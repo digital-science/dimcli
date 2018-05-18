@@ -1,4 +1,6 @@
-# PySciGraph 
+# PyDimensions 
+
+> STILL IN DEVELOPMENT
 
 Python API for accessing dimensions.ai 
 
