@@ -6,7 +6,7 @@ Python API for accessing dimensions.ai
 
 * [https://app.dimensions.ai](https://app.dimensions.ai)
 * [https://pypi.org/project/pydimensions/](https://pypi.org/project/pydimensions/)
-
+* [https://app.dimensions.ai/dsl](https://app.dimensions.ai/dsl)
 
 ### Install
 

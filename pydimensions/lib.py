@@ -1,7 +1,15 @@
 import requests
 import click
 
-
+# search publications for "malaria"
+# where (year<=1980 or year in [2005:2010])
+#         and research_orgs.name~"Africa"
+#         return publications[basics + extras] sort by date limit 5 skip 10
+#     return in "facets"
+#     funders[name + country_name] as "entity_funder"
+#     return in "facets" research_orgs[all]
+#     aggregate rcr_avg, altmetric_median sort by rcr_avg
+#             limit 3
 
 
 
