@@ -1,16 +1,43 @@
 import requests
 import click
+import os
+import json
 
-# search publications for "malaria"
-# where (year<=1980 or year in [2005:2010])
-#         and research_orgs.name~"Africa"
-#         return publications[basics + extras] sort by date limit 5 skip 10
-#     return in "facets"
-#     funders[name + country_name] as "entity_funder"
-#     return in "facets" research_orgs[all]
-#     aggregate rcr_avg, altmetric_median sort by rcr_avg
-#             limit 3
 
+def get_init():
+    """
+    Get init details. These have to be manually added in a file in the home folder: '~/.pydimensions.config.json'
+    
+    This is the structure:
+
+    {
+        "usr": "spam",
+        "psw" : "spam", 
+        "service" : "https://app.dimensions.ai/api/"   # optional
+    }
+    
+    """
+    DEFAULT_SERVICE = 'https://app.dimensions.ai/api/'
+    user_config_dir = os.path.expanduser("~") + "/.pydimensions.config.json"
+    try:
+        with open(user_config_dir) as f:
+            data = json.load(f)
+    except:
+        return None
+
+    if data:
+        try:
+            usr = data['usr']
+            psw = data['psw']
+        except:
+            return None
+        try:
+            service = c.get('service')
+        except:
+            service = DEFAULT_SERVICE
+        return {'usr': usr, 'psw': psw, 'service': service}
+    else:
+        return None
 
 
 class DimensionsClient(object):
@@ -26,86 +53,42 @@ class DimensionsClient(object):
     _default_headers = {'Accept': 'application/rdf+xml'}
 
     def __init__(self, *args, **kwargs):
-        allowed_keys = ['verbose']
+        allowed_keys = ['verbose', 'usr', 'psw', 'service']
         self.__dict__.update((k, False) for k in allowed_keys)
-        self.__dict__.update((k, v) for k, v in kwargs.items() if k in allowed_keys)
-        self.response = None
+        self.__dict__.update(
+            (k, v) for k, v in kwargs.items() if k in allowed_keys)
 
-        self.entity = None
+        self.AUTH_URL = self.service + 'auth.json'
+        self.QUERY_URL = self.service + 'dsl.json'
+        LOGIN = {'username': self.usr, 'password': self.psw}
 
-    # def get_response_from_id(self, **kwargs):
-    #     """
-    #     Function.#TODO
-    #     """
-    #     allowed_keys = ['uri', 'doi', 'issn', 'isbn']
-    #     for k, v in kwargs.items():
-    #         if k in allowed_keys:
-    #             payload = {k: v}
-    #             self.response = self._do_request(payload)
-    #             return self.response
-    #     if self.verbose: click.secho("Valid arguments: " + str(allowed_keys), fg="green")
-    #     return None
+        #   Send credentials to login url to retrieve token. Raise
+        #   an error, if the return code indicates a problem.
+        #   Please use the URL of the system you'd like to access the API
+        #   in the example below.
+        resp = requests.post(self.AUTH_URL, json=LOGIN)
+        resp.raise_for_status()
+        #   Create http header using the generated token.
+        self.headers = {'Authorization': "JWT " + resp.json()['token']}
 
-    # def get_entity_from_id(self, **kwargs):
-    #     """
-    #     Function.#TODO
-    #     """
-    #     self.get_response_from_id(**kwargs)
-    #     if self.response:
-    #         rdf_url, rdf_text = self.response.url, self.response.text
-    #         x = ontospy.Ontospy()
-    #         if self.verbose: click.secho("... loading graph", fg="green")
-    #         x.load_rdf(text=rdf_text)
-    #         click.secho("Parsing %d triples.." % x.triplesCount(), fg="green")
-    #         if self.verbose: click.secho("... building entity...", fg="green")
-    #         # build SG Entity
-    #         self.entity = x.build_entity_from_uri(rdf_url, SciGraphRdfEntity)
-    #         return self.entity
-    #     else:
-    #         return None
+    def query(self, q):
+        """
+        Execute DSL query. EG
 
-    # def _do_request(self, payload, headers=None):
-    #     """
-    #     Function.#TODO
-    #     """
-    #     if not headers:
-    #         headers = self._default_headers
-    #     if 'uri' in payload:
-    #         url = payload['uri']
-    #         payload = {}
-    #     else:
-    #         url = self._redirect_url
-    #     if self.verbose: click.secho("... requesting rdf", fg="green")
-        
-    #     r = requests.get(url, headers=headers, params=payload)
-        
-    #     if r.status_code == 404:
-    #         return False
-    #     else:
-    #         if r.url.startswith("https://"):
-    #             # https ok for retrieval, but rdf payload always uses http uris
-    #             r.url = r.url.replace("https://", "http://")
-    #         if self.verbose: click.secho("Found " + r.url, fg="green")
-    #         return r
+        search publications for "malaria"
+        where (year<=1980 or year in [2005:2010])
+                and research_orgs.name~"Africa"
+                return publications[basics + extras] sort by date limit 5 skip 10
+            return in "facets"
+            funders[name + country_name] as "entity_funder"
+            return in "facets" research_orgs[all]
+            aggregate rcr_avg, altmetric_median sort by rcr_avg
+                    limit 3
 
-
-
-    # def print_report(self):
-    #     if self.entity and self.response:
-    #         # extract values
-    #         label = self.entity.bestLabel() or "N/A"
-    #         title = self.entity.title or "N/A"
-    #         doi = self.entity.doi or "N/A"
-    #         types = " ".join([x for x in self.entity.rdftype_qname])
-    #         rdf_url, rdf_text = self.response.url, self.response.text
-    #         # print
-    #         click.echo(click.style('URI: ', fg='green') + click.style(' ' + rdf_url, reset=True))
-    #         click.echo(click.style('DOI: ', fg='green') + click.style(' ' + doi, reset=True))
-    #         click.echo(click.style('Label: ', fg='green') + click.style(' ' + label, reset=True))
-    #         click.echo(click.style('Title: ', fg='green') + click.style(' ' + title, reset=True))
-    #         click.echo(click.style('Types: ', fg='green') + click.style(' ' + types, reset=True))
-
-
-
-
-
+        """
+        #   Execute DSL query.
+        resp = requests.post(
+            self.QUERY_URL,
+            data='search publications return FOR',
+            headers=self.headers)
+        return resp.json()
