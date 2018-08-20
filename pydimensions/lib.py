@@ -8,13 +8,17 @@ def get_init():
     """
     Get init details. These have to be manually added in a file in the home folder: '~/.pydimensions.config.json'
     
-    This is the structure:
+    This is the source file structure:
 
     {
         "usr": "spam",
         "psw" : "spam", 
         "service" : "https://app.dimensions.ai/api/"   # optional
     }
+
+    Returns a dict:
+
+    {'usr': usr, 'psw': psw, 'service': service}
     
     """
     DEFAULT_SERVICE = 'https://app.dimensions.ai/api/'

@@ -32,7 +32,7 @@ The file should have the following structure:
 @click.option('--doi', help='Search a DOI')
 @click.option('--issn', help='Search a ISSN')
 @click.option('--isbn', help='Search a ISBN')
-@click.option('--init', is_flag=True, help='Init profile settings')
+@click.option('--settings', is_flag=True, help='Show current profile settings')
 @click.option('--examples', is_flag=True, help='Show some examples')
 @click.option('--verbose', is_flag=True, help='Verbose logs')
 @click.pass_context
@@ -43,7 +43,7 @@ def main_cli(ctx,
              issn=None,
              isbn=None,
              rdf=None,
-             init=False,
+             settings=False,
              examples=False,
              verbose=False):
     """
@@ -56,6 +56,16 @@ def main_cli(ctx,
             "**Account details not available or partially missing**\n",
             fg="red")
         click.secho(HOW_TO_INIT)
+        return
+
+    if settings:
+        for k, v in account_details.items():
+            if k == "psw":
+                print k, ": ", "*" * len(v)
+            else:
+                print k, ": ", v
+        print "\n"    
+        click.secho(HOW_TO_INIT, dim=True)
         return
 
     if examples:
