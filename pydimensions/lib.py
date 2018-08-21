@@ -36,7 +36,7 @@ def get_init():
         except:
             return None
         try:
-            service = c.get('service')
+            service = data['service']
         except:
             service = DEFAULT_SERVICE
         return {'usr': usr, 'psw': psw, 'service': service}
@@ -52,6 +52,11 @@ class DimensionsClient(object):
         **kwargs (dict): dict of keyword arguments
     Attributes:
         self
+
+    INTRO: http://docs.dimensions.ai/dsl/1.6.0/api.html
+    FIELDS: http://docs.dimensions.ai/dsl/1.6.0/data.html#data
+    ESCAPING RULES: http://docs.dimensions.ai/dsl/1.6.0/api.html#frequently-asked-questions
+
     """
     _redirect_url = 'https://scigraph.springernature.com/api/redirect'
     _default_headers = {'Accept': 'application/rdf+xml'}
@@ -91,8 +96,14 @@ class DimensionsClient(object):
 
         """
         #   Execute DSL query.
-        resp = requests.post(
-            self.QUERY_URL,
-            data='search publications return FOR',
-            headers=self.headers)
+        resp = requests.post(self.QUERY_URL, data=q, headers=self.headers)
         return resp.json()
+
+    def search_doi_issn(self, doi="", issn=""):
+        if doi:
+            q = 'search publications where doi="%s" return publications' % doi  # eg 10.1038/205425a0
+            print q
+            return self.query(q)
+        if issn:
+            q = 'search publications where issn="%s" return publications' % issn
+            return self.query(q)
