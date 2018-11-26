@@ -48,7 +48,8 @@ def main_cli(ctx,
              settings=False,
              examples=False):
     """
-    PyDimensions: client for www.dimensions.ai   
+    PyDimensions: client for www.dimensions.ai   \n
+    $ pydimensions 'search publications for "napoleon" return publications'
     """
 
     click.secho("PyDimensions " + VERSION, bold=True)
@@ -85,8 +86,6 @@ def main_cli(ctx,
             return
         else:
             query = args[0]
-
-    print(args)
 
     client = DimensionsClient(**account_details)
     # print s.usr, s.psw, s.service
