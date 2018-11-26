@@ -8,8 +8,12 @@ from .lib import *
 from .VERSION import *
 
 CMD_LINE_EXAMPLES = """EXAMPLES:
-$ @TODO
-$ see http://docs.dimensions.ai/dsl/1.6.0/api.html
+$ pydimensions -q 'search publications for "napoleon" return publications'
+
+NOTE: watch the inner double quotes!
+
+MORE ?
+=> http://docs.dimensions.ai/dsl/1.6.0/api.html
 """
 
 HOW_TO_INIT = """HOW TO SET UP A CONFIGURATION FILE:
@@ -29,10 +33,11 @@ The file should have the following structure:
 @click.command()
 @click.argument('args', nargs=-1)
 @click.option('-q', '--query', help='Issue a DSL query')
-@click.option('--doi', help='Search a DOI')
-@click.option('--issn', help='Search a ISSN')
-@click.option('--settings', is_flag=True, help='Show current profile settings')
-@click.option('--examples', is_flag=True, help='Show some examples')
+@click.option('-d', '--doi', help='Search a DOI')
+@click.option('-i', '--issn', help='Search a ISSN')
+@click.option(
+    '-s', '--settings', is_flag=True, help='Show current profile settings')
+@click.option('-e', '--examples', is_flag=True, help='Show some examples')
 # @click.option('--verbose', is_flag=True, help='Verbose logs')
 @click.pass_context
 def main_cli(ctx,
@@ -66,7 +71,7 @@ def main_cli(ctx,
             else:
                 click.secho("%s: %s" % (k, v), dim=True)
                 # print k, ": ", v
-        print "\n"
+        print("\n")
         click.secho(HOW_TO_INIT, dim=True)
         return
 
@@ -74,20 +79,27 @@ def main_cli(ctx,
         click.secho(CMD_LINE_EXAMPLES, fg="green")
         return
 
-    if not (query or doi or issn) and not args:
-        click.echo(ctx.get_help())
-        return
+    if not (query or doi or issn):
+        if not args:
+            click.echo(ctx.get_help())
+            return
+        else:
+            query = args[0]
+
+    print(args)
 
     client = DimensionsClient(**account_details)
     # print s.usr, s.psw, s.service
 
+    res = None
     if query:
         res = client.query(query)
     elif doi:
         res = client.search_doi_issn(doi=doi)
     elif issn:
         res = client.search_doi_issn(issn=issn)
-    pprint(res)
+    if res:
+        pprint(res)
 
 
 if __name__ == '__main__':

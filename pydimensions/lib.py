@@ -102,7 +102,7 @@ class DimensionsClient(object):
     def search_doi_issn(self, doi="", issn=""):
         if doi:
             q = 'search publications where doi="%s" return publications' % doi  # eg 10.1038/205425a0
-            print q
+            print(q)
             return self.query(q)
         if issn:
             q = 'search publications where issn="%s" return publications' % issn
