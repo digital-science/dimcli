@@ -13,7 +13,7 @@ $ pydimensions -q 'search publications for "napoleon" return publications'
 NOTE: watch the inner double quotes!
 
 MORE ?
-=> http://docs.dimensions.ai/dsl/1.6.0/api.html
+=> https://docs.dimensions.ai/dsl/index.html
 """
 
 HOW_TO_INIT = """HOW TO SET UP A CONFIGURATION FILE:
@@ -28,6 +28,16 @@ The file should have the following structure:
     }
 
 """
+
+
+
+def help_interpret_args(args):
+    if len(args) == 1:
+        return args[0]
+    else:
+        return " ".join([x for x in args])
+
+
 
 
 @click.command()
@@ -48,8 +58,9 @@ def main_cli(ctx,
              settings=False,
              examples=False):
     """
-    PyDimensions: client for www.dimensions.ai   \n
-    $ pydimensions 'search publications for "napoleon" return publications'
+    PyDimensions: client for the dimensions.ai API\n
+    $ pydimensions 'search publications for "napoleon" return publications'\n
+    More info: https://docs.dimensions.ai/dsl/index.html
     """
 
     click.secho("PyDimensions " + VERSION, bold=True)
@@ -80,12 +91,13 @@ def main_cli(ctx,
         click.secho(CMD_LINE_EXAMPLES, fg="green")
         return
 
+
     if not (query or doi or issn):
-        if not args:
+        if args:
+            query = args[0]
+        else:
             click.echo(ctx.get_help())
             return
-        else:
-            query = args[0]
 
     client = DimensionsClient(**account_details)
     # print s.usr, s.psw, s.service
