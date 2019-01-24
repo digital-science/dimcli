@@ -15,29 +15,11 @@ dim_lang_2 = [
     # https://docs.dimensions.ai/dsl/language.html
     'for',
     'where',
-    'in'
+    'in',
     'limit',
 ]
 
-dim_lang = dim_lang_1 + dim_lang_2
-
-Sources_All = [
-    # https://docs.dimensions.ai/dsl/data.html#sources
-    'publications',
-    'grants',
-    'patents',
-    'clinical_trials',
-    'policy_documents',
-]
-
-dim_entities = [
-    # https://docs.dimensions.ai/dsl/data.html#entities
-    'year',
-    'research_orgs',
-    'funders'
-]
-
-dim_filters = [
+dim_lang_3 = [
     # https://docs.dimensions.ai/dsl/language.html#simple-filters
     '=',
     '!=',
@@ -49,8 +31,18 @@ dim_filters = [
     'is empty',
     'is not empty',
 ]
+dim_lang = dim_lang_1 + dim_lang_2 + dim_lang_3
 
-dim_all_completions = dim_lang + Sources_All + dim_entities + dim_filters
+Sources_All = [
+    # https://docs.dimensions.ai/dsl/data.html#sources
+    'publications',
+    'grants',
+    'patents',
+    'clinical_trials',
+    'policy_documents',
+]
+
+dim_all_completions = dim_lang
 
 dim_entities_after_dot = [
     'research_orgs.name',  # trying to add DOT notation

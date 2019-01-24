@@ -114,7 +114,8 @@ class BasicLexer(Lexer):
                 return 'green'
             elif w in Sources_All:
                 return 'blue bold'
-            elif w in dim_entities:
+            elif w in Publications_Facet_Fields:
+                # with Publication_Literal_Fields Lexer FAILS @TODO
                 return 'blue'
             elif w in dim_entities_after_dot:
                 return 'violet'
