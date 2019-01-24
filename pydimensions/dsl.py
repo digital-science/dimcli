@@ -22,36 +22,7 @@ from prompt_toolkit.styles import Style
 # AUTO COMPLETION
 #
 
-# @TODO: smarter completer should keep into account previous words
-
-meta_keywords = [
-    # here go the main gramma words without the dot notation
-    'quit',
-    'show',
-]
-
-dim_keywords = [
-    # here go the main gramma words without the dot notation
-    'search',
-    'for',
-    'where',
-    'return',
-]
-
-dim_entities = [
-    # here go the main gramma words without the dot notation
-    'publications',
-    'year',
-    'research_orgs',
-    'funders'
-]
-
-main_completions = meta_keywords + dim_keywords + dim_entities
-
-dim_entities_after_dot = [
-    'research_orgs.name',  # trying to add DOT notation
-    # @TODO programmatically add all variations based on docs
-]
+from dsl_grammar import *
 
 
 class CleverCompleter(Completer):
@@ -63,17 +34,103 @@ class CleverCompleter(Completer):
     """
 
     def get_completions(self, document, complete_event):
+        #
         word = document.get_word_before_cursor(WORD=True)
-        # line = document.current_line_before_cursor()
-        # print("\n" + word)
+        line = document.current_line_before_cursor
+        line_minus_current = line.replace(word, "").strip()
+
+        def last_word(line):
+            if len(line) > 0:
+                return line.split()[-1]
+            else:
+                return False
+
+        def is_search_for(line, source_name):
+            if "search " + source_name in line:
+                return True
+            else:
+                return False
+
+        candidates = []
+
         if word.endswith('.'):
-            for keyword in dim_entities_after_dot:
-                if keyword.startswith(word):
-                    yield Completion(keyword, start_position=-len(word))
+            # properties @TODO
+            candidates = dim_entities_after_dot
+
+        elif len(line_minus_current) == 0:
+            # beginning: only main keywords
+            # PS ensure you remove the current stem from line
+            candidates = Allowed_Starts
+
+        elif last_word(line_minus_current) in dim_lang_1:
+            # after search and return only sources
+            candidates = Sources_All
+
+        elif last_word(line_minus_current) == "in":
+            if is_search_for(line, "publications"):
+                candidates = Publications_Search_Fields
+            else:
+                pass
+
+        elif last_word(line_minus_current) == "where":
+            if is_search_for(line, "publications"):
+                candidates = Publication_Literal_Fields + Publications_Entity_Fields
+            else:
+                pass
+
         else:
-            for keyword in main_completions:
-                if keyword.startswith(word):
-                    yield Completion(keyword, start_position=-len(word))
+            candidates = [x for x in dim_all_completions if x != 'search']
+
+        # finally
+        for keyword in candidates:
+            if keyword.startswith(word):
+                yield Completion(keyword, start_position=-len(word))
+
+
+#
+# LEXER AND SYNTAX HIGHLIGHTING
+#
+# https://python-prompt-toolkit.readthedocs.io/en/master/pages/reference.html#prompt_toolkit.lexers.Lexer
+#
+#
+
+from prompt_toolkit.lexers import Lexer
+
+
+def is_quoted(w):
+    if w[0] == "\"" and w[-1] == "\"":
+        return True
+    if w[0] == "'" and w[-1] == "'":
+        return True
+    return False
+
+
+class BasicLexer(Lexer):
+    def lex_document(self, document):
+        def get_class(w):
+            if w in dim_lang_1:
+                return 'green bold'
+            if w in dim_lang_2 + dim_lang_3:
+                return 'green'
+            elif w in Sources_All:
+                return 'blue bold'
+            elif w in dim_entities:
+                return 'blue'
+            elif w in dim_entities_after_dot:
+                return 'violet'
+            elif is_quoted(w):
+                return 'orange'
+            elif w in Allowed_Starts:
+                return "red"
+            else:
+                return 'black'
+
+        def get_line(lineno):
+
+            return [(get_class(w), w + " ")
+                    for w in document.lines[lineno].split()]
+
+        return get_line
 
 
 #
@@ -112,48 +169,6 @@ class BasicValidator(Validator):
                 message='A query must include a return statement',
                 # cursor_position=i
             )
-
-
-#
-# LEXER AND SYNTAX HIGHLIGHTING
-#
-# https://python-prompt-toolkit.readthedocs.io/en/master/pages/reference.html#prompt_toolkit.lexers.Lexer
-#
-#
-
-from prompt_toolkit.lexers import Lexer
-
-
-def is_quoted(w):
-    if w[0] == "\"" and w[-1] == "\"":
-        return True
-    if w[0] == "'" and w[-1] == "'":
-        return True
-    return False
-
-
-class BasicLexer(Lexer):
-    def lex_document(self, document):
-        def get_class(w):
-            if w in dim_keywords:
-                return 'green bold'
-            elif w in dim_entities:
-                return 'blue bold'
-            elif w in dim_entities_after_dot:
-                return 'violet'
-            elif is_quoted(w):
-                return 'orange'
-            elif w in meta_keywords:
-                return "red"
-            else:
-                return 'black'
-
-        def get_line(lineno):
-
-            return [(get_class(w), w + " ")
-                    for w in document.lines[lineno].split()]
-
-        return get_line
 
 
 #
@@ -202,8 +217,11 @@ def handle_query(text, buffer):
 
     if text.replace("\n", "").strip() == "show":
         res = buffer.yeald()
-        jj = json.dumps(res, indent=4, sort_keys=True)
-        print(jj)
+        if res:
+            jj = json.dumps(res, indent=4, sort_keys=True)
+            print(jj)
+        else:
+            print("Nothing to show - please run a search first.")
     else:
         print('You said: %s' % text)
         res = client.query(text)
@@ -231,7 +249,9 @@ client = dimlib.DimensionsClient(**account_details)
 
 
 def main():
-    print("Enter your query (Esc+Enter=run / Control-C=stop / Control-D=exit)")
+    print(
+        "Enter your query (Esc+Enter = run / Control-C = stop / Control-D = exit) API: https://docs.dimensions.ai/dsl"
+    )
 
     our_history = ThreadedHistory(SlowHistory())
     # The history needs to be passed to the `PromptSession`. It can't be passed
@@ -252,7 +272,7 @@ def main():
                 complete_style=CompleteStyle.READLINE_LIKE,
                 # validator=BasicValidator(),
                 # validate_while_typing=False,
-                multiline=True,
+                multiline=False,
                 complete_while_typing=True,
                 lexer=BasicLexer(),
                 key_bindings=kb)
@@ -261,7 +281,9 @@ def main():
         except EOFError:
             break  # Control-D pressed.
         else:
-            if text == "quit":
+            if text.strip() == "":
+                continue
+            elif text == "quit":
                 break
             handle_query(text, buffer)
     print('GoodBye!')
