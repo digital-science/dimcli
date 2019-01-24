@@ -9,17 +9,26 @@ Press [Tab] to complete the current word.
 """
 from __future__ import unicode_literals
 
-from prompt_toolkit.completion import WordCompleter
 from prompt_toolkit.completion import Completion, Completer
 from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.validation import Validator, ValidationError
-from prompt_toolkit import prompt
+from prompt_toolkit.shortcuts import CompleteStyle
+from prompt_toolkit.formatted_text import HTML
+# from prompt_toolkit import prompt   #using session instead
+from prompt_toolkit import PromptSession
+from prompt_toolkit.styles import Style
 
 #
 # AUTO COMPLETION
 #
 
 # @TODO: smarter completer should keep into account previous words
+
+meta_keywords = [
+    # here go the main gramma words without the dot notation
+    'quit',
+    'show',
+]
 
 dim_keywords = [
     # here go the main gramma words without the dot notation
@@ -36,6 +45,8 @@ dim_entities = [
     'research_orgs',
     'funders'
 ]
+
+main_completions = meta_keywords + dim_keywords + dim_entities
 
 dim_entities_after_dot = [
     'research_orgs.name',  # trying to add DOT notation
@@ -60,12 +71,9 @@ class CleverCompleter(Completer):
                 if keyword.startswith(word):
                     yield Completion(keyword, start_position=-len(word))
         else:
-            for keyword in dim_keywords + dim_entities:
+            for keyword in main_completions:
                 if keyword.startswith(word):
-                    yield Completion(
-                        keyword,
-                        start_position=-len(word),
-                        style='bg:ansiyellow fg:ansiblack')
+                    yield Completion(keyword, start_position=-len(word))
 
 
 #
@@ -91,6 +99,7 @@ def _(event):
 #
 # VALIDATOR
 #
+#
 
 
 class BasicValidator(Validator):
@@ -98,12 +107,6 @@ class BasicValidator(Validator):
         text = document.text
 
         if text and "return" not in text:
-            # i = 0
-            # # Get index of fist non numeric character.
-            # # We want to move the cursor here.
-            # for i, c in enumerate(text):
-            #     if not c.isdigit():
-            #         break
 
             raise ValidationError(
                 message='A query must include a return statement',
@@ -139,7 +142,9 @@ class BasicLexer(Lexer):
             elif w in dim_entities_after_dot:
                 return 'violet'
             elif is_quoted(w):
-                return 'red'
+                return 'orange'
+            elif w in meta_keywords:
+                return "red"
             else:
                 return 'black'
 
@@ -153,29 +158,113 @@ class BasicLexer(Lexer):
 
 #
 #
+# HISTORY
+#
+#
+
+from prompt_toolkit.history import History, ThreadedHistory
+import time
+
+
+class SlowHistory(History):
+    """
+    Example class that loads the history very slowly...
+    """
+
+    def load_history_strings(self):
+        for i in range(1000):
+            time.sleep(1)  # Emulate slowness.
+            yield 'item-%s' % (i, )
+
+    def store_string(self, string):
+        pass  # Don't store strings.
+
+
+#
+#
+# DIMENSIONS QUERY AND DATA HANDLING
+#
+#
+
+
+class Buffer(object):
+    current_json = ""
+
+    def load(self, _json):
+        self.current_json = _json
+
+    def yeald(self):
+        return self.current_json
+
+
+def handle_query(text, buffer):
+    # @TODO query dimensions and open up a webpage
+
+    if text.replace("\n", "").strip() == "show":
+        res = buffer.yeald()
+        jj = json.dumps(res, indent=4, sort_keys=True)
+        print(jj)
+    else:
+        print('You said: %s' % text)
+        res = client.query(text)
+        if 'errors' in res.keys():
+            print(res['errors']['query']['header'])
+            for x in res['errors']['query']['details']:
+                print(x)
+        else:
+            print("Tot Results: ", res['_stats']['total_count'])
+            for k in res.keys():
+                if k != '_stats':
+                    print(k.capitalize() + ":", len(res[k]))
+            buffer.load(res)
+
+
+#
+#
 # MAIN CLI
 #
 #
+import json, sys
+import lib as dimlib
+account_details = dimlib.get_init()
+client = dimlib.DimensionsClient(**account_details)
 
 
 def main():
-    text = prompt(
-        'Enter your query (esc+enter=run):\n>',
-        default="",  # you can pass a default text to begin with
-        # completer=dim_completer,
-        completer=CleverCompleter(),
-        validator=BasicValidator(),
-        validate_while_typing=False,
-        multiline=True,
-        complete_while_typing=False,
-        lexer=BasicLexer(),
-        key_bindings=kb)
-    handle_query(text)
+    print("Enter your query (Esc+Enter=run / Control-C=stop / Control-D=exit)")
 
+    our_history = ThreadedHistory(SlowHistory())
+    # The history needs to be passed to the `PromptSession`. It can't be passed
+    # to the `prompt` call because only one history can be used during a
+    # session.
+    session = PromptSession(history=our_history)
 
-def handle_query(q):
-    # @TODO query dimensions and open up a webpage
-    print('You said: %s' % q)
+    buffer = Buffer()
+
+    # REPL loop.
+    while True:
+        try:
+            text = session.prompt(
+                '\n> ',
+                default="",  # you can pass a default text to begin with
+                # completer=dim_completer,
+                completer=CleverCompleter(),
+                complete_style=CompleteStyle.READLINE_LIKE,
+                # validator=BasicValidator(),
+                # validate_while_typing=False,
+                multiline=True,
+                complete_while_typing=True,
+                lexer=BasicLexer(),
+                key_bindings=kb)
+        except KeyboardInterrupt:
+            continue  # Control-C pressed. Try again.
+        except EOFError:
+            break  # Control-D pressed.
+        else:
+            if text == "quit":
+                break
+            handle_query(text, buffer)
+    print('GoodBye!')
 
 
 if __name__ == '__main__':
