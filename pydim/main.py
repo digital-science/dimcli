@@ -8,7 +8,7 @@ from .lib import *
 from .VERSION import *
 
 CMD_LINE_EXAMPLES = """EXAMPLES:
-$ pydimensions -q 'search publications for "napoleon" return publications'
+$ pydim -q 'search publications for "napoleon" return publications'
 
 NOTE: watch the inner double quotes!
 
@@ -18,7 +18,7 @@ MORE ?
 
 HOW_TO_INIT = """HOW TO SET UP A CONFIGURATION FILE:
 
-Add a '.pydimensions.config.json' file to your home folder ('~'). 
+Add a '.pydim.config.json' file to your home folder ('~'). 
 The file should have the following structure:
 
     {
@@ -58,12 +58,12 @@ def main_cli(ctx,
              settings=False,
              examples=False):
     """
-    PyDimensions: client for the dimensions.ai API\n
-    $ pydimensions 'search publications for "napoleon" return publications'\n
+    pydim: client for the dimensions.ai API\n
+    $ pydim 'search publications for "napoleon" return publications'\n
     More info: https://docs.dimensions.ai/dsl/index.html
     """
 
-    click.secho("PyDimensions " + VERSION, bold=True)
+    click.secho("pydim " + VERSION, bold=True)
     click.secho("------------", fg='white')
 
     account_details = get_init()

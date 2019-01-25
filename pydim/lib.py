@@ -6,7 +6,7 @@ import json
 
 def get_init():
     """
-    Get init details. These have to be manually added in a file in the home folder: '~/.pydimensions.config.json'
+    Get init details. These have to be manually added in a file in the home folder: '~/.pydim.config.json'
     
     This is the source file structure:
 
@@ -22,7 +22,7 @@ def get_init():
     
     """
     DEFAULT_SERVICE = 'https://app.dimensions.ai/api/'
-    user_config_dir = os.path.expanduser("~") + "/.pydimensions.config.json"
+    user_config_dir = os.path.expanduser("~") + "/.pydim.config.json"
     try:
         with open(user_config_dir) as f:
             data = json.load(f)

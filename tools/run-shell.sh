@@ -5,6 +5,6 @@
 clear
 
 echo "=================="
-echo "Opening iPython with pydimensions pre-loaded..."
+echo "Opening iPython with pydim pre-loaded..."
 echo "=================="
 ipython shellprofile.py --no-simple-prompt --no-confirm-exit -i

@@ -8,7 +8,7 @@ echo "=================="
 echo "CALLING [test_one] in 1 second..."
 echo "=================="
 sleep 1
-python -m pydimensions.tests.quicktest
+python -m pydim.tests.quicktest
 sleep 2
 
 clear 
