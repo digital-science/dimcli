@@ -146,10 +146,10 @@ class BasicLexer(Lexer):
 # KEY BINDINGS OVERRIDE
 #
 
-kb = KeyBindings()
+bindings = KeyBindings()
 
 
-@kb.add("c-space")
+@bindings.add("c-space")
 def _(event):
     """
     Start auto completion. If the menu is showing already, select the next
@@ -160,6 +160,26 @@ def _(event):
         b.complete_next()
     else:
         b.start_completion(select_first=False)
+
+
+@bindings.add("c-h")
+def _(event):
+    """
+    Look up in docs
+    """
+    line = event.app.current_buffer.text
+    if line:
+        last_word = line.split()[-1]
+        import webbrowser 
+        webbrowser.open("https://docs.dimensions.ai/dsl/search.html?q="+last_word)
+
+
+
+
+# @bindings.add("c-x")
+# def _(event):
+#     " Exit when `c-x` is pressed. "
+#     event.app.exit()
 
 
 #
@@ -282,7 +302,7 @@ def main():
                 multiline=False,
                 complete_while_typing=True,
                 lexer=BasicLexer(),
-                key_bindings=kb,
+                key_bindings=bindings,
             )
         except KeyboardInterrupt:
             continue  # Control-C pressed. Try again.
