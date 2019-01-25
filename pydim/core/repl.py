@@ -14,15 +14,24 @@ from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.validation import Validator, ValidationError
 from prompt_toolkit.shortcuts import CompleteStyle
 from prompt_toolkit.formatted_text import HTML
+
 # from prompt_toolkit import prompt   #using session instead
 from prompt_toolkit import PromptSession
 from prompt_toolkit.styles import Style
 
+import json, sys
+
+from .dsl_grammar import *
+from .credentials import *
+from .lib import DimensionsClient
+
+
+CLIENT = DimensionsClient(**get_credentials())
+
+
 #
 # AUTO COMPLETION
 #
-
-from dsl_grammar import *
 
 
 class CleverCompleter(Completer):
@@ -53,7 +62,7 @@ class CleverCompleter(Completer):
 
         candidates = []
 
-        if word.endswith('.'):
+        if word.endswith("."):
             # properties @TODO
             candidates = dim_entities_after_dot
 
@@ -79,7 +88,7 @@ class CleverCompleter(Completer):
                 pass
 
         else:
-            candidates = [x for x in dim_all_completions if x != 'search']
+            candidates = [x for x in dim_all_completions if x != "search"]
 
         # finally
         for keyword in candidates:
@@ -98,7 +107,7 @@ from prompt_toolkit.lexers import Lexer
 
 
 def is_quoted(w):
-    if w[0] == "\"" and w[-1] == "\"":
+    if w[0] == '"' and w[-1] == '"':
         return True
     if w[0] == "'" and w[-1] == "'":
         return True
@@ -109,27 +118,26 @@ class BasicLexer(Lexer):
     def lex_document(self, document):
         def get_class(w):
             if w in dim_lang_1:
-                return 'green bold'
+                return "green bold"
             if w in dim_lang_2 + dim_lang_3:
-                return 'green'
+                return "green"
             elif w in Sources_All:
-                return 'blue bold'
+                return "blue bold"
             elif w in Publications_Facet_Fields:
                 # with Publication_Literal_Fields Lexer FAILS @TODO
-                return 'blue'
+                return "blue"
             elif w in dim_entities_after_dot:
-                return 'violet'
+                return "violet"
             elif is_quoted(w):
-                return 'orange'
+                return "orange"
             elif w in Allowed_Starts:
                 return "red"
             else:
-                return 'black'
+                return "black"
 
         def get_line(lineno):
 
-            return [(get_class(w), w + " ")
-                    for w in document.lines[lineno].split()]
+            return [(get_class(w), w + " ") for w in document.lines[lineno].split()]
 
         return get_line
 
@@ -141,7 +149,7 @@ class BasicLexer(Lexer):
 kb = KeyBindings()
 
 
-@kb.add('c-space')
+@kb.add("c-space")
 def _(event):
     """
     Start auto completion. If the menu is showing already, select the next
@@ -167,7 +175,7 @@ class BasicValidator(Validator):
         if text and "return" not in text:
 
             raise ValidationError(
-                message='A query must include a return statement',
+                message="A query must include a return statement",
                 # cursor_position=i
             )
 
@@ -190,7 +198,7 @@ class SlowHistory(History):
     def load_history_strings(self):
         for i in range(1000):
             time.sleep(1)  # Emulate slowness.
-            yield 'item-%s' % (i, )
+            yield "item-%s" % (i,)
 
     def store_string(self, string):
         pass  # Don't store strings.
@@ -224,16 +232,18 @@ def handle_query(text, buffer):
         else:
             print("Nothing to show - please run a search first.")
     else:
-        print('You said: %s' % text)
-        res = client.query(text)
-        if 'errors' in res.keys():
-            print(res['errors']['query']['header'])
-            for x in res['errors']['query']['details']:
+        print("You said: %s" % text)
+        # RUN QUERY
+        res = CLIENT.query(text)
+        # #
+        if "errors" in res.keys():
+            print(res["errors"]["query"]["header"])
+            for x in res["errors"]["query"]["details"]:
                 print(x)
         else:
-            print("Tot Results: ", res['_stats']['total_count'])
+            print("Tot Results: ", res["_stats"]["total_count"])
             for k in res.keys():
-                if k != '_stats':
+                if k != "_stats":
                     print(k.capitalize() + ":", len(res[k]))
             buffer.load(res)
 
@@ -243,10 +253,6 @@ def handle_query(text, buffer):
 # MAIN CLI
 #
 #
-import json, sys
-import lib as dimlib
-account_details = dimlib.get_init()
-client = dimlib.DimensionsClient(**account_details)
 
 
 def main():
@@ -266,7 +272,7 @@ def main():
     while True:
         try:
             text = session.prompt(
-                '\n> ',
+                "\n> ",
                 default="",  # you can pass a default text to begin with
                 # completer=dim_completer,
                 completer=CleverCompleter(),
@@ -276,7 +282,8 @@ def main():
                 multiline=False,
                 complete_while_typing=True,
                 lexer=BasicLexer(),
-                key_bindings=kb)
+                key_bindings=kb,
+            )
         except KeyboardInterrupt:
             continue  # Control-C pressed. Try again.
         except EOFError:
@@ -287,8 +294,8 @@ def main():
             elif text == "quit":
                 break
             handle_query(text, buffer)
-    print('GoodBye!')
+    print("GoodBye!")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

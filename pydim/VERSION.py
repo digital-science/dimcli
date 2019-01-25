@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 #  -*- coding: UTF-8 -*-
 
-__version__ = "0.4"  # LATEST? https://pypi.org/project/pydim/
+__version__ = "0.1"  # LATEST? https://pypi.org/project/pydim/
 __copyright__ = "CopyRight (C) 2018 by Michele Pasin"
 __license__ = "Apache2.0"
 __author__ = "Michele Pasin"

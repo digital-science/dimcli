@@ -1,14 +1,16 @@
 from setuptools import setup, find_packages
 from os import path
+
 # To use a consistent encoding
 from codecs import open
 
-here = path.abspath(path.dirname(__file__))
+HERE = path.abspath(path.dirname(__file__))
 
 # trick to manage package versions in one place only
 # http://stackoverflow.com/questions/458550/standard-way-to-embed-version-into-python-package
 import re
-VERSIONFILE="pydim/VERSION.py"
+
+VERSIONFILE = "pydim/VERSION.py"
 verstrline = open(VERSIONFILE, "rt").read()
 VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
 mo = re.search(VSRE, verstrline, re.M)
@@ -19,25 +21,33 @@ else:
 
 
 # Get the long description from the README file
-with open(path.join(here, 'README.md'), encoding='utf-8') as f:
+with open(path.join(HERE, "README.md"), encoding="utf-8") as f:
     long_description = f.read()
 
 
+# Parse requirements.txt file so to have one single source of truth
+REQUIREMENTS_DATA = []
+with open(path.join(HERE, "requirements.txt"), encoding="utf-8") as f:
+    for l in f.readlines():
+        if not l.startswith("#"):
+            if ">=" in l:
+                REQUIREMENTS_DATA.append([l.split(">=")[0]])
+            elif "=" in l:
+                REQUIREMENTS_DATA.append([l.split("=")[0]])
+
+
 setup(
-    name = 'pydim',
-    version = VERSIONSTRING,
-    description='Python API for accessing dimensions.ai.',
-    long_description=long_description, 
-    long_description_content_type='text/markdown',
-    url='https://github.com/lambdamusic/pydim', 
-    packages = find_packages(),
+    name="pydim",
+    version=VERSIONSTRING,
+    description="Python REPL/API for accessing dimensions.ai.",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/lambdamusic/pydim",
+    packages=find_packages(),
     include_package_data=True,
-    install_requires=[
-        'Click==6.6',
-        'Requests==2.18.3',
-    ],
-    entry_points='''
+    install_requires=REQUIREMENTS_DATA,
+    entry_points="""
         [console_scripts]
-        pydim = pydim.main:main_cli
-    ''',
+        pydim = pydim.cli:main_cli
+    """,
 )
