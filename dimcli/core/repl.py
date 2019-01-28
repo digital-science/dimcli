@@ -25,10 +25,6 @@ from .dsl_grammar import *
 from .credentials import *
 from .lib import DimensionsClient
 
-
-CLIENT = DimensionsClient(**get_credentials())
-
-
 #
 # AUTO COMPLETION
 #
@@ -137,7 +133,8 @@ class BasicLexer(Lexer):
 
         def get_line(lineno):
 
-            return [(get_class(w), w + " ") for w in document.lines[lineno].split()]
+            return [(get_class(w), w + " ")
+                    for w in document.lines[lineno].split()]
 
         return get_line
 
@@ -162,7 +159,7 @@ def _(event):
         b.start_completion(select_first=False)
 
 
-@bindings.add("c-h")
+@bindings.add("c-]")
 def _(event):
     """
     Look up in docs
@@ -170,17 +167,16 @@ def _(event):
     line = event.app.current_buffer.text
     if line:
         last_word = line.split()[-1]
-        import webbrowser 
-        webbrowser.open("https://docs.dimensions.ai/dsl/search.html?q="+last_word)
-
-
+        import webbrowser
+        webbrowser.open("https://docs.dimensions.ai/dsl/search.html?q=" +
+                        last_word)
+    return
 
 
 # @bindings.add("c-x")
 # def _(event):
 #     " Exit when `c-x` is pressed. "
 #     event.app.exit()
-
 
 #
 # VALIDATOR
@@ -218,7 +214,7 @@ class SlowHistory(History):
     def load_history_strings(self):
         for i in range(1000):
             time.sleep(1)  # Emulate slowness.
-            yield "item-%s" % (i,)
+            yield "item-%s" % (i, )
 
     def store_string(self, string):
         pass  # Don't store strings.
@@ -241,7 +237,7 @@ class Buffer(object):
         return self.current_json
 
 
-def handle_query(text, buffer):
+def handle_query(CLIENT, text, buffer):
     # @TODO query dimensions and open up a webpage
 
     if text.replace("\n", "").strip() == "show":
@@ -275,10 +271,12 @@ def handle_query(text, buffer):
 #
 
 
-def main():
-    print(
-        "Enter your query (Esc+Enter = run / Control-C = stop / Control-D = exit) API: https://docs.dimensions.ai/dsl"
-    )
+def main(credentials):
+    click.secho(
+        "Enter your query (Tab=suggest / Ctrl-C = stop / Ctrl-D = exit / Ctrl-] = search docs) API: https://docs.dimensions.ai/dsl",
+        dim=True)
+
+    CLIENT = DimensionsClient(**credentials)
 
     our_history = ThreadedHistory(SlowHistory())
     # The history needs to be passed to the `PromptSession`. It can't be passed
@@ -313,9 +311,10 @@ def main():
                 continue
             elif text == "quit":
                 break
-            handle_query(text, buffer)
+            handle_query(CLIENT, text, buffer)
     print("GoodBye!")
 
 
 if __name__ == "__main__":
-    main()
+    credentials = get_credentials()
+    main(credentials)

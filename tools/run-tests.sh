@@ -8,7 +8,7 @@ echo "=================="
 echo "CALLING [test_one] in 1 second..."
 echo "=================="
 sleep 1
-python -m pydim.tests.test_one
+python -m dimcli.tests.test_one
 sleep 2
 
 

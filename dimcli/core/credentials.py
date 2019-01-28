@@ -3,9 +3,8 @@ import click
 import os
 import json
 
-
 DEFAULT_SERVICE = "https://app.dimensions.ai/api/"
-USER_CONFIG_FILE = os.path.expanduser("~") + "/.pydim.config.json"
+USER_CONFIG_FILE = os.path.expanduser("~") + "/.dimcli.config.json"
 
 
 def register_credentials():
@@ -15,12 +14,13 @@ def register_credentials():
     with open(USER_CONFIG_FILE, "w") as f:
         f.write(json.dumps(data))
         f.close()
-    print(json.dumps(data), " => ", USER_CONFIG_FILE)
+    click.secho(" Saved to => " + USER_CONFIG_FILE, dim=True)
+    click.secho("==========", dim=True)
 
 
 def get_credentials():
     """
-    Get init details. These have to be manually added in a file in the home folder: '~/.pydim.config.json'
+    Get init details. These have to be manually added in a file in the home folder: '~/.dimcli.config.json'
     
     This is the source file structure:
 
@@ -55,4 +55,3 @@ def get_credentials():
         return {"usr": usr, "psw": psw, "service": service}
     else:
         return None
-

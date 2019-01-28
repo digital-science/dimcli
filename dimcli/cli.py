@@ -10,10 +10,9 @@ from .core import credentials
 
 from .VERSION import *
 
-
 # HOW TO SET UP A CONFIGURATION FILE:
 
-# Add a '.pydim.config.json' file to your home folder ('~').
+# Add a '.dimcli.config.json' file to your home folder ('~').
 # The file should have the following structure:
 
 #     {
@@ -40,11 +39,11 @@ def help_interpret_args(args):
 @click.pass_context
 def main_cli(ctx, args=None, register=False):
     """
-    pydim: client for the dimensions.ai
+    dimcli: client for the dimensions.ai
     More info: https://docs.dimensions.ai/dsl/index.html
     """
 
-    click.secho("PyDim " + VERSION, dim=True)
+    click.secho("dimcli " + VERSION, dim=True)
     click.secho("------------", fg="white")
 
     data = credentials.get_credentials()
@@ -57,7 +56,7 @@ def main_cli(ctx, args=None, register=False):
         data = credentials.get_credentials()
 
     # unique functionality > launch REPL
-    repl.main()
+    repl.main(data)
 
 
 if __name__ == "__main__":

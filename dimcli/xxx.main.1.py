@@ -8,7 +8,7 @@ from .lib import *
 from .VERSION import *
 
 CMD_LINE_EXAMPLES = """EXAMPLES:
-$ pydim -q 'search publications for "napoleon" return publications'
+$ dimcli -q 'search publications for "napoleon" return publications'
 
 NOTE: watch the inner double quotes!
 
@@ -18,7 +18,7 @@ MORE ?
 
 HOW_TO_INIT = """HOW TO SET UP A CONFIGURATION FILE:
 
-Add a '.pydim.config.json' file to your home folder ('~'). 
+Add a '.dimcli.config.json' file to your home folder ('~'). 
 The file should have the following structure:
 
     {
@@ -30,14 +30,11 @@ The file should have the following structure:
 """
 
 
-
 def help_interpret_args(args):
     if len(args) == 1:
         return args[0]
     else:
         return " ".join([x for x in args])
-
-
 
 
 @click.command()
@@ -58,12 +55,12 @@ def main_cli(ctx,
              settings=False,
              examples=False):
     """
-    pydim: client for the dimensions.ai API\n
-    $ pydim 'search publications for "napoleon" return publications'\n
+    dimcli: client for the dimensions.ai API\n
+    $ dimcli 'search publications for "napoleon" return publications'\n
     More info: https://docs.dimensions.ai/dsl/index.html
     """
 
-    click.secho("pydim " + VERSION, bold=True)
+    click.secho("dimcli " + VERSION, bold=True)
     click.secho("------------", fg='white')
 
     account_details = get_init()
@@ -90,7 +87,6 @@ def main_cli(ctx,
     if examples:
         click.secho(CMD_LINE_EXAMPLES, fg="green")
         return
-
 
     if not (query or doi or issn):
         if args:

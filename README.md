@@ -1,17 +1,17 @@
-# pydim 
+# dimcli
 
 > STILL IN DEVELOPMENT
 
-Python API for accessing dimensions.ai 
+Python API for accessing dimensions.ai
 
-* [https://app.dimensions.ai](https://app.dimensions.ai)
-* [https://pypi.org/project/pydim/](https://pypi.org/project/pydim/)
-* [https://app.dimensions.ai/dsl](https://app.dimensions.ai/dsl)
+-   [https://app.dimensions.ai](https://app.dimensions.ai)
+-   [https://pypi.org/project/dimcli/](https://pypi.org/project/dimcli/)
+-   [https://app.dimensions.ai/dsl](https://app.dimensions.ai/dsl)
 
 ### Install
 
 ```
-pip install pydim
+pip install dimcli
 ```
 
 ### Develop
@@ -19,7 +19,7 @@ pip install pydim
 Note: requires [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/).
 
 ```
-$ mkvirtualenv pydim
+$ mkvirtualenv dimcli
 $ pip install --editable .
 $ ./run-shell # iPython with library preloaded so you can play with it!
 ```
