@@ -243,8 +243,14 @@ def handle_query(CLIENT, text, buffer):
     if text.replace("\n", "").strip() == "show":
         res = buffer.yeald()
         if res:
-            jj = json.dumps(res, indent=4, sort_keys=True)
-            print(jj)
+            formatted_json = json.dumps(res, indent=4, sort_keys=True)
+            # print(formatted_json)
+            # import webbrowser
+            # webbrowser.open("http://jsoneditoronline.org?json=%s" % res)
+            from pygments import highlight, lexers, formatters
+            colorful_json = highlight(formatted_json, lexers.JsonLexer(),
+                                      formatters.TerminalFormatter())
+            print(colorful_json)
         else:
             print("Nothing to show - please run a search first.")
     else:

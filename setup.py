@@ -35,7 +35,7 @@ with open(path.join(HERE, "requirements.txt"), encoding="utf-8") as f:
                 REQUIREMENTS_DATA.append([l.split("=")[0]])
 
 setup(
-    name="dimcliclient",
+    name="dimcli",
     version=VERSIONSTRING,
     description="Python REPL/API for accessing dimensions.ai.",
     long_description=long_description,
