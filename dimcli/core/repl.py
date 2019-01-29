@@ -127,20 +127,19 @@ def is_quoted(w):
 class BasicLexer(Lexer):
     def lex_document(self, document):
         def get_class(w):
-            if w in dim_lang_1:
-                return "green bold"
-            if w in dim_lang_2 + dim_lang_3:
+            # if w in dim_lang_1:
+            #     return "green bold"
+            if w in VOCABULARY['lang']:
                 return "green"
-            elif w in Sources_All:
+            elif w in VOCABULARY['sources'].keys():
                 return "blue bold"
-            elif w in Publications_Facet_Fields:
-                # with Publication_Literal_Fields Lexer FAILS @TODO
-                return "blue"
-            elif w in dim_entities_after_dot:
-                return "violet"
+            elif w in VOCABULARY['sources']['publications']['fields']:
+                return "blue"  # @TODO generalize
+            # elif w in dim_entities_after_dot:
+            #     return "violet"
             elif is_quoted(w):
                 return "orange"
-            elif w in Allowed_Starts:
+            elif w in VOCABULARY['allowed_starts']:
                 return "red"
             else:
                 return "black"
@@ -293,7 +292,7 @@ def handle_query(CLIENT, text, buffer):
 
 def main(credentials):
     click.secho(
-        "Enter your query (Tab=suggest / Ctrl-C = abort query / Ctrl-D = exit / Ctrl-] = search docs) API: https://docs.dimensions.ai/dsl",
+        "Enter your query (TAB = suggest / Ctrl-C = abort query / Ctrl-D = exit / Ctrl-] = search docs) API: https://docs.dimensions.ai/dsl",
         dim=True)
 
     CLIENT = DimensionsClient(**credentials)
