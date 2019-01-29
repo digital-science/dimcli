@@ -207,13 +207,36 @@ VOCABULARY = {
             'search_fields': ['title_only', 'full_data'],
         },
         'clinical_trials': {
-            # @TODO
-            'fields': [],
-            'facets': [],
-            'entities': [],
-            'fieldsets': [],
-            'metrics': [],
-            'search_fields': [],
+            'fields': [
+                "abstract",
+                "associated_grant_ids",
+                "conditions",
+                "date",
+                "gender",
+                "id",
+                "investigators",
+                "linkout",
+                "phase",
+                "publication_ids",
+                "registry",
+                "title",
+            ],
+            'facets': ['active_years'],
+            'entities': [
+                ("FOR", "categories"),
+                ("FOR_first", "categories"),
+                ("funder_countries", "countries"),
+                ("funder_groups", "org_groups"),
+                ("funders", "orgs"),
+                ("HRCS_HC", "categories"),
+                ("HRCS_RAC", "categories"),
+                ("organizations", "orgs"),
+                ("RCDC", "categories"),
+            ],
+            'fieldsets': ['extras', 'basics'],
+            'metrics': ['count'],
+            'search_fields':
+            ['title_only', 'title_abstract_only', 'full_data'],
         },
     }
 }
