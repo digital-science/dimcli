@@ -56,35 +56,49 @@ class CleverCompleter(Completer):
             else:
                 return False
 
+        def get_search_subject(line):
+            "get the source one searches for"
+            l = line.split()
+            if "search" in l:
+                i = l.index("search")
+                return l[i + 1]
+            else:
+                return None
+
         candidates = []
 
         if word.endswith("."):
-            # properties @TODO
-            candidates = dim_entities_after_dot
+            # @TODO
+            candidates = []
 
-        elif len(line_minus_current) == 0:
+        elif len(line_minus_current) == 0:  # remove the current stem from line
             # beginning: only main keywords
-            # PS ensure you remove the current stem from line
-            candidates = Allowed_Starts
+            candidates = VOCABULARY['allowed_starts']
 
         elif last_word(line_minus_current) in dim_lang_1:
             # after search and return only sources
-            candidates = Sources_All
+            candidates = VOCABULARY['sources'].keys()
 
         elif last_word(line_minus_current) == "in":
-            if is_search_for(line, "publications"):
-                candidates = Publications_Search_Fields
+            source = get_search_subject(line)  # generic solution
+            if source in VOCABULARY['sources'].keys():
+                candidates = VOCABULARY['sources'][source]['fields']
             else:
                 pass
 
         elif last_word(line_minus_current) == "where":
-            if is_search_for(line, "publications"):
-                candidates = Publication_Literal_Fields + Publications_Entity_Fields
+            source = get_search_subject(line)  # generic solution
+            if source in VOCABULARY['sources'].keys():
+                fields = VOCABULARY['sources'][source]['fields']
+                entities = [
+                    x[0] for x in VOCABULARY['sources'][source]['entities']
+                ]
+                candidates = list(set(fields + entities))
             else:
                 pass
 
         else:
-            candidates = [x for x in dim_all_completions if x != "search"]
+            candidates = [x for x in VOCABULARY['lang'] if x != "search"]
 
         # finally
         for keyword in candidates:
@@ -279,7 +293,7 @@ def handle_query(CLIENT, text, buffer):
 
 def main(credentials):
     click.secho(
-        "Enter your query (Tab=suggest / Ctrl-C = stop / Ctrl-D = exit / Ctrl-] = search docs) API: https://docs.dimensions.ai/dsl",
+        "Enter your query (Tab=suggest / Ctrl-C = abort query / Ctrl-D = exit / Ctrl-] = search docs) API: https://docs.dimensions.ai/dsl",
         dim=True)
 
     CLIENT = DimensionsClient(**credentials)

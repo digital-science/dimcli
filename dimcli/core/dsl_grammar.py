@@ -1,3 +1,122 @@
+#
+# https://docs.dimensions.ai/dsl/data.html
+#
+
+VOCABULARY = {
+    'allowed_starts': [
+        'quit',  # meta
+        'show',  # meta
+        'search',
+    ],
+    'lang': [
+        'search',
+        'return',
+        'for',
+        'where',
+        'in',
+        'limit',
+        '=',
+        '!=',
+        '>',
+        '<',
+        '>=',
+        '<=',
+        '~',
+        'is empty',
+        'is not empty',
+    ],
+    'sources': {
+        'publications': {
+            'fields': [
+                'altmetric',
+                'author_affiliations',
+                'book_doi',
+                'book_series_title',
+                'book_title',
+                'date',
+                'date_inserted',
+                'doi',
+                'field_citation_ratio',
+                'id',
+                'issn',
+                'issue',
+                'journal_lists',
+                'linkout',
+                'open_access',
+                'pages',
+                'pmcid',
+                'pmid',
+                'proceedings_title',
+                'references',
+                'relative_citation_ratio',
+                'research_org_country_names',
+                'supporting_grant_ids',
+                'times_cited',
+                'title',
+                'type',
+                'volume',
+            ],
+            'facets': [
+                'mesh_terms', 'publisher', 'recent_citations',
+                'research_org_state_names', 'year'
+            ],
+            'entities': [
+                ('FOR', 'categories'),
+                ('FOR_first', 'categories'),
+                ('funder_countries', 'countries'),
+                ('funders', 'orgs'),
+                ('HRCS_HC', 'categories'),
+                ('HRCS_RAC', 'categories'),
+                ('journal', 'journals'),
+                ('RCDC', 'categories'),
+                ('research_org_cities', 'cities'),
+                ('research_org_countries', 'countries'),
+                ('research_org_state_codes', 'states'),
+                ('research_orgs', 'orgs'),
+                ('researchers', 'researchers'),
+            ],
+            'fieldsets': ['extras', 'book', 'basic'],
+            'metrics': ['rcr_avg', 'count', 'altmetric_median'],
+            'search_fields': [
+                'title_only', 'title_abstract_only', 'researchers',
+                'full_data', 'authors'
+            ],
+        },
+        'grants': {
+            'fields': [],
+            'facets': [],
+            'entities': [],
+            'fieldsets': [],
+            'metrics': [],
+            'search_fields': [],
+        },
+        'patents': {
+            'fields': [],
+            'facets': [],
+            'entities': [],
+            'fieldsets': [],
+            'metrics': [],
+            'search_fields': [],
+        },
+        'clinical_trials': {
+            'fields': [],
+            'facets': [],
+            'entities': [],
+            'fieldsets': [],
+            'metrics': [],
+            'search_fields': [],
+        },
+        'policy_documents': {
+            'fields': [],
+            'facets': [],
+            'entities': [],
+            'fieldsets': [],
+            'metrics': [],
+            'search_fields': [],
+        },
+    }
+}
+
 Allowed_Starts = [
     # here go the main gramma words without the dot notation
     'quit',  # meta
@@ -113,3 +232,50 @@ Publications_Search_Fields = [
     'full_data',
     'researchers',
 ]
+
+# template
+
+# VOCABULARY = {
+#     'sources': {
+#         'publications': {
+#             'fields': [],
+#             'facets': [],
+#             'entities': [],
+#             'fieldsets': [],
+#             'metrics': [],
+#             'search_fields': [],
+#         },
+#         'grants': {
+#             'fields': [],
+#             'facets': [],
+#             'entities': [],
+#             'fieldsets': [],
+#             'metrics': [],
+#             'search_fields': [],
+#         },
+#         'patents': {
+#             'fields': [],
+#             'facets': [],
+#             'entities': [],
+#             'fieldsets': [],
+#             'metrics': [],
+#             'search_fields': [],
+#         },
+#         'clinical_trials': {
+#             'fields': [],
+#             'facets': [],
+#             'entities': [],
+#             'fieldsets': [],
+#             'metrics': [],
+#             'search_fields': [],
+#         },
+#         'policy_documents': {
+#             'fields': [],
+#             'facets': [],
+#             'entities': [],
+#             'fieldsets': [],
+#             'metrics': [],
+#             'search_fields': [],
+#         },
+#     }
+# }
