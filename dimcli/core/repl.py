@@ -26,6 +26,48 @@ from .credentials import *
 from .lib import DimensionsClient
 
 #
+# utils
+#
+
+
+def line_last_word(line):
+    if len(line) > 0:
+        return line.split()[-1]
+    else:
+        return False
+
+
+def line_search_subject(line):
+    "get the source one searches for"
+    l = line.split()
+    if "search" in l:
+        i = l.index("search")
+        return l[i + 1]
+    else:
+        return None
+
+
+def line_lazy_return(text):
+    "if return statement not included, add it lazily"
+    if "return" not in text:
+        source = line_search_subject(text)
+        if source in VOCABULARY['sources'].keys():
+            # click.secho("..inferring result statement", dim=True)
+            return text.strip() + " return " + source
+    return text
+
+
+class DataBuffer(object):
+    current_json = ""
+
+    def load(self, _json):
+        self.current_json = _json
+
+    def return_json(self):
+        return self.current_json
+
+
+#
 # AUTO COMPLETION
 #
 
@@ -44,27 +86,6 @@ class CleverCompleter(Completer):
         line = document.current_line_before_cursor
         line_minus_current = line.replace(word, "").strip()
 
-        def last_word(line):
-            if len(line) > 0:
-                return line.split()[-1]
-            else:
-                return False
-
-        def is_search_for(line, source_name):
-            if "search " + source_name in line:
-                return True
-            else:
-                return False
-
-        def get_search_subject(line):
-            "get the source one searches for"
-            l = line.split()
-            if "search" in l:
-                i = l.index("search")
-                return l[i + 1]
-            else:
-                return None
-
         candidates = []
 
         if word.endswith("."):
@@ -75,19 +96,19 @@ class CleverCompleter(Completer):
             # beginning: only main keywords
             candidates = VOCABULARY['allowed_starts']
 
-        elif last_word(line_minus_current) in dim_lang_1:
+        elif line_last_word(line_minus_current) in ["search", "return"]:
             # after search and return only sources
             candidates = VOCABULARY['sources'].keys()
 
-        elif last_word(line_minus_current) == "in":
-            source = get_search_subject(line)  # generic solution
+        elif line_last_word(line_minus_current) == "in":
+            source = line_search_subject(line)  # generic solution
             if source in VOCABULARY['sources'].keys():
                 candidates = VOCABULARY['sources'][source]['fields']
             else:
                 pass
 
-        elif last_word(line_minus_current) == "where":
-            source = get_search_subject(line)  # generic solution
+        elif line_last_word(line_minus_current) == "where":
+            source = line_search_subject(line)  # generic solution
             if source in VOCABULARY['sources'].keys():
                 fields = VOCABULARY['sources'][source]['fields']
                 entities = [
@@ -165,7 +186,7 @@ def _(event):
     Start auto completion. If the menu is showing already, select the next
     completion.
     """
-    b = event.app.current_buffer
+    b = event.app.current_DataBuffer
     if b.complete_state:
         b.complete_next()
     else:
@@ -177,12 +198,12 @@ def _(event):
     """
     Look up in docs
     """
-    line = event.app.current_buffer.text
+    line = event.app.current_DataBuffer.text
     if line:
-        last_word = line.split()[-1]
+        line_last_word = line.split()[-1]
         import webbrowser
         webbrowser.open("https://docs.dimensions.ai/dsl/search.html?q=" +
-                        last_word)
+                        line_last_word)
     return
 
 
@@ -240,21 +261,11 @@ class SlowHistory(History):
 #
 
 
-class Buffer(object):
-    current_json = ""
-
-    def load(self, _json):
-        self.current_json = _json
-
-    def yeald(self):
-        return self.current_json
-
-
-def handle_query(CLIENT, text, buffer):
+def handle_query(CLIENT, text, databuffer):
     # @TODO query dimensions and open up a webpage
 
     if text.replace("\n", "").strip() == "show":
-        res = buffer.yeald()
+        res = databuffer.return_json()
         if res:
             formatted_json = json.dumps(res, indent=4, sort_keys=True)
             # print(formatted_json)
@@ -267,6 +278,8 @@ def handle_query(CLIENT, text, buffer):
         else:
             print("Nothing to show - please run a search first.")
     else:
+        # lazy complete
+        text = line_lazy_return(text)
         print("You said: %s" % text)
         # RUN QUERY
         res = CLIENT.query(text)
@@ -280,7 +293,7 @@ def handle_query(CLIENT, text, buffer):
             for k in res.keys():
                 if k != "_stats":
                     print(k.capitalize() + ":", len(res[k]))
-            buffer.load(res)
+            databuffer.load(res)
 
 
 #
@@ -303,7 +316,7 @@ def main(credentials):
     # session.
     session = PromptSession(history=our_history)
 
-    buffer = Buffer()
+    databuffer = DataBuffer()
 
     # REPL loop.
     while True:
@@ -330,7 +343,7 @@ def main(credentials):
                 continue
             elif text == "quit":
                 break
-            handle_query(CLIENT, text, buffer)
+            handle_query(CLIENT, text, databuffer)
     print("GoodBye!")
 
 
