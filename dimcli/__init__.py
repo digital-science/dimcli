@@ -1,2 +1,3 @@
 from .VERSION import __version__, VERSION
-# from .lib import DimensionsClient
+
+from .dimensions import Dsl, chunks_of

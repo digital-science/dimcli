@@ -4,11 +4,12 @@
 import sys
 import click
 from pprint import pprint
-from .core.lib import *
-from .core import repl
-from .core import credentials
+# from .console.lib import *
+from .console import repl
+# from .console import credentials
 
 from .VERSION import *
+from .dimensions import *
 
 # HOW TO SET UP A CONFIGURATION FILE:
 
@@ -22,22 +23,10 @@ from .VERSION import *
 #     }
 
 
-def help_interpret_args(args):
-    if len(args) == 1:
-        return args[0]
-    else:
-        return " ".join([x for x in args])
-
-
 @click.command()
-@click.argument("args", nargs=-1)
-@click.option(
-    "--register",
-    is_flag=True,
-    help="Store Dimensions user and password on this computer",
-)
+@click.argument("instance", nargs=1, default="live")
 @click.pass_context
-def main_cli(ctx, args=None, register=False):
+def main_cli(ctx, instance=None):
     """
     dimcli: client for the dimensions.ai
     More info: https://docs.dimensions.ai/dsl/index.html
@@ -46,17 +35,18 @@ def main_cli(ctx, args=None, register=False):
     click.secho("dimcli " + VERSION, dim=True)
     click.secho("------------", fg="white")
 
-    data = credentials.get_credentials()
-    if not data or register:
+    if not USER_CONFIG_FILE:
         click.secho(
-            "Please set up a Dimensions account (this data will be stored in a hidden file in your home folder)",
+            "Please set up a Dimensions init file first (see the README)",
             fg="green",
         )
-        credentials.register_credentials()
-        data = credentials.get_credentials()
+        return
 
+    # dsl = Dsl(instance)
+    # dsl.query("search grants return grants", True)
+    # print(res)
     # unique functionality > launch REPL
-    repl.main(data)
+    repl.run(instance)
 
 
 if __name__ == "__main__":

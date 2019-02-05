@@ -19,11 +19,12 @@ from prompt_toolkit.formatted_text import HTML
 from prompt_toolkit import PromptSession
 from prompt_toolkit.styles import Style
 
-import json, sys
+import click
+import json
+import sys
 
 from .dsl_grammar import *
-from .credentials import *
-from .lib import DimensionsClient
+from ..dimensions import Dsl
 
 #
 # utils
@@ -303,12 +304,12 @@ def handle_query(CLIENT, text, databuffer):
 #
 
 
-def main(credentials):
+def run(instance="live"):
     click.secho(
         "Enter your query (TAB = suggest / Ctrl-C = abort query / Ctrl-D = exit / Ctrl-] = search docs) API: https://docs.dimensions.ai/dsl",
         dim=True)
 
-    CLIENT = DimensionsClient(**credentials)
+    CLIENT = Dsl(instance=instance, show_results=False, rich_display=False)
 
     our_history = ThreadedHistory(SlowHistory())
     # The history needs to be passed to the `PromptSession`. It can't be passed
@@ -348,5 +349,4 @@ def main(credentials):
 
 
 if __name__ == "__main__":
-    credentials = get_credentials()
-    main(credentials)
+    run()
