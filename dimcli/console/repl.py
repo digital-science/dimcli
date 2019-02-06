@@ -22,9 +22,12 @@ from prompt_toolkit.styles import Style
 import click
 import json
 import sys
+import os
+import time
+import webbrowser
 
 from .dsl_grammar import *
-from ..dimensions import Dsl
+from ..dimensions import Dsl, USER_JSON_OUTPUTS_DIR
 
 #
 # utils
@@ -58,14 +61,15 @@ def line_lazy_return(text):
     return text
 
 
-class DataBuffer(object):
-    current_json = ""
-
-    def load(self, _json):
-        self.current_json = _json
-
-    def return_json(self):
-        return self.current_json
+def _save2File(contents, filename, path):
+    if not os.path.exists(path):
+        os.makedirs(path)
+    filename = os.path.join(path, filename)
+    f = open(filename, 'wb')
+    f.write(contents.encode())  # python will convert \n to os.linesep
+    f.close()  # you can omit in most cases as the destructor will call it
+    url = "file://" + filename
+    return url
 
 
 #
@@ -120,6 +124,7 @@ class CleverCompleter(Completer):
                 pass
 
         else:
+            print('here')
             candidates = [x for x in VOCABULARY['lang'] if x != "search"]
 
         # finally
@@ -262,20 +267,48 @@ class SlowHistory(History):
 #
 
 
+class DataBuffer(object):
+    current_json = ""
+    current_query = ""
+
+    def load(self, json_data, query):
+        self.current_json = json_data
+        self.current_query = query
+
+    def retrieve(self):
+        return (self.current_json, self.current_query)
+
+
+def show_json(jjson, terminal=False):
+    "print out json to the user"
+    formatted_json = json.dumps(jjson, indent=4, sort_keys=True)
+    if terminal:
+        from pygments import highlight, lexers, formatters
+        colorful_json = highlight(formatted_json, lexers.JsonLexer(),
+                                  formatters.TerminalFormatter())
+        print(colorful_json)
+    else:
+        contents = "<html><body><pre>%s</pre></body></html>" % formatted_json
+
+        filename = time.strftime("%Y%m%d-%H%M%S.html")
+
+        url = _save2File(contents, filename, USER_JSON_OUTPUTS_DIR)
+
+        webbrowser.open(url)
+
+        pass
+    # print(formatted_json)
+    # import webbrowser
+    # webbrowser.open("http://jsoneditoronline.org?json=%s" % res)
+
+
 def handle_query(CLIENT, text, databuffer):
-    # @TODO query dimensions and open up a webpage
+    """main procedure after user input"""
 
     if text.replace("\n", "").strip() == "show":
-        res = databuffer.return_json()
-        if res:
-            formatted_json = json.dumps(res, indent=4, sort_keys=True)
-            # print(formatted_json)
-            # import webbrowser
-            # webbrowser.open("http://jsoneditoronline.org?json=%s" % res)
-            from pygments import highlight, lexers, formatters
-            colorful_json = highlight(formatted_json, lexers.JsonLexer(),
-                                      formatters.TerminalFormatter())
-            print(colorful_json)
+        jsondata, query = databuffer.retrieve()
+        if jsondata:
+            show_json(jsondata)
         else:
             print("Nothing to show - please run a search first.")
     else:
@@ -294,7 +327,7 @@ def handle_query(CLIENT, text, databuffer):
             for k in res.keys():
                 if k != "_stats":
                     print(k.capitalize() + ":", len(res[k]))
-            databuffer.load(res)
+            databuffer.load(res, text)
 
 
 #
@@ -305,8 +338,10 @@ def handle_query(CLIENT, text, databuffer):
 
 
 def run(instance="live"):
+    click.secho("Welcome!")
+    click.secho("Please enter your query below.")
     click.secho(
-        "Enter your query (TAB = suggest / Ctrl-C = abort query / Ctrl-D = exit / Ctrl-] = search docs) API: https://docs.dimensions.ai/dsl",
+        "TAB = suggest | Ctrl-C = abort query | Ctrl-D = exit | Ctrl-] = search docs (https://docs.dimensions.ai/dsl)",
         dim=True)
 
     CLIENT = Dsl(instance=instance, show_results=False, rich_display=False)
