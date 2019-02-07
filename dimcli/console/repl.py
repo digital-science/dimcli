@@ -48,7 +48,13 @@ class CleverCompleter(Completer):
         word = document.get_word_before_cursor(WORD=True)
         line = document.current_line_before_cursor
         line_minus_current = line.replace(word, "").strip()
+        # debug
+        click.secho("\nAutocomplete running..", dim=True)
+        click.secho("WORD=" + word, dim=True)
+        click.secho("LINE=" + line, dim=True)
+        click.secho("LINE_MINUS_CURRENT=" + line_minus_current, dim=True)
 
+        # line_minus_current = line
         candidates = []
 
         if word.endswith("."):
@@ -215,7 +221,6 @@ def run(instance="live"):
             text = session.prompt(
                 "\n> ",
                 default="",  # you can pass a default text to begin with
-                # completer=dim_completer,
                 completer=CleverCompleter(),
                 complete_style=CompleteStyle.READLINE_LIKE,
                 # validator=BasicValidator(),
