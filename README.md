@@ -2,11 +2,10 @@
 
 > STILL IN DEVELOPMENT
 
-Python API for accessing dimensions.ai
+Python library for accessing the [Dimensions](https://www.dimensions.ai/) [DSL](https://app.dimensions.ai/dsl).
 
--   [https://app.dimensions.ai](https://app.dimensions.ai)
+-   [https://github.com/lambdamusic/dimcli](https://github.com/lambdamusic/dimcli)
 -   [https://pypi.org/project/dimcli/](https://pypi.org/project/dimcli/)
--   [https://app.dimensions.ai/dsl](https://app.dimensions.ai/dsl)
 
 ### Install
 

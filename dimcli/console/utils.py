@@ -9,6 +9,14 @@ import os
 from .dsl_grammar import *
 
 
+def is_quoted(w):
+    if w[0] == '"' and w[-1] == '"':
+        return True
+    if w[0] == "'" and w[-1] == "'":
+        return True
+    return False
+
+
 def line_last_word(line):
     if len(line) > 0:
         return line.split()[-1]
@@ -19,7 +27,7 @@ def line_last_word(line):
 def line_search_subject(line):
     "get the source one searches for"
     l = line.split()
-    if "search" in l:
+    if len(l) > 1 and "search" in l:
         i = l.index("search")
         return l[i + 1]
     else:
@@ -50,6 +58,7 @@ def save2File(contents, filename, path):
 def html_template_interactive(query, formatted_json):
     """
     version that uses to open/close the json tree
+    * https://github.com/caldwell/renderjson
     """
     s = """
     <html>
@@ -103,8 +112,9 @@ def html_template_interactive(query, formatted_json):
 
 def html_template_version1(query, formatted_json):
     """
-    this version just uses highlight.js to colorize the json code
-    2019-02-07: deprecated in favor of the interactive one above
+    this version just uses https://highlightjs.org/ to colorize the json code
+    * 2019-02-07: 
+    deprecated in favor of the interactive one above
     """
 
     s = """

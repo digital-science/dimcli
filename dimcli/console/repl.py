@@ -10,8 +10,6 @@ Press [Tab] to complete the current word.
 from __future__ import unicode_literals
 
 from prompt_toolkit.completion import Completion, Completer
-from prompt_toolkit.key_binding import KeyBindings
-from prompt_toolkit.validation import Validator, ValidationError
 from prompt_toolkit.shortcuts import CompleteStyle
 from prompt_toolkit.formatted_text import HTML
 
@@ -28,11 +26,9 @@ import webbrowser
 
 from .dsl_grammar import *
 from .utils import *
+from .keys import *
+from .lexer import *
 from ..dimensions import Dsl, USER_JSON_OUTPUTS_DIR
-
-#
-# utils
-#
 
 #
 # AUTO COMPLETION
@@ -86,116 +82,12 @@ class CleverCompleter(Completer):
                 pass
 
         else:
-            print('here')
             candidates = [x for x in VOCABULARY['lang'] if x != "search"]
 
         # finally
         for keyword in candidates:
             if keyword.startswith(word):
                 yield Completion(keyword, start_position=-len(word))
-
-
-#
-# LEXER AND SYNTAX HIGHLIGHTING
-#
-# https://python-prompt-toolkit.readthedocs.io/en/master/pages/reference.html#prompt_toolkit.lexers.Lexer
-#
-#
-
-from prompt_toolkit.lexers import Lexer
-
-
-def is_quoted(w):
-    if w[0] == '"' and w[-1] == '"':
-        return True
-    if w[0] == "'" and w[-1] == "'":
-        return True
-    return False
-
-
-class BasicLexer(Lexer):
-    def lex_document(self, document):
-        def get_class(w):
-            # if w in dim_lang_1:
-            #     return "green bold"
-            if w in VOCABULARY['lang']:
-                return "green"
-            elif w in VOCABULARY['sources'].keys():
-                return "blue bold"
-            elif w in VOCABULARY['sources']['publications']['fields']:
-                return "blue"  # @TODO generalize
-            # elif w in dim_entities_after_dot:
-            #     return "violet"
-            elif is_quoted(w):
-                return "orange"
-            elif w in VOCABULARY['allowed_starts']:
-                return "red"
-            else:
-                return "black"
-
-        def get_line(lineno):
-
-            return [(get_class(w), w + " ")
-                    for w in document.lines[lineno].split()]
-
-        return get_line
-
-
-#
-# KEY BINDINGS OVERRIDE
-#
-
-bindings = KeyBindings()
-
-
-@bindings.add("c-space")
-def _(event):
-    """
-    Start auto completion. If the menu is showing already, select the next
-    completion.
-    """
-    b = event.app.current_DataBuffer
-    if b.complete_state:
-        b.complete_next()
-    else:
-        b.start_completion(select_first=False)
-
-
-@bindings.add("c-]")
-def _(event):
-    """
-    Look up in docs
-    """
-    line = event.app.current_DataBuffer.text
-    if line:
-        line_last_word = line.split()[-1]
-        import webbrowser
-        webbrowser.open("https://docs.dimensions.ai/dsl/search.html?q=" +
-                        line_last_word)
-    return
-
-
-# @bindings.add("c-x")
-# def _(event):
-#     " Exit when `c-x` is pressed. "
-#     event.app.exit()
-
-#
-# VALIDATOR
-#
-#
-
-
-class BasicValidator(Validator):
-    def validate(self, document):
-        text = document.text
-
-        if text and "return" not in text:
-
-            raise ValidationError(
-                message="A query must include a return statement",
-                # cursor_position=i
-            )
 
 
 #
@@ -262,13 +154,13 @@ def show_json(jjson, query, terminal=False):
 def handle_query(CLIENT, text, databuffer):
     """main procedure after user input"""
 
-    if text.replace("\n", "").strip() == "show_html":
+    if text.replace("\n", "").strip() == "nice_html":
         jsondata, query = databuffer.retrieve()
         if jsondata:
             show_json(jsondata, query, terminal=False)
         else:
             print("Nothing to show - please run a search first.")
-    elif text.replace("\n", "").strip() == "show_text":
+    elif text.replace("\n", "").strip() == "show":
         jsondata, query = databuffer.retrieve()
         if jsondata:
             show_json(jsondata, query, terminal=True)
@@ -329,7 +221,7 @@ def run(instance="live"):
                 # validator=BasicValidator(),
                 # validate_while_typing=False,
                 multiline=False,
-                complete_while_typing=True,
+                # complete_while_typing=True,
                 lexer=BasicLexer(),
                 key_bindings=bindings,
             )
