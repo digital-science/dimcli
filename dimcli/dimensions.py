@@ -54,7 +54,7 @@ class Dsl:
         token = response.json()['token']
         self._headers = {'Authorization': "JWT " + token}
 
-    def query(self, q, show_result=None, rich_display=None, retry=3):
+    def query(self, q, show_result=None, rich_display=None, retry=0):
         """
         Execute DSL query.
         By default it doesn't show results, but it uses the iPython rich widgets for it, optimized for Jupyter Notebooks.
@@ -72,7 +72,7 @@ class Dsl:
             print('Login token expired. Logging in again.')
             self._login()
             return self.query(q)
-        elif resp.status_code == 200:  # OK
+        elif resp.status_code == 200 or resp.status_code == 400:  # OK or Error
             #   Display raw result
             if rich_display or (rich_display is None and self._rich_display):
                 result = Result(resp.json())
@@ -84,7 +84,7 @@ class Dsl:
                     print(json.dumps(result, indent=4, sort_keys=True))
             return result
         else:
-            if retry >= 0:
+            if retry > 0:
                 print('Retrying in 30 secs')
                 time.sleep(30)
                 return self.query(
