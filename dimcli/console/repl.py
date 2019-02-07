@@ -221,7 +221,7 @@ def run(instance="live"):
                 # validator=BasicValidator(),
                 # validate_while_typing=False,
                 multiline=False,
-                # complete_while_typing=True,
+                complete_while_typing=True,
                 lexer=BasicLexer(),
                 key_bindings=bindings,
             )
