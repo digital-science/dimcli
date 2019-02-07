@@ -27,50 +27,12 @@ import time
 import webbrowser
 
 from .dsl_grammar import *
+from .utils import *
 from ..dimensions import Dsl, USER_JSON_OUTPUTS_DIR
 
 #
 # utils
 #
-
-
-def line_last_word(line):
-    if len(line) > 0:
-        return line.split()[-1]
-    else:
-        return False
-
-
-def line_search_subject(line):
-    "get the source one searches for"
-    l = line.split()
-    if "search" in l:
-        i = l.index("search")
-        return l[i + 1]
-    else:
-        return None
-
-
-def line_lazy_return(text):
-    "if return statement not included, add it lazily"
-    if "return" not in text:
-        source = line_search_subject(text)
-        if source in VOCABULARY['sources'].keys():
-            # click.secho("..inferring result statement", dim=True)
-            return text.strip() + " return " + source
-    return text
-
-
-def _save2File(contents, filename, path):
-    if not os.path.exists(path):
-        os.makedirs(path)
-    filename = os.path.join(path, filename)
-    f = open(filename, 'wb')
-    f.write(contents.encode())  # python will convert \n to os.linesep
-    f.close()  # you can omit in most cases as the destructor will call it
-    url = "file://" + filename
-    return url
-
 
 #
 # AUTO COMPLETION
@@ -279,7 +241,7 @@ class DataBuffer(object):
         return (self.current_json, self.current_query)
 
 
-def show_json(jjson, terminal=False):
+def show_json(jjson, query, terminal=False):
     "print out json to the user"
     formatted_json = json.dumps(jjson, indent=4, sort_keys=True)
     if terminal:
@@ -288,27 +250,28 @@ def show_json(jjson, terminal=False):
                                   formatters.TerminalFormatter())
         print(colorful_json)
     else:
-        contents = "<html><body><pre>%s</pre></body></html>" % formatted_json
+        contents = html_template_interactive(query, formatted_json)
 
         filename = time.strftime("%Y%m%d-%H%M%S.html")
 
-        url = _save2File(contents, filename, USER_JSON_OUTPUTS_DIR)
+        url = save2File(contents, filename, USER_JSON_OUTPUTS_DIR)
 
         webbrowser.open(url)
-
-        pass
-    # print(formatted_json)
-    # import webbrowser
-    # webbrowser.open("http://jsoneditoronline.org?json=%s" % res)
 
 
 def handle_query(CLIENT, text, databuffer):
     """main procedure after user input"""
 
-    if text.replace("\n", "").strip() == "show":
+    if text.replace("\n", "").strip() == "show_html":
         jsondata, query = databuffer.retrieve()
         if jsondata:
-            show_json(jsondata)
+            show_json(jsondata, query, terminal=False)
+        else:
+            print("Nothing to show - please run a search first.")
+    elif text.replace("\n", "").strip() == "show_text":
+        jsondata, query = databuffer.retrieve()
+        if jsondata:
+            show_json(jsondata, query, terminal=True)
         else:
             print("Nothing to show - please run a search first.")
     else:

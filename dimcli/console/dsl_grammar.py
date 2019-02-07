@@ -5,7 +5,8 @@
 VOCABULARY = {
     'allowed_starts': [
         'quit',  # meta
-        'show',  # meta
+        'show_html',  # meta
+        'show_text',  # meta
         'search',
     ],
     'lang': [
