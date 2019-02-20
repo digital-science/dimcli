@@ -1,6 +1,6 @@
 # dimcli
 
-> STILL IN DEVELOPMENT
+> unofficial version, still in development
 
 Python library for accessing the [Dimensions](https://www.dimensions.ai/) [DSL](https://app.dimensions.ai/dsl).
 

@@ -26,7 +26,10 @@ from .dimensions import *
 
 @click.command()
 @click.argument("instance_name", nargs=1, default="live")
-@click.option("--config", is_flag=True, help="Open config init file")
+@click.option(
+    "--config",
+    is_flag=True,
+    help="Open config init file with default editor.")
 @click.pass_context
 def main_cli(ctx, instance_name=None, config=False):
     """
