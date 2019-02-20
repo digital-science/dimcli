@@ -18,8 +18,9 @@ from itertools import islice
 #
 # If you have access to other Dimensions DBs just add an entry for them with a suitable name.
 
-USER_CONFIG_FILE = os.path.expanduser("~/.dimensions/dsl.ini")
-USER_JSON_OUTPUTS_DIR = os.path.expanduser("~/.dimensions/json/")
+USER_DIR = "~/.dimensions/"
+USER_CONFIG_FILE = os.path.expanduser(USER_DIR + "dsl.ini")
+USER_JSON_OUTPUTS_DIR = os.path.expanduser(USER_DIR + "json/")
 
 
 class Result(IPython.display.JSON):

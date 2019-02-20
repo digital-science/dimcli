@@ -12,6 +12,7 @@ from __future__ import unicode_literals
 from prompt_toolkit.completion import Completion, Completer
 from prompt_toolkit.shortcuts import CompleteStyle
 from prompt_toolkit.formatted_text import HTML
+from prompt_toolkit.history import FileHistory
 
 # from prompt_toolkit import prompt   #using session instead
 from prompt_toolkit import PromptSession
@@ -30,31 +31,15 @@ from .utils import *
 from .autocompletion import *
 from .key_bindings import *
 from .lexer import *
-from ..dimensions import Dsl, USER_JSON_OUTPUTS_DIR
+from ..dimensions import Dsl, USER_DIR, USER_JSON_OUTPUTS_DIR
 
 #
 #
-# HISTORY
+# PARAMETERS
 #
 #
 
-from prompt_toolkit.history import History, ThreadedHistory
-import time
-
-
-class SlowHistory(History):
-    """
-    Example class that loads the history very slowly...
-    """
-
-    def load_history_strings(self):
-        for i in range(1000):
-            time.sleep(1)  # Emulate slowness.
-            yield "item-%s" % (i, )
-
-    def store_string(self, string):
-        pass  # Don't store strings.
-
+HISTORY_FILE = os.path.expanduser(USER_DIR + "history")
 
 #
 #
@@ -178,11 +163,8 @@ def run(instance="live"):
         "TAB = suggest | Ctrl-C = abort query | Ctrl-D = exit | Ctrl-] = search docs (https://docs.dimensions.ai/dsl)",
         dim=True)
 
-    our_history = ThreadedHistory(SlowHistory())
-    # The history needs to be passed to the `PromptSession`. It can't be passed
-    # to the `prompt` call because only one history can be used during a
-    # session.
-    session = PromptSession(history=our_history)
+    # history
+    session = PromptSession(history=FileHistory(HISTORY_FILE))
 
     databuffer = DataBuffer()
 
