@@ -3,12 +3,11 @@
 #
 
 VOCABULARY = {
-    'allowed_starts': [
-        'quit',  # meta
-        'nice_html',  # meta
-        'show',  # meta
-        'search',
-    ],
+    'allowed_starts': {
+        'quit' : [],
+        'show' : [ 'json', 'html', 'preview'],
+        'search': [],
+    },
     'lang': [
         'search',
         'return',

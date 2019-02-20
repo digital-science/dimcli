@@ -27,75 +27,10 @@ import requests
 
 from .dsl_grammar import *
 from .utils import *
-from .keys import *
+from .autocompletion import *
+from .key_bindings import *
 from .lexer import *
 from ..dimensions import Dsl, USER_JSON_OUTPUTS_DIR
-
-#
-# AUTO COMPLETION
-#
-
-
-class CleverCompleter(Completer):
-    """
-    Goal: complete that helps with Dimensions DSL grammar and predicates 
-
-    info: https://python-prompt-toolkit.readthedocs.io/en/master/pages/reference.html#prompt_toolkit.document.Document
-    
-    """
-
-    def get_completions(self, document, complete_event):
-        #
-        word = document.get_word_before_cursor(WORD=True)
-        line = document.current_line_before_cursor
-        line_minus_current = line.replace(word, "").strip()
-        # debug
-        # click.secho("\nAutocomplete running..", dim=True)
-        # click.secho("WORD=" + word, dim=True)
-        # click.secho("LINE=" + line, dim=True)
-        # click.secho("LINE_MINUS_CURRENT=" + line_minus_current, dim=True)
-
-        # line_minus_current = line
-        candidates = []
-
-        if word.endswith("."):
-            # @TODO
-            candidates = []
-
-        elif len(line_minus_current) == 0:  # remove the current stem from line
-            # beginning: only main keywords
-            candidates = VOCABULARY['allowed_starts']
-
-        elif line_last_word(line_minus_current) in ["search", "return"]:
-            # after search and return only sources
-            candidates = VOCABULARY['sources'].keys()
-
-        elif line_last_word(line_minus_current) == "in":
-            source = line_search_subject(line)  # generic solution
-            if source in VOCABULARY['sources'].keys():
-                candidates = VOCABULARY['sources'][source]['fields']
-            else:
-                pass
-
-        elif line_last_word(line_minus_current) == "where":
-            source = line_search_subject(line)  # generic solution
-            if source in VOCABULARY['sources'].keys():
-                fields = VOCABULARY['sources'][source]['fields']
-                entities = [
-                    x[0] for x in VOCABULARY['sources'][source]['entities']
-                ]
-                candidates = list(set(fields + entities))
-            else:
-                pass
-
-        else:
-            candidates = [x for x in VOCABULARY['lang'] if x != "search"]
-
-        # finally
-        for keyword in candidates:
-            if keyword.startswith(word):
-                yield Completion(keyword, start_position=-len(word))
-
 
 #
 #
@@ -140,7 +75,7 @@ class DataBuffer(object):
         return (self.current_json, self.current_query)
 
 
-def show_json(jjson, query, terminal=False):
+def print_json(jjson, query, terminal=False):
     "print out json to the user"
     formatted_json = json.dumps(jjson, indent=4, sort_keys=True)
     if terminal:
@@ -158,21 +93,46 @@ def show_json(jjson, query, terminal=False):
         webbrowser.open(url)
 
 
+def show_command(text, databuffer):
+    """
+    show results of a query
+    """
+    DEFAULT = "preview"
+    text = text.replace("show", "").strip()
+    if not text: text = DEFAULT
+    # no data
+    jsondata, query = databuffer.retrieve()
+    if not jsondata:
+        print("Nothing to show - please run a search first.")
+        return
+    # cases
+    if text == "html":
+        print_json(jsondata, query, terminal=False)
+
+    elif text == "json":
+        print_json(jsondata, query, terminal=True)
+
+    elif text == "preview":
+        # simple way to get some useful data HACK
+        for x in jsondata.keys():
+            if x == "_stats":
+                pass
+            elif x in VOCABULARY['sources'].keys():
+                for row in jsondata[x]:
+                    try:
+                        print(row['title'], row['id'])
+                    except:
+                        print(row)
+            else:
+                print("Preview for result type *%s* not implemented" % x)
+
+
 def handle_query(CLIENT, text, databuffer):
     """main procedure after user input"""
 
-    if text.replace("\n", "").strip() == "nice_html":
-        jsondata, query = databuffer.retrieve()
-        if jsondata:
-            show_json(jsondata, query, terminal=False)
-        else:
-            print("Nothing to show - please run a search first.")
-    elif text.replace("\n", "").strip() == "show":
-        jsondata, query = databuffer.retrieve()
-        if jsondata:
-            show_json(jsondata, query, terminal=True)
-        else:
-            print("Nothing to show - please run a search first.")
+    if text.replace("\n", "").strip().startswith("show"):
+        show_command(text.replace("\n", "").strip(), databuffer)
+
     else:
         # lazy complete
         text = line_lazy_return(text)

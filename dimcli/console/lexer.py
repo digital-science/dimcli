@@ -28,7 +28,7 @@ class BasicLexer(Lexer):
             #     return "violet"
             elif is_quoted(w):
                 return "orange"
-            elif w in VOCABULARY['allowed_starts']:
+            elif w in VOCABULARY['allowed_starts'].keys():
                 return "red"
             else:
                 return "black"
