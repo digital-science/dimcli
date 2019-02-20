@@ -6,6 +6,7 @@ import click
 from pprint import pprint
 # from .console.lib import *
 from .console import repl
+from .console.utils import open_multi_platform
 # from .console import credentials
 
 from .VERSION import *
@@ -24,9 +25,10 @@ from .dimensions import *
 
 
 @click.command()
-@click.argument("instance", nargs=1, default="live")
+@click.argument("instance_name", nargs=1, default="live")
+@click.option("--config", is_flag=True, help="Open config init file")
 @click.pass_context
-def main_cli(ctx, instance=None):
+def main_cli(ctx, instance_name=None, config=False):
     """
     dimcli: client for the dimensions.ai
     More info: https://docs.dimensions.ai/dsl/index.html
@@ -35,18 +37,23 @@ def main_cli(ctx, instance=None):
     click.secho("dimcli " + VERSION, dim=True)
     click.secho("------------", fg="white")
 
-    if not USER_CONFIG_FILE:
+    if not os.path.exists(USER_CONFIG_FILE):
         click.secho(
-            "Please set up a Dimensions init file first (see the README)",
-            fg="green",
+            "Credentials file not found - please set one up first (%s)" %
+            USER_CONFIG_FILE,
+            fg="red",
         )
         return
+
+    if config:
+        open_multi_platform(USER_CONFIG_FILE)
+        return
+    # launch REPL
+    repl.run(instance_name)
 
     # dsl = Dsl(instance)
     # dsl.query("search grants return grants", True)
     # print(res)
-    # unique functionality > launch REPL
-    repl.run(instance)
 
 
 if __name__ == "__main__":

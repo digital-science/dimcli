@@ -23,6 +23,7 @@ import sys
 import os
 import time
 import webbrowser
+import requests
 
 from .dsl_grammar import *
 from .utils import *
@@ -199,13 +200,23 @@ def handle_query(CLIENT, text, databuffer):
 
 
 def run(instance="live"):
+    """
+    run the repl
+    """
+
+    try:
+        CLIENT = Dsl(instance=instance, show_results=False, rich_display=False)
+    except requests.exceptions.HTTPError as err:
+        print(err)
+        sys.exit(1)
+        # if err.response.status_code == 401:
+        #     print("here")
+
     click.secho("Welcome!")
     click.secho("Please enter your query below.")
     click.secho(
         "TAB = suggest | Ctrl-C = abort query | Ctrl-D = exit | Ctrl-] = search docs (https://docs.dimensions.ai/dsl)",
         dim=True)
-
-    CLIENT = Dsl(instance=instance, show_results=False, rich_display=False)
 
     our_history = ThreadedHistory(SlowHistory())
     # The history needs to be passed to the `PromptSession`. It can't be passed

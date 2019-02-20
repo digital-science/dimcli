@@ -4,6 +4,7 @@
 import click
 import json
 import sys
+import subprocess
 import os
 
 from .dsl_grammar import *
@@ -138,3 +139,20 @@ def html_template_version1(query, formatted_json):
     
     """ % (query, formatted_json)
     return s
+
+
+def open_multi_platform(fpath):
+    """
+    util to open a file on any platform (i hope)
+    """
+    if sys.platform == 'win32':
+        subprocess.Popen(['start', fpath], shell=True)
+
+    elif sys.platform == 'darwin':
+        subprocess.Popen(['open', fpath])
+
+    else:
+        try:
+            subprocess.Popen(['xdg-open', fpath])
+        except OSError:
+            print("Couldnt find suitable opener for %s" % fpath)
