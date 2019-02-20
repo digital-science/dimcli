@@ -31,15 +31,7 @@ from .utils import *
 from .autocompletion import *
 from .key_bindings import *
 from .lexer import *
-from ..dimensions import Dsl, USER_DIR, USER_JSON_OUTPUTS_DIR
-
-#
-#
-# PARAMETERS
-#
-#
-
-HISTORY_FILE = os.path.expanduser(USER_DIR + "history")
+from ..dimensions import Dsl, USER_HISTORY_FILE, USER_JSON_OUTPUTS_DIR
 
 #
 #
@@ -139,6 +131,31 @@ def handle_query(CLIENT, text, databuffer):
 
 #
 #
+# HISTORY
+#
+#
+
+
+class SelectiveFileHistory(FileHistory):
+    """
+    :class:`.SelectiveFileHistory` class that extends history but stores only queries 
+     - strings starting with 'search' 
+    NOTE This approach can be refined in the future
+    """
+
+    def __init__(self, filename):
+        self.filename = filename
+        super(SelectiveFileHistory, self).__init__(filename)
+
+    def append_string(self, string):
+        " Add string to the history only if it is a search statement "
+        if string.startswith("search"):
+            self._loaded_strings.append(string)
+            self.store_string(string)
+
+
+#
+#
 # MAIN CLI
 #
 #
@@ -164,7 +181,7 @@ def run(instance="live"):
         dim=True)
 
     # history
-    session = PromptSession(history=FileHistory(HISTORY_FILE))
+    session = PromptSession(history=SelectiveFileHistory(USER_HISTORY_FILE))
 
     databuffer = DataBuffer()
 

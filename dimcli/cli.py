@@ -30,8 +30,10 @@ from .dimensions import *
     "--config",
     is_flag=True,
     help="Open config init file with default editor.")
+@click.option(
+    "--history", is_flag=True, help="Open history file with default editor.")
 @click.pass_context
-def main_cli(ctx, instance_name=None, config=False):
+def main_cli(ctx, instance_name=None, config=False, history=False):
     """
     dimcli: client for the dimensions.ai
     More info: https://docs.dimensions.ai/dsl/index.html
@@ -51,6 +53,12 @@ def main_cli(ctx, instance_name=None, config=False):
     if config:
         open_multi_platform(USER_CONFIG_FILE)
         return
+
+    if history:
+        if os.path.exists(USER_HISTORY_FILE):
+            open_multi_platform(USER_HISTORY_FILE)
+        return
+
     # launch REPL
     repl.run(instance_name)
 
