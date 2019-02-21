@@ -198,6 +198,9 @@ def run(instance="live"):
             continue  # Control-C pressed. Try again.
         except EOFError:
             break  # Control-D pressed.
+        except Exception as e:
+            print(e)
+            break  # Control-D pressed.
         else:
             if text.strip() == "":
                 continue
