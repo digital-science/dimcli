@@ -65,21 +65,21 @@ class CleverCompleter(Completer):
 
         elif line_last_word(line_minus_current) in ["return"]:
             # after search and return only sources
-            candidates = list(VOCABULARY['sources'].keys())
+            # candidates = list(VOCABULARY['sources'].keys())
             source = line_search_subject(line)  # generic solution
             if source in VOCABULARY['sources'].keys():
                 fields = VOCABULARY['sources'][source]['facets']
                 entities = [
                     x[0] for x in VOCABULARY['sources'][source]['entities']
                 ]
-                candidates = list(set(fields + entities + candidates))
+                candidates = list(set(fields + entities + source))
 
         elif line_last_word(line_minus_current) == "in":
             source = line_search_subject(line)  # generic solution
             if source in VOCABULARY['sources'].keys():
                 candidates = VOCABULARY['sources'][source]['search_fields']
 
-        elif line_last_word(line_minus_current) == ["where", "and"]:
+        elif line_last_word(line_minus_current) in ["where", "and"]:
             source = line_search_subject(line)  # generic solution
             if source in VOCABULARY['sources'].keys():
                 fields = VOCABULARY['sources'][source]['fields']
@@ -87,6 +87,21 @@ class CleverCompleter(Completer):
                     x[0] for x in VOCABULARY['sources'][source]['entities']
                 ]
                 candidates = list(set(fields + entities))
+
+        elif line_last_word(line_minus_current) == "aggregate":
+            source = line_search_subject(line)  # generic solution
+            if source in VOCABULARY['sources'].keys():
+                candidates = VOCABULARY['sources'][source]['metrics']
+
+        elif line_last_two_words(
+                line_minus_current
+        ) == "sort by":  # @TODO detect if facet is returned
+            # https://docs.dimensions.ai/dsl/language.html#sort
+            source = line_search_subject(line)  # generic solution
+            if source in VOCABULARY['sources'].keys():
+                metrics = VOCABULARY['sources'][source]['metrics']
+                fields = VOCABULARY['sources'][source]['fields']
+                candidates = list(set(fields + metrics))
 
         else:
             candidates = [x for x in VOCABULARY['lang'] if x != "search"]

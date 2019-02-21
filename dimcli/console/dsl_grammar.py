@@ -32,6 +32,9 @@ VOCABULARY = {
         '~',
         'is empty',
         'is not empty',
+        'sort by',
+        'asc',
+        'desc',
     ],
     'sources': {
         'publications': {

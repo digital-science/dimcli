@@ -19,8 +19,17 @@ def is_quoted(w):
 
 
 def line_last_word(line):
+    "return last word"
     if len(line) > 0:
         return line.split()[-1]
+    else:
+        return False
+
+
+def line_last_two_words(line):
+    "return last two words"
+    if len(line) > 1:
+        return " ".join([line.split()[-2], line.split()[-1]])
     else:
         return False
 
