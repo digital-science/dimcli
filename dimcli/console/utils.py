@@ -156,3 +156,10 @@ def open_multi_platform(fpath):
             subprocess.Popen(['xdg-open', fpath])
         except OSError:
             print("Couldnt find suitable opener for %s" % fpath)
+
+
+def get_dimensions_url(obj_id, obj_type):
+    if obj_type in VOCABULARY['dimensions_urls'].keys():
+        return VOCABULARY['dimensions_urls'][obj_type] + obj_id
+    else:
+        return None

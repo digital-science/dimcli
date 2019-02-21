@@ -21,7 +21,7 @@ from itertools import islice
 USER_DIR = "~/.dimensions/"
 USER_CONFIG_FILE = os.path.expanduser(USER_DIR + "dsl.ini")
 USER_JSON_OUTPUTS_DIR = os.path.expanduser(USER_DIR + "json/")
-USER_HISTORY_FILE = os.path.expanduser(USER_DIR + "history")
+USER_HISTORY_FILE = os.path.expanduser(USER_DIR + "history.txt")
 
 
 class Result(IPython.display.JSON):

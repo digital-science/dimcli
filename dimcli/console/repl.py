@@ -12,7 +12,6 @@ from __future__ import unicode_literals
 from prompt_toolkit.completion import Completion, Completer
 from prompt_toolkit.shortcuts import CompleteStyle
 from prompt_toolkit.formatted_text import HTML
-from prompt_toolkit.history import FileHistory
 
 # from prompt_toolkit import prompt   #using session instead
 from prompt_toolkit import PromptSession
@@ -29,6 +28,7 @@ import requests
 from .dsl_grammar import *
 from .utils import *
 from .autocompletion import *
+from .history import *
 from .key_bindings import *
 from .lexer import *
 from ..dimensions import Dsl, USER_HISTORY_FILE, USER_JSON_OUTPUTS_DIR
@@ -40,7 +40,7 @@ from ..dimensions import Dsl, USER_HISTORY_FILE, USER_JSON_OUTPUTS_DIR
 #
 
 
-class DataBuffer(object):
+class DslResultsBuffer(object):
     current_json = ""
     current_query = ""
 
@@ -70,6 +70,32 @@ def print_json(jjson, query, terminal=False):
         webbrowser.open(url)
 
 
+def preview_content(jsondata, maxitems=10):
+    """
+    Preview items in console
+    If it's one of the main sources, try to show title/id. Otherwise show json in one line
+    """
+    counter = 0
+    for key in jsondata.keys():
+        if key == "_stats":
+            pass
+        else:
+            for row in jsondata[key]:
+                counter += 1
+                if counter <= maxitems:
+                    try:  # title and url/id if object has them
+                        url = get_dimensions_url(row['id'], key) or row['id']
+                        click.echo(
+                            click.style("[" + str(counter) + "] ", dim=True) +
+                            click.style(row['title'].strip(), bold=True) +
+                            click.style(" (id: " + url + " )", fg='blue'))
+
+                    except:  # fallback: full row
+                        click.echo(
+                            click.style("[" + str(counter) + "] ", dim=True) +
+                            click.style(str(row), bold=True))
+
+
 def show_command(text, databuffer):
     """
     show results of a query
@@ -90,18 +116,8 @@ def show_command(text, databuffer):
         print_json(jsondata, query, terminal=True)
 
     elif text == "preview":
-        # simple way to get some useful data HACK
-        for x in jsondata.keys():
-            if x == "_stats":
-                pass
-            elif x in VOCABULARY['sources'].keys():
-                for row in jsondata[x]:
-                    try:
-                        print(row['title'], row['id'])
-                    except:
-                        print(row)
-            else:
-                print("Preview for result type *%s* not implemented" % x)
+        click.secho("Showing first 10 records from latest query..", dim=True)
+        preview_content(jsondata, maxitems=10)
 
 
 def handle_query(CLIENT, text, databuffer):
@@ -119,39 +135,14 @@ def handle_query(CLIENT, text, databuffer):
         # #
         if "errors" in res.keys():
             print(res["errors"]["query"]["header"])
-            for x in res["errors"]["query"]["details"]:
-                print(x)
+            for key in res["errors"]["query"]["details"]:
+                print(key)
         else:
             print("Tot Results: ", res["_stats"]["total_count"])
             for k in res.keys():
                 if k != "_stats":
                     print(k.capitalize() + ":", len(res[k]))
             databuffer.load(res, text)
-
-
-#
-#
-# HISTORY
-#
-#
-
-
-class SelectiveFileHistory(FileHistory):
-    """
-    :class:`.SelectiveFileHistory` class that extends history but stores only queries 
-     - strings starting with 'search' 
-    NOTE This approach can be refined in the future
-    """
-
-    def __init__(self, filename):
-        self.filename = filename
-        super(SelectiveFileHistory, self).__init__(filename)
-
-    def append_string(self, string):
-        " Add string to the history only if it is a search statement "
-        if string.startswith("search"):
-            self._loaded_strings.append(string)
-            self.store_string(string)
 
 
 #
@@ -174,16 +165,15 @@ def run(instance="live"):
         # if err.response.status_code == 401:
         #     print("here")
 
-    click.secho("Welcome!")
-    click.secho("Please enter your query below.")
+    click.secho("Welcome! Please enter your query below.")
     click.secho(
-        "TAB = suggest | Ctrl-C = abort query | Ctrl-D = exit | Ctrl-] = search docs (https://docs.dimensions.ai/dsl)",
+        "Tab = suggest , Ctrl-c = abort query , Ctrl-d = exit , Ctrl-o = search docs",
         dim=True)
 
     # history
     session = PromptSession(history=SelectiveFileHistory(USER_HISTORY_FILE))
 
-    databuffer = DataBuffer()
+    databuffer = DslResultsBuffer()
 
     # REPL loop.
     while True:

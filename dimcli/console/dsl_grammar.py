@@ -8,6 +8,13 @@ VOCABULARY = {
         'show' : [ 'json', 'html', 'preview'],
         'search': [],
     },
+    'dimensions_urls' : {
+        'publications' : 'https://app.dimensions.ai/details/publication/',
+        'grants' : 'https://app.dimensions.ai/details/grant/',
+        'patents' : 'https://app.dimensions.ai/details/patent/',
+        'policy_documents' : 'https://app.dimensions.ai/details/clinical_trial/',
+        'clinical_trials' : 'https://app.dimensions.ai/details/policy_documents/',
+    },
     'lang': [
         'search',
         'return',

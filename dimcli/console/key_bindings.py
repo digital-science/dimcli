@@ -23,7 +23,7 @@ def _(event):
         b.start_completion(select_first=False)
 
 
-@bindings.add("c-]")
+@bindings.add("c-o")
 def _(event):
     """
     Look up in docs
