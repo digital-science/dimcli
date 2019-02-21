@@ -59,18 +59,27 @@ class CleverCompleter(Completer):
             # beginning: only main keywords
             candidates = VOCABULARY['allowed_starts']["show"]
 
-        elif line_last_word(line_minus_current) in ["search", "return"]:
+        elif line_last_word(line_minus_current) in ["search"]:
             # after search and return only sources
             candidates = VOCABULARY['sources'].keys()
+
+        elif line_last_word(line_minus_current) in ["return"]:
+            # after search and return only sources
+            candidates = list(VOCABULARY['sources'].keys())
+            source = line_search_subject(line)  # generic solution
+            if source in VOCABULARY['sources'].keys():
+                fields = VOCABULARY['sources'][source]['facets']
+                entities = [
+                    x[0] for x in VOCABULARY['sources'][source]['entities']
+                ]
+                candidates = list(set(fields + entities + candidates))
 
         elif line_last_word(line_minus_current) == "in":
             source = line_search_subject(line)  # generic solution
             if source in VOCABULARY['sources'].keys():
-                candidates = VOCABULARY['sources'][source]['fields']
-            else:
-                pass
+                candidates = VOCABULARY['sources'][source]['search_fields']
 
-        elif line_last_word(line_minus_current) == "where":
+        elif line_last_word(line_minus_current) == ["where", "and"]:
             source = line_search_subject(line)  # generic solution
             if source in VOCABULARY['sources'].keys():
                 fields = VOCABULARY['sources'][source]['fields']
@@ -78,8 +87,6 @@ class CleverCompleter(Completer):
                     x[0] for x in VOCABULARY['sources'][source]['entities']
                 ]
                 candidates = list(set(fields + entities))
-            else:
-                pass
 
         else:
             candidates = [x for x in VOCABULARY['lang'] if x != "search"]
