@@ -134,9 +134,13 @@ def handle_query(CLIENT, text, databuffer):
         res = CLIENT.query(text)
         # #
         if "errors" in res.keys():
-            print(res["errors"]["query"]["header"])
-            for key in res["errors"]["query"]["details"]:
-                print(key)
+            if "query" in res["errors"]:
+                print(res["errors"]["query"]["header"])
+                for key in res["errors"]["query"]["details"]:
+                    print(key)
+            else:
+                print(res["errors"])
+
         else:
             print("Tot Results: ", res["_stats"]["total_count"])
             for k in res.keys():
