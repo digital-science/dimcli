@@ -23,6 +23,7 @@ VOCABULARY = {
         'in',
         'limit',
         'skip',
+        'aggregate',
         '=',
         '!=',
         '>',

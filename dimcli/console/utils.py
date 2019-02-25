@@ -10,6 +10,13 @@ import os
 from .dsl_grammar import *
 
 
+def split_multi_words(llist):
+    "break down a list of strings so that it is composed of only 1-word elements"
+    broken = [x.split() for x in llist] 
+    flatten = lambda l: [item for sublist in l for item in sublist]
+    return flatten(broken)
+
+
 def is_quoted(w):
     if w[0] == '"' and w[-1] == '"':
         return True
