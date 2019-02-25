@@ -34,20 +34,9 @@ class BasicLexer(Lexer):
     """
     def lex_document(self, document):
 
-        self.is_string_flag = False
-
         def get_class(w):
-            if is_single_word_quoted(w): 
-                return "orange"
-            # if len(w) and w[0] == '"':
-            #     if self.is_string_flag:
-            #         self.is_string_flag = False
-            #         return "orange"
-            #     else:
-            #         self.is_string_flag = True
-            # elif self.is_string_flag:
-            #     return "orange"
-            elif w in lang:
+            "color classes for main objects"
+            if w in lang:
                 return "green"
             elif w in sources + entities:
                 return "blue bold"
@@ -64,9 +53,28 @@ class BasicLexer(Lexer):
             else:
                 return "black"
 
+        def _spot_strings_bits(data):
+            "note: this is run after the whole sentence has been parsed and marked up, so to be able to spot multi-word strings"
+            STRING_COLOR = "orange"
+            is_string_flag = False
+            for x in data:
+                if is_string_flag:
+                    x[0] = STRING_COLOR
+                    if x[1].strip()[-1] == '"':
+                        is_string_flag = False
+                elif x[1].strip()[0] == '"' and x[1].strip()[-1] == '"':
+                    x[0] = STRING_COLOR
+                elif x[1].strip()[0] == '"':
+                    x[0] = STRING_COLOR
+                    is_string_flag = True
+            return data
+
         def get_line(lineno):
-            # NOTE: this gets called at each single key press, so the line is re-rendered all the time
-            return [(get_class(w), w + " ")
+            "NOTE: this gets called at each single key press, i.e. line is re-rendered all the time"
+            data = [[get_class(w), w + " "]
                     for w in document.lines[lineno].split()]
+            # add on to mark up multi-word strings post-process
+            data = _spot_strings_bits(data)
+            return data
 
         return get_line
