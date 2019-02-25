@@ -35,8 +35,8 @@ from .dimensions import *
 @click.pass_context
 def main_cli(ctx, instance_name=None, config=False, history=False):
     """
-    dimcli: client for the dimensions.ai
-    More info: https://docs.dimensions.ai/dsl/index.html
+    Python client for the Dimensions DSL.
+    More info: https://github.com/lambdamusic/dimcli
     """
 
     click.secho("Dimcli - dimensions console (" + VERSION + ")", dim=True)
@@ -44,9 +44,13 @@ def main_cli(ctx, instance_name=None, config=False, history=False):
 
     if not os.path.exists(USER_CONFIG_FILE):
         click.secho(
-            "Credentials file not found - please set one up first (%s)" %
+            "Credentials file not found - please set one up first: %s" %
             USER_CONFIG_FILE,
             fg="red",
+        )
+        click.secho(
+            "HowTo: https://github.com/lambdamusic/dimcli#credentials-file",
+            fg="blue",
         )
         return
 

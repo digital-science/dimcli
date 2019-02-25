@@ -3,6 +3,7 @@ import requests
 import os.path
 import time
 import json
+import click
 import IPython.display
 from itertools import islice
 
@@ -33,19 +34,33 @@ class Result(IPython.display.JSON):
 
 
 class Dsl:
-    def __init__(self, instance="live", show_results=False, rich_display=True):
-        config = configparser.ConfigParser()
-        config.read(os.path.expanduser(USER_CONFIG_FILE))
-        section = config['instance.' + instance]
+    def __init__(self, instance="live", show_results=False, rich_display=False):
 
-        self._url = section['url']
+        config_section = self._get_config(instance)
+
         self._show_results = show_results
         self._rich_display = rich_display  # whether to iPython renderers
-
-        self._username = section['login']
-        self._password = section['password']
+        self._url = config_section['url']
+        self._username = config_section['login']
+        self._password = config_section['password']
 
         self._login()
+
+    def _get_config(self, instance_name):
+        config = configparser.ConfigParser()
+        try:
+            config.read(os.path.expanduser(USER_CONFIG_FILE))
+        except:
+            click.secho("ERROR: Credentials file not found at: %s" % os.path.expanduser(USER_CONFIG_FILE), fg="red")
+            click.secho("HowTo: https://github.com/lambdamusic/dimcli#credentials-file", fg="red")
+            raise
+        try:
+            section = config['instance.' + instance_name]
+        except:
+            click.secho("ERROR: Credentials file does contain settings for instance: %s" % instance_name, fg="red")
+            click.secho("HowTo: https://github.com/lambdamusic/dimcli#credentials-file", fg="red")
+            raise
+        return section
 
     def _login(self):
         login = {'username': self._username, 'password': self._password}

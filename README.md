@@ -5,7 +5,9 @@ Python library for accessing the [Dimensions](https://www.dimensions.ai/) [DSL](
 -   [https://github.com/lambdamusic/dimcli](https://github.com/lambdamusic/dimcli)
 -   [https://pypi.org/project/dimcli/](https://pypi.org/project/dimcli/)
 
-Dimcli includes a console-like tool that allows to launch queries against a Dimensions endpoint.
+### Features
+
+Dimcli includes a Command Line Interface tool that allows to launch queries against a Dimensions endpoint.
 
 Main features:
 
@@ -13,7 +15,9 @@ Main features:
 -   history persists across sessions
 -   displays query results as raw json or quick preview
 
-> note: this library is an experimental project and still in development. Please report any bugs in the Github issues section.
+> Development status: alpha.
+
+Feedback's welcome, please use Github's [issues](https://github.com/lambdamusic/dimcli/issues/new).
 
 ### Install
 
@@ -22,6 +26,12 @@ $ pip install dimcli
 ```
 
 Current version: see [pypi homepage](https://pypi.org/project/dimcli/).
+
+Then you can check if the installation worked with
+
+```
+$ dimcli --help
+```
 
 ### Running the CLI
 
@@ -33,9 +43,16 @@ $ dimcli
 
 The only prerequisiste after installation is a configuration file with your Dimensions account credentials.
 
-#### Credentials File
+### Creating a Credentials File
 
-This file must called `dsl.ini` and located in your user directory in the `.dimensions` folder. The contents must look like this:
+This file must called `dsl.ini` and located in your user directory in the `.dimensions` folder. So this is what you'd do on unix systems:
+
+```
+$ mkdir ~/.dimensions
+$ touch ~/.dimensions/dsl.ini
+```
+
+Then open `dsl.ini` and edit its contents. It should look like this:
 
 ```
 [instance.live]
@@ -89,3 +106,6 @@ $ mkvirtualenv dimcli
 $ pip install --editable .
 $ ./run-shell # launch iPython with library preloaded so you can play with it
 ```
+
+$$
+$$
