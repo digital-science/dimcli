@@ -70,7 +70,7 @@ def print_json(jjson, query, terminal=False):
         webbrowser.open(url)
 
 
-def preview_content(jsondata, maxitems=10):
+def print_json_preview(jsondata, maxitems=10):
     """
     Preview items in console
     If it's one of the main sources, try to show title/id. Otherwise show json in one line
@@ -96,6 +96,24 @@ def preview_content(jsondata, maxitems=10):
                             click.style(str(row), bold=True))
 
 
+def print_json_compact(jsondata):
+    """
+    Show json in one line
+    NOTE: the logic is the same as the except clause in print_json_preview. Maybe some refactoring could be beneficial here..
+    """
+    counter = 0
+    for key in jsondata.keys():
+        if key == "_stats":
+            pass
+        else:
+            for row in jsondata[key]:
+                counter += 1
+                # full row
+                click.echo(
+                    click.style("[" + str(counter) + "] ", dim=True) +
+                    click.style(str(row), bold=True))
+
+
 def show_command(text, databuffer):
     """
     show results of a query
@@ -112,12 +130,15 @@ def show_command(text, databuffer):
     if text == "html":
         print_json(jsondata, query, terminal=False)
 
-    elif text == "json":
+    elif text == "json_raw":
         print_json(jsondata, query, terminal=True)
+
+    elif text == "json_compact":
+        print_json_compact(jsondata)
 
     elif text == "preview":
         click.secho("Showing first 10 records from latest query..", dim=True)
-        preview_content(jsondata, maxitems=10)
+        print_json_preview(jsondata, maxitems=10)
 
 
 def handle_query(CLIENT, text, databuffer):
