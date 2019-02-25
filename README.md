@@ -43,7 +43,7 @@ $ dimcli
 
 The only prerequisiste after installation is a configuration file with your Dimensions account credentials.
 
-### Creating a Credentials File
+### Credentials File
 
 This file must called `dsl.ini` and located in your user directory in the `.dimensions` folder. So this is what you'd do on unix systems:
 
