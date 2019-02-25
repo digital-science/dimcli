@@ -43,8 +43,31 @@ def line_search_subject(line):
     else:
         return None
 
+def line_search_return(line):
+    """get the source/facet in the return statement
+        TODO: return multiple return values not just one
+    """
+    l = line.split()
+    if "return" in l:
+        i = l.index("return")
+        if len(l) > i + 2: # cause index is zero based
+            return l[i + 1]
+    else:
+        return None
 
-def line_lazy_return(text):
+def line_search_aggregates(line):
+    """get the aggregrates statement eg in `search publications return funders aggregate altmetric_median sort by rcr_avg`
+        TODO: return multiple return values not just one
+    """
+    l = line.split()
+    if "aggregate" in l:
+        i = l.index("aggregate")
+        if len(l) > i + 2: # cause index is zero based
+            return l[i + 1]
+    else:
+        return None
+
+def line_add_lazy_return(text):
     "if return statement not included, add it lazily"
     if "return" not in text:
         source = line_search_subject(text)

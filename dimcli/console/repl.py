@@ -149,7 +149,7 @@ def handle_query(CLIENT, text, databuffer):
 
     else:
         # lazy complete
-        text = line_lazy_return(text)
+        text = line_add_lazy_return(text)
         print("You said: %s" % text)
         # RUN QUERY
         res = CLIENT.query(text)
@@ -192,7 +192,7 @@ def run(instance="live"):
 
     click.secho("Welcome! Please enter your query below.")
     click.secho(
-        "Tab = suggest , Ctrl-c = abort query , Ctrl-d = exit , Ctrl-o = search docs",
+        "Tab = suggest , Ctrl-c = abort query , Ctrl-d = exit , Ctrl-o = online docs",
         dim=True)
 
     # history

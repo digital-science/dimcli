@@ -39,8 +39,8 @@ def main_cli(ctx, instance_name=None, config=False, history=False):
     More info: https://docs.dimensions.ai/dsl/index.html
     """
 
-    click.secho("dimcli " + VERSION, dim=True)
-    click.secho("------------", fg="white")
+    click.secho("Dimcli - dimensions console (" + VERSION + ")", dim=True)
+    # click.secho("------------", fg="white")
 
     if not os.path.exists(USER_CONFIG_FILE):
         click.secho(

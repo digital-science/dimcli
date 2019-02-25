@@ -93,15 +93,19 @@ class CleverCompleter(Completer):
             if source in VOCABULARY['sources'].keys():
                 candidates = VOCABULARY['sources'][source]['metrics']
 
-        elif line_last_two_words(
-                line_minus_current
-        ) == "sort by":  # @TODO detect if facet is returned
-            # https://docs.dimensions.ai/dsl/language.html#sort
-            source = line_search_subject(line)  # generic solution
-            if source in VOCABULARY['sources'].keys():
-                metrics = VOCABULARY['sources'][source]['metrics']
-                fields = VOCABULARY['sources'][source]['fields']
+        elif line_last_two_words(line_minus_current) == "sort by":  # # https://docs.dimensions.ai/dsl/language.html#sort         
+            source = line_search_subject(line) 
+            return_object = line_search_return(line)  
+            aggreg_object = line_search_aggregates(line)  
+            if return_object in VOCABULARY['sources'].keys(): # if source, can sort by several things
+                metrics = VOCABULARY['sources'][return_object]['metrics']
+                fields = VOCABULARY['sources'][return_object]['fields']
                 candidates = list(set(fields + metrics))
+            else: # if not source, it's a facet so can only sort by count or aggregates
+                candidates = ['count']
+                if aggreg_object: 
+                    candidates += [aggreg_object]
+
 
         else:
             candidates = [x for x in VOCABULARY['lang'] if x != "search"]
