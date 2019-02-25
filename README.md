@@ -106,6 +106,3 @@ $ mkvirtualenv dimcli
 $ pip install --editable .
 $ ./run-shell # launch iPython with library preloaded so you can play with it
 ```
-
-$$
-$$
