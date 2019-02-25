@@ -18,7 +18,7 @@ Main features:
 ### Install
 
 ```
-pip install dimcli
+$ pip install dimcli
 ```
 
 Current version: see [pypi homepage](https://pypi.org/project/dimcli/).
@@ -28,12 +28,12 @@ Current version: see [pypi homepage](https://pypi.org/project/dimcli/).
 Run the CLI by typing
 
 ```
-dimcli
+$ dimcli
 ```
 
 The only prerequisiste after installation is a configuration file with your Dimensions account credentials.
 
-#### Credentials
+#### Credentials File
 
 This file must called `dsl.ini` and located in your user directory in the `.dimensions` folder. The contents must look like this:
 
@@ -50,11 +50,11 @@ In most situations you can simply copy/paste the text above and change the login
 
 If you have access to multiple Dimensions instances, you can just add more entries to the credentials files.
 
-NOTE you can add details for more than one instance but make sure you give them unique names. So for example you can add another entry like this:
+You can add details for more than one instance but make sure you give them unique names. So for example you can add another entry like this:
 
 ```
 [instance.private]
-url=https://local.dimensions.ai
+url=https://private-instance.dimensions.ai
 login=user@mail.com
 password=yourpasswordhere
 ```
@@ -62,7 +62,7 @@ password=yourpasswordhere
 Then when running the CLI you can select which instance to use just by passing its name as argument eg
 
 ```
-dimcli private
+$ dimcli private
 ```
 
 > NOTE `live` is the instance name taken by default when no instance is specified.
