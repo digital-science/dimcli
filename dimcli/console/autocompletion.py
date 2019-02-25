@@ -72,7 +72,7 @@ class CleverCompleter(Completer):
                 entities = [
                     x[0] for x in VOCABULARY['sources'][source]['entities']
                 ]
-                candidates = list(set(fields + entities + source))
+                candidates = list(set(fields + entities + [source]))
 
         elif line_last_word(line_minus_current) == "in":
             source = line_search_subject(line)  # generic solution
