@@ -33,10 +33,21 @@ class BasicLexer(Lexer):
     note: lexer is single word based, so multi word DSL operands need to split first 
     """
     def lex_document(self, document):
+
+        self.is_string_flag = False
+
         def get_class(w):
-            # if w in dim_lang_1:
-            #     return "green bold"
-            if w in lang:
+            if is_single_word_quoted(w): 
+                return "orange"
+            # if len(w) and w[0] == '"':
+            #     if self.is_string_flag:
+            #         self.is_string_flag = False
+            #         return "orange"
+            #     else:
+            #         self.is_string_flag = True
+            # elif self.is_string_flag:
+            #     return "orange"
+            elif w in lang:
                 return "green"
             elif w in sources + entities:
                 return "blue bold"
@@ -48,15 +59,13 @@ class BasicLexer(Lexer):
                 return "brown" 
             elif w in fieldsets + search_fields:
                 return "black" 
-            elif is_quoted(w): # @TODO improve for multi word strings
-                return "orange"
             elif w in allowed_starts:
                 return "red"
             else:
                 return "black"
 
         def get_line(lineno):
-
+            # NOTE: this gets called at each single key press, so the line is re-rendered all the time
             return [(get_class(w), w + " ")
                     for w in document.lines[lineno].split()]
 

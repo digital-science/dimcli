@@ -221,7 +221,7 @@ def run(instance="live"):
             break  # Control-D pressed.
         except Exception as e:
             print(e)
-            break  # Control-D pressed.
+            sys.exit(0)  
         else:
             if text.strip() == "":
                 continue

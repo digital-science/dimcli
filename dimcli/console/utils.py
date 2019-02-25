@@ -18,7 +18,7 @@ def split_multi_words(llist):
 def list_flatten(llist):
     return [item for sublist in llist for item in sublist]
 
-def is_quoted(w):
+def is_single_word_quoted(w):
     if w[0] == '"' and w[-1] == '"':
         return True
     if w[0] == "'" and w[-1] == "'":
