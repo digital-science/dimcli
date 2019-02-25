@@ -14,11 +14,19 @@ from .utils import *
 
 
 
-
+#
 allowed_starts = VOCABULARY['allowed_starts'].keys()
 lang = split_multi_words(VOCABULARY['lang'])
-sources = VOCABULARY['sources'].keys()
-fields = split_multi_words(VOCABULARY['sources']['publications']['fields']) # @TODO generalize
+#
+sources = list(VOCABULARY['sources'].keys())
+#
+fields = list_flatten([VOCABULARY['sources'][source]['fields'] for source in sources])
+facets = list_flatten([VOCABULARY['sources'][source]['facets'] for source in sources])
+entities = list_flatten([VOCABULARY['sources'][source]['entities'] for source in sources])
+fieldsets = list_flatten([VOCABULARY['sources'][source]['fieldsets'] for source in sources])
+metrics = list_flatten([VOCABULARY['sources'][source]['metrics'] for source in sources])
+search_fields = list_flatten([VOCABULARY['sources'][source]['search_fields'] for source in sources])
+#
 
 class BasicLexer(Lexer):
     """
@@ -30,12 +38,16 @@ class BasicLexer(Lexer):
             #     return "green bold"
             if w in lang:
                 return "green"
-            elif w in sources:
+            elif w in sources + entities:
                 return "blue bold"
             elif w in fields:
-                return "blue"  # @TODO generalize
-            # elif w in dim_entities_after_dot:
-            #     return "violet"
+                return "blue"
+            elif w in facets:
+                return "blue" 
+            elif w in metrics:
+                return "brown" 
+            elif w in fieldsets + search_fields:
+                return "black" 
             elif is_quoted(w): # @TODO improve for multi word strings
                 return "orange"
             elif w in allowed_starts:
