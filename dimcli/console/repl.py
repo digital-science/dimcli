@@ -52,15 +52,15 @@ class DslResultsBuffer(object):
         return (self.current_json, self.current_query)
 
 
-def print_json(jjson, query, terminal=False):
-    "print out json to the user"
+def print_json_full(jjson, query, terminal=False):
+    "print out full json either as pretty_json or within an html template"
     formatted_json = json.dumps(jjson, indent=4, sort_keys=True)
-    if terminal:
+    if terminal: # json_pretty
         from pygments import highlight, lexers, formatters
         colorful_json = highlight(formatted_json, lexers.JsonLexer(),
                                   formatters.TerminalFormatter())
         print(colorful_json)
-    else:
+    else: # json_html
         contents = html_template_interactive(query, formatted_json)
 
         filename = time.strftime("%Y%m%d-%H%M%S.html")
@@ -70,7 +70,24 @@ def print_json(jjson, query, terminal=False):
         webbrowser.open(url)
 
 
-def print_json_preview(jsondata, maxitems=10):
+def print_json_compact(jsondata):
+    """
+    Show json in one line
+    NOTE: the logic is the same as the except clause in print_json_preview. Maybe some refactoring could be beneficial here..
+    """
+    counter = 0
+    for key in jsondata.keys():
+        if key == "_stats":
+            pass
+        else:
+            for row in jsondata[key]:
+                counter += 1
+                # full row
+                click.echo(
+                    click.style("[" + str(counter) + "] ", dim=True) +
+                    click.style(str(row)))
+
+def print_smart_preview(jsondata, maxitems=10):
     """
     Preview items in console
     If it's one of the main sources, try to show title/id. Otherwise show json in one line
@@ -93,52 +110,39 @@ def print_json_preview(jsondata, maxitems=10):
                     except:  # fallback: full row
                         click.echo(
                             click.style("[" + str(counter) + "] ", dim=True) +
-                            click.style(str(row), bold=True))
+                            click.style(str(row)))
 
-
-def print_json_compact(jsondata):
-    """
-    Show json in one line
-    NOTE: the logic is the same as the except clause in print_json_preview. Maybe some refactoring could be beneficial here..
-    """
-    counter = 0
-    for key in jsondata.keys():
-        if key == "_stats":
-            pass
-        else:
-            for row in jsondata[key]:
-                counter += 1
-                # full row
-                click.echo(
-                    click.style("[" + str(counter) + "] ", dim=True) +
-                    click.style(str(row), bold=True))
 
 
 def show_command(text, databuffer):
     """
     show results of a query
     """
-    DEFAULT = "preview"
     text = text.replace("show", "").strip()
-    if not text: text = DEFAULT
-    # no data
+
     jsondata, query = databuffer.retrieve()
     if not jsondata:
         print("Nothing to show - please run a search first.")
         return
     # cases
-    if text == "html":
-        print_json(jsondata, query, terminal=False)
+    if text == "json_html":
+        print_json_full(jsondata, query, terminal=False)
 
-    elif text == "json_raw":
-        print_json(jsondata, query, terminal=True)
+    elif text == "json_pretty":
+        print_json_full(jsondata, query, terminal=True)
 
-    elif text == "json_compact":
+    elif text == "json":
         print_json_compact(jsondata)
 
-    elif text == "preview":
-        click.secho("Showing first 10 records from latest query..", dim=True)
-        print_json_preview(jsondata, maxitems=10)
+    else:
+        try:
+            slice_no = int(text)
+        except ValueError:
+            slice_no = 10
+            
+        click.secho("Showing first %d records from latest query.." % slice_no, dim=True)
+        print_smart_preview(jsondata, maxitems=slice_no)
+
 
 
 def handle_query(CLIENT, text, databuffer):

@@ -5,7 +5,7 @@
 VOCABULARY = {
     'allowed_starts': {
         'quit' : [],
-        'show' : [ 'json_raw', 'json_compact', 'html', 'preview'],
+        'show' : [ 'json', 'json_pretty', 'json_html'],
         'search': [],
     },
     'dimensions_urls' : {

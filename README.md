@@ -102,7 +102,7 @@ In [3]: dsl.query("search grants return grants")
 Note: requires [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/).
 
 ```
-$ mkvirtualenv dimcli
+$ mkvirtualenv dimcli$$
 $ pip install --editable .
 $ ./run-shell # launch iPython with library preloaded so you can play with it
 ```
