@@ -91,10 +91,107 @@ _TODO add more examples_
 ```
 In [1]: import dimcli
 
-In [2]: dsl = dimcli.Dsl('live', show_results=True, rich_display=False)
-Out[2]: <dimcli.dimensions.Dsl at 0x10880a1d0>
+# if you have set up a credentials file, no need to pass log in details
+In [2]: dsl = dimcli.Dsl()
 
-In [3]: dsl.query("search grants return grants")
+# errors are handled transparently
+In [3]: dsl.query("search grants for \"malaria\" return publications")
+Out[3]:
+{'errors': {'query': {'header': 'Semantic Error',
+   'details': ["Semantic errors found:\n\tFacet 'publications' is not present in source 'grants'. Available facets are: FOR,FOR_first,HRCS_HC,HRCS_RAC,RCDC,active_year,funder_countries,funders,funding_org_acronym,funding_org_city,funding_org_name,language,research_org_cities,research_org_countries,research_org_name,research_org_state_codes,research_orgs,researchers,start_year,title_language"],
+   'query': 'search grants for "malaria" return publications'}}}
+
+# now a good query
+In [4]: dsl.query("search grants for \"malaria\" return researchers")
+Out[4]:
+{'researchers': [{'id': 'ur.01332073522.49',
+   'count': 75,
+   'last_name': 'White',
+   'first_name': 'Nicholas J'},
+  {'id': 'ur.01343654360.43',
+   'count': 59,
+   'last_name': 'Marsh',
+   'first_name': 'Kevin'},
+  {'id': 'ur.013570515662.78',
+   'count': 39,
+   'last_name': 'Day',
+   'orcid_id': ['0000-0003-2309-1171'],
+   'first_name': 'Nicholas P  J'},
+  {'id': 'ur.01246255474.14',
+   'count': 32,
+   'last_name': 'Tsuboi',
+   'first_name': 'Takafumi'},
+  {'id': 'ur.013621403537.53',
+   'count': 32,
+   'last_name': 'Molyneux',
+   'orcid_id': ['0000-0002-7093-8921'],
+   'first_name': 'Malcolm E'},
+  {'id': 'ur.0646650127.76',
+   'count': 32,
+   'last_name': 'Tanabe',
+   'first_name': 'Kazuyuki'},
+  {'id': 'ur.01004335615.66',
+   'count': 29,
+   'last_name': 'Hoffman',
+   'first_name': 'Stephen L'},
+  {'id': 'ur.01013145443.28',
+   'count': 29,
+   'last_name': 'Horii',
+   'first_name': 'Toshihiro'},
+  {'id': 'ur.011050223772.27',
+   'count': 29,
+   'last_name': 'Miller',
+   'orcid_id': ['0000-0003-3420-1284'],
+   'first_name': 'Louis H'},
+  {'id': 'ur.07764267264.89',
+   'count': 29,
+   'last_name': 'Nosten',
+   'orcid_id': ['0000-0002-7951-0745'],
+   'first_name': 'Francois'},
+  {'id': 'ur.01200142274.58',
+   'count': 28,
+   'last_name': 'Torii',
+   'first_name': 'Motomi'},
+  {'id': 'ur.01157022450.71',
+   'count': 25,
+   'last_name': 'Cowman',
+   'orcid_id': ['0000-0001-5145-9004'],
+   'first_name': 'Alan F'},
+  {'id': 'ur.01231001203.23',
+   'count': 25,
+   'last_name': 'Duffy',
+   'first_name': 'Patrick E'},
+  {'id': 'ur.01370151200.33',
+   'count': 24,
+   'last_name': 'Kawai',
+   'first_name': 'Satoru'},
+  {'id': 'ur.014032733622.20',
+   'count': 24,
+   'last_name': 'Craig',
+   'orcid_id': ['0000-0003-0914-6164'],
+   'first_name': 'Alister G'},
+  {'id': 'ur.01123513136.18',
+   'count': 23,
+   'last_name': 'Kawamoto',
+   'first_name': 'Fumihiko'},
+  {'id': 'ur.010634112405.45',
+   'count': 22,
+   'last_name': 'Hirai',
+   'first_name': 'Makoto'},
+  {'id': 'ur.0612737310.86',
+   'count': 22,
+   'last_name': 'Ferreira',
+   'orcid_id': ['0000-0002-5293-9090'],
+   'first_name': 'Marcelo U'},
+  {'id': 'ur.0725323667.50',
+   'count': 22,
+   'last_name': 'Kaneko',
+   'first_name': 'Osamu'},
+  {'id': 'ur.013471271621.48',
+   'count': 21,
+   'last_name': 'Wataya',
+   'first_name': 'Yusuke'}],
+ '_stats': {'total_count': 8735}}
 ```
 
 ### Develop
@@ -102,7 +199,7 @@ In [3]: dsl.query("search grants return grants")
 Note: requires [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/).
 
 ```
-$ mkvirtualenv dimcli$$
+$ mkvirtualenv dimcli
 $ pip install --editable .
 $ ./run-shell # launch iPython with library preloaded so you can play with it
 ```

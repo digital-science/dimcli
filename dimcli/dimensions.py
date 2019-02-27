@@ -93,11 +93,11 @@ class Dsl:
             #   Display raw result
             if rich_display or (rich_display is None and self._rich_display):
                 result = Result(resp.json())
-                if show_result or (show_result is None and self._show_results):
+                if show_results or (show_results is None and self._show_results):
                     IPython.display.display(result)
             else:
                 result = resp.json()
-                if show_result or (show_result is None and self._show_results):
+                if show_results or (show_results is None and self._show_results):
                     print(json.dumps(result, indent=4, sort_keys=True))
             return result
         else:
