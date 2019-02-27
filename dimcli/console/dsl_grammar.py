@@ -24,7 +24,7 @@ VOCABULARY = {
         'limit',
         'skip',
         'aggregate',
-        '=',
+        '=',  # filter operators https://docs.dimensions.ai/dsl/language.html#simple-filters
         '!=',
         '>',
         '<',
@@ -33,9 +33,18 @@ VOCABULARY = {
         '~',
         'is empty',
         'is not empty',
+        "count", # https://docs.dimensions.ai/dsl/language.html#filter-functions
         'sort by',
         'asc',
         'desc',
+        "AND", # boolean operators https://docs.dimensions.ai/dsl/language.html#id6
+        "OR", 
+        "NOT",
+        "&&",
+        "!",
+        "||",
+        "+",
+        "-",
     ],
     'sources': {
         'publications': {

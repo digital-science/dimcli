@@ -71,7 +71,7 @@ class Dsl:
         token = response.json()['token']
         self._headers = {'Authorization': "JWT " + token}
 
-    def query(self, q, show_result=None, rich_display=None, retry=0):
+    def query(self, q, show_results=None, rich_display=None, retry=0):
         """
         Execute DSL query.
         By default it doesn't show results, but it uses the iPython rich widgets for it, optimized for Jupyter Notebooks.

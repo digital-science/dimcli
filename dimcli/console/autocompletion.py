@@ -83,10 +83,11 @@ class CleverCompleter(Completer):
             source = line_search_subject(line)  # generic solution
             if source in VOCABULARY['sources'].keys():
                 fields = VOCABULARY['sources'][source]['fields']
+                facets = VOCABULARY['sources'][source]['facets']
                 entities = [
                     x[0] for x in VOCABULARY['sources'][source]['entities']
                 ]
-                candidates = list(set(fields + entities))
+                candidates = list(set(fields + entities + facets))
 
         elif line_last_word(line_minus_current) == "aggregate":
             source = line_search_subject(line)  # generic solution

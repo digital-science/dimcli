@@ -194,10 +194,11 @@ def run(instance="live"):
         # if err.response.status_code == 401:
         #     print("here")
 
-    click.secho("Welcome! Please enter your query below.")
+    
     click.secho(
-        "Tab = suggest , Ctrl-c = abort query , Ctrl-d = exit , Ctrl-o = online docs",
+        "Usage: Tab = suggest , Ctrl-c = abort query , Ctrl-d = exit , Ctrl-o = open online docs",
         dim=True)
+    click.secho("Welcome! Please enter your query below.")
 
     # history
     session = PromptSession(history=SelectiveFileHistory(USER_HISTORY_FILE))
