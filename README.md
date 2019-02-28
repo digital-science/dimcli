@@ -41,18 +41,24 @@ Run the CLI by typing
 $ dimcli
 ```
 
-The only prerequisiste after installation is a configuration file with your Dimensions account credentials.
+The only prerequisiste after installation is a configuration file with your Dimensions account credentials. These can be set up directly from the command line by typing:
+
+```
+$ dimcli --init
+```
+
+For more info see the following section.
 
 ### Credentials File
 
-This file must called `dsl.ini` and located in your user directory in the `.dimensions` folder. So this is what you'd do on unix systems:
+The credentials file must be called `dsl.ini` and located in your user directory in the `.dimensions` folder. So if yoy want to set this up manually, this is what you'd do on unix systems:
 
 ```
 $ mkdir ~/.dimensions
 $ touch ~/.dimensions/dsl.ini
 ```
 
-Then open `dsl.ini` and edit its contents. It should look like this:
+Then open `dsl.ini` with a text editor. Its contents should look like this:
 
 ```
 [instance.live]
@@ -62,6 +68,8 @@ password=yourpasswordhere
 ```
 
 In most situations you can simply copy/paste the text above and change the login and password as needed.
+
+> Note: you must always have an entry in the configuration called `[instance.live]`
 
 #### Multiple Dimensions Environments
 
