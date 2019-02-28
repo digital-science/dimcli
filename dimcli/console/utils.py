@@ -185,6 +185,7 @@ def open_multi_platform(fpath):
     """
     util to open a file on any platform (i hope)
     """
+    click.secho("Opening `%s` ..." % fpath)
     if sys.platform == 'win32':
         subprocess.Popen(['start', fpath], shell=True)
 
@@ -203,3 +204,34 @@ def get_dimensions_url(obj_id, obj_type):
         return VOCABULARY['dimensions_urls'][obj_type] + obj_id
     else:
         return None
+
+
+def init_config_folder(user_dir, user_config_file):
+    """
+    Create the config folder/file unless existing. If it exists, backup and create new one.
+    """
+    if not os.path.exists(user_dir):
+        os.mkdir(user_dir)
+        # click.secho("Created %s" % user_dir, dim=True)
+    if os.path.exists(user_config_file):
+        click.secho("The config file `%s` already exists." % user_config_file, fg="red")
+        if click.confirm("Overwrite?"):
+            pass
+        else:
+            click.secho("Goodbye")
+            return False
+
+    instance = "[instance.live]" # default for main instance
+    url = click.prompt('Please enter the API URL or leave blank for default', default="https://app.dimensions.ai")
+    login = click.prompt('Please enter your username')
+    password = click.prompt('Please enter your password', hide_input=True, confirmation_prompt=True)
+
+    f= open(user_config_file,"w+")
+    f.write(instance + "\n")
+    f.write("url=" + url + "\n")
+    f.write("login=" + login + "\n")
+    f.write("password=" + password + "\n")
+    f.close()
+    click.secho(
+        "Created %s" % user_config_file, dim=True
+    )
