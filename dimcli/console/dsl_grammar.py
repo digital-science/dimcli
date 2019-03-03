@@ -2,8 +2,15 @@
 # https://docs.dimensions.ai/dsl/data.html
 #
 
+# need a structure that contains desc / and possibly other lang metadata
+# then maybe we can have 'children' as a key for nested objects
+
+
+
+
 VOCABULARY = {
     'allowed_starts': {
+        'help' : [],
         'quit' : [],
         'show' : [ 'json', 'json_pretty', 'json_html'],
         'search': [],
@@ -261,6 +268,37 @@ VOCABULARY = {
         },
     }
 }
+
+
+
+
+def search_vocab_get_key(val, dct=VOCABULARY, parent=None):
+    """
+    quick and dirty way to search for a match in the voc dict
+    >> print(search_vocab_get_key("journal")) # =entities
+
+    So that the autocomplete can determine the grammar-type of an object
+    """
+    for x in dct:
+        if x == val:
+            return parent
+        # print(x, type(dct[x]))
+        if type(dct[x]) == dict:
+            # print("recur")
+            res = search_vocab_get_key(val, dct[x], x)
+            if res is not None:
+                return res
+        if type(dct[x]) == list:
+            for y in dct[x]:
+                if type(y) == tuple:
+                    if y[0] == val:
+                        return x      
+                elif y == val:
+                    return x   
+                
+
+
+
 
 
 # template

@@ -54,6 +54,7 @@ class CleverCompleter(Completer):
         elif len(line_minus_current) == 0:  # remove the current stem from line
             # beginning: only main keywords
             candidates = VOCABULARY['allowed_starts']
+            # candidates = [(x, ""VOCABULARY['allowed_starts']
 
         elif line_last_word(line_minus_current) in ["show"]:
             # beginning: only main keywords
@@ -114,4 +115,9 @@ class CleverCompleter(Completer):
         # finally
         for keyword in candidates:
             if keyword.startswith(word):
-                yield Completion(keyword, start_position=-len(word))
+                yield Completion(
+                    keyword, 
+                    start_position=-len(word),
+                    display=keyword,
+                    display_meta="Type: " + search_vocab_get_key(keyword)
+                    )

@@ -33,6 +33,11 @@ from .key_bindings import *
 from .lexer import *
 from ..dimensions import Dsl, USER_HISTORY_FILE, USER_JSON_OUTPUTS_DIR
 
+
+
+HELP_MESSAGE =  "Usage: Tab = suggest , Ctrl-c = abort query , Ctrl-d = exit , Ctrl-o = open online docs"
+
+
 #
 #
 # DIMENSIONS QUERY AND DATA HANDLING
@@ -194,10 +199,6 @@ def run(instance="live"):
         # if err.response.status_code == 401:
         #     print("here")
 
-    
-    click.secho(
-        "Usage: Tab = suggest , Ctrl-c = abort query , Ctrl-d = exit , Ctrl-o = open online docs",
-        dim=True)
     click.secho("Welcome! Please enter your query below.")
 
     # history
@@ -212,7 +213,7 @@ def run(instance="live"):
                 "\n> ",
                 default="",  # you can pass a default text to begin with
                 completer=CleverCompleter(),
-                complete_style=CompleteStyle.READLINE_LIKE,
+                complete_style=CompleteStyle.MULTI_COLUMN,
                 # validator=BasicValidator(),
                 # validate_while_typing=False,
                 multiline=False,
@@ -225,13 +226,16 @@ def run(instance="live"):
         except EOFError:
             break  # Control-D pressed.
         except Exception as e:
-            print(e)
+            print(e, "here...")
             sys.exit(0)  
         else:
             if text.strip() == "":
                 continue
             elif text == "quit":
                 break
+            elif text == "help":
+                click.secho(HELP_MESSAGE, dim=True)
+                continue
             handle_query(CLIENT, text, databuffer)
     print("GoodBye!")
 
