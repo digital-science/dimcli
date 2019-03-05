@@ -17,7 +17,6 @@ Main features:
 
 > Development status: alpha.
 
-Feedback's welcome, please use Github's [issues](https://github.com/lambdamusic/dimcli/issues/new).
 
 ### Install
 
@@ -211,3 +210,8 @@ $ mkvirtualenv dimcli
 $ pip install --editable .
 $ ./run-shell # launch iPython with library preloaded so you can play with it
 ```
+
+
+### Comments, bug reports
+
+Dimcli lives on [Github](https://github.com/lambdamusic/dimcli/). You can file [issues]([issues](https://github.com/lambdamusic/dimcli/issues/new)) or pull requests there. Suggestions, pull requests and improvements welcome!

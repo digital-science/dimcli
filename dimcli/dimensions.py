@@ -89,7 +89,7 @@ class Dsl:
             print('Login token expired. Logging in again.')
             self._login()
             return self.query(q)
-        elif resp.status_code == 200 or resp.status_code == 400:  # OK or Error
+        elif resp.status_code in [200, 400, 500]:  # OK or Error
             #   Display raw result
             if rich_display or (rich_display is None and self._rich_display):
                 result = Result(resp.json())
