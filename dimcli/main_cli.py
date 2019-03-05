@@ -73,9 +73,6 @@ def main_cli(ctx, instance_name=None, init=False, config=False, history=False):
     # launch REPL
     repl.run(instance_name)
 
-    # dsl = Dsl(instance)
-    # dsl.query("search grants return grants", True)
-    # print(res)
 
 
 if __name__ == "__main__":

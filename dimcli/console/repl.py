@@ -199,7 +199,7 @@ def run(instance="live"):
         # if err.response.status_code == 401:
         #     print("here")
 
-    click.secho("Welcome! Please enter your query below.")
+    click.secho("Welcome! Ready to query endpoint: %s" % CLIENT._url)
 
     # history
     session = PromptSession(history=SelectiveFileHistory(USER_HISTORY_FILE))

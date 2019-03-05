@@ -46,6 +46,6 @@ setup(
     install_requires=REQUIREMENTS_DATA,
     entry_points="""
         [console_scripts]
-        dimcli = dimcli.cli:main_cli
+        dimcli = dimcli.main_cli:main_cli
     """,
 )
