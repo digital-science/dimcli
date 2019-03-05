@@ -280,7 +280,7 @@ def search_vocab_get_key(val, dct=VOCABULARY, parent=None):
     So that the autocomplete can determine the grammar-type of an object
     """
     for x in dct:
-        if x == val:
+        if x == val and parent != "dimensions_urls":
             return parent
         # print(x, type(dct[x]))
         if type(dct[x]) == dict:
