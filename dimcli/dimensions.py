@@ -26,12 +26,30 @@ USER_HISTORY_FILE = os.path.expanduser(USER_DIR + "history.txt")
 
 
 class Result(IPython.display.JSON):
+    """
+    Wrapper for JSON results from DSL
+
+    # Magic methods: 
+
+    * res[publications] # => the dict section
+    * res.publications # => same
+    * res.xxx # => false, not found
+    * res.stats # => the _stats dict
+    """
     def __init__(self, data):
         IPython.display.JSON.__init__(self, data)
 
     def __getitem__(self, key):
-        return self.data[key]
+        "return dict key as slice"
+        if key in self.data:
+            return self.data[key]
+        else:
+            return False
 
+    def __getattr__(self, name):
+        if name == "stats":
+            name = "_stats" # syntactic sugar
+        return self.__getitem__(name)
 
 class Dsl:
     def __init__(self, instance="live", show_results=False, rich_display=False):
@@ -91,15 +109,7 @@ class Dsl:
             return self.query(q)
         elif resp.status_code in [200, 400, 500]:  # OK or Error
             #   Display raw result
-            if rich_display or (rich_display is None and self._rich_display):
-                result = Result(resp.json())
-                if show_results or (show_results is None and self._show_results):
-                    IPython.display.display(result)
-            else:
-                result = resp.json()
-                if show_results or (show_results is None and self._show_results):
-                    print(json.dumps(result, indent=4, sort_keys=True))
-            return result
+            return self._do_query(resp, show_results, rich_display)
         else:
             if retry > 0:
                 print('Retrying in 30 secs')
@@ -111,6 +121,20 @@ class Dsl:
                     retry=retry - 1)
             else:
                 resp.raise_for_status()
+
+    def _do_query(self, response, show_results, rich_display):
+        """
+        Execute DSL query based on environment
+        """
+        if rich_display or (rich_display is None and self._rich_display):
+            result = Result(response.json())
+            if show_results or (show_results is None and self._show_results):
+                IPython.display.display(result)
+        else:
+            result = response.json()
+            if show_results or (show_results is None and self._show_results):
+                print(json.dumps(result, indent=4, sort_keys=True))
+        return result
 
 
 def chunks_of(data, size):

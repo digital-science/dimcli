@@ -6,4 +6,5 @@
 # $ ipython startup.py -i
 #
 
-from dimcli import *
+import dimcli
+dsl = dimcli.Dsl()

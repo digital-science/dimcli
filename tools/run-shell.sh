@@ -6,5 +6,7 @@ clear
 
 echo "=================="
 echo "Opening iPython with dimcli pre-loaded..."
+echo "import dimcli"
+echo "dsl = dimcli.Dsl()"
 echo "=================="
 ipython shellprofile.py --no-simple-prompt --no-confirm-exit -i
