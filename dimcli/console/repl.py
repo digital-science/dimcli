@@ -192,7 +192,7 @@ def run(instance="live"):
     """
 
     try:
-        CLIENT = Dsl(instance=instance, show_results=False, rich_display=False)
+        CLIENT = Dsl(instance=instance)
     except requests.exceptions.HTTPError as err:
         print(err)
         sys.exit(1)

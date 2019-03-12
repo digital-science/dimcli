@@ -29,6 +29,9 @@ class Result(IPython.display.JSON):
     """
     Wrapper for JSON results from DSL
 
+    res = dsl.query("search publications return publications")
+    res.data # => shows the underlying JSON data
+
     # Magic methods: 
 
     * res[publications] # => the dict section
@@ -52,12 +55,10 @@ class Result(IPython.display.JSON):
         return self.__getitem__(name)
 
 class Dsl:
-    def __init__(self, instance="live", show_results=False, rich_display=False):
+    def __init__(self, instance="live"):
 
         config_section = self._get_config(instance)
 
-        self._show_results = show_results
-        self._rich_display = rich_display  # whether to iPython renderers
         self._url = config_section['url']
         self._username = config_section['login']
         self._password = config_section['password']
@@ -89,52 +90,41 @@ class Dsl:
         token = response.json()['token']
         self._headers = {'Authorization': "JWT " + token}
 
-    def query(self, q, show_results=None, rich_display=None, retry=0):
+    def query(self, q, retry=0):
         """
         Execute DSL query.
         By default it doesn't show results, but it uses the iPython rich widgets for it, optimized for Jupyter Notebooks.
         """
         #   Execute DSL query.
-        resp = requests.post(
+        response = requests.post(
             '{}/api/dsl.json'.format(self._url), data=q, headers=self._headers)
-        if resp.status_code == 429:  # Too Many Requests
+        if response.status_code == 429:  
+            # Too Many Requests
             print(
                 'Too Many Requests for the Server. Sleeping for 30 seconds and then retrying.'
             )
             time.sleep(30)
             return self.query(q)
-        elif resp.status_code == 403:  # Forbidden:
+        elif response.status_code == 403:  
+            # Forbidden:
             print('Login token expired. Logging in again.')
             self._login()
             return self.query(q)
-        elif resp.status_code in [200, 400, 500]:  # OK or Error
-            #   Display raw result
-            return self._do_query(resp, show_results, rich_display)
+        elif response.status_code in [200, 400, 500]:  
+            ###  
+            # OK or Error Info :-)
+            ###
+            result = Result(response.json())
+            return result
         else:
             if retry > 0:
                 print('Retrying in 30 secs')
                 time.sleep(30)
                 return self.query(
                     q,
-                    show_result=show_result,
-                    rich_display=rich_display,
                     retry=retry - 1)
             else:
-                resp.raise_for_status()
-
-    def _do_query(self, response, show_results, rich_display):
-        """
-        Execute DSL query based on environment
-        """
-        if rich_display or (rich_display is None and self._rich_display):
-            result = Result(response.json())
-            if show_results or (show_results is None and self._show_results):
-                IPython.display.display(result)
-        else:
-            result = response.json()
-            if show_results or (show_results is None and self._show_results):
-                print(json.dumps(result, indent=4, sort_keys=True))
-        return result
+                response.raise_for_status()
 
 
 def chunks_of(data, size):
