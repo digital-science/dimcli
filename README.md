@@ -101,16 +101,21 @@ In [1]: import dimcli
 # if you have set up a credentials file, no need to pass log in details
 In [2]: dsl = dimcli.Dsl()
 
-# errors are handled transparently
+# queries always return a Result object (subclassing IPython.display.JSON)
 In [3]: dsl.query("search grants for \"malaria\" return publications")
-Out[3]:
+Out[3]: <dimcli.dimensions.Result object>
+
+# use the .data method to get the JSON
+In [4]: dsl.query("search grants for \"malaria\" return publications").data
+Out[4]:
 {'errors': {'query': {'header': 'Semantic Error',
    'details': ["Semantic errors found:\n\tFacet 'publications' is not present in source 'grants'. Available facets are: FOR,FOR_first,HRCS_HC,HRCS_RAC,RCDC,active_year,funder_countries,funders,funding_org_acronym,funding_org_city,funding_org_name,language,research_org_cities,research_org_countries,research_org_name,research_org_state_codes,research_orgs,researchers,start_year,title_language"],
    'query': 'search grants for "malaria" return publications'}}}
 
 # now a good query
-In [4]: dsl.query("search grants for \"malaria\" return researchers")
-Out[4]:
+In [5]: res = dsl.query("search grants for \"malaria\" return researchers")
+In [6]: res.data
+Out[6]:
 {'researchers': [{'id': 'ur.01332073522.49',
    'count': 75,
    'last_name': 'White',
@@ -199,6 +204,40 @@ Out[4]:
    'last_name': 'Wataya',
    'first_name': 'Yusuke'}],
  '_stats': {'total_count': 8735}}
+
+# JSON keys are available as slice objects or attributes
+In [7]: res.researchers[0] 
+Out[7]:
+{'id': 'ur.01332073522.49',
+ 'count': 75,
+ 'last_name': 'White',
+ 'first_name': 'Nicholas John'}
+# note: res.['researchers'] is also allowed!
+
+# so now let's pull out all names and surnames
+In [8]: [x['first_name'] + " " + x['last_name'] for x in res.researchers]
+Out[8]:
+['Nicholas John White',
+ 'Kevin Marsh',
+ 'Nicholas Philip John Day',
+ 'Takafumi Tsuboi',
+ 'Malcolm Edward Molyneux',
+ 'Kazuyuki Tanabe',
+ 'Stephen Lev Hoffman',
+ 'Toshihiro Horii',
+ 'Louis H Miller',
+ 'Francois Henri Nosten',
+ 'Motomi Torii',
+ 'Alan Frederick Cowman',
+ 'Patrick Emmet Duffy',
+ 'Satoru Kawai',
+ 'Alister Gordon Craig',
+ 'Fumihiko Kawamoto',
+ 'Makoto Hirai',
+ 'Marcelo Urbano Ferreira',
+ 'Osamu Kaneko',
+ 'Yusuke Wataya']
+
 ```
 
 ### Develop
