@@ -21,7 +21,7 @@ Main features:
 ### Install
 
 ```
-$ pip install dimcli
+$ pip install dimcli -U
 ```
 
 Current version: see [pypi homepage](https://pypi.org/project/dimcli/).
