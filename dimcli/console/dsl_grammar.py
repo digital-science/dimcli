@@ -21,6 +21,7 @@ VOCABULARY = {
         'patents' : 'https://app.dimensions.ai/details/patent/',
         'policy_documents' : 'https://app.dimensions.ai/details/clinical_trial/',
         'clinical_trials' : 'https://app.dimensions.ai/details/policy_documents/',
+        'researchers' : 'https://app.dimensions.ai/discover/publication?and_facet_researcher=',
     },
     'lang': [
         'search',

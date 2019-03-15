@@ -107,9 +107,13 @@ def print_smart_preview(jsondata, maxitems=10):
                 if counter <= maxitems:
                     try:  # title and url/id if object has them
                         url = get_dimensions_url(row['id'], key) or row['id']
+                        if 'title' in row.keys():
+                            name_or_title = row['title'].strip()
+                        else:
+                            name_or_title = row['first_name'] + " " + row['last_name']
                         click.echo(
                             click.style("[" + str(counter) + "] ", dim=True) +
-                            click.style(row['title'].strip(), bold=True) +
+                            click.style(name_or_title , bold=True) +
                             click.style(" (id: " + url + " )", fg='blue'))
 
                     except:  # fallback: full row
@@ -172,7 +176,8 @@ def handle_query(CLIENT, text, databuffer):
                 print(res.data["errors"])
 
         else:
-            print("Tot Results: ", res.data["_stats"]["total_count"])
+            if res.stats:
+                print("Tot Results: ", res.stats["total_count"])
             for k in res.data.keys():
                 if k != "_stats":
                     print(k.capitalize() + ":", len(res.data[k]))
