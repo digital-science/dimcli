@@ -14,6 +14,7 @@ VOCABULARY = {
         'quit' : [],
         'show' : [ 'json', 'json_pretty', 'json_html'],
         'search': [],
+        'describe': [ 'version', 'source', 'entity', 'schema'],
     },
     'dimensions_urls' : {
         'publications' : 'https://app.dimensions.ai/details/publication/',
