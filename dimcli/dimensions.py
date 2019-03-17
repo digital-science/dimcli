@@ -7,17 +7,29 @@ import click
 import IPython.display
 from itertools import islice
 
-# Authentication
-# Authentication is read from a config file. Create a dsl.ini in ~/.dimensions/ which has to look like this:
-
+#
+#
+# File-based Authentication
+# ===================
+#
+# Authentication details can be stored in a `dsl.ini` file in `~/.dimensions/`
+# File contents need to have this structure:
+#
+#
 # [instance.live]
 # url=https://app.dimensions.ai
 # login=your_username
 # password=your_password
-
-# The section name has to start with "instance.". "live" is the default name for most installations.
 #
-# If you have access to other Dimensions DBs just add an entry for them with a suitable name.
+#
+# The section name has to start with "instance.". 
+# "live" is the default name for most installations.
+#
+# If you have access to other Dimensions APIs just add an entry for them with a suitable name.
+#
+#
+#
+
 
 USER_DIR = os.path.expanduser("~/.dimensions/")
 USER_CONFIG_FILE = os.path.expanduser(USER_DIR + "dsl.ini")
@@ -34,10 +46,11 @@ class Result(IPython.display.JSON):
 
     # Magic methods: 
 
-    * res[publications] # => the dict section
-    * res.publications # => same
-    * res.xxx # => false, not found
-    * res.stats # => the _stats dict
+    >>> res[publications] # => the dict section
+    >>> res.publications # => same
+    >>> res.xxx # => false, not found
+    >>> res.stats # => the _stats dict
+
     """
     def __init__(self, data):
         IPython.display.JSON.__init__(self, data)
@@ -54,18 +67,43 @@ class Result(IPython.display.JSON):
             name = "_stats" # syntactic sugar
         return self.__getitem__(name)
 
+
+
 class Dsl:
-    def __init__(self, instance="live"):
+    """
+    Object for abstracting common interaction steps with the Dimensions API. 
+    Most often you just want to instantiate, autheticate and query() - yeah!
 
-        config_section = self._get_config(instance)
+    >>> import dimcli
+    # if you have set up a credentials file, no need to pass log in details
+    >>> dsl = dimcli.Dsl()
+    # queries always return a Result object (subclassing IPython.display.JSON)
+    >>> dsl.query("search grants for \"malaria\" return researchers")
+    >>> <dimcli.dimensions.Result object>
+    # use the .data method to get the JSON
+    >>> dsl.query("search grants for \"malaria\" return researchers").data
+    >>> {'researchers': [{'id': 'ur.01332073522.49',
+            'count': 75,
+            'last_name': 'White',
+            'first_name': 'Nicholas J'},
+        "... JSON data continues ... "
 
-        self._url = config_section['url']
-        self._username = config_section['login']
-        self._password = config_section['password']
+    """
+    def __init__(self, instance="live", user="", password="", endpoint="https://app.dimensions.ai"):
+
+        if user and password:
+            self._url = endpoint
+            self._username = user
+            self._password = password
+        else:
+            config_section = self._get_config_from_file(instance)
+            self._url = config_section['url']
+            self._username = config_section['login']
+            self._password = config_section['password']
 
         self._login()
 
-    def _get_config(self, instance_name):
+    def _get_config_from_file(self, instance_name):
         config = configparser.ConfigParser()
         try:
             config.read(os.path.expanduser(USER_CONFIG_FILE))
