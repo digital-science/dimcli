@@ -35,7 +35,7 @@ from ..dimensions import Dsl, USER_HISTORY_FILE, USER_JSON_OUTPUTS_DIR
 
 
 
-HELP_MESSAGE =  "Usage: Tab = suggest , Ctrl-c = abort query , Ctrl-d = exit , Ctrl-o = open online docs"
+HELP_MESSAGE =  "HELP >>> Tab = suggest , Ctrl-c = abort query , Ctrl-d = exit , Ctrl-o = open online docs"
 
 
 #
@@ -97,6 +97,7 @@ def print_smart_preview(jsondata, maxitems=10):
     Preview items in console
     If it's one of the main sources, try to show title/id. Otherwise show json in one line
     """
+    click.secho("Showing first %d records from latest query.." % maxitems, dim=True)
     counter = 0
     for key in jsondata.keys():
         if key == "_stats":
@@ -149,7 +150,6 @@ def show_command(text, databuffer):
         except ValueError:
             slice_no = 10
             
-        click.secho("Showing first %d records from latest query.." % slice_no, dim=True)
         print_smart_preview(jsondata, maxitems=slice_no)
 
 
@@ -163,7 +163,7 @@ def handle_query(CLIENT, text, databuffer):
     else:
         # lazy complete
         text = line_add_lazy_return(text)
-        print("You said: %s" % text)
+        click.secho("You said: %s" % text, dim=True)
         # RUN QUERY
         res = CLIENT.query(text)
         # #
@@ -182,6 +182,9 @@ def handle_query(CLIENT, text, databuffer):
                 if k != "_stats":
                     print(k.capitalize() + ":", len(res.data[k]))
             databuffer.load(res.data, text)
+            if False:
+                click.secho("--------", dim=True)
+                print_smart_preview(res.data, maxitems=3)
 
 
 #
@@ -231,7 +234,7 @@ def run(instance="live"):
         except EOFError:
             break  # Control-D pressed.
         except Exception as e:
-            print(e, "here...")
+            print(e)
             sys.exit(0)  
         else:
             if text.strip() == "":
@@ -241,7 +244,11 @@ def run(instance="live"):
             elif text == "help":
                 click.secho(HELP_MESSAGE, dim=True)
                 continue
-            handle_query(CLIENT, text, databuffer)
+            try:
+                handle_query(CLIENT, text, databuffer)
+            except Exception as e:
+                print(e)
+                continue
     print("GoodBye!")
 
 
