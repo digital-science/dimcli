@@ -1,24 +1,31 @@
+
+- [Dimcli](#dimcli)
+    - [In a nutshell](#in-a-nutshell)
+  - [Install](#install)
+  - [Getting Started](#getting-started)
+    - [Credentials File](#credentials-file)
+    - [Advanced: multiple APIs](#advanced-multiple-apis)
+  - [Using the library from Python](#using-the-library-from-python)
+  - [Comments, bug reports](#comments-bug-reports)
+
+
 # Dimcli
 
-Python library for accessing the [Dimensions](https://www.dimensions.ai/) [DSL](https://app.dimensions.ai/dsl).
+Python library for accessing the [Dimensions](https://www.dimensions.ai/) API.
 
 -   [https://github.com/lambdamusic/dimcli](https://github.com/lambdamusic/dimcli)
 -   [https://pypi.org/project/dimcli/](https://pypi.org/project/dimcli/)
 
-### Features
+### In a nutshell
 
-Dimcli includes a Command Line Interface tool that allows to launch queries against a Dimensions endpoint.
+Dimcli is a small Python wrapper around the Dimensions API. It makes it easier to authenticate, query the Dimensions endpoint and handle the results, normally returned as JSON. 
 
-Main features:
+Second, if used as a command line application, Dimcli offers an interactive environment for learning about the Dimensions Search Language ([DSL](https://app.dimensions.ai/dsl)). Calling `dimcli` from the shell opens a console-like tool with many features such as autocomplete based on DSL grammar, persistent history across sessions, pretty-printing or previewing of JSON results, and more.  
 
--   autocomplete based on DSL grammar
--   history persists across sessions
--   displays query results as raw json or quick preview
-
-> Development status: alpha.
+> Note: this project is still in active development.
 
 
-### Install
+## Install
 
 ```
 $ pip install dimcli -U
@@ -32,9 +39,9 @@ Then you can check if the installation worked with
 $ dimcli --help
 ```
 
-### Running the CLI
+## Getting Started
 
-Run the CLI by typing
+Run the command line application by typing
 
 ```
 $ dimcli
@@ -70,9 +77,9 @@ In most situations you can simply copy/paste the text above and change the login
 
 > Note: you must always have an entry in the configuration called `[instance.live]`
 
-#### Multiple Dimensions Environments
+### Advanced: multiple APIs
 
-If you have access to multiple Dimensions instances, you can just add more entries to the credentials files.
+If you have access to multiple Dimensions API endpoints (or instances), you can just add more entries to the credentials file.
 
 You can add details for more than one instance but make sure you give them unique names. So for example you can add another entry like this:
 
@@ -91,7 +98,7 @@ $ dimcli private
 
 > NOTE `live` is the instance name taken by default when no instance is specified.
 
-### Using the library from Python
+## Using the library from Python
 
 _TODO add more examples_
 
@@ -240,17 +247,7 @@ Out[8]:
 
 ```
 
-### Develop
 
-Note: requires [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/).
-
-```
-$ mkvirtualenv dimcli
-$ pip install --editable .
-$ ./run-shell # launch iPython with library preloaded so you can play with it
-```
-
-
-### Comments, bug reports
+## Comments, bug reports
 
 Dimcli lives on [Github](https://github.com/lambdamusic/dimcli/). You can file [issues]([issues](https://github.com/lambdamusic/dimcli/issues/new)) or pull requests there. Suggestions, pull requests and improvements welcome!
