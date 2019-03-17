@@ -1,14 +1,16 @@
 # !/usr/bin/env python
 #  -*- coding: UTF-8 -*-
 """
-Unit test stub 
+Unit tests for Dimcli 
 """
 
 from __future__ import print_function
 
 import unittest, os, sys, click
+import configparser
 
 from .. import *
+from ..dimensions import USER_CONFIG_FILE
 
 
 class TestOne(unittest.TestCase):
@@ -18,17 +20,30 @@ class TestOne(unittest.TestCase):
     """
 
     click.secho("**TESTS**", fg="red")
-    # client = SciGraphClient(verbose=True)
 
     def test_001(self):
-        click.secho("TEST 001: query using redirect API.", fg="green")
-
-        # click.secho("Querying URI...", fg="red")
-        # self.client.get_entity_from_id(uri="http://www.grid.ac/institutes/grid.443610.4")
-        # self.client.print_report()
-
+        click.secho("\nTEST 001: load Dimcli using file-based credentials.", fg="green")
+        # ----
+        d = Dsl()
+        res = d.query("search publications where year=2018 return publications")
+        print("Query results: ", res.keys_and_count())
+        # ----
         click.secho("Completed test succesfully", fg="green")
 
+    def test_002(self):
+        click.secho("\nTEST 002: load Dimcli by passing credentials explicitly.", fg="green")
+        # ----
+        # get credentials from file as strings
+        config = configparser.ConfigParser()
+        config.read(os.path.expanduser(USER_CONFIG_FILE))
+        section = config['instance.live' ]
+        USER = section['login']
+        PSW = section['password']
+        d = Dsl(user=USER, password=PSW)
+        res = d.query("search publications where year=2018 return publications")
+        print("Query results: ", res.keys_and_count())
+        # ----
+        click.secho("\n--------\nCompleted all tests", fg="green")
 
 if __name__ == "__main__":
     unittest.main()

@@ -2,10 +2,10 @@
 - [Dimcli](#dimcli)
     - [In a nutshell](#in-a-nutshell)
   - [Install](#install)
-  - [Getting Started](#getting-started)
+  - [Using the Query Console](#using-the-query-console)
     - [Credentials File](#credentials-file)
     - [Advanced: multiple APIs](#advanced-multiple-apis)
-  - [Using the library from Python](#using-the-library-from-python)
+  - [Using Dimcli as a Python library](#using-dimcli-as-a-python-library)
   - [Comments, bug reports](#comments-bug-reports)
 
 
@@ -39,7 +39,7 @@ Then you can check if the installation worked with
 $ dimcli --help
 ```
 
-## Getting Started
+## Using the Query Console
 
 Run the command line application by typing
 
@@ -98,31 +98,39 @@ $ dimcli private
 
 > NOTE `live` is the instance name taken by default when no instance is specified.
 
-## Using the library from Python
+## Using Dimcli as a Python library
 
-_TODO add more examples_
+Dimcli can be used within a Python script as a wrapper around the Dimensions API. It makes it easier to authenticate, query the Dimensions endpoint and handle the results, normally returned as JSON. 
 
 ```
-In [1]: import dimcli
+>>> import dimcli
 
-# if you have set up a credentials file, no need to pass log in details
-In [2]: dsl = dimcli.Dsl()
+# if you have already set up a credentials file (above), no need to pass log in details
+>>> dsl = dimcli.Dsl()
 
+# otherwise you can authenticate by passing your credentials explicitly
+>>> dsl = dimcli.Dsl(user="mary.poppins", password="chimneysweeper")
+
+# you can also pass an endpoint, which defaults to "https://app.dimensions.ai"
+>>> dsl = dimcli.Dsl(user="mary.poppins", password="chimneysweeper", ednpoint="https://nannies-research.dimensions.ai")
+```
+
+Once logged in, off you go with some queries:
+
+```
 # queries always return a Result object (subclassing IPython.display.JSON)
-In [3]: dsl.query("search grants for \"malaria\" return publications")
-Out[3]: <dimcli.dimensions.Result object>
+>>> dsl.query("search grants for \"malaria\" return publications")
+<dimcli.dimensions.Result object>
 
 # use the .data method to get the JSON
-In [4]: dsl.query("search grants for \"malaria\" return publications").data
-Out[4]:
+>>> dsl.query("search grants for \"malaria\" return publications").data
 {'errors': {'query': {'header': 'Semantic Error',
    'details': ["Semantic errors found:\n\tFacet 'publications' is not present in source 'grants'. Available facets are: FOR,FOR_first,HRCS_HC,HRCS_RAC,RCDC,active_year,funder_countries,funders,funding_org_acronym,funding_org_city,funding_org_name,language,research_org_cities,research_org_countries,research_org_name,research_org_state_codes,research_orgs,researchers,start_year,title_language"],
    'query': 'search grants for "malaria" return publications'}}}
 
 # now a good query
-In [5]: res = dsl.query("search grants for \"malaria\" return researchers")
-In [6]: res.data
-Out[6]:
+>>> res = dsl.query("search grants for \"malaria\" return researchers")
+>>> print(res.data)
 {'researchers': [{'id': 'ur.01332073522.49',
    'count': 75,
    'last_name': 'White',
@@ -213,8 +221,7 @@ Out[6]:
  '_stats': {'total_count': 8735}}
 
 # JSON keys are available as slice objects or attributes
-In [7]: res.researchers[0] 
-Out[7]:
+>>> res.researchers[0] 
 {'id': 'ur.01332073522.49',
  'count': 75,
  'last_name': 'White',
@@ -222,8 +229,7 @@ Out[7]:
 # note: res.['researchers'] is also allowed!
 
 # so now let's pull out all names and surnames
-In [8]: [x['first_name'] + " " + x['last_name'] for x in res.researchers]
-Out[8]:
+>>> [x['first_name'] + " " + x['last_name'] for x in res.researchers]
 ['Nicholas John White',
  'Kevin Marsh',
  'Nicholas Philip John Day',

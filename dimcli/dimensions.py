@@ -41,8 +41,8 @@ class Result(IPython.display.JSON):
     """
     Wrapper for JSON results from DSL
 
-    res = dsl.query("search publications return publications")
-    res.data # => shows the underlying JSON data
+    >>> res = dsl.query("search publications return publications")
+    >>> res.data # => shows the underlying JSON data
 
     # Magic methods: 
 
@@ -67,7 +67,10 @@ class Result(IPython.display.JSON):
             name = "_stats" # syntactic sugar
         return self.__getitem__(name)
 
-
+    def keys(self,):
+        return list(self.data.keys())
+    def keys_and_count(self,):
+        return [(x, len(self.data[x])) for x in self.data.keys()]
 
 class Dsl:
     """
