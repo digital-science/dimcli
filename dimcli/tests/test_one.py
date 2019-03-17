@@ -45,5 +45,18 @@ class TestOne(unittest.TestCase):
         # ----
         click.secho("\n--------\nCompleted all tests", fg="green")
 
+    def test_003(self):
+        click.secho("\nTEST 003: Try magic methods on result object.", fg="green")
+        # ----
+        d = Dsl()
+        res = d.query("search publications where year=2018 return publications")
+        print("Query results: ", res.keys_and_count())
+        print(" ==> res.publications[0]: ", res.publications[0])
+        print(" ==> res.stats: ", res.stats)
+        print(" ==> res.notthere: ", res.notthere)
+        # ----
+        click.secho("Completed test succesfully", fg="green")
+
+
 if __name__ == "__main__":
     unittest.main()
