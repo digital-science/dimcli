@@ -22,10 +22,11 @@ sources = list(VOCABULARY['sources'].keys())
 #
 fields = list_flatten([VOCABULARY['sources'][source]['fields'] for source in sources])
 facets = list_flatten([VOCABULARY['sources'][source]['facets'] for source in sources])
-entities = list_flatten([VOCABULARY['sources'][source]['entities'] for source in sources])
 fieldsets = list_flatten([VOCABULARY['sources'][source]['fieldsets'] for source in sources])
 metrics = list_flatten([VOCABULARY['sources'][source]['metrics'] for source in sources])
 search_fields = list_flatten([VOCABULARY['sources'][source]['search_fields'] for source in sources])
+# entities = list_flatten([VOCABULARY['sources'][source]['entities'] for source in sources])
+entities = list(VOCABULARY['entities'].keys())
 # ====
 
 class BasicLexer(Lexer):
@@ -74,7 +75,7 @@ class BasicLexer(Lexer):
 
         def _spot_strings_bits(data):
             "note: this is run after the whole sentence has been parsed and marked up, so to be able to spot multi-word strings"
-            STRING_COLOR = "orange"
+            STRING_COLOR = "red"
             is_string_flag = False
             for x in data:
                 if is_string_flag:

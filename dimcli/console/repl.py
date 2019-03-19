@@ -163,7 +163,7 @@ def handle_query(CLIENT, text, databuffer):
     else:
         # lazy complete
         text = line_add_lazy_return(text)
-        click.secho("You said: %s" % text, dim=True)
+        click.secho("You said: %s" % text, fg="black", dim=True)
         # RUN QUERY
         res = CLIENT.query(text)
         # #

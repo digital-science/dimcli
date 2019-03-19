@@ -54,7 +54,6 @@ class CleverCompleter(Completer):
         elif len(line_minus_current) == 0:  # remove the current stem from line
             # beginning: only main keywords
             candidates = VOCABULARY['allowed_starts']
-            # candidates = [(x, ""VOCABULARY['allowed_starts']
 
         elif line_last_word(line_minus_current) in ["show"]:
             # beginning: only main keywords
@@ -62,47 +61,40 @@ class CleverCompleter(Completer):
 
         elif line_last_word(line_minus_current) in ["search"]:
             # after search and return only sources
-            candidates = VOCABULARY['sources'].keys()
+            candidates = listify_and_unify(VOCABULARY['sources'].keys())
 
         elif line_last_word(line_minus_current) in ["return"]:
-            # after search and return only sources
-            # candidates = list(VOCABULARY['sources'].keys())
             source = line_search_subject(line)  # generic solution
             if source in VOCABULARY['sources'].keys():
-                fields = VOCABULARY['sources'][source]['facets']
-                entities = [
-                    x[0] for x in VOCABULARY['sources'][source]['entities']
-                ]
-                candidates = list(set(fields + entities + [source]))
+                facets = VOCABULARY['sources'][source]['facets'].keys()
+                candidates = listify_and_unify(facets, [source])
 
         elif line_last_word(line_minus_current) == "in":
             source = line_search_subject(line)  # generic solution
             if source in VOCABULARY['sources'].keys():
-                candidates = VOCABULARY['sources'][source]['search_fields']
+                # candidates = VOCABULARY['sources'][source]['search_fields']
+                candidates = listify_and_unify(VOCABULARY['sources'][source]['search_fields'])
 
         elif line_last_word(line_minus_current) in ["where", "and"]:
             source = line_search_subject(line)  # generic solution
             if source in VOCABULARY['sources'].keys():
-                fields = VOCABULARY['sources'][source]['fields']
-                facets = VOCABULARY['sources'][source]['facets']
-                entities = [
-                    x[0] for x in VOCABULARY['sources'][source]['entities']
-                ]
-                candidates = list(set(fields + entities + facets))
+                fields = VOCABULARY['sources'][source]['fields'].keys()
+                facets = VOCABULARY['sources'][source]['facets'].keys()
+                candidates = listify_and_unify(fields, facets)
 
         elif line_last_word(line_minus_current) == "aggregate":
             source = line_search_subject(line)  # generic solution
             if source in VOCABULARY['sources'].keys():
-                candidates = VOCABULARY['sources'][source]['metrics']
+                candidates = listify_and_unify(VOCABULARY['sources'][source]['metrics'].keys())
 
         elif line_last_two_words(line_minus_current) == "sort by":  # # https://docs.dimensions.ai/dsl/language.html#sort         
             source = line_search_subject(line) 
             return_object = line_search_return(line)  
             aggreg_object = line_search_aggregates(line)  
             if return_object in VOCABULARY['sources'].keys(): # if source, can sort by several things
-                metrics = VOCABULARY['sources'][return_object]['metrics']
-                fields = VOCABULARY['sources'][return_object]['fields']
-                candidates = list(set(fields + metrics))
+                metrics = VOCABULARY['sources'][return_object]['metrics'].keys()
+                fields = VOCABULARY['sources'][return_object]['fields'].keys()
+                candidates = listify_and_unify(fields, metrics)
             else: # if not source, it's a facet so can only sort by count or aggregates
                 candidates = ['count']
                 if aggreg_object: 

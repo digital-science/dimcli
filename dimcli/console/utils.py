@@ -10,6 +10,17 @@ import os
 from .dsl_grammar import *
 
 
+def listify_and_unify(*args):
+    "util to handle listing together dict.keys() sequences"
+    out = []
+    for x in args:
+        if type(x) == list:
+            out += x
+        else:
+            out += list(x)
+    return out
+
+
 def split_multi_words(llist):
     "break down a list of strings so that it is composed of only 1-word elements"
     broken = [x.split() for x in llist] 

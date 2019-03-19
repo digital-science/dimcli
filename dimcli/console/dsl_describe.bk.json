@@ -1,5 +1,6 @@
-{
-    "entities": {
+{ 
+    "entities": 
+    {
         "categories": {
             "fields": {
                 "id": {
