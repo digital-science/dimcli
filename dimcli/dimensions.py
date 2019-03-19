@@ -72,6 +72,9 @@ class Result(IPython.display.JSON):
     def keys_and_count(self,):
         return [(x, len(self.data[x])) for x in self.data.keys()]
 
+
+
+
 class Dsl:
     """
     Object for abstracting common interaction steps with the Dimensions API. 
@@ -92,7 +95,7 @@ class Dsl:
         "... JSON data continues ... "
 
     """
-    def __init__(self, instance="live", user="", password="", endpoint="https://app.dimensions.ai"):
+    def __init__(self, instance="live", user="", password="", endpoint="https://app.dimensions.ai", show_results=True):
 
         if user and password:
             self._url = endpoint
@@ -104,6 +107,7 @@ class Dsl:
             self._username = config_section['login']
             self._password = config_section['password']
 
+        self._show_results = show_results
         self._login()
 
     def _get_config_from_file(self, instance_name):
@@ -131,7 +135,7 @@ class Dsl:
         token = response.json()['token']
         self._headers = {'Authorization': "JWT " + token}
 
-    def query(self, q, retry=0):
+    def query(self, q, show_results=None, retry=0):
         """
         Execute DSL query.
         By default it doesn't show results, but it uses the iPython rich widgets for it, optimized for Jupyter Notebooks.
@@ -156,6 +160,9 @@ class Dsl:
             # OK or Error Info :-)
             ###
             result = Result(response.json())
+            if show_results or (show_results is None and self._show_results):
+                #  IPython.display.JSON(result.data)
+                 IPython.display.display(result)
             return result
         else:
             if retry > 0:
