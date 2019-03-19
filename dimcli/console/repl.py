@@ -176,8 +176,8 @@ def handle_query(CLIENT, text, databuffer):
                 print(res.data["errors"])
 
         else:
-            if res.stats:
-                print("Tot Results: ", res.stats["total_count"])
+            if res['stats']:
+                print("Tot Results: ", res['stats']["total_count"])
             for k in res.data.keys():
                 if k != "_stats":
                     print(k.capitalize() + ":", len(res.data[k]))
@@ -200,7 +200,7 @@ def run(instance="live"):
     """
 
     try:
-        CLIENT = Dsl(instance=instance)
+        CLIENT = Dsl(instance=instance, show_results=False)
     except requests.exceptions.HTTPError as err:
         print(err)
         sys.exit(1)
