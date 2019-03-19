@@ -115,7 +115,7 @@ Dimcli can be used within a Python script as a wrapper around the Dimensions API
 >>> dsl = dimcli.Dsl(user="mary.poppins", password="chimneysweeper", ednpoint="https://nannies-research.dimensions.ai")
 ```
 
-Once logged in, off you go with some queries:
+Once logged in, you can try some queries:
 
 ```
 # queries always return a Result object (subclassing IPython.display.JSON)
@@ -220,8 +220,8 @@ Once logged in, off you go with some queries:
    'first_name': 'Yusuke'}],
  '_stats': {'total_count': 8735}}
 
-# JSON keys are available as slice objects or attributes
->>> res.researchers[0] 
+# JSON keys are available also as dict attributes
+>>> res['researchers'][0] 
 {'id': 'ur.01332073522.49',
  'count': 75,
  'last_name': 'White',
@@ -229,7 +229,7 @@ Once logged in, off you go with some queries:
 # note: res.['researchers'] is also allowed!
 
 # so now let's pull out all names and surnames
->>> [x['first_name'] + " " + x['last_name'] for x in res.researchers]
+>>> [x['first_name'] + " " + x['last_name'] for x in res['researchers']]
 ['Nicholas John White',
  'Kevin Marsh',
  'Nicholas Philip John Day',

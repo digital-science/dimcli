@@ -51,9 +51,9 @@ class TestOne(unittest.TestCase):
         d = Dsl()
         res = d.query("search publications where year=2018 return publications")
         print("Query results: ", res.keys_and_count())
-        print(" ==> res.publications[0]: ", res.publications[0])
-        print(" ==> res.stats: ", res.stats)
-        print(" ==> res.notthere: ", res.notthere)
+        print(" ==> res.publications[0]: ", res['publications'][0])
+        print(" ==> res.stats: ", res['_stats'])
+        print(" ==> res.notthere: ", res['not_there'])
         # ----
         click.secho("Completed test succesfully", fg="green")
 
