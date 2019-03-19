@@ -14,7 +14,7 @@ from .utils import *
 
 
 
-#
+# ====
 allowed_starts = VOCABULARY['allowed_starts'].keys()
 lang = split_multi_words(VOCABULARY['lang'])
 #
@@ -26,7 +26,7 @@ entities = list_flatten([VOCABULARY['sources'][source]['entities'] for source in
 fieldsets = list_flatten([VOCABULARY['sources'][source]['fieldsets'] for source in sources])
 metrics = list_flatten([VOCABULARY['sources'][source]['metrics'] for source in sources])
 search_fields = list_flatten([VOCABULARY['sources'][source]['search_fields'] for source in sources])
-#
+# ====
 
 class BasicLexer(Lexer):
     """
@@ -35,6 +35,25 @@ class BasicLexer(Lexer):
     def lex_document(self, document):
 
         def get_class(w):
+            "color classes for main objects - color-safe"
+            if w in lang:
+                return "bold"
+            elif w in sources + entities:
+                return "bold"
+            elif w in fields:
+                return "italic"
+            elif w in facets:
+                return "italic" 
+            elif w in metrics:
+                return "italic" 
+            elif w in fieldsets + search_fields:
+                return "italic" 
+            elif w in allowed_starts:
+                return "reverse"
+            else:
+                return "nobold"
+
+        def xx_get_class(w):
             "color classes for main objects"
             if w in lang:
                 return "green"
