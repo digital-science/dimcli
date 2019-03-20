@@ -13,9 +13,22 @@ else:
     # @TODO get in real time from DSL
     pass 
 
-SOURCES = {'sources' : vocab_data['sources']}
+SOURCES = vocab_data['sources']
+ENTITY_TYPES = vocab_data['entities']
 
-ENTITIES = {'entities' : vocab_data['entities']}
+# note: attrs of entities are defined only at the entity_type level
+ENTITIES = [] 
+for x in SOURCES:
+    for val in SOURCES[x]['facets']:
+        if SOURCES[x]['facets'][val]['is_entity']:
+            ENTITIES += [(val, SOURCES[x]['facets'][val]['type'])]
+    for val in SOURCES[x]['fields']:
+        if SOURCES[x]['fields'][val]['is_entity']:
+            ENTITIES += [(val, SOURCES[x]['fields'][val]['type'])]
+ENTITIES = sorted(list(set(ENTITIES))) # => [('FOR', 'category'), ('FOR_first', 'category') etc...]
+
+
+
 
 
 GRAMMAR = {
@@ -70,10 +83,10 @@ GRAMMAR = {
 
 
 
-VOCABULARY = { **SOURCES, **ENTITIES, **GRAMMAR }
+VOCABULARY = { **{'sources' : SOURCES}, **{'entities' : ENTITY_TYPES}, **GRAMMAR }
 
 
- 
+
 
 
 def search_vocab_get_key(val, dct=VOCABULARY, parent=None):
@@ -103,51 +116,3 @@ def search_vocab_get_key(val, dct=VOCABULARY, parent=None):
 
 
 
-
-
-# template
-
-# VOCABULARY = {
-#     'sources': {
-#         'publications': {
-#             'fields': [],
-#             'facets': [],
-#             'entities': [],
-#             'fieldsets': [],
-#             'metrics': [],
-#             'search_fields': [],
-#         },
-#         'grants': {
-#             'fields': [],
-#             'facets': [],
-#             'entities': [],
-#             'fieldsets': [],
-#             'metrics': [],
-#             'search_fields': [],
-#         },
-#         'patents': {
-#             'fields': [],
-#             'facets': [],
-#             'entities': [],
-#             'fieldsets': [],
-#             'metrics': [],
-#             'search_fields': [],
-#         },
-#         'clinical_trials': {
-#             'fields': [],
-#             'facets': [],
-#             'entities': [],
-#             'fieldsets': [],
-#             'metrics': [],
-#             'search_fields': [],
-#         },
-#         'policy_documents': {
-#             'fields': [],
-#             'facets': [],
-#             'entities': [],
-#             'fieldsets': [],
-#             'metrics': [],
-#             'search_fields': [],
-#         },
-#     }
-# }

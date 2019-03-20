@@ -49,7 +49,17 @@ class CleverCompleter(Completer):
 
         if word.endswith("."):
             # @TODO
+            source = line_search_subject(line)
+            entity = line_last_word(line).replace(".", "")
+            # print("***" + entity_test + "***")
             candidates = []
+            for x in ENTITIES:
+                if entity == x[0]:
+                    entity_type = x[1]
+                    # print("***" + entity_type + "***")
+                    if entity_type in ENTITY_TYPES.keys():
+                        candidates = listify_and_unify(ENTITY_TYPES[entity_type]['fields'].keys())
+                        # print("***" + str(candidates) + "***")
 
         elif len(line_minus_current) == 0:  # remove the current stem from line
             candidates = VOCABULARY['allowed_starts']
@@ -106,14 +116,25 @@ class CleverCompleter(Completer):
             candidates = [x for x in VOCABULARY['lang'] if x != "search"]
 
         # finally
-        for keyword in candidates:
-            if keyword.startswith(word):
+        if word.endswith("."):
+            # print("***" + str(candidates) + "***")
+            candidates = [word + x for x in candidates]
+            for keyword in candidates:
                 yield Completion(
                     keyword, 
                     start_position=-len(word),
-                    display=keyword,
-                    display_meta=build_display_meta(keyword),
+                    display=keyword.replace(word, ""),
+                    display_meta=build_display_meta(keyword.replace(word, "")),
                     )
+        else:
+            for keyword in candidates:
+                if keyword.startswith(word):
+                    yield Completion(
+                        keyword, 
+                        start_position=-len(word),
+                        display=keyword,
+                        display_meta=build_display_meta(keyword),
+                        )
 
 
 
