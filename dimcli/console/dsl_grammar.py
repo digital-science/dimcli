@@ -5,10 +5,13 @@
 # need a structure that contains desc / and possibly other lang metadata
 # then maybe we can have 'children' as a key for nested objects
 
-import json
+from .dsl_describe_bk import DESCRIBE_DATA_BK
 
-
-vocab_data = json.load(open("dsl_describe.bk.json")) # @TODO get in real time from DSL
+if True:
+    vocab_data = DESCRIBE_DATA_BK 
+else:
+    # @TODO get in real time from DSL
+    pass 
 
 SOURCES = {'sources' : vocab_data['sources']}
 

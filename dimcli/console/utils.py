@@ -18,7 +18,7 @@ def listify_and_unify(*args):
             out += x
         else:
             out += list(x)
-    return out
+    return sorted(list(set(out)))
 
 
 def split_multi_words(llist):

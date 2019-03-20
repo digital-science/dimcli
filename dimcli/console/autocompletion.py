@@ -112,5 +112,21 @@ class CleverCompleter(Completer):
                     keyword, 
                     start_position=-len(word),
                     display=keyword,
-                    display_meta="Type: " + search_vocab_get_key(keyword)
+                    display_meta=build_display_meta(keyword),
                     )
+
+
+
+
+# TODO handle fields with same name across different sources/entities!
+def build_display_meta(keyword):
+    for group,vals in VOCABULARY.items(): 
+        if type(vals) == dict: # ==> dict_keys(['clinical_trials', 'grants', etc..])
+            for name,section in vals.items(): 
+                if type(section) == dict: # ==> {'fields': {'acronym': {'description': None, 'is_filter': True, 'long_description': None, 'name': 'acronym', 'type': 'string'}, etc...
+                    for field, field_desc in section.items():
+                        if type(field_desc) == dict:
+                            if keyword in field_desc.keys():
+                                return field_desc[keyword]['description']
+    return None
+
