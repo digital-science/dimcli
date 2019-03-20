@@ -52,12 +52,13 @@ class CleverCompleter(Completer):
             candidates = []
 
         elif len(line_minus_current) == 0:  # remove the current stem from line
-            # beginning: only main keywords
             candidates = VOCABULARY['allowed_starts']
 
         elif line_last_word(line_minus_current) in ["show"]:
-            # beginning: only main keywords
             candidates = VOCABULARY['allowed_starts']["show"]
+
+        elif line_last_word(line_minus_current) in ["describe"]:
+            candidates = VOCABULARY['allowed_starts']["describe"]
 
         elif line_last_word(line_minus_current) in ["search"]:
             # after search and return only sources

@@ -97,7 +97,8 @@ def print_smart_preview(jsondata, maxitems=10):
     Preview items in console
     If it's one of the main sources, try to show title/id. Otherwise show json in one line
     """
-    click.secho("Showing first %d records from latest query.." % maxitems, dim=True)
+    # click.secho("Showing first %d records from latest query.." % maxitems, dim=True)
+    # click.secho("")
     counter = 0
     for key in jsondata.keys():
         if key == "_stats":
@@ -121,6 +122,8 @@ def print_smart_preview(jsondata, maxitems=10):
                         click.echo(
                             click.style("[" + str(counter) + "] ", dim=True) +
                             click.style(str(row)))
+            click.secho("---", dim=True)
+            click.secho("Tip: use 'show <number>' or show+Tab to see more options", dim=True)
 
 
 
@@ -141,7 +144,7 @@ def show_command(text, databuffer):
     elif text == "json_pretty":
         print_json_full(jsondata, query, terminal=True)
 
-    elif text == "json":
+    elif text == "json_compact":
         print_json_compact(jsondata)
 
     else:
@@ -163,6 +166,7 @@ def handle_query(CLIENT, text, databuffer):
     else:
         # lazy complete
         text = line_add_lazy_return(text)
+        text = line_add_lazy_describe(text)
         click.secho("You said: %s" % text, fg="black", dim=True)
         # RUN QUERY
         res = CLIENT.query(text)
@@ -174,7 +178,10 @@ def handle_query(CLIENT, text, databuffer):
                     print(key)
             else:
                 print(res.data["errors"])
-
+        elif text.strip().startswith("describe"):
+            databuffer.load(res.data, text)
+            click.secho("---", dim=True)
+            print_json_full(res.data, text, terminal=True)
         else:
             if res['stats']:
                 print("Tot Results: ", res['stats']["total_count"])
@@ -182,9 +189,9 @@ def handle_query(CLIENT, text, databuffer):
                 if k != "_stats":
                     print(k.capitalize() + ":", len(res.data[k]))
             databuffer.load(res.data, text)
-            if False:
-                click.secho("--------", dim=True)
-                print_smart_preview(res.data, maxitems=3)
+            if True:
+                click.secho("---", dim=True)
+                print_smart_preview(res.data, maxitems=5)
 
 
 #
@@ -207,7 +214,7 @@ def run(instance="live"):
         # if err.response.status_code == 401:
         #     print("here")
 
-    click.secho("Welcome! Ready to query endpoint: %s" % CLIENT._url)
+    click.secho("Welcome! Type 'help' for more info. Ready to query endpoint: %s" % CLIENT._url)
 
     # history
     session = PromptSession(history=SelectiveFileHistory(USER_HISTORY_FILE))

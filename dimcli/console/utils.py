@@ -95,6 +95,13 @@ def line_add_lazy_return(text):
             return text.strip() + " return " + source
     return text
 
+def line_add_lazy_describe(line):
+    "if describe has no arguments, default silently to <describe version>"
+    l = line.split()
+    if "describe" in line and len(l) == 1:
+        return "describe version"
+    return line
+
 
 def save2File(contents, filename, path):
     if not os.path.exists(path):

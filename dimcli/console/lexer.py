@@ -50,12 +50,12 @@ class BasicLexer(Lexer):
             elif w in fieldsets + search_fields:
                 return "italic" 
             elif w in allowed_starts:
-                return "reverse"
+                return "bold"
             else:
                 return "nobold"
 
-        def xx_get_class(w):
-            "color classes for main objects"
+        def previous_get_class(w):
+            "DEPRECATED DUE TO UNREADABILITY ON SOME TERMINALS - color classes for main objects"
             if w in lang:
                 return "green"
             elif w in sources + entities:

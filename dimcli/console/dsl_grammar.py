@@ -19,7 +19,7 @@ GRAMMAR = {
     'allowed_starts': {
         'help' : [],
         'quit' : [],
-        'show' : [ 'json', 'json_pretty', 'json_html'],
+        'show' : [ 'json_compact', 'json_pretty', 'json_html'],
         'search': [],
         'describe': [ 'version', 'source', 'entity', 'schema'],
     },
