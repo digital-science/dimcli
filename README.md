@@ -3,8 +3,8 @@
     - [In a nutshell](#in-a-nutshell)
   - [Install](#install)
   - [Using the Query Console](#using-the-query-console)
-    - [Credentials File](#credentials-file)
-    - [Advanced: multiple APIs](#advanced-multiple-apis)
+      - [The Credentials File](#the-credentials-file)
+      - [Advanced: Multiple API Endpoints](#advanced-multiple-api-endpoints)
   - [Using Dimcli as a Python library](#using-dimcli-as-a-python-library)
   - [Comments, bug reports](#comments-bug-reports)
 
@@ -22,7 +22,7 @@ Dimcli is a small Python wrapper around the Dimensions API. It makes it easier t
 
 Second, if used as a command line application, Dimcli offers an interactive environment for learning about the Dimensions Search Language ([DSL](https://app.dimensions.ai/dsl)). Calling `dimcli` from the shell opens a console-like tool with many features such as autocomplete based on DSL grammar, persistent history across sessions, pretty-printing or previewing of JSON results, and more.  
 
-> Note: this project is still in active development.
+Current version: see [pypi homepage](https://pypi.org/project/dimcli/).
 
 
 ## Install
@@ -30,8 +30,6 @@ Second, if used as a command line application, Dimcli offers an interactive envi
 ```
 $ pip install dimcli -U
 ```
-
-Current version: see [pypi homepage](https://pypi.org/project/dimcli/).
 
 Then you can check if the installation worked with
 
@@ -55,7 +53,7 @@ $ dimcli --init
 
 For more info see the following section.
 
-### Credentials File
+#### The Credentials File
 
 The credentials file must be called `dsl.ini` and located in your user directory in the `.dimensions` folder. So if yoy want to set this up manually, this is what you'd do on unix systems:
 
@@ -77,7 +75,7 @@ In most situations you can simply copy/paste the text above and change the login
 
 > Note: you must always have an entry in the configuration called `[instance.live]`
 
-### Advanced: multiple APIs
+#### Advanced: Multiple API Endpoints
 
 If you have access to multiple Dimensions API endpoints (or instances), you can just add more entries to the credentials file.
 
@@ -100,18 +98,18 @@ $ dimcli private
 
 ## Using Dimcli as a Python library
 
-Dimcli can be used within a Python script as a wrapper around the Dimensions API. It makes it easier to authenticate, query the Dimensions endpoint and handle the results, normally returned as JSON. 
+Dimcli can be used as a wrapper around the Dimensions API within a Python program. It makes it easier to authenticate, query the Dimensions endpoint and handle the results, normally returned as JSON. 
 
 ```
 >>> import dimcli
 
-# if you have already set up a credentials file (above), no need to pass log in details
+# if you have already set up the credentials file (see above), no need to pass log in details
 >>> dsl = dimcli.Dsl()
 
-# otherwise you can authenticate by passing your credentials explicitly
+# otherwise you can authenticate by passing your login details as arguments
 >>> dsl = dimcli.Dsl(user="mary.poppins", password="chimneysweeper")
 
-# you can also pass an endpoint, which defaults to "https://app.dimensions.ai"
+# you can specify endpoint, which by default is set to "https://app.dimensions.ai"
 >>> dsl = dimcli.Dsl(user="mary.poppins", password="chimneysweeper", ednpoint="https://nannies-research.dimensions.ai")
 ```
 
