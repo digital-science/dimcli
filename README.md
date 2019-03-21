@@ -1,4 +1,7 @@
 
+[![asciicast](https://asciinema.org/a/jSzISIsaXN2VbpOApSSOSwGcj.svg)](https://asciinema.org/a/jSzISIsaXN2VbpOApSSOSwGcj)
+
+
 - [Dimcli](#dimcli)
     - [In a nutshell](#in-a-nutshell)
   - [Install](#install)
@@ -24,7 +27,6 @@ Dimcli also provides an interactive environment for learning about the Dimension
 
 Current version: see [pypi homepage](https://pypi.org/project/dimcli/).
 
-[![asciicast](https://asciinema.org/a/jSzISIsaXN2VbpOApSSOSwGcj.svg)](https://asciinema.org/a/jSzISIsaXN2VbpOApSSOSwGcj)
 
 ## Install
 
