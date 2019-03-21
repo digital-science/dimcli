@@ -1,7 +1,4 @@
 
-[![asciicast](https://asciinema.org/a/jSzISIsaXN2VbpOApSSOSwGcj.svg)](https://asciinema.org/a/jSzISIsaXN2VbpOApSSOSwGcj)
-
-
 - [Dimcli](#dimcli)
     - [In a nutshell](#in-a-nutshell)
   - [Install](#install)
@@ -13,6 +10,8 @@
 
 
 # Dimcli
+
+[![asciicast](https://asciinema.org/a/jSzISIsaXN2VbpOApSSOSwGcj.svg)](https://asciinema.org/a/jSzISIsaXN2VbpOApSSOSwGcj)
 
 Python library for accessing the [Dimensions](https://www.dimensions.ai/) API.
 
