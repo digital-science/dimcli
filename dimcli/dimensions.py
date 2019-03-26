@@ -37,22 +37,6 @@ USER_JSON_OUTPUTS_DIR = os.path.expanduser(USER_DIR + "json/")
 USER_HISTORY_FILE = os.path.expanduser(USER_DIR + "history.txt")
 
 
-# class Result(IPython.display.JSON):
-#     def __init__(self, data):
-#         IPython.display.JSON.__init__(self, data)
-        
-#     def __getitem__(self, key):
-#         "return dict key as slice"
-#         if key in self.data:
-#             return self.data[key]
-#         else:
-#             return False
-
-#     def keys(self,):
-#         return list(self.data.keys())
-#     def keys_and_count(self,):
-#         return [(x, len(self.data[x])) for x in self.data.keys()]
-
 
 
 class Result(IPython.display.JSON):

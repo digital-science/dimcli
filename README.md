@@ -13,7 +13,7 @@
 
 [![asciicast](https://asciinema.org/a/jSzISIsaXN2VbpOApSSOSwGcj.svg)](https://asciinema.org/a/jSzISIsaXN2VbpOApSSOSwGcj)
 
-Python library for accessing the [Dimensions](https://www.dimensions.ai/) API.
+Python library for accessing the [Dimensions](https://www.dimensions.ai/) API. See the video above for a quick demo. 
 
 -   [https://github.com/lambdamusic/dimcli](https://github.com/lambdamusic/dimcli)
 -   [https://pypi.org/project/dimcli/](https://pypi.org/project/dimcli/)

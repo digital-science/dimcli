@@ -1,0 +1,1923 @@
+{
+  "sources": {
+    "publications": {
+      "fields": {
+        "research_org_country_names": {
+          "type": "string",
+          "description": "GeoNames country name",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "RCDC": {
+          "type": "categories",
+          "description": "Research, Condition, and Disease Categorization",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "categories",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "times_cited": {
+          "type": "count",
+          "description": "Number of citations. Does not support emptiness filters",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "research_org_countries": {
+          "type": "countries",
+          "description": null,
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "countries",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "linkout": {
+          "type": "text",
+          "description": "URL address",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": false,
+          "is_facet": false
+        },
+        "research_org_cities": {
+          "type": "cities",
+          "description": "GeoNames id and name",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "cities",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "mesh_terms": {
+          "type": "label",
+          "description": "Medical Subject Heading terms as used in PubMed.",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": true
+        },
+        "open_access": {
+          "type": "string",
+          "description": "Open Access status for publication. Deprecated in favor of `open_access_categories`",
+          "long_description": "\n\n        **DEPRECATED in favor of `open_access_categories`**\n\n        Open Access field data for publications can make reference to information on the host location and the record version.\n\n        **Open Access host location**\n\n        Host location information can describes if the document is either hosted by the publisher or in an institutional repository.\n\n           * **Open access - publisher** means the linked full-text version is served by the article's publisher.\n           * **Open access - repository** means the linked full-text version is served by an Open Access repository.\n\n        **Record Version**\n\n        Record version refers to the version of the content as defined by Unpaywall (see `Unpaywall Data Format <https://unpaywall.org/data-format>`_)\n\n           * **Open access - submitted** means the linked full-text version is not yet peer-reviewed.\n           * **Open access - accepted** means the linked full-text version is peer-reviewed, but lacks publisher-specific formatting.\n           * **Open access - published** means the linked full-text version is the version of record.\n        ",
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "doi": {
+          "type": "identifier",
+          "description": "Digital object identifier",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "recent_citations": {
+          "type": "integer",
+          "description": "Number of citations received in the last two years. Does not support emptiness filters",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": true
+        },
+        "pmid": {
+          "type": "identifier",
+          "description": "PubMed ID",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "researchers": {
+          "type": "researchers",
+          "description": null,
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "researchers",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "proceedings_title": {
+          "type": "text",
+          "description": "Title of a conference corresponding to documents that are `type` of \"proceeding\"",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": false,
+          "is_facet": false
+        },
+        "referenced_pubs": {
+          "type": "publications_entity",
+          "description": "Dimensions publication id for documents referencing another document",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "publications",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "book_series_title": {
+          "type": "text",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": false,
+          "is_facet": false
+        },
+        "relative_citation_ratio": {
+          "type": "float",
+          "description": "Relative citation performance of an article when compared to others in its area of research. Does not support emptiness filters",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "year": {
+          "type": "integer",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": true
+        },
+        "open_access_categories": {
+          "type": "open_access",
+          "description": "Open Access category for publication. Filtering on values is case sensitive.",
+          "long_description": "\n        Open Access category data for publications values:\n\n        * `oa_all`: Article is freely available\n        * `gold_pure`: Version Of Record (VOR) is free under an open licence from a full OA journal\n        * `gold_hybrid`: Version Of Record (VOR) is free under an open licence in a paid-access journal\n        * `gold_bronze`: Freely available on publisher page, but without an open licence\n        * `green_pub`: Free copy of published version in an OA repository\n        * `green_acc`: Free copy of accepted version in an OA repository\n        * `green_sub`: Free copy of submitted version, or where version is unknown, in an OA repository\n        * `closed`: No freely available copy has been identified\n        ",
+          "is_entity": true,
+          "entity_type": "open_access",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "supporting_grant_ids": {
+          "type": "identifier",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "title": {
+          "type": "text",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": false,
+          "is_facet": false
+        },
+        "FOR_first": {
+          "type": "categories",
+          "description": "Division level FOR",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "categories",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "date_inserted": {
+          "type": "timestamp",
+          "description": "Date when publication was inserted into Dimensions",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "date": {
+          "type": "date",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "volume": {
+          "type": "string",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "id": {
+          "type": "identifier",
+          "description": "Dimensions publication id",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "HRCS_HC": {
+          "type": "categories",
+          "description": "HRCS - Health Categories",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "categories",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "terms": {
+          "type": "text",
+          "description": "Extracted terms. See :ref:`for-terms` regarding searching terms vs phrases",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": false,
+          "is_facet": false
+        },
+        "type": {
+          "type": "string",
+          "description": "Publication type (article, chapter, proceeding, monograph, preprint or book)",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "issn": {
+          "type": "string",
+          "description": "International Standard Serial Number",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "publisher": {
+          "type": "label",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": true
+        },
+        "author_affiliations": {
+          "type": "json",
+          "description": "List of JSON lists of researchers' first and last names and affiliations",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "issue": {
+          "type": "string",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "references": {
+          "type": "identifier",
+          "description": "Dimensions publication id for documents referencing another document",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "book_doi": {
+          "type": "identifier",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "HRCS_RAC": {
+          "type": "categories",
+          "description": "HRCS – Research Activity Codes",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "categories",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "FOR": {
+          "type": "categories",
+          "description": "ANZSRC Fields of Research classification",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "categories",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "pmcid": {
+          "type": "identifier",
+          "description": "PubMed Central ID",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "journal": {
+          "type": "journals",
+          "description": null,
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "journals",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "research_org_state_codes": {
+          "type": "states",
+          "description": "ISO‌-3166-2 code and name",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "states",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "funder_countries": {
+          "type": "countries",
+          "description": null,
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "countries",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "altmetric": {
+          "type": "float",
+          "description": "Altmetric attention score. Does not support emptiness filters",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "research_orgs": {
+          "type": "orgs",
+          "description": null,
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "orgs",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "pages": {
+          "type": "string",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "field_citation_ratio": {
+          "type": "float",
+          "description": "Relative citation performance of article when compared to similarly aged articles in its area of research. Does not support emptiness filters",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "journal_lists": {
+          "type": "string",
+          "description": "Independent grouping of journals outside of Dimensions",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "research_org_state_names": {
+          "type": "string",
+          "description": "GeoNames state name",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "book_title": {
+          "type": "text",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": false,
+          "is_facet": false
+        },
+        "funders": {
+          "type": "orgs",
+          "description": null,
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "orgs",
+          "is_filter": true,
+          "is_facet": true
+        }
+      },
+      "fieldsets": [
+        "all",
+        "basics",
+        "extras",
+        "book"
+      ],
+      "metrics": {
+        "count": {
+          "name": "count",
+          "description": "Total count"
+        },
+        "altmetric_median": {
+          "name": "altmetric_median",
+          "description": "Median Altmetric attention score"
+        },
+        "citations_total": {
+          "name": "citations_total",
+          "description": "Aggregated number of citations"
+        },
+        "citations_avg": {
+          "name": "citations_avg",
+          "description": "Arithmetic mean of citations"
+        },
+        "citations_median": {
+          "name": "citations_median",
+          "description": "Median of citations"
+        },
+        "recent_citations_total": {
+          "name": "recent_citations_total",
+          "description": "For a given article, in a given year, the number of citations accrued in the last two year period. Single value stored per document, year window rolls over in July."
+        },
+        "rcr_avg": {
+          "name": "rcr_avg",
+          "description": "Arithmetic mean of `relative_citation_ratio`"
+        },
+        "fcr_gavg": {
+          "name": "fcr_gavg",
+          "description": "Geometric mean of `field_citation_ratio`"
+        }
+      },
+      "search_fields": [
+        "terms",
+        "title_only",
+        "terms_experimental",
+        "authors",
+        "title_abstract_only",
+        "full_data",
+        "noun_phrases",
+        "researchers"
+      ]
+    },
+    "grants": {
+      "fields": {
+        "RCDC": {
+          "type": "categories",
+          "description": "Research, Condition, and Disease Categorization",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "categories",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "original_title": {
+          "type": "text",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": false,
+          "is_facet": false
+        },
+        "active_year": {
+          "type": "integer",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": true
+        },
+        "linkout": {
+          "type": "text",
+          "description": "URL linked to grant",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": false,
+          "is_facet": false
+        },
+        "research_org_countries": {
+          "type": "countries",
+          "description": "GeoNames code and name",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "countries",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "research_org_name": {
+          "type": "label",
+          "description": "Name for research organisation",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": true
+        },
+        "research_org_cities": {
+          "type": "cities",
+          "description": "GeoNames id and name",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "cities",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "funding_chf": {
+          "type": "financial",
+          "description": "Funding amount awarded in CHF",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "title_language": {
+          "type": "label",
+          "description": "ISO 639-1 language code used in title",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": true
+        },
+        "researchers": {
+          "type": "researchers",
+          "description": null,
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "researchers",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "end_date": {
+          "type": "timestamp",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "funding_gbp": {
+          "type": "financial",
+          "description": "Funding amount awarded in GBP",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "funding_org_city": {
+          "type": "label",
+          "description": "City name for funding organisation",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": true
+        },
+        "funding_usd": {
+          "type": "financial",
+          "description": "Funding amount awarded in USD",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "title": {
+          "type": "text",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": false,
+          "is_facet": false
+        },
+        "start_year": {
+          "type": "integer",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": true
+        },
+        "FOR_first": {
+          "type": "categories",
+          "description": "Division level FOR",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "categories",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "date_inserted": {
+          "type": "timestamp",
+          "description": "Date when publication was inserted into Dimensions",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "funding_aud": {
+          "type": "financial",
+          "description": "Funding amount awarded in AUD",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "id": {
+          "type": "identifier",
+          "description": "Dimensions grant id",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "HRCS_HC": {
+          "type": "categories",
+          "description": "HRCS - Health Categories",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "categories",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "terms": {
+          "type": "text",
+          "description": "Extracted terms",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": false,
+          "is_facet": false
+        },
+        "abstract": {
+          "type": "text",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": false,
+          "is_facet": false
+        },
+        "project_num": {
+          "type": "identifier",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "funding_jpy": {
+          "type": "financial",
+          "description": "Funding amount awarded in JPY",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "funding_cad": {
+          "type": "financial",
+          "description": "Funding amount awarded in CAD",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "HRCS_RAC": {
+          "type": "categories",
+          "description": "HRCS – Research Activity Codes",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "categories",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "researcher_details": {
+          "type": "json",
+          "description": "Additional details about researchers including affiliations and role",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "FOR": {
+          "type": "categories",
+          "description": "ANZSRC Fields of Research classification",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "categories",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "funding_eur": {
+          "type": "financial",
+          "description": "Funding amount awarded in EUR",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "research_org_state_codes": {
+          "type": "states",
+          "description": "ISO‌-3166-2 code and name",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "states",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "funder_countries": {
+          "type": "countries",
+          "description": "GeoNames code and name",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "countries",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "funding_org_name": {
+          "type": "label",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": true
+        },
+        "research_orgs": {
+          "type": "orgs",
+          "description": null,
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "orgs",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "start_date": {
+          "type": "timestamp",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "language": {
+          "type": "label",
+          "description": "ISO 639-1 language codes",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": true
+        },
+        "funding_org_acronym": {
+          "type": "label",
+          "description": "Acronym for funding organisation",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": true
+        },
+        "resulting_publication_ids": {
+          "type": "identifier",
+          "description": "Resulting Publication IDs. Deprecated, use `publications` field `supporting_grant_ids` instead",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "funders": {
+          "type": "orgs",
+          "description": null,
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "orgs",
+          "is_filter": true,
+          "is_facet": true
+        }
+      },
+      "fieldsets": [
+        "all",
+        "basics",
+        "extras"
+      ],
+      "metrics": {
+        "count": {
+          "name": "count",
+          "description": "Total count"
+        },
+        "funding": {
+          "name": "funding",
+          "description": null
+        }
+      },
+      "search_fields": [
+        "terms",
+        "title_only",
+        "title_abstract_only",
+        "full_data",
+        "noun_phrases",
+        "researchers"
+      ]
+    },
+    "patents": {
+      "fields": {
+        "RCDC": {
+          "type": "categories",
+          "description": "Research, Condition, and Disease Categorization",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "categories",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "times_cited": {
+          "type": "count",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "filing_status": {
+          "type": "string",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "assignee_cities": {
+          "type": "cities",
+          "description": "GeoNames id and name",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "cities",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "additional_filters": {
+          "type": "string",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "expiration_date": {
+          "type": "timestamp",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "reference_ids": {
+          "type": "identifier",
+          "description": "Patents which are cited by this patent",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "assignee_names": {
+          "type": "string",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "granted_year": {
+          "type": "integer",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": true
+        },
+        "cited_by_ids": {
+          "type": "identifier",
+          "description": "Patents which cite this patent",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "year": {
+          "type": "integer",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": true
+        },
+        "assignees": {
+          "type": "orgs",
+          "description": null,
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "orgs",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "jurisdiction": {
+          "type": "string",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "publication_ids": {
+          "type": "identifier",
+          "description": "Related publication IDs",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "associated_grant_ids": {
+          "type": "identifier",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "original_assignees": {
+          "type": "orgs",
+          "description": null,
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "orgs",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "title": {
+          "type": "text",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": false,
+          "is_facet": false
+        },
+        "FOR_first": {
+          "type": "categories",
+          "description": "Division level FOR",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "categories",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "date_inserted": {
+          "type": "timestamp",
+          "description": "Date when publication was inserted into Dimensions",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "status": {
+          "type": "string",
+          "description": "Deprecated in favor of `legal_status`",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "date": {
+          "type": "timestamp",
+          "description": "Date when the patent was filed",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "publication_date": {
+          "type": "timestamp",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "cpc": {
+          "type": "identifier",
+          "description": "Cooperative Patent Classification number for a patent",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "HRCS_HC": {
+          "type": "categories",
+          "description": "HRCS - Health Categories",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "categories",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "id": {
+          "type": "identifier",
+          "description": "Dimensions patent id",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "inventor_names": {
+          "type": "string",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "abstract": {
+          "type": "text",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": false,
+          "is_facet": false
+        },
+        "assignee_countries": {
+          "type": "countries",
+          "description": "GeoNames code and name",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "countries",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "assignee_state_codes": {
+          "type": "states",
+          "description": "GeoNames code and name",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "states",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "current_assignees": {
+          "type": "orgs",
+          "description": null,
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "orgs",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "current_assignee_names": {
+          "type": "string",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "original_assignee_names": {
+          "type": "string",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "HRCS_RAC": {
+          "type": "categories",
+          "description": "HRCS – Research Activity Codes",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "categories",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "FOR": {
+          "type": "categories",
+          "description": "ANZSRC Fields of Research classification",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "categories",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "filed_year": {
+          "type": "integer",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": true
+        },
+        "ipcr": {
+          "type": "identifier",
+          "description": "International Patent Classification Reform number for a patent",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "filed_date": {
+          "type": "timestamp",
+          "description": "Deprecated in favor of `filed_date`",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "funder_groups": {
+          "type": "org_groups",
+          "description": null,
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "org_groups",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "legal_status": {
+          "type": "string",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "priority_date": {
+          "type": "timestamp",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "assignee_state_names": {
+          "type": "label",
+          "description": "GeoNames name",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": true
+        },
+        "funders": {
+          "type": "orgs",
+          "description": null,
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "orgs",
+          "is_filter": true,
+          "is_facet": true
+        }
+      },
+      "fieldsets": [
+        "all",
+        "basics",
+        "extras"
+      ],
+      "metrics": {
+        "count": {
+          "name": "count",
+          "description": "Total count"
+        }
+      },
+      "search_fields": [
+        "full_data",
+        "title_only",
+        "title_abstract_only"
+      ]
+    },
+    "clinical_trials": {
+      "fields": {
+        "RCDC": {
+          "type": "categories",
+          "description": "Research, Condition, and Disease Categorization",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "categories",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "linkout": {
+          "type": "text",
+          "description": "URL linked to clinical trial",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": false,
+          "is_facet": false
+        },
+        "conditions": {
+          "type": "string",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "organizations": {
+          "type": "orgs",
+          "description": "IDs of any organizations involved in any way, e.g. as sponsors or collaborators",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "orgs",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "publication_ids": {
+          "type": "identifier",
+          "description": "Linked Publication IDs",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "associated_grant_ids": {
+          "type": "identifier",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "title": {
+          "type": "text",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": false,
+          "is_facet": false
+        },
+        "FOR_first": {
+          "type": "categories",
+          "description": "Division level FOR",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "categories",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "date_inserted": {
+          "type": "timestamp",
+          "description": "Date when publication was inserted into Dimensions",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "date": {
+          "type": "timestamp",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "investigators": {
+          "type": "json",
+          "description": "JSON with names, titles, & roles (no ids) of involved researchers for display purposes",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "HRCS_HC": {
+          "type": "categories",
+          "description": "HRCS - Health Categories",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "categories",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "id": {
+          "type": "identifier",
+          "description": "Dimensions clinical trial id",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "abstract": {
+          "type": "text",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": false,
+          "is_facet": false
+        },
+        "registry": {
+          "type": "string",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "phase": {
+          "type": "string",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "HRCS_RAC": {
+          "type": "categories",
+          "description": "HRCS – Research Activity Codes",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "categories",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "FOR": {
+          "type": "categories",
+          "description": "ANZSRC Fields of Research classification",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "categories",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "funder_countries": {
+          "type": "countries",
+          "description": null,
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "countries",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "gender": {
+          "type": "string",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "funder_groups": {
+          "type": "org_groups",
+          "description": null,
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "org_groups",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "active_years": {
+          "type": "integer",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": true
+        },
+        "funders": {
+          "type": "orgs",
+          "description": null,
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "orgs",
+          "is_filter": true,
+          "is_facet": true
+        }
+      },
+      "fieldsets": [
+        "all",
+        "basics",
+        "extras"
+      ],
+      "metrics": {
+        "count": {
+          "name": "count",
+          "description": "Total count"
+        }
+      },
+      "search_fields": [
+        "full_data",
+        "title_only",
+        "researchers",
+        "title_abstract_only"
+      ]
+    },
+    "policy_documents": {
+      "fields": {
+        "HRCS_HC": {
+          "type": "categories",
+          "description": "HRCS - Health Categories",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "categories",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "id": {
+          "type": "identifier",
+          "description": "Dimensions clinical trial id",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "health_research_areas": {
+          "type": "categories",
+          "description": null,
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "categories",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "RCDC": {
+          "type": "categories",
+          "description": "Research, Condition, and Disease Categorization",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "categories",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "year": {
+          "type": "integer",
+          "description": "Policy posted on year",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": true
+        },
+        "linkout": {
+          "type": "text",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": false,
+          "is_facet": false
+        },
+        "country": {
+          "type": "countries",
+          "description": null,
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "countries",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "publication_ids": {
+          "type": "identifier",
+          "description": "Referenced Publication IDs",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "state": {
+          "type": "states",
+          "description": null,
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "states",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "broad_research_areas": {
+          "type": "categories",
+          "description": null,
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "categories",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "source_name": {
+          "type": "string",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "grid_id": {
+          "type": "string",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "title": {
+          "type": "string",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "FOR_first": {
+          "type": "categories",
+          "description": "Division level FOR",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "categories",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "city": {
+          "type": "cities",
+          "description": null,
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "cities",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "HRCS_RAC": {
+          "type": "categories",
+          "description": "HRCS – Research Activity Codes",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "categories",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "FOR": {
+          "type": "categories",
+          "description": "ANZSRC Fields of Research classification",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "categories",
+          "is_filter": true,
+          "is_facet": true
+        }
+      },
+      "fieldsets": [
+        "all",
+        "basics",
+        "categories"
+      ],
+      "metrics": {
+        "count": {
+          "name": "count",
+          "description": "Total count"
+        }
+      },
+      "search_fields": [
+        "full_data",
+        "title_only"
+      ]
+    },
+    "researchers": {
+      "fields": {
+        "id": {
+          "type": "identifier",
+          "description": "Dimensions researcher id",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "last_grant_year": {
+          "type": "integer",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": true
+        },
+        "current_research_org": {
+          "type": "orgs",
+          "description": "The most recent research organization linked to the researcher",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "orgs",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "research_orgs": {
+          "type": "orgs",
+          "description": "All research organizations linked to the researcher",
+          "long_description": null,
+          "is_entity": true,
+          "entity_type": "orgs",
+          "is_filter": true,
+          "is_facet": true
+        },
+        "obsolete": {
+          "type": "integer",
+          "description": "\n        Indicates researcher ID status. 0 means that the researcher ID is still active, 1 means that the researcher ID is no longer valid. See redirect field for further information on invalid researcher IDs.\n        ",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": true
+        },
+        "redirect": {
+          "type": "identifier",
+          "description": "\n        Indicates status of obsolete researcher ID. Empty means that the researcher ID was deleted. Otherwise ID provided means that is the new id into which the obsolete one was redirected. If multiple values are available, it means that the original researcher ID was split into multiple IDs.\n        ",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "first_grant_year": {
+          "type": "integer",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": true
+        },
+        "total_publications": {
+          "type": "integer",
+          "description": "Total publications count",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": true
+        },
+        "last_name": {
+          "type": "string",
+          "description": "Last Name",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "last_publication_year": {
+          "type": "integer",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": true
+        },
+        "total_grants": {
+          "type": "integer",
+          "description": "Total grants count",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": true
+        },
+        "first_name": {
+          "type": "string",
+          "description": "First Name",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": false
+        },
+        "orcid_id": {
+          "type": "text",
+          "description": "`ORCID <https://orcid.org/>`_ ID",
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": false,
+          "is_facet": false
+        },
+        "first_publication_year": {
+          "type": "integer",
+          "description": null,
+          "long_description": null,
+          "is_entity": false,
+          "is_filter": true,
+          "is_facet": true
+        }
+      },
+      "fieldsets": [
+        "all",
+        "basics",
+        "extras"
+      ],
+      "metrics": {
+        "count": {
+          "name": "count",
+          "description": "Total count"
+        }
+      },
+      "search_fields": [
+        "researcher"
+      ]
+    }
+  },
+  "entities": {
+    "categories": {
+      "fields": {
+        "id": {
+          "name": "id",
+          "type": "string",
+          "description": "Dimensions category id",
+          "long_description": null,
+          "is_filter": true
+        },
+        "name": {
+          "name": "name",
+          "type": "string",
+          "description": null,
+          "long_description": null,
+          "is_filter": true
+        }
+      },
+      "fieldsets": [
+        "all",
+        "basics"
+      ]
+    },
+    "cities": {
+      "fields": {
+        "id": {
+          "name": "id",
+          "type": "identifier",
+          "description": "Dimensions city id",
+          "long_description": null,
+          "is_filter": true
+        },
+        "name": {
+          "name": "name",
+          "type": "string",
+          "description": null,
+          "long_description": null,
+          "is_filter": true
+        }
+      },
+      "fieldsets": [
+        "all",
+        "basics"
+      ]
+    },
+    "countries": {
+      "fields": {
+        "id": {
+          "name": "id",
+          "type": "string",
+          "description": "Dimensions city id",
+          "long_description": null,
+          "is_filter": true
+        },
+        "name": {
+          "name": "name",
+          "type": "string",
+          "description": null,
+          "long_description": null,
+          "is_filter": true
+        }
+      },
+      "fieldsets": [
+        "all",
+        "basics"
+      ]
+    },
+    "journals": {
+      "fields": {
+        "id": {
+          "name": "id",
+          "type": "string",
+          "description": "Dimensions journal id",
+          "long_description": null,
+          "is_filter": true
+        },
+        "title": {
+          "name": "title",
+          "type": "string",
+          "description": null,
+          "long_description": null,
+          "is_filter": true
+        }
+      },
+      "fieldsets": [
+        "all",
+        "basics"
+      ]
+    },
+    "org_groups": {
+      "fields": {
+        "id": {
+          "name": "id",
+          "type": "identifier",
+          "description": "Dimensions organization group id",
+          "long_description": null,
+          "is_filter": true
+        },
+        "name": {
+          "name": "name",
+          "type": "string",
+          "description": null,
+          "long_description": null,
+          "is_filter": true
+        }
+      },
+      "fieldsets": [
+        "all",
+        "basics"
+      ]
+    },
+    "orgs": {
+      "fields": {
+        "id": {
+          "name": "id",
+          "type": "identifier",
+          "description": "Dimensions organization id",
+          "long_description": null,
+          "is_filter": true
+        },
+        "name": {
+          "name": "name",
+          "type": "string",
+          "description": null,
+          "long_description": null,
+          "is_filter": true
+        },
+        "acronym": {
+          "name": "acronym",
+          "type": "string",
+          "description": null,
+          "long_description": null,
+          "is_filter": true
+        },
+        "country_name": {
+          "name": "country_name",
+          "type": "string",
+          "description": null,
+          "long_description": null,
+          "is_filter": true
+        }
+      },
+      "fieldsets": [
+        "all",
+        "basics"
+      ]
+    },
+    "states": {
+      "fields": {
+        "id": {
+          "name": "id",
+          "type": "identifier",
+          "description": "Dimensions state id",
+          "long_description": null,
+          "is_filter": true
+        },
+        "name": {
+          "name": "name",
+          "type": "string",
+          "description": null,
+          "long_description": null,
+          "is_filter": true
+        }
+      },
+      "fieldsets": [
+        "all",
+        "basics"
+      ]
+    },
+    "publications_entity": {
+      "fields": {
+        "id": {
+          "name": "id",
+          "type": "identifier",
+          "description": "Dimensions publication id",
+          "long_description": null,
+          "is_filter": true
+        },
+        "doi": {
+          "name": "doi",
+          "type": "identifier",
+          "description": "Digital object identifier",
+          "long_description": null,
+          "is_filter": true
+        },
+        "pmid": {
+          "name": "pmid",
+          "type": "identifier",
+          "description": "PubMed ID",
+          "long_description": null,
+          "is_filter": true
+        },
+        "pmcid": {
+          "name": "pmcid",
+          "type": "identifier",
+          "description": "PubMed Central ID",
+          "long_description": null,
+          "is_filter": true
+        }
+      },
+      "fieldsets": [
+        "all",
+        "basics"
+      ]
+    },
+    "open_access": {
+      "fields": {
+        "id": {
+          "name": "id",
+          "type": "identifier",
+          "description": null,
+          "long_description": null,
+          "is_filter": true
+        },
+        "name": {
+          "name": "name",
+          "type": "string",
+          "description": null,
+          "long_description": null,
+          "is_filter": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "description": null,
+          "long_description": null,
+          "is_filter": false
+        }
+      },
+      "fieldsets": [
+        "all",
+        "basics"
+      ]
+    }
+  }
+}
