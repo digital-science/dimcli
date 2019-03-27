@@ -1,6 +1,7 @@
 import configparser
 import requests
 import os.path
+import os
 import time
 import json
 import click
@@ -32,7 +33,8 @@ from itertools import islice
 
 
 USER_DIR = os.path.expanduser("~/.dimensions/")
-USER_CONFIG_FILE = os.path.expanduser(USER_DIR + "dsl.ini")
+USER_CONFIG_FILE_NAME = "dsl.ini"
+USER_CONFIG_FILE = os.path.expanduser(USER_DIR + USER_CONFIG_FILE_NAME)
 USER_JSON_OUTPUTS_DIR = os.path.expanduser(USER_DIR + "json/")
 USER_HISTORY_FILE = os.path.expanduser(USER_DIR + "history.txt")
 
@@ -94,7 +96,7 @@ class Dsl:
 
     """
     def __init__(self, instance="live", user="", password="", endpoint="https://app.dimensions.ai", show_results=True):
-
+        # print(os.getcwd())
         if user and password:
             self._url = endpoint
             self._username = user
@@ -109,11 +111,22 @@ class Dsl:
         self._login()
 
     def _get_config_from_file(self, instance_name):
+        """
+        get the dsl.ini file and extraction credentials
+        * first use the current WD 
+            => useful for jup notebooks without system wide installation
+        * second use the default system location 
+            => this is the usual case for CLI
+        """
         config = configparser.ConfigParser()
+        if os.path.exists(os.getcwd() + "/" + USER_CONFIG_FILE_NAME):
+            credentials = os.getcwd() + "/" + USER_CONFIG_FILE_NAME
+        else:
+            credentials = os.path.expanduser(USER_CONFIG_FILE)
         try:
-            config.read(os.path.expanduser(USER_CONFIG_FILE))
+            config.read(credentials)
         except:
-            click.secho("ERROR: Credentials file not found at: %s" % os.path.expanduser(USER_CONFIG_FILE), fg="red")
+            click.secho("ERROR: Credentials file not found at: %s" % credentials, fg="red")
             click.secho("HowTo: https://github.com/lambdamusic/dimcli#credentials-file", fg="red")
             raise
         try:
