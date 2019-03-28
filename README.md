@@ -5,6 +5,7 @@
   - [Using the Query Console](#using-the-query-console)
       - [The Credentials File](#the-credentials-file)
       - [Advanced: Multiple API Endpoints](#advanced-multiple-api-endpoints)
+      - [Overriding credentials e.g. with Jupyter Notebooks](#overriding-credentials-eg-with-jupyter-notebooks)
   - [Using Dimcli as a Python library](#using-dimcli-as-a-python-library)
   - [Comments, bug reports](#comments-bug-reports)
 
@@ -96,7 +97,20 @@ Then when running the CLI you can select which instance to use just by passing i
 $ dimcli private
 ```
 
-> NOTE `live` is the instance name taken by default when no instance is specified.
+
+#### Overriding credentials e.g. with Jupyter Notebooks
+
+If you are using dimcli within a jupyter notebook and you do not want (or can) set up credentials at the user level, you can simply but a `dsl.ini` file in the current working directory (eg where the notebooks are located).  
+
+These credentials will take precedence over any other file previously defined.
+
+```
+[instance.live]
+url=https://app.dimensions.ai
+login=user@mail.com
+password=yourpasswordhere
+```
+
 
 ## Using Dimcli as a Python library
 

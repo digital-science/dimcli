@@ -69,7 +69,7 @@ def line_search_return(line):
     l = line.split()
     if "return" in l:
         i = l.index("return")
-        if len(l) > i + 2: # cause index is zero based
+        if len(l) > i + 1: # cause index is zero based
             return l[i + 1]
     else:
         return None

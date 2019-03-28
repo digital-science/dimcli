@@ -47,5 +47,6 @@ setup(
     entry_points="""
         [console_scripts]
         dimcli = dimcli.main_cli:main_cli
+        dimcli_quicktest = dimcli.tests.quicktest:main
     """,
 )
