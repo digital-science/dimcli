@@ -189,37 +189,12 @@ class Dsl:
                 response.raise_for_status()
 
 
-    # def query_iterative(self, q, skip=0, limit=1000):
-    #     """
-    #     transform a query into a loop that pulls out all data available 
-    #     TODO hard limit of 50k results for limit/skip? 
-    #     """
-    #     if q.split().count('return') != 1:
-    #         raise Exception("Iterative querying support only 1 return statement")
-    #     if "limit" in q or "skip" in q:
-    #         raise Exception("Iterative querying does not require `limit` or `skip`")
-    #     sourcetype = line_search_return(q)  
-    #     if not (sourcetype in VOCABULARY['sources'].keys()):
-    #         raise Exception("Iterative querying works only with sources, not facets") 
-     
-    #     res = self._inner_query_iterative(q, skip, limit)
-
-    #     payload = {
-    #         "_stats": {
-    #              "total_count": tot
-    #             },
-    #         sourcetype: output
-    #     }
-    #     return payload
-
 
     def query_iterative(self, q, show_results=None, skip=0, limit=1000):
         """
         transform a query into a loop that pulls out all data available 
-        PS hard limit of 50k results for limit/skip
+        @TODO is there a hard limit of 50k results for limit/skip
         """
-        # @TODO 1 check that the return statement a) is a source and b) is valid
-        # @TODO 2 check that the query has no limit / skip statement, as this is added later
 
         if q.split().count('return') != 1:
             raise Exception("Iterative querying support only 1 return statement")
@@ -245,8 +220,10 @@ class Dsl:
                 output = res[sourcetype]
 
         # FINALLY 
-        # if recursion is complete (we are at top level, skip=0) build the Result obj
-        # else just return current iteration results 
+        # if recursion is complete (we are at top level, hence skip=0) 
+        #   build the Result obj
+        # else 
+        #   just return current iteration results 
         if skip == 0: 
             response_simulation = {
                 "_stats": {

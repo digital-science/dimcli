@@ -57,6 +57,16 @@ class TestOne(unittest.TestCase):
         # ----
         click.secho("Completed test succesfully", fg="green")
 
+    def test_004(self):
+        click.secho("\nTEST 004: Iterative querying.", fg="green")
+        # ----
+        d = Dsl()
+        res = d.query_iterative("""search publications where journal.title="nature medicine" return publications""")
+        print("Query results: ", res.keys_and_count())
+        print(" ==> res['stats']: ", res['stats'])
+        print(" ==> len(res['publications']): ", len(res['publications']))
+        # ----
+        click.secho("Completed test succesfully", fg="green")
 
 if __name__ == "__main__":
     unittest.main()
