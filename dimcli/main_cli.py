@@ -4,10 +4,10 @@
 import sys
 import click
 from pprint import pprint
-# from .console.lib import *
-from .console import repl
-from .console.utils import open_multi_platform, init_config_folder
-# from .console import credentials
+# from .repl.lib import *
+from .repl import repl
+from .repl.utils import open_multi_platform, init_config_folder
+# from .repl import credentials
 
 from .VERSION import *
 from .dimensions import *

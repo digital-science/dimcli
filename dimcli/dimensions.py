@@ -8,8 +8,8 @@ import click
 import IPython.display
 from itertools import islice
 
-from .console.utils import line_search_return
-from .console.dsl_grammar import VOCABULARY
+from .repl.utils import line_search_return
+from .repl.dsl_grammar import VOCABULARY
 
 
 #
