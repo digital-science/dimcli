@@ -60,7 +60,7 @@ class DslResultsBuffer(object):
 def print_json_full(jjson, query, terminal=False):
     "print out full json either as pretty_json or within an html template"
     formatted_json = json.dumps(jjson, indent=4, sort_keys=True)
-    if terminal: # json_pretty
+    if False and terminal: # json_pretty  # deprecated 2019-03-30
         from pygments import highlight, lexers, formatters
         colorful_json = highlight(formatted_json, lexers.JsonLexer(),
                                   formatters.TerminalFormatter())
@@ -138,11 +138,8 @@ def show_command(text, databuffer):
         print("Nothing to show - please run a search first.")
         return
     # cases
-    if text == "json_html":
+    if text == "json_pretty":
         print_json_full(jsondata, query, terminal=False)
-
-    elif text == "json_pretty":
-        print_json_full(jsondata, query, terminal=True)
 
     elif text == "json_compact":
         print_json_compact(jsondata)

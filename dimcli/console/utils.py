@@ -124,14 +124,21 @@ def html_template_interactive(query, formatted_json):
     <head>
     <meta charset="UTF-8">
     <style>
+        body {
+            background: antiquewhite;
+        }
+        .title {
+            color: grey;
+        }
         .query {
-            font-size: 20px;
-            color: blue;
+            font-size: 19px;
+            color: darkgoldenrod;
             font-family: monospace;
         }
 
         .renderjson {
-                font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal;
+                // font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal;
+                font-family: monospace;
                 background: black;
                 font-size: 14px;
         }
@@ -153,8 +160,8 @@ def html_template_interactive(query, formatted_json):
     var data = %s;
     </script>
     </head>
-    <body>Query:
-        <p class="query">%s</p><hr>
+    <body><span class="title">Dimensions DSL query:</span>
+        <p class="query">$ %s</p><hr>
         <code id="json_data"></code>
     
         <script> 
@@ -171,9 +178,9 @@ def html_template_interactive(query, formatted_json):
 
 def html_template_version1(query, formatted_json):
     """
-    this version just uses https://highlightjs.org/ to colorize the json code
-    * 2019-02-07: 
-    deprecated in favor of the interactive one above
+    * 2019-02-07: deprecated in favor of the interactive one above
+    
+    This version just uses https://highlightjs.org/ to colorize the json code
     """
 
     s = """
