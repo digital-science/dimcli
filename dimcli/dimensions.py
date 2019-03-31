@@ -209,7 +209,9 @@ class Dsl:
         
         res = self.query(q2, show_results=False, retry=0)
 
-        if res['stats']:
+        if res['errors']:
+            return res.data
+        elif res['stats']:
 
             tot = int(res['stats']['total_count'])
             print("%d / %d" % (skip+limit, tot  ))
@@ -219,25 +221,24 @@ class Dsl:
             else:
                 output = res[sourcetype]
 
-        # FINALLY 
-        # if recursion is complete (we are at top level, hence skip=0) 
-        #   build the Result obj
-        # else 
-        #   just return current iteration results 
-        if skip == 0: 
-            response_simulation = {
-                "_stats": {
-                    "total_count": tot
-                    },
-                sourcetype: output
-            }
-            result = Result(response_simulation)
-            if show_results or (show_results is None and self._show_results):
-                IPython.display.display(result)
-            return result
-        else:
-            return output
-
+            # FINALLY 
+            # if recursion is complete (we are at top level, hence skip=0) 
+            #   build the Result obj
+            # else 
+            #   just return current iteration results 
+            if skip == 0: 
+                response_simulation = {
+                    "_stats": {
+                        "total_count": tot
+                        },
+                    sourcetype: output
+                }
+                result = Result(response_simulation)
+                if show_results or (show_results is None and self._show_results):
+                    IPython.display.display(result)
+                return result
+            else:
+                return output
 
 
 

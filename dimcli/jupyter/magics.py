@@ -26,6 +26,15 @@ class DslMagics(Magics):
         else:
             print("Please login first: %dsl_login")
         # print('hi ' + line)
- 
+
+    @line_magic
+    def dsl_loop(self, line):
+        if self.CLIENT:
+            return self.CLIENT.query_iterative(line)
+        else:
+            print("Please login first: %dsl_login")
+
+
+
 ip = get_ipython()
 ip.register_magics(DslMagics)
