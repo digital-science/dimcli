@@ -133,7 +133,10 @@ def show_command(text, databuffer):
     """
     text = text.replace("show", "").strip()
 
-    jsondata, query = databuffer.retrieve()
+    if databuffer: 
+        jsondata, query = databuffer.retrieve()
+    else:
+        jsondata, query = None, None
     if not jsondata:
         print("Nothing to show - please run a search first.")
         return
@@ -176,7 +179,7 @@ def handle_query(CLIENT, text, databuffer):
             else:
                 print(res.data["errors"])
         elif text.strip().startswith("describe"):
-            databuffer.load(res.data, text)
+            if databuffer: databuffer.load(res.data, text)
             click.secho("---", dim=True)
             print_json_full(res.data, text, terminal=True)
         else:
@@ -185,10 +188,11 @@ def handle_query(CLIENT, text, databuffer):
             for k in res.data.keys():
                 if k != "_stats":
                     print(k.capitalize() + ":", len(res.data[k]))
-            databuffer.load(res.data, text)
+            if databuffer: databuffer.load(res.data, text)
             if True:
                 click.secho("---", dim=True)
                 print_smart_preview(res.data, maxitems=5)
+            return res  # 2019-03-31
 
 
 #
