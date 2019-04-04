@@ -8,6 +8,7 @@ import subprocess
 import os
 
 from .dsl_grammar import *
+from .html import *
 
 
 def listify_and_unify(*args):
@@ -113,97 +114,6 @@ def save2File(contents, filename, path):
     url = "file://" + filename
     return url
 
-
-def html_template_interactive(query, formatted_json):
-    """
-    version that uses to open/close the json tree
-    * https://github.com/caldwell/renderjson
-    """
-    s = """
-    <html>
-    <head>
-    <meta charset="UTF-8">
-    <style>
-        body {
-            background: antiquewhite;
-        }
-        .title {
-            color: grey;
-        }
-        .query {
-            font-size: 19px;
-            color: darkgoldenrod;
-            font-family: monospace;
-        }
-
-        .renderjson {
-                // font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal;
-                font-family: monospace;
-                background: black;
-                font-size: 14px;
-        }
-
-        .renderjson a              { text-decoration: none; }
-        .renderjson .disclosure    { color: crimson;
-                                    font-size: 150%%; }
-        .renderjson .syntax        { color: grey; }
-        .renderjson .string        { color: darkkhaki; }
-        .renderjson .number        { color: cyan; }
-        .renderjson .boolean       { color: plum; }
-        .renderjson .key           { color: lightblue; }
-        .renderjson .keyword       { color: lightgoldenrodyellow; }
-        .renderjson .object.syntax { color: lightseagreen; }
-        .renderjson .array.syntax  { color: lightsalmon; }
-    </style>
-    <script type="text/javascript" src="http://static.michelepasin.org/thirdparty/renderjson.js"></script>
-    <script>    
-    var data = %s;
-    </script>
-    </head>
-    <body><span class="title">Dimensions DSL query:</span>
-        <p class="query">$ %s</p><hr>
-        <code id="json_data"></code>
-    
-        <script> 
-        renderjson.set_show_to_level(3);
-        renderjson.set_sort_objects(true);
-        document.getElementById("json_data").appendChild(renderjson(data)); 
-        </script>
-    </body>
-    </html>
-    
-    """ % (formatted_json, query)
-    return s
-
-
-def html_template_version1(query, formatted_json):
-    """
-    * 2019-02-07: deprecated in favor of the interactive one above
-    
-    This version just uses https://highlightjs.org/ to colorize the json code
-    """
-
-    s = """
-    <html>
-    <head>
-    <meta charset="UTF-8">
-    <style>
-        .query {
-            font-size: 20px;
-            color: red;
-            background: beige;
-            font-family: monospace;
-        }
-    </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/styles/default.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
-    </head>
-    <body>Query:<p class="query">%s</p><hr><pre><code>%s</code></pre></body>
-    </html>
-    
-    """ % (query, formatted_json)
-    return s
 
 
 def open_multi_platform(fpath):

@@ -38,3 +38,4 @@ class DslMagics(Magics):
 
 ip = get_ipython()
 ip.register_magics(DslMagics)
+
