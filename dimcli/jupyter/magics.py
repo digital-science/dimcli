@@ -9,30 +9,43 @@ from ..repl.repl import handle_query
 @magics_class
 class DslMagics(Magics):
 
-    CLIENT = None
-    # @cell_magic
-    # def hello(self, line='', cell=None):
-    #     print('hello ' + cell)
+    connection = None
 
+    
+    # @magic_arguments.magic_arguments()
+    # @magic_arguments.argument('env', type="string",
+    #       help='Which dimensions backend to use'
+    # )
     @line_magic
     def dsl_login(self, line):
-        connection = Dsl(instance="live", show_results=False)
-        self.CLIENT = connection 
+        # args = magic_arguments.parse_argstring(self.hello, line)
+        # if args.verbose:
+        #     print('hello ' + cell)
 
-    @line_magic
-    def dsl(self, line):
-        if self.CLIENT:
-            return handle_query(self.CLIENT, line, None)
+        self.connection = Dsl(instance="live", show_results=False) 
+
+    @line_cell_magic
+    def dsl_query(self, line, cell=None):
+        "Send a query to the DSL back end"
+        if self.connection:
+            if cell:
+                line = cell
+            return handle_query(self.connection, line, None)
+            
         else:
             print("Please login first: %dsl_login")
-        # print('hi ' + line)
 
-    @line_magic
-    def dsl_loop(self, line):
-        if self.CLIENT:
-            return self.CLIENT.query_iterative(line)
+    @line_cell_magic
+    def dsl_loop(self, line, cell=None):
+        "Send an iterative query to the DSL back end"
+        if self.connection:
+            if cell:
+                line = cell
+            return self.connection.query_iterative(line)
+
         else:
             print("Please login first: %dsl_login")
+
 
 
 
