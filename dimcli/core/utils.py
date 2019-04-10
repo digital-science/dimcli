@@ -10,6 +10,25 @@ import os
 from .dsl_grammar import *
 
 
+def print_json_summary(res, query=""):
+    """
+    from a dimcli.Result object, print out basic stats
+    * ignore if it isn't a search type of query
+    eg output:
+        Tot Grants:  4565325
+        Returned Researchers: 20
+    """
+    # what is searched for
+    source = line_search_subject(query)
+    if source:
+        if res['stats']:
+            print("Tot %s: " % source.capitalize(), res['stats']["total_count"])
+        for k in res.data.keys():
+            if k != "_stats":
+                print("Returned " + k.capitalize() + ":", len(res.data[k]))
+
+
+
 def listify_and_unify(*args):
     "util to handle listing together dict.keys() sequences"
     out = []
@@ -60,17 +79,22 @@ def line_search_subject(line):
         i = l.index("search")
         return l[i + 1]
     else:
-        return None
+        return ""
 
 def line_search_return(line):
-    """get the source/facet in the return statement
+    """
+    get the source/facet in the return statement
     """
     l = line.split()
     n = l.count("return")
     if n == 1:
         i = l.index("return")
         if len(l) > i + 1: # cause index is zero based
-            return l[i + 1]
+            return_obj = l[i + 1]
+            if "[" in return_obj:
+                return return_obj.split('[')[0]
+            else:
+                return return_obj
     else: # if multiple return values, fail
         return None
 
@@ -169,3 +193,12 @@ def init_config_folder(user_dir, user_config_file):
     click.secho(
         "Created %s" % user_config_file, dim=True
     )
+
+
+
+def chunks_of(data, size):
+    it = iter(data)
+    chunk = list(islice(it, size))
+    while chunk:
+        yield chunk
+        chunk = list(islice(it, size))

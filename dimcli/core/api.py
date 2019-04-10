@@ -198,16 +198,16 @@ class Dsl:
     def query_iterative(self, q, show_results=None, skip=0, limit=1000):
         """
         transform a query into a loop that pulls out all data available 
-        @TODO is there a hard limit of 50k results for limit/skip
+        @TODO is there a hard limit of 50k results for limit/skip?
         """
 
         if q.split().count('return') != 1:
-            raise Exception("Iterative querying support only 1 return statement")
+            raise Exception("Loop queries support only 1 return statement")
         if "limit" in q or "skip" in q:
-            raise Exception("Iterative querying does not require `limit` or `skip`")
+            raise Exception("Loop queries should not contain the keywords `limit` or `skip`")
         sourcetype = line_search_return(q)  
         if not (sourcetype in VOCABULARY['sources'].keys()):
-            raise Exception("Iterative querying works only with sources, not facets") 
+            raise Exception("Loop queries can return only one of the Dimensions sources: %s" % ", ".join([s for s in VOCABULARY['sources'].keys()])) 
         
         output = []
         q2 = q + " limit %d skip %d" % (limit, skip)
@@ -215,11 +215,14 @@ class Dsl:
         res = self.query(q2, show_results=False, retry=0)
 
         if res['errors']:
-            return res.data
+            return res
         elif res['stats']:
 
             tot = int(res['stats']['total_count'])
-            print("%d / %d" % (skip+limit, tot  ))
+            batch = skip+limit
+            if batch > tot:
+                batch = tot
+            print("%d / %d" % (batch, tot  ))
 
             if len(res[sourcetype]) == limit:
                 output = res[sourcetype] + self.query_iterative(q, show_results, skip+limit)
@@ -227,10 +230,12 @@ class Dsl:
                 output = res[sourcetype]
 
             # FINALLY 
+            #
             # if recursion is complete (we are at top level, hence skip=0) 
             #   build the Result obj
             # else 
             #   just return current iteration results 
+            #
             if skip == 0: 
                 response_simulation = {
                     "_stats": {
@@ -246,10 +251,3 @@ class Dsl:
                 return output
 
 
-
-def chunks_of(data, size):
-    it = iter(data)
-    chunk = list(islice(it, size))
-    while chunk:
-        yield chunk
-        chunk = list(islice(it, size))

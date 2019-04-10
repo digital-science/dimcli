@@ -1,6 +1,6 @@
 from .VERSION import __version__, VERSION
 
-from .core.api import Dsl, chunks_of
+from .core.api import Dsl
 from .core.dsl_grammar import VOCABULARY
 
 try:

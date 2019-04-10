@@ -186,11 +186,12 @@ def handle_query(CLIENT, text, databuffer):
             click.secho("---", dim=True)
             print_json_full(res.data, text, terminal=True)
         else:
-            if res['stats']:
-                print("Tot Results: ", res['stats']["total_count"])
-            for k in res.data.keys():
-                if k != "_stats":
-                    print(k.capitalize() + ":", len(res.data[k]))
+            print_json_summary(res, text)
+            # if res['stats']:
+            #     print("Tot Results: ", res['stats']["total_count"])
+            # for k in res.data.keys():
+            #     if k != "_stats":
+            #         print(k.capitalize() + ":", len(res.data[k]))
             if databuffer: databuffer.load(res.data, text)
             if True:
                 click.secho("---", dim=True)
