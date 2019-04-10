@@ -8,8 +8,8 @@ import click
 import IPython.display
 from itertools import islice
 
-from .repl.utils import line_search_return
-from .repl.dsl_grammar import VOCABULARY
+from .utils import line_search_return
+from .dsl_grammar import VOCABULARY
 
 
 #
@@ -71,8 +71,16 @@ class Result(IPython.display.JSON):
         else:
             return False
 
+    def __repr__(self):
+        return "<dimcli.Result object #%s: %s>" % (str(id(self)), str(self.keys_and_count()))
+        # return '{Query Results:'+self.id+', age:'+str(self.age)+ '}'
+
+    # def __str__(self):
+    #     return 'Person(name='+self.name+', age='+str(self.age)+ ')'
+
     def keys(self,):
         return list(self.data.keys())
+
     def keys_and_count(self,):
         return [(x, len(self.data[x])) for x in self.data.keys()]
 

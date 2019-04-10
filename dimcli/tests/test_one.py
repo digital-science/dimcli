@@ -10,7 +10,7 @@ import unittest, os, sys, click
 import configparser
 
 from .. import *
-from ..dimensions import USER_CONFIG_FILE
+from ..core.api import USER_CONFIG_FILE
 
 
 class TestOne(unittest.TestCase):
@@ -26,7 +26,7 @@ class TestOne(unittest.TestCase):
         # ----
         d = Dsl()
         res = d.query("search publications where year=2018 return publications")
-        print("Query results: ", res.keys_and_count())
+        # print("Query results: ", res.keys_and_count())
         # ----
         click.secho("Completed test succesfully", fg="green")
 
@@ -41,7 +41,7 @@ class TestOne(unittest.TestCase):
         PSW = section['password']
         d = Dsl(user=USER, password=PSW)
         res = d.query("search publications where year=2018 return publications")
-        print("Query results: ", res.keys_and_count())
+        # print("Query results: ", res.keys_and_count())
         # ----
         click.secho("\n--------\nCompleted all tests", fg="green")
 
@@ -50,7 +50,7 @@ class TestOne(unittest.TestCase):
         # ----
         d = Dsl()
         res = d.query("search publications where year=2018 return publications")
-        print("Query results: ", res.keys_and_count())
+        print("Query results: ")
         print(" ==> res['publications'][0]: ", res['publications'][0])
         print(" ==> res['stats']: ", res['stats'])
         print(" ==> res['not_there']: ", res['not_there'])
@@ -62,7 +62,7 @@ class TestOne(unittest.TestCase):
         # ----
         d = Dsl()
         res = d.query_iterative("""search publications where journal.title="nature medicine" return publications""")
-        print("Query results: ", res.keys_and_count())
+        print("Query results: ")
         print(" ==> res['stats']: ", res['stats'])
         print(" ==> len(res['publications']): ", len(res['publications']))
         # ----

@@ -4,24 +4,14 @@
 import sys
 import click
 from pprint import pprint
-# from .repl.lib import *
-from .repl import repl
-from .repl.utils import open_multi_platform, init_config_folder
-# from .repl import credentials
 
 from .VERSION import *
-from .dimensions import *
 
-# HOW TO SET UP A CONFIGURATION FILE:
+from .core.api import *
+from .core.utils import open_multi_platform, init_config_folder
 
-# Add a '.dimcli.config.json' file to your home folder ('~').
-# The file should have the following structure:
+from .repl import repl
 
-#     {
-#         "usr": "your-username",
-#         "psw" : "your-password",
-#         "service" : "https://app.dimensions.ai/api/"   # default
-#     }
 
 
 @click.command()

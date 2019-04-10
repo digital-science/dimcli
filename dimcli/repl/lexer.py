@@ -9,8 +9,8 @@
 #
 
 from prompt_toolkit.lexers import Lexer
-from .dsl_grammar import *
-from .utils import *
+from ..core.dsl_grammar import *
+from ..core.utils import *
 
 
 

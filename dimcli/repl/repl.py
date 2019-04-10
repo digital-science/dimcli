@@ -25,8 +25,9 @@ import time
 import webbrowser
 import requests
 
-from .dsl_grammar import *
-from .utils import *
+from ..core.dsl_grammar import *
+from ..core.utils import *
+
 from .autocompletion import *
 from .history import *
 from .key_bindings import *

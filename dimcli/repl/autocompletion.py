@@ -17,8 +17,8 @@ from prompt_toolkit.formatted_text import HTML
 from prompt_toolkit import PromptSession
 from prompt_toolkit.styles import Style
 
-from .dsl_grammar import *
-from .utils import *
+from ..core.dsl_grammar import *
+from ..core.utils import *
 
 #
 # AUTO COMPLETION
