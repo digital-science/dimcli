@@ -75,9 +75,6 @@ class Result(IPython.display.JSON):
         return "<dimcli.Result object #%s: %s>" % (str(id(self)), str(self.keys_and_count()))
         # return '{Query Results:'+self.id+', age:'+str(self.age)+ '}'
 
-    # def __str__(self):
-    #     return 'Person(name='+self.name+', age='+str(self.age)+ ')'
-
     def keys(self,):
         return list(self.data.keys())
 

@@ -2,8 +2,65 @@
 # -*- coding: utf-8 -*-
 
 from ..VERSION import VERSION
+from json2html import *
+
 
 def html_template_interactive(query, formatted_json):
+    """
+    * 2019-02-07: deprecated in favor of the interactive one above
+    
+    This version just uses https://highlightjs.org/ to colorize the json code
+    """
+
+    table = json2html.convert(json = formatted_json)
+
+    s = """
+    <html>
+    <head>
+        <title>DSL Query Output</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <style>
+            .query {
+                font-size: 20px;
+                color: red;
+                background: beige;
+                font-family: monospace;
+            }
+        </style>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/styles/default.min.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script>
+    </head>
+    <div>
+        <div id="header"><h1>Dimensions DSL Query Results</h1></div>
+        <div id="query">
+            <p>Query:</p>
+            <p class="query">$ %s</p></p>
+            <p>
+                <li><a href="#json">json</a></li>
+                <li><a href="#table">table</a></li>
+            </p>
+        </div>
+        <h3>JSON format</h3><a name="json">
+        <div id="code"></a><pre><code>%s</code></pre>
+        </div> 
+        <h3>Tabular format</h3><a name="table"></a>
+        <div id="table">%s</div> 
+        <div id="footer">
+            <p>Generated with <a href="https://github.com/lambdamusic/dimcli">DimCli</a> %s</p>
+        </div>
+    </body>
+    </html>
+    
+    """ % (query, formatted_json, table, VERSION)
+    return s
+
+
+
+
+
+
+def __html_template_interactive(query, formatted_json):
     """
     version that uses to open/close the json tree
     * https://github.com/caldwell/renderjson
@@ -218,35 +275,5 @@ def xxx_html_template_interactive(query, formatted_json):
     </html>
     
     """ % (formatted_json, query)
-    return s
-
-
-def html_template_version1(query, formatted_json):
-    """
-    * 2019-02-07: deprecated in favor of the interactive one above
-    
-    This version just uses https://highlightjs.org/ to colorize the json code
-    """
-
-    s = """
-    <html>
-    <head>
-    <meta charset="UTF-8">
-    <style>
-        .query {
-            font-size: 20px;
-            color: red;
-            background: beige;
-            font-family: monospace;
-        }
-    </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/styles/default.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
-    </head>
-    <body>Query:<p class="query">%s</p><hr><pre><code>%s</code></pre></body>
-    </html>
-    
-    """ % (query, formatted_json)
     return s
 

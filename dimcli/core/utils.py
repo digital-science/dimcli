@@ -8,7 +8,6 @@ import subprocess
 import os
 
 from .dsl_grammar import *
-from .html import *
 
 
 def listify_and_unify(*args):
@@ -65,22 +64,22 @@ def line_search_subject(line):
 
 def line_search_return(line):
     """get the source/facet in the return statement
-        TODO: return multiple return values not just one
     """
     l = line.split()
-    if "return" in l:
+    n = l.count("return")
+    if n == 1:
         i = l.index("return")
         if len(l) > i + 1: # cause index is zero based
             return l[i + 1]
-    else:
+    else: # if multiple return values, fail
         return None
 
 def line_search_aggregates(line):
     """get the aggregrates statement eg in `search publications return funders aggregate altmetric_median sort by rcr_avg`
-        TODO: return multiple return values not just one
     """
     l = line.split()
-    if "aggregate" in l:
+    n = l.count("aggregate")
+    if n == 1:
         i = l.index("aggregate")
         if len(l) > i + 2: # cause index is zero based
             return l[i + 1]

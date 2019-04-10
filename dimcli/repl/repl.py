@@ -25,14 +25,16 @@ import time
 import webbrowser
 import requests
 
+from ..core.api import Dsl, USER_HISTORY_FILE, USER_JSON_OUTPUTS_DIR
 from ..core.dsl_grammar import *
 from ..core.utils import *
+from ..core.html import html_template_interactive
 
 from .autocompletion import *
 from .history import *
 from .key_bindings import *
 from .lexer import *
-from ..dimensions import Dsl, USER_HISTORY_FILE, USER_JSON_OUTPUTS_DIR
+
 
 
 
