@@ -2,6 +2,7 @@
 from IPython.core import magic_arguments
 from IPython.core.magic import line_magic, cell_magic, line_cell_magic, Magics, magics_class
 
+from ..VERSION import VERSION
 
 from ..core.api import Dsl
 from ..core.utils import *
@@ -18,11 +19,9 @@ class DslMagics(Magics):
     # )
     @line_magic
     def dsl_login(self, line):
-        # args = magic_arguments.parse_argstring(self.hello, line)
-        # if args.verbose:
-        #     print('hello ' + cell)
-
-        self.connection = Dsl(instance="live", show_results=False) 
+        instance = line.strip() or "live"
+        self.connection = Dsl(instance=instance, show_results=False) 
+        print("DimCli %s - Succesfully connected to <%s>" % (str(VERSION), self.connection._url))
 
     @line_cell_magic
     def dsl_query(self, line, cell=None):
@@ -75,7 +74,13 @@ class DslMagics(Magics):
             return res
 
 
-
+    @line_magic
+    def dsl_schema(self, line):
+        "Wrapper around the dsl describe function"
+        if self.connection:
+            return self._handle_query("describe schema")
+        else:
+            print("Please login first: %dsl_login")
 
 
 ip = get_ipython()
