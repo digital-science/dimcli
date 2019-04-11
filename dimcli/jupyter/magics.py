@@ -19,13 +19,19 @@ class DslMagics(Magics):
     # )
     @line_magic
     def dsl_login(self, line):
+        """DimCli Magic
+        Authenticate with the Dimensions.ai DSL backend. Requires a dsl.ini file (see https://github.com/lambdamusic/dimcli#the-credentials-file). 
+        Accepts an argument matching the instance name in the credentials file (default=live)
+        """
         instance = line.strip() or "live"
         self.connection = Dsl(instance=instance, show_results=False) 
         print("DimCli %s - Succesfully connected to <%s>" % (str(VERSION), self.connection._url))
 
     @line_cell_magic
     def dsl_query(self, line, cell=None):
-        "Send a query to the DSL back end"
+        """DimCli Magic
+        Query the Dimensions DSL API with the text passed. 
+        """
         if self.connection:
             if cell:
                 line = cell
@@ -36,7 +42,9 @@ class DslMagics(Magics):
 
     @line_cell_magic
     def dsl_query_loop(self, line, cell=None):
-        "Send an iterative query to the DSL back end"
+        """DimCli Magic
+        Query the Dimensions DSL API with the text passed, looping over all results pages. The final object returns contains all results into a single JSON object.  
+        """
         if self.connection:
             if cell:
                 line = cell
