@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 """
 Autocompletion.
 
@@ -7,6 +8,7 @@ Press [Tab] to complete the current word.
     and shows all the completions. (In the menu)
 - Any following tab press cycles through all the possible completions.
 """
+
 from __future__ import unicode_literals
 
 from prompt_toolkit.completion import Completion, Completer

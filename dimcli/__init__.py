@@ -2,6 +2,7 @@ from .VERSION import __version__, VERSION
 
 from .core.api import Dsl
 from .core.dsl_grammar import VOCABULARY
+from .core.dsl_grammar import NEW_GRAMMAR # new version
 
 try:
     # https://stackoverflow.com/questions/32538758/nameerror-name-get-ipython-is-not-defined
