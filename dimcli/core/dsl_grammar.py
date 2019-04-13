@@ -13,8 +13,55 @@ else:
     # @TODO get in real time from DSL
     pass 
 
-SOURCES = vocab_data['sources']
-ENTITY_TYPES = vocab_data['entities']
+
+SYNTAX = {
+    'allowed_starts': {
+        'help' : [],
+        'quit' : [],
+        'show' : [ 'json_compact', 'json_pretty'],
+        'search': [],
+        'describe': [ 'version', 'source', 'entity', 'schema'],
+    },
+    'dimensions_urls' : {
+        'publications' : 'https://app.dimensions.ai/details/publication/',
+        'grants' : 'https://app.dimensions.ai/details/grant/',
+        'patents' : 'https://app.dimensions.ai/details/patent/',
+        'policy_documents' : 'https://app.dimensions.ai/details/clinical_trial/',
+        'clinical_trials' : 'https://app.dimensions.ai/details/policy_documents/',
+        'researchers' : 'https://app.dimensions.ai/discover/publication?and_facet_researcher=',
+    },
+    'lang': [
+        'search',
+        'return',
+        'for',
+        'where',
+        'in',
+        'limit',
+        'skip',
+        'aggregate',
+        '=',  # filter operators https://docs.dimensions.ai/dsl/language.html#simple-filters
+        '!=',
+        '>',
+        '<',
+        '>=',
+        '<=',
+        '~',
+        'is empty',
+        'is not empty',
+        "count", # https://docs.dimensions.ai/dsl/language.html#filter-functions
+        'sort by',
+        'asc',
+        'desc',
+        "AND", # boolean operators https://docs.dimensions.ai/dsl/language.html#id6
+        "OR", 
+        "NOT",
+        "&&",
+        "!",
+        "||",
+        "+",
+        "-",
+    ]
+}
 
 
 
@@ -24,38 +71,63 @@ class DslGrammar():
     Wrapper for the DSL Grammar dict
 
     """
-    def __init__(self, data):
-        self.data = data
+    def __init__(self, grammar_dict, extra_syntax):
+        self.grammar = grammar_dict
+        self.syntax = extra_syntax
         # DslGrammar.__init__(self, data)
 
     def __getitem__(self, key):
         "return dict key as slice"
-        if key in self.data:
-            return self.data[key]
+        if key in self.grammar:
+            return self.grammar[key]
         else:
             return False
 
     def __repr__(self):
-        return "<Dsl Grammar object #%s. %s>" % (str(id(self)), str(self.keys_and_count()))
+        stats = [(x, len(self.grammar[x])) for x in self.grammar.keys()]
+        return "<Dsl Grammar object #%s. %s>" % (str(id(self)), str(stats))
 
-    def keys(self,):
-        return list(self.data.keys())
+    # 
+    # SYNTAX METHODS
+    # 
 
-    def keys_and_count(self,):
-        return [(x, len(self.data[x])) for x in self.data.keys()]
+    def allowed_starts(self, word=""):
+        "Get a the allowed starts dict"
+        if not word:
+            return self.syntax['allowed_starts']
+        else:
+            try:
+                return self.syntax['allowed_starts'][word]
+            except:
+                return None
+    def lang(self):
+        "Get a list of lang operators"
+        return self.syntax['lang']
+    def url_for_source(self, source):
+        "Get a the Dimensions URL for a specific source"
+        try:
+            return self.syntax['dimensions_urls'][source]
+        except:
+            return None
+
+    # 
+    # GRAMMAR METHODS
+    # 
 
     def sources(self):
         "Get a list of all sources available"
-        return [x for x in self.data['sources'].keys()]
+        return [x for x in self.grammar['sources'].keys()]
 
     def entities(self):
         "Get a list of all entities available"
-        return [x for x in self.data['entities'].keys()]
+        return [x for x in self.grammar['entities'].keys()]
 
     def fields_for_source(self, source, filters=False, facets=False, fieldtype=False):
         "Get a list of all fields available"
         out= []
-        for field,specs in self.data['sources'][source]['fields'].items():
+        if source not in self.sources():
+            return None
+        for field,specs in self.grammar['sources'][source]['fields'].items():
             if filters:
                 if specs['is_filter']:
                     out.append(field)
@@ -79,20 +151,31 @@ class DslGrammar():
 
     def fieldsets_for_source(self, source):
         "Get a list of all fieldsets available"
-        return self.data['sources'][source]['fieldsets']
+        try:
+            return self.grammar['sources'][source]['fieldsets']
+        except:
+            return None
 
     def metrics_for_source(self, source):
         "Get a list of all metrics available"
-        return [x for x in self.data['sources'][source]['metrics']]
+        try:
+            return [x for x in self.grammar['sources'][source]['metrics']]
+        except:
+            return None
 
     def search_fields_for_source(self, source):
         "Get a list of all search fields available"
-        return self.data['sources'][source]['search_fields']
+        try:
+            return self.grammar['sources'][source]['search_fields']
+        except:
+            return None
 
     def fields_for_entity(self, entity, filters=False, fieldtype=None):
         "Get a list of all fields available for an entity"
         out= []
-        for field,specs in self.data['entities'][entity]['fields'].items():
+        if entity not in self.entities():
+            return None
+        for field,specs in self.grammar['entities'][entity]['fields'].items():
             if filters:
                 if specs['is_filter']:
                     out.append(field)
@@ -109,7 +192,16 @@ class DslGrammar():
 
 
 
-NEW_GRAMMAR = DslGrammar(vocab_data)
+G = DslGrammar(vocab_data, SYNTAX)
+
+
+# OLD VERSION
+
+SOURCES = vocab_data['sources']
+ENTITY_TYPES = vocab_data['entities']
+
+
+
 
 
 # note: attrs of entities are defined only at the entity_type level

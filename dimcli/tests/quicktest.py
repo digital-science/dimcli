@@ -27,15 +27,20 @@ def main(test_number=1):
         print(len(res['publications']))
 
     elif test_number == 2:
-        g = NEW_GRAMMAR
+        #     @TODO turn this into a test
+        g = G
+        print(g)
+        print(g.allowed_starts())
+        print(g.lang())
         print(g.sources())
         print(g.entities())
         for x in g.sources():
-            print(x)
+            print("============", x, "============")
             print(g.fields_for_source(x))
+            print(g.url_for_source(x))
 
         for x in g.entities():
-            print(x)
+            print("============", x, "============")
             print(g.fields_for_entity(x))
  
 if __name__ == '__main__':
