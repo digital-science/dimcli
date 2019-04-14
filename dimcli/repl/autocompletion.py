@@ -102,7 +102,7 @@ class CleverCompleter(Completer):
         # finally
         if word.endswith("."):
             # print("***" + str(candidates) + "***")
-            candidates = [word + x for x in candidates]
+            candidates = sorted([word + x for x in candidates])
             for keyword in candidates:
                 yield Completion(
                     keyword, 
@@ -111,6 +111,7 @@ class CleverCompleter(Completer):
                     display_meta=build_help_string(keyword, entity),
                     )
         else:
+            candidates = sorted(candidates)
             for keyword in candidates:
                 if keyword.startswith(word):
                     yield Completion(
