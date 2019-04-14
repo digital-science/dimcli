@@ -9,7 +9,7 @@ import IPython.display
 from itertools import islice
 
 from .utils import line_search_return
-from .dsl_grammar import VOCABULARY
+from .dsl_grammar import G
 
 
 #
@@ -206,8 +206,8 @@ class Dsl:
         if "limit" in q or "skip" in q:
             raise Exception("Loop queries should not contain the keywords `limit` or `skip`")
         sourcetype = line_search_return(q)  
-        if not (sourcetype in VOCABULARY['sources'].keys()):
-            raise Exception("Loop queries can return only one of the Dimensions sources: %s" % ", ".join([s for s in VOCABULARY['sources'].keys()])) 
+        if not (sourcetype in G.sources()):
+            raise Exception("Loop queries can return only one of the Dimensions sources: %s" % ", ".join([s for s in G.sources()])) 
         
         output = []
         q2 = q + " limit %d skip %d" % (limit, skip)

@@ -99,7 +99,10 @@ def line_search_return(line):
         return None
 
 def line_search_aggregates(line):
-    """get the aggregrates statement eg in `search publications return funders aggregate altmetric_median sort by rcr_avg`
+    """get the aggregrates statement eg in 
+        `search publications return funders aggregate altmetric_median sort by altmetric_median`
+        @TODO handle multiple aggregrate statements eg
+        `return research_orgs aggregate altmetric_median, rcr_avg sort by rcr_avg`
     """
     l = line.split()
     n = l.count("aggregate")

@@ -40,6 +40,7 @@ class CleverCompleter(Completer):
         word = document.get_word_before_cursor(WORD=True)
         line = document.current_line_before_cursor
         line_minus_current = line.replace(word, "").strip()
+        source = line_search_subject(line)
         # DEBUG
         # click.secho("\nAutocomplete running..", dim=True)
         # click.secho("WORD=" + word, dim=True)
@@ -50,65 +51,53 @@ class CleverCompleter(Completer):
         candidates = []
 
         if word.endswith("."):
-            source = line_search_subject(line)
             entity_facet = line_last_word(line).replace(".", "")
-            # GET FIELDS FOR ENTITY-FIELD
+            entity = G.entity_type_for_source_facet(source, entity_facet)
             candidates = G.fields_for_entity_from_source_facet(source, entity_facet)
-            # click.secho(source + entity_facet + str(candidates), dim=True)
 
         elif len(line_minus_current) == 0:  # remove the current stem from line
-            candidates = VOCABULARY['allowed_starts']
+            candidates = G.allowed_starts()
 
         elif line_last_word(line_minus_current) in ["show"]:
-            candidates = VOCABULARY['allowed_starts']["show"]
+            candidates = G.allowed_starts("show")
 
         elif line_last_word(line_minus_current) in ["describe"]:
-            candidates = VOCABULARY['allowed_starts']["describe"]
+            candidates = G.allowed_starts("describe")
 
         elif line_last_word(line_minus_current) in ["search"]:
-            # after search and return only sources
-            candidates = listify_and_unify(VOCABULARY['sources'].keys())
+            candidates = G.sources()
 
         elif line_last_word(line_minus_current) in ["return"]:
-            source = line_search_subject(line)  # generic solution
-            if source in VOCABULARY['sources'].keys():
-                facets = [] # VOCABULARY['sources'][source]['facets'].keys()
-                candidates = listify_and_unify(facets, [source])
+            if source in G.sources():
+                candidates = G.facets_for_source(source) + [source]
 
         elif line_last_word(line_minus_current) == "in":
-            source = line_search_subject(line)  # generic solution
-            if source in VOCABULARY['sources'].keys():
-                # candidates = VOCABULARY['sources'][source]['search_fields']
-                candidates = listify_and_unify(VOCABULARY['sources'][source]['search_fields'])
+            candidates = G.search_fields_for_source(source)
 
         elif line_last_word(line_minus_current) in ["where", "and"]:
-            source = line_search_subject(line)  # generic solution
-            if source in VOCABULARY['sources'].keys():
-                fields = VOCABULARY['sources'][source]['fields'].keys()
-                facets = [] # VOCABULARY['sources'][source]['facets'].keys() # NEW G
-                candidates = listify_and_unify(fields, facets)
+            candidates = G.filters_for_source(source)
 
         elif line_last_word(line_minus_current) == "aggregate":
-            source = line_search_subject(line)  # generic solution
-            if source in VOCABULARY['sources'].keys():
-                candidates = listify_and_unify(VOCABULARY['sources'][source]['metrics'].keys())
+            # aggr. can be used only when returning facets!
+            return_object = line_search_return(line)
+            if return_object in G.facets_for_source(source):
+                candidates = G.metrics_for_source(source)
 
-        elif line_last_two_words(line_minus_current) == "sort by":  # # https://docs.dimensions.ai/dsl/language.html#sort         
-            source = line_search_subject(line) 
+        elif line_last_two_words(line_minus_current) == "sort by":  
             return_object = line_search_return(line)  
-            aggreg_object = line_search_aggregates(line)  
-            if return_object in VOCABULARY['sources'].keys(): # if source, can sort by several things
-                metrics = VOCABULARY['sources'][return_object]['metrics'].keys()
-                fields = VOCABULARY['sources'][return_object]['fields'].keys()
-                candidates = listify_and_unify(fields, metrics)
-            else: # if not source, it's a facet so can only sort by count or aggregates
-                candidates = ['count']
-                if aggreg_object: 
-                    candidates += [aggreg_object]
-
+            if return_object in G.sources(): 
+                # if source, can sort by fields
+                candidates = G.fields_for_source(source) + ['relevance']
+            elif return_object in G.facets_for_source(source):
+                # if facet, can sort by aggregrates metrics if available, otherwise count
+                aggreg_object = line_search_aggregates(line)
+                if aggreg_object:
+                    candidates = ['aggreg_object']   
+                else:
+                    candidates = ['count']          
 
         else:
-            candidates = [x for x in VOCABULARY['lang'] if x != "search"]
+            candidates = [x for x in G.lang() if x != "search"] # not destructive
 
         # finally
         if word.endswith("."):
@@ -119,7 +108,7 @@ class CleverCompleter(Completer):
                     keyword, 
                     start_position=-len(word),
                     display=keyword.replace(word, ""),
-                    display_meta=build_display_meta(keyword.replace(word, "")),
+                    display_meta=build_help_string(keyword, entity),
                     )
         else:
             for keyword in candidates:
@@ -128,21 +117,15 @@ class CleverCompleter(Completer):
                         keyword, 
                         start_position=-len(word),
                         display=keyword,
-                        display_meta=build_display_meta(keyword),
+                        display_meta=build_help_string(keyword, source),
                         )
 
 
-
-
-# TODO handle fields with same name across different sources/entities!
-def build_display_meta(keyword):
-    for group,vals in VOCABULARY.items(): 
-        if type(vals) == dict: # ==> dict_keys(['clinical_trials', 'grants', etc..])
-            for name,section in vals.items(): 
-                if type(section) == dict: # ==> {'fields': {'acronym': {'description': None, 'is_filter': True, 'long_description': None, 'name': 'acronym', 'type': 'string'}, etc...
-                    for field, field_desc in section.items():
-                        if type(field_desc) == dict:
-                            if keyword in field_desc.keys():
-                                return field_desc[keyword]['description']
-    return None
+def build_help_string(field, source="", facet=""):
+    if source:
+        return G.desc_for_source_field_enriched(source, field)
+    elif facet:
+        return G.desc_for_entity_field(facet, field)
+    else:
+        return ""
 

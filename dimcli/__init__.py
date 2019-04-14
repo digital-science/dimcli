@@ -1,8 +1,7 @@
 from .VERSION import __version__, VERSION
 
 from .core.api import Dsl
-from .core.dsl_grammar import VOCABULARY
-from .core.dsl_grammar import G  # new version
+from .core.dsl_grammar import G 
 
 
 

@@ -106,8 +106,14 @@ class DslGrammar():
     def desc_for_source_field(self, source, field):
         "from a source-field combination, return the description"
         if not field in self.fields_for_source(source):
-            return []
+            return ""
         return self.grammar['sources'][source]['fields'][field]['description']
+    def desc_for_source_field_enriched(self, source, field):
+        "A decription prefixed by extra info for a field eg if it is a facet"
+        desc = self.desc_for_source_field(source, field)
+        if desc and field in self.facets_for_source(source):
+            return "[FACET] " + desc
+        return desc
 
     def fieldsets_for_source(self, source):
         "Get a list of all fieldsets available"
@@ -161,7 +167,7 @@ class DslGrammar():
         if facet not in self.facets_for_source(source):
             return []
         entity = self.entity_type_for_source_facet(source, facet)
-        return self.fields_for_entity(entity)
+        return self.filters_for_entity(entity)  # only filters as used in 'where' context
         
     def desc_for_entity_field(self, entity, field):
         "from a entity-field combination, return the description"
@@ -169,13 +175,6 @@ class DslGrammar():
             return []
         return self.grammar['entities'][entity]['fields'][field]['description']
 
-#   'research_orgs': {'type': 'orgs',
-#    'description': None,
-#    'long_description': None,
-#    'is_entity': True,
-#    'entity_type': 'orgs',
-#    'is_filter': True,
-#    'is_facet': True},
 
 G = DslGrammar(vocab_data, syntax_data)
 
@@ -184,109 +183,109 @@ G = DslGrammar(vocab_data, syntax_data)
 
 # OLD VERSION
 
-SOURCES = vocab_data['sources']
-ENTITY_TYPES = vocab_data['entities']
+# SOURCES = vocab_data['sources']
+# ENTITY_TYPES = vocab_data['entities']
 
 
 
 
 
-# note: attrs of entities are defined only at the entity_type level
-ENTITIES = [] 
-# for x in SOURCES:
-#     for val in SOURCES[x]['facets']:
-#         if SOURCES[x]['facets'][val]['is_entity']:
-#             ENTITIES += [(val, SOURCES[x]['facets'][val]['type'])]
-#     for val in SOURCES[x]['fields']:
-#         if SOURCES[x]['fields'][val]['is_entity']:
-#             ENTITIES += [(val, SOURCES[x]['fields'][val]['type'])]
-# ENTITIES = sorted(list(set(ENTITIES))) # => [('FOR', 'category'), ('FOR_first', 'category') etc...]
+# # note: attrs of entities are defined only at the entity_type level
+# ENTITIES = [] 
+# # for x in SOURCES:
+# #     for val in SOURCES[x]['facets']:
+# #         if SOURCES[x]['facets'][val]['is_entity']:
+# #             ENTITIES += [(val, SOURCES[x]['facets'][val]['type'])]
+# #     for val in SOURCES[x]['fields']:
+# #         if SOURCES[x]['fields'][val]['is_entity']:
+# #             ENTITIES += [(val, SOURCES[x]['fields'][val]['type'])]
+# # ENTITIES = sorted(list(set(ENTITIES))) # => [('FOR', 'category'), ('FOR_first', 'category') etc...]
 
 
 
 
 
-GRAMMAR = {
-    'allowed_starts': {
-        'help' : [],
-        'quit' : [],
-        'show' : [ 'json_compact', 'json_pretty'],
-        'search': [],
-        'describe': [ 'version', 'source', 'entity', 'schema'],
-    },
-    'dimensions_urls' : {
-        'publications' : 'https://app.dimensions.ai/details/publication/',
-        'grants' : 'https://app.dimensions.ai/details/grant/',
-        'patents' : 'https://app.dimensions.ai/details/patent/',
-        'policy_documents' : 'https://app.dimensions.ai/details/clinical_trial/',
-        'clinical_trials' : 'https://app.dimensions.ai/details/policy_documents/',
-        'researchers' : 'https://app.dimensions.ai/discover/publication?and_facet_researcher=',
-    },
-    'lang': [
-        'search',
-        'return',
-        'for',
-        'where',
-        'in',
-        'limit',
-        'skip',
-        'aggregate',
-        '=',  # filter operators https://docs.dimensions.ai/dsl/language.html#simple-filters
-        '!=',
-        '>',
-        '<',
-        '>=',
-        '<=',
-        '~',
-        'is empty',
-        'is not empty',
-        "count", # https://docs.dimensions.ai/dsl/language.html#filter-functions
-        'sort by',
-        'asc',
-        'desc',
-        "AND", # boolean operators https://docs.dimensions.ai/dsl/language.html#id6
-        "OR", 
-        "NOT",
-        "&&",
-        "!",
-        "||",
-        "+",
-        "-",
-    ]
-}
+# GRAMMAR = {
+#     'allowed_starts': {
+#         'help' : [],
+#         'quit' : [],
+#         'show' : [ 'json_compact', 'json_pretty'],
+#         'search': [],
+#         'describe': [ 'version', 'source', 'entity', 'schema'],
+#     },
+#     'dimensions_urls' : {
+#         'publications' : 'https://app.dimensions.ai/details/publication/',
+#         'grants' : 'https://app.dimensions.ai/details/grant/',
+#         'patents' : 'https://app.dimensions.ai/details/patent/',
+#         'policy_documents' : 'https://app.dimensions.ai/details/clinical_trial/',
+#         'clinical_trials' : 'https://app.dimensions.ai/details/policy_documents/',
+#         'researchers' : 'https://app.dimensions.ai/discover/publication?and_facet_researcher=',
+#     },
+#     'lang': [
+#         'search',
+#         'return',
+#         'for',
+#         'where',
+#         'in',
+#         'limit',
+#         'skip',
+#         'aggregate',
+#         '=',  # filter operators https://docs.dimensions.ai/dsl/language.html#simple-filters
+#         '!=',
+#         '>',
+#         '<',
+#         '>=',
+#         '<=',
+#         '~',
+#         'is empty',
+#         'is not empty',
+#         "count", # https://docs.dimensions.ai/dsl/language.html#filter-functions
+#         'sort by',
+#         'asc',
+#         'desc',
+#         "AND", # boolean operators https://docs.dimensions.ai/dsl/language.html#id6
+#         "OR", 
+#         "NOT",
+#         "&&",
+#         "!",
+#         "||",
+#         "+",
+#         "-",
+#     ]
+# }
 
 
 
 
-VOCABULARY = { **{'sources' : SOURCES}, **{'entities' : ENTITY_TYPES}, **GRAMMAR }
+# VOCABULARY = { **{'sources' : SOURCES}, **{'entities' : ENTITY_TYPES}, **GRAMMAR }
 
 
 
 
 
-def search_vocab_get_key(val, dct=VOCABULARY, parent=None):
-    """
-    quick and dirty way to search for a match in the voc dict
-    >> print(search_vocab_get_key("journal")) # =entities
+# def search_vocab_get_key(val, dct=VOCABULARY, parent=None):
+#     """
+#     quick and dirty way to search for a match in the voc dict
+#     >> print(search_vocab_get_key("journal")) # =entities
 
-    So that the autocomplete can determine the grammar-type of an object
-    """
-    for x in dct:
-        if x == val and parent != "dimensions_urls":
-            return parent
-        # print(x, type(dct[x]))
-        if type(dct[x]) == dict:
-            # print("recur")
-            res = search_vocab_get_key(val, dct[x], x)
-            if res is not None:
-                return res
-        if type(dct[x]) == list:
-            for y in dct[x]:
-                if type(y) == tuple:
-                    if y[0] == val:
-                        return x      
-                elif y == val:
-                    return x   
+#     So that the autocomplete can determine the grammar-type of an object
+#     """
+#     for x in dct:
+#         if x == val and parent != "dimensions_urls":
+#             return parent
+#         # print(x, type(dct[x]))
+#         if type(dct[x]) == dict:
+#             # print("recur")
+#             res = search_vocab_get_key(val, dct[x], x)
+#             if res is not None:
+#                 return res
+#         if type(dct[x]) == list:
+#             for y in dct[x]:
+#                 if type(y) == tuple:
+#                     if y[0] == val:
+#                         return x      
+#                 elif y == val:
+#                     return x   
                 
 
 

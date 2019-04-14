@@ -15,18 +15,19 @@ from ..core.utils import *
 
 
 # ====
-allowed_starts = VOCABULARY['allowed_starts'].keys()
-lang = split_multi_words(VOCABULARY['lang'])
 #
-sources = list(VOCABULARY['sources'].keys())
+allowed_starts = G.allowed_starts()
+lang = split_multi_words(G.lang())
 #
-fields = list_flatten([VOCABULARY['sources'][source]['fields'] for source in sources])
-facets = [] # list_flatten([VOCABULARY['sources'][source]['facets'] for source in sources])
-fieldsets = list_flatten([VOCABULARY['sources'][source]['fieldsets'] for source in sources])
-metrics = list_flatten([VOCABULARY['sources'][source]['metrics'] for source in sources])
-search_fields = list_flatten([VOCABULARY['sources'][source]['search_fields'] for source in sources])
-# entities = list_flatten([VOCABULARY['sources'][source]['entities'] for source in sources])
-entities = list(VOCABULARY['entities'].keys())
+sources = G.sources()
+entities = G.entities()
+#
+fields = list_flatten([G.fields_for_source(source) for source in sources])
+facets = list_flatten([G.facets_for_source(source) for source in sources])
+fieldsets = list_flatten([G.fieldsets_for_source(source) for source in sources])
+metrics = list_flatten([G.metrics_for_source(source) for source in sources])
+search_fields = list_flatten([G.search_fields_for_source(source) for source in sources])
+#
 # ====
 
 class BasicLexer(Lexer):
