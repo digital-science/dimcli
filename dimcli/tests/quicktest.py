@@ -30,18 +30,21 @@ def main(test_number=1):
         #     @TODO turn this into a test
         g = G
         print(g)
-        print(g.allowed_starts())
-        print(g.lang())
-        print(g.sources())
-        print(g.entities())
+        print("*STARTS*", g.allowed_starts())
+        print("*LANG*", g.lang())
+        print("*SOURCES*", g.sources())
+        print("*ENTITIES*", g.entities())
         for x in g.sources():
             print("============", x, "============")
-            print(g.fields_for_source(x))
             print(g.url_for_source(x))
+            for y in g.fields_for_source(x):
+                print("...", y, " => ", str(g.desc_for_source_field(x, y)), "**facet?**", str(g.entity_type_for_source_facet(x, y)), str(g.fields_for_entity_from_source_facet(x, y)))
 
         for x in g.entities():
             print("============", x, "============")
-            print(g.fields_for_entity(x))
- 
+            for y in g.fields_for_entity(x):
+                print("...",  y, " => ", str(g.desc_for_entity_field(x, y)))
+
+
 if __name__ == '__main__':
     main()

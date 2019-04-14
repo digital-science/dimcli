@@ -21,7 +21,7 @@ lang = split_multi_words(VOCABULARY['lang'])
 sources = list(VOCABULARY['sources'].keys())
 #
 fields = list_flatten([VOCABULARY['sources'][source]['fields'] for source in sources])
-facets = list_flatten([VOCABULARY['sources'][source]['facets'] for source in sources])
+facets = [] # list_flatten([VOCABULARY['sources'][source]['facets'] for source in sources])
 fieldsets = list_flatten([VOCABULARY['sources'][source]['fieldsets'] for source in sources])
 metrics = list_flatten([VOCABULARY['sources'][source]['metrics'] for source in sources])
 search_fields = list_flatten([VOCABULARY['sources'][source]['search_fields'] for source in sources])

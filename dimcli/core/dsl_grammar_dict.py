@@ -1,9 +1,67 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+
+
 #
-# this file contains a dictionary rendering of the DSL grammar JSON
-# this can be obtained with the query `describe schema`
+#
+# SYNTAX_DICT is a dictionary representation of operators and other constants of the DSL language 
+#
+#
+
+SYNTAX_DICT = {
+    'allowed_starts': {
+        'help' : [],
+        'quit' : [],
+        'show' : [ 'json_compact', 'json_pretty'],
+        'search': [],
+        'describe': [ 'version', 'source', 'entity', 'schema'],
+    },
+    'dimensions_urls' : {
+        'publications' : 'https://app.dimensions.ai/details/publication/',
+        'grants' : 'https://app.dimensions.ai/details/grant/',
+        'patents' : 'https://app.dimensions.ai/details/patent/',
+        'policy_documents' : 'https://app.dimensions.ai/details/clinical_trial/',
+        'clinical_trials' : 'https://app.dimensions.ai/details/policy_documents/',
+        'researchers' : 'https://app.dimensions.ai/discover/publication?and_facet_researcher=',
+    },
+    'lang': [
+        'search',
+        'return',
+        'for',
+        'where',
+        'in',
+        'limit',
+        'skip',
+        'aggregate',
+        '=',  # filter operators https://docs.dimensions.ai/dsl/language.html#simple-filters
+        '!=',
+        '>',
+        '<',
+        '>=',
+        '<=',
+        '~',
+        'is empty',
+        'is not empty',
+        "count", # https://docs.dimensions.ai/dsl/language.html#filter-functions
+        'sort by',
+        'asc',
+        'desc',
+        "AND", # boolean operators https://docs.dimensions.ai/dsl/language.html#id6
+        "OR", 
+        "NOT",
+        "&&",
+        "!",
+        "||",
+        "+",
+        "-",
+    ]
+}
+
+
+#
+# GRAMMAR_DICT is a dictionary rendering of the DSL grammar JSON
+# which can be obtained with the query `describe schema`
 #
 # last updated: v1.16
 # how to create:

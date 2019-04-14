@@ -50,11 +50,18 @@ class CleverCompleter(Completer):
         candidates = []
 
         if word.endswith("."):
+            # @TODO
             source = line_search_subject(line)
-            entity_facet = line_last_word(line).replace(".", "")
-            # GET FIELDS FOR ENTITY-FIELD
-            candidates = G.fields_for_entity_from_source_facet(source, entity_facet)
-            # click.secho(source + entity_facet + str(candidates), dim=True)
+            entity = line_last_word(line).replace(".", "")
+            # print("***" + entity_test + "***")
+            candidates = []
+            for x in ENTITIES:
+                if entity == x[0]:
+                    entity_type = x[1]
+                    # print("***" + entity_type + "***")
+                    if entity_type in ENTITY_TYPES.keys():
+                        candidates = listify_and_unify(ENTITY_TYPES[entity_type]['fields'].keys())
+                        # print("***" + str(candidates) + "***")
 
         elif len(line_minus_current) == 0:  # remove the current stem from line
             candidates = VOCABULARY['allowed_starts']
@@ -72,7 +79,7 @@ class CleverCompleter(Completer):
         elif line_last_word(line_minus_current) in ["return"]:
             source = line_search_subject(line)  # generic solution
             if source in VOCABULARY['sources'].keys():
-                facets = [] # VOCABULARY['sources'][source]['facets'].keys()
+                facets = VOCABULARY['sources'][source]['facets'].keys()
                 candidates = listify_and_unify(facets, [source])
 
         elif line_last_word(line_minus_current) == "in":
@@ -85,7 +92,7 @@ class CleverCompleter(Completer):
             source = line_search_subject(line)  # generic solution
             if source in VOCABULARY['sources'].keys():
                 fields = VOCABULARY['sources'][source]['fields'].keys()
-                facets = [] # VOCABULARY['sources'][source]['facets'].keys() # NEW G
+                facets = VOCABULARY['sources'][source]['facets'].keys()
                 candidates = listify_and_unify(fields, facets)
 
         elif line_last_word(line_minus_current) == "aggregate":
