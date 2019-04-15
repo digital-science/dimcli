@@ -27,7 +27,7 @@ def main(test_number=1):
         print(len(res['publications']))
 
     elif test_number == 2:
-        #     @TODO turn this into a test
+        #  => now part of the normal tests 2019-04-15
         g = G
         print(g)
         print("*STARTS*", g.allowed_starts())
