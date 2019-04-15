@@ -25,7 +25,7 @@ SYNTAX_DICT = {
         'clinical_trials' : 'https://app.dimensions.ai/details/policy_documents/',
         'researchers' : 'https://app.dimensions.ai/discover/publication?and_facet_researcher=',
     },
-    'lang': [
+    'lang_all': [
         'search',
         'return',
         'for',
@@ -56,7 +56,11 @@ SYNTAX_DICT = {
         "+",
         "-",
     ],
-    # 'lang_after' : ['in', 'where', 'return']
+    'lang_after_search' : ['in', 'where', 'for', 'return'],
+    'lang_after_filter' : ['and', 'or', 'not', 'return', ],
+    'lang_after_return' : ['sort by', 'asc', 'desc', 'aggregate', 'limit', 'skip' ],
+    'lang_simple_filters' : ['=', '!=', '>', '<', '>=', '<=', '~', 'is empty', 'is not empty'],
+    'lang_text_operators' : ['AND', 'OR', 'NOT', '&&', '!', '||', '+', '-', '?', '*', '~'],
 }
 
 

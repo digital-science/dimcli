@@ -71,11 +71,20 @@ class CleverCompleter(Completer):
             if source in G.sources():
                 candidates = G.facets_for_source(source) + [source]
 
+        elif line_search_subject_is_valid(line_minus_current):
+            candidates = G.lang_after_search()
+
+        elif line_return_subject_is_valid(line_minus_current):
+            candidates = G.lang_after_return()
+
         elif line_last_word(line_minus_current) == "in":
             candidates = G.search_fields_for_source(source)
 
-        elif line_last_word(line_minus_current) in ["where", "and", "or"]:
+        elif line_last_word(line_minus_current) in ["where", "and", "or", "not"]:
             candidates = G.filters_for_source(source)
+
+        elif line_filter_is_valid(line_minus_current):  # IMP this must to go after previous case
+            candidates = G.lang_after_filter()
 
         elif line_last_word(line_minus_current) == "aggregate":
             # aggr. can be used only when returning facets!

@@ -51,8 +51,24 @@ class DslGrammar():
             except:
                 return []
     def lang(self):
-        "Get a list of lang operators"
-        return self.syntax['lang']
+        "Get a list of all lang operators"
+        return self.syntax['lang_all']
+    def lang_after_search(self):
+        "Get a list of all lang operators after a valid search -source- statement"
+        return self.syntax['lang_after_search']
+    def lang_simple_filters(self):
+        "Get a list of all lang operators for a filter statement eg  `search -source- where -filter-` statement"
+        return self.syntax['lang_simple_filters']
+    def lang_text_operators(self):
+        "Get a list of all lang operators for a text search eg  `search -source- for 'x AND y'`"
+        return self.syntax['lang_text_operators']
+    def lang_after_filter(self):
+        "Get a list of all lang operators after a valid `search -source- where -filter=?-` statement"
+        return self.syntax['lang_after_filter']
+    def lang_after_return(self):
+        "Get a list of all lang operators after a valid `return -source-` statement"
+        return self.syntax['lang_after_return']
+
     def url_for_source(self, source):
         "Get a the Dimensions URL for a specific source"
         try:

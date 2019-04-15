@@ -72,6 +72,37 @@ def line_last_two_words(line):
         return False
 
 
+def line_search_subject_is_valid(line):
+    "if we have a valid 'search <source>' statement"
+    if len(line.split()) == 2 and line.split()[1] in G.sources():
+        return True
+    else:
+        return False
+
+def line_return_subject_is_valid(line):
+    "if we have a valid 'return <object>' statement PS not checking if object is semantically valid"
+    l = line.split()
+    if len(l) > 1:
+        if l[-2] == "return":
+            return True 
+
+def line_filter_is_valid(line):
+    "if the filter statement (after where) is fully specified eg `where FOR = '123'` or `where doi!='123'` "
+    # @TODO REVIEW
+    l = line.split('where')
+    if len(l) > 1 and l[-1].strip():
+        if l[-1].strip() == 'is empty' or l[-1].strip() ==  'is not empty':
+            return True
+        else:
+            for x in G.lang_simple_filters():
+                if x in l[-1]:
+                    after_filter = l[-1].split(x) # => [' doi ', ' 123  '] from ' doi = 123  '
+                    if len(after_filter) > 1 and after_filter[-1].strip():
+                        return True
+
+
+
+
 def line_search_subject(line):
     "get the source one searches for"
     l = line.split()
