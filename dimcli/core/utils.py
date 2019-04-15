@@ -86,15 +86,23 @@ def line_return_subject_is_valid(line):
         if l[-2] == "return":
             return True 
 
-def line_filter_is_valid(line):
+def line_filter_is_partial(line):
+    "return one of the valid filter operators after a partial `where -filter-` statement"
+    l = line.split()
+    if len(l) > 1:
+        if l[-2] == "where":
+            return True     
+
+
+def line_filter_is_complete(line):
     "if the filter statement (after where) is fully specified eg `where FOR = '123'` or `where doi!='123'` "
     # @TODO REVIEW
     l = line.split('where')
     if len(l) > 1 and l[-1].strip():
-        if l[-1].strip() == 'is empty' or l[-1].strip() ==  'is not empty':
+        if 'is empty' in l[-1] or 'is not empty' in l[-1]:
             return True
         else:
-            for x in G.lang_simple_filters():
+            for x in G.lang_filter_operators():
                 if x in l[-1]:
                     after_filter = l[-1].split(x) # => [' doi ', ' 123  '] from ' doi = 123  '
                     if len(after_filter) > 1 and after_filter[-1].strip():

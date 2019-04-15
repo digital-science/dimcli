@@ -83,7 +83,10 @@ class CleverCompleter(Completer):
         elif line_last_word(line_minus_current) in ["where", "and", "or", "not"]:
             candidates = G.filters_for_source(source)
 
-        elif line_filter_is_valid(line_minus_current):  # IMP this must to go after previous case
+        elif line_filter_is_partial(line_minus_current):
+            candidates = G.lang_filter_operators()
+
+        elif line_filter_is_complete(line_minus_current):  # IMP this must to go after previous case
             candidates = G.lang_after_filter()
 
         elif line_last_word(line_minus_current) == "aggregate":
@@ -106,7 +109,8 @@ class CleverCompleter(Completer):
                     candidates = ['count']          
 
         else:
-            candidates = [x for x in G.lang() if x != "search"] # not destructive
+            candidates = [] # 2019-04-15
+            # candidates = [x for x in G.lang() if x != "search"] # not destructive
 
         # finally
         if word.endswith("."):
