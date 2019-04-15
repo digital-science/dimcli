@@ -58,6 +58,7 @@ SYNTAX_DICT = {
     ],
     'lang_after_search' : ['in', 'where', 'for', 'return'],
     'lang_after_filter' : ['and', 'or', 'not', 'return', ],
+    'lang_after_for_text' : ['and', 'or', 'not', 'return', 'where' ],
     'lang_after_return' : ['sort by', 'asc', 'desc', 'aggregate', 'limit', 'skip' ],
     'lang_filter_operators' : ['=', '!=', '>', '<', '>=', '<=', '~', 'is empty', 'is not empty'],
     'lang_text_operators' : ['AND', 'OR', 'NOT', '&&', '!', '||', '+', '-', '?', '*', '~'],

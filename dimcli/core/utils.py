@@ -116,6 +116,13 @@ def line_for_text_search_inner(line):
         if l[-1].count("\"") == 1:
             return True
 
+def line_for_text_is_complete(line):
+    "if the 'for' text search statement is complete"
+    l = line.split("for")
+    if len(l) > 1 and l[-1].strip():
+        if l[-1].count("\"") > 1 and l[-1].strip()[-1] == "\"":
+            return True
+
 def line_search_subject(line):
     "get the source one searches for"
     l = line.split()

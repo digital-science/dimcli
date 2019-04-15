@@ -62,6 +62,9 @@ class DslGrammar():
     def lang_text_operators(self):
         "Get a list of all lang operators for a text search eg  `search -source- for 'x AND y'`"
         return self.syntax['lang_text_operators']
+    def lang_after_for_text(self):
+        "Get a list of all lang operators after a valid `for 'text'` statement"
+        return self.syntax['lang_after_for_text']
     def lang_after_filter(self):
         "Get a list of all lang operators after a valid `search -source- where -filter=?-` statement"
         return self.syntax['lang_after_filter']
