@@ -117,7 +117,7 @@ def line_add_lazy_return(text):
     "if return statement not included, add it lazily"
     if "return" not in text:
         source = line_search_subject(text)
-        if source in VOCABULARY['sources'].keys():
+        if source in G.sources():
             # click.secho("..inferring result statement", dim=True)
             return text.strip() + " return " + source
     return text
@@ -161,10 +161,9 @@ def open_multi_platform(fpath):
 
 
 def get_dimensions_url(obj_id, obj_type):
-    if obj_type in VOCABULARY['dimensions_urls'].keys():
-        return VOCABULARY['dimensions_urls'][obj_type] + obj_id
-    else:
-        return None
+    url = G.url_for_source(obj_type)
+    if url:
+        return url + obj_id
 
 
 def init_config_folder(user_dir, user_config_file):

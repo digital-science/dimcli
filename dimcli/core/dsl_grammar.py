@@ -64,6 +64,21 @@ class DslGrammar():
     # GRAMMAR METHODS IE the dsl sources / fields
     # 
 
+    # generic
+
+    def get_field_json(self, field, source=None, entity=None):
+        "Get the raw json for a field"
+        if source:
+            try:
+                return self.grammar['sources'][source]['fields'][field]
+            except:
+                return None
+        elif facet:
+            try:
+                return self.grammar['entities'][entity]['fields'][field]
+            except:
+                return None            
+
     # sources 
 
     def sources(self):
@@ -110,10 +125,16 @@ class DslGrammar():
         return self.grammar['sources'][source]['fields'][field]['description']
     def desc_for_source_field_enriched(self, source, field):
         "A decription prefixed by extra info for a field eg if it is a facet"
-        desc = self.desc_for_source_field(source, field)
-        if desc and field in self.facets_for_source(source):
-            return "[FACET] " + desc
-        return desc
+        # desc = self.desc_for_source_field(source, field)
+        json = self.get_field_json(field=field, source=source)
+        try:
+            desc = json['description'] or  ""
+            if json['is_facet']:
+                return "[FACET] " + desc
+            else:
+                return "[%s] " % json['type'] + desc
+        except:
+            pass
 
     def fieldsets_for_source(self, source):
         "Get a list of all fieldsets available"
