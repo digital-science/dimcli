@@ -109,7 +109,12 @@ def line_filter_is_complete(line):
                         return True
 
 
-
+def line_for_text_search_inner(line):
+    "return one of the valid text search operators if inside a `for '...'` statement"
+    l = line.split("for")
+    if len(l) > 1 and l[-1].strip():
+        if l[-1].count("\"") == 1:
+            return True
 
 def line_search_subject(line):
     "get the source one searches for"

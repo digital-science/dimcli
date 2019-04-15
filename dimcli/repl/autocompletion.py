@@ -89,6 +89,9 @@ class CleverCompleter(Completer):
         elif line_filter_is_complete(line_minus_current):  # IMP this must to go after previous case
             candidates = G.lang_after_filter()
 
+        elif line_for_text_search_inner(line_minus_current):
+            candidates = G.lang_text_operators()
+
         elif line_last_word(line_minus_current) == "aggregate":
             # aggr. can be used only when returning facets!
             return_object = line_search_return(line)
