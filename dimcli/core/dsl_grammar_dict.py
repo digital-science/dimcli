@@ -55,7 +55,8 @@ SYNTAX_DICT = {
         "||",
         "+",
         "-",
-    ]
+    ],
+    # 'lang_after' : ['in', 'where', 'return']
 }
 
 

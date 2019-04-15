@@ -74,7 +74,7 @@ class CleverCompleter(Completer):
         elif line_last_word(line_minus_current) == "in":
             candidates = G.search_fields_for_source(source)
 
-        elif line_last_word(line_minus_current) in ["where", "and"]:
+        elif line_last_word(line_minus_current) in ["where", "and", "or"]:
             candidates = G.filters_for_source(source)
 
         elif line_last_word(line_minus_current) == "aggregate":
