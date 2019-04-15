@@ -108,7 +108,7 @@ class CleverCompleter(Completer):
                     keyword, 
                     start_position=-len(word),
                     display=keyword.replace(word, ""),
-                    display_meta=build_help_string(keyword, entity),
+                    display_meta=build_help_string(keyword.replace(word, ""), entity=entity),
                     )
         else:
             candidates = sorted(candidates)
@@ -118,15 +118,15 @@ class CleverCompleter(Completer):
                         keyword, 
                         start_position=-len(word),
                         display=keyword,
-                        display_meta=build_help_string(keyword, source),
+                        display_meta=build_help_string(keyword, source=source),
                         )
 
 
-def build_help_string(field, source="", facet=""):
+def build_help_string(field, source="", entity=""):
     if source:
         return G.desc_for_source_field_enriched(source, field)
-    elif facet:
-        return G.desc_for_entity_field(facet, field)
+    elif entity:
+        return G.desc_for_entity_field_enriched(entity, field)
     else:
         return ""
 

@@ -73,7 +73,7 @@ class DslGrammar():
                 return self.grammar['sources'][source]['fields'][field]
             except:
                 return None
-        elif facet:
+        elif entity:
             try:
                 return self.grammar['entities'][entity]['fields'][field]
             except:
@@ -193,9 +193,17 @@ class DslGrammar():
     def desc_for_entity_field(self, entity, field):
         "from a entity-field combination, return the description"
         if not field in self.fields_for_entity(entity):
-            return []
+            return ""
         return self.grammar['entities'][entity]['fields'][field]['description']
-
+    def desc_for_entity_field_enriched(self, entity, field):
+        "A decription prefixed by extra info for a field eg if it a string or number"
+        # @TODO similar to desc_for_source_field_enriched // consider refactoring
+        json = self.get_field_json(field=field, entity=entity)
+        try:
+            desc = json['description'] or  ""
+            return "[%s] " % json['type'] + desc
+        except:
+            pass
 
 G = DslGrammar(vocab_data, syntax_data)
 
