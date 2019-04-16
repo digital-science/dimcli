@@ -22,7 +22,9 @@ def html_template_interactive(query, formatted_json):
         <style>
             .query {
                 font-size: 20px;
-                color: red;
+                padding: 50px;
+                margin-bottom: 30px;
+                color: black;
                 background: beige;
                 font-family: monospace;
             }
@@ -32,19 +34,16 @@ def html_template_interactive(query, formatted_json):
         <script>hljs.initHighlightingOnLoad();</script>
     </head>
     <div>
-        <div id="header"><h1>Dimensions DSL Query Results</h1></div>
+        <div id="header"><h1>Dimensions DSL Results for Query:&nbsp;
+            <span style="font-size: 40%%; font-weight: normal;">jump to <a href="#json">json</a> | <a href="#table">table</a></span>
+            </h1></div>
         <div id="query">
-            <p>Query:</p>
             <p class="query">$ %s</p></p>
-            <p>
-                <li><a href="#json">json</a></li>
-                <li><a href="#table">table</a></li>
-            </p>
         </div>
-        <h3>JSON format</h3><a name="json">
+        <h3>Results: JSON</h3><a name="json">
         <div id="code"></a><pre><code>%s</code></pre>
         </div> 
-        <h3>Tabular format</h3><a name="table"></a>
+        <h3>Results: Table</h3><a name="table"></a>
         <div id="table">%s</div> 
         <div id="footer">
             <p>Generated with <a href="https://github.com/lambdamusic/dimcli">DimCli</a> %s</p>
