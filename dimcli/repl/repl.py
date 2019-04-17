@@ -125,8 +125,9 @@ def print_smart_preview(jsondata, maxitems=10):
                         click.echo(
                             click.style("[" + str(counter) + "] ", dim=True) +
                             click.style(str(row)))
-            click.secho("---", dim=True)
-            click.secho("Tip: use 'show <number>' or show+Tab to see more options", dim=True)
+            if False:
+                click.secho("---", dim=True)
+                click.secho("Tip: use 'show <number>' or show+Tab to see more options", dim=True)
 
 
 
