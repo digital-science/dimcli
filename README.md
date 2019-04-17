@@ -1,12 +1,14 @@
 
 - [Dimcli](#dimcli)
     - [In a nutshell](#in-a-nutshell)
-  - [Install](#install)
-  - [Using the Query Console](#using-the-query-console)
+  - [Installation](#installation)
+      - [Authentication](#authentication)
       - [The Credentials File](#the-credentials-file)
       - [Advanced: Multiple API Endpoints](#advanced-multiple-api-endpoints)
-      - [Overriding credentials e.g. with Jupyter Notebooks](#overriding-credentials-eg-with-jupyter-notebooks)
+      - [Overriding credentials at runtime e.g. with Jupyter Notebooks](#overriding-credentials-at-runtime-eg-with-jupyter-notebooks)
+  - [Using DimCli as a CLI](#using-dimcli-as-a-cli)
   - [Using Dimcli as a Python library](#using-dimcli-as-a-python-library)
+  - [Using Dimcli in Jupyter Notebooks](#using-dimcli-in-jupyter-notebooks)
   - [Comments, bug reports](#comments-bug-reports)
 
 
@@ -14,21 +16,17 @@
 
 [![asciicast](https://asciinema.org/a/jSzISIsaXN2VbpOApSSOSwGcj.svg)](https://asciinema.org/a/jSzISIsaXN2VbpOApSSOSwGcj)
 
-Python library for accessing the [Dimensions](https://www.dimensions.ai/) API. See the video above for a quick demo. 
-
--   [https://github.com/lambdamusic/dimcli](https://github.com/lambdamusic/dimcli)
--   [https://pypi.org/project/dimcli/](https://pypi.org/project/dimcli/)
 
 ### In a nutshell
 
-Dimcli is a small Python wrapper around the Dimensions API. It makes it easier to authenticate, query the Dimensions endpoint and handle the results, normally returned as JSON. 
+Dimcli is a Python library for accessing the [Dimensions Analytics API](https://www.dimensions.ai/). It makes it easier to authenticate, query the API endpoint and process the results, normally returned as JSON. 
 
-Dimcli also provides an interactive environment for learning about the Dimensions Search Language ([DSL](https://app.dimensions.ai/dsl)). Calling `dimcli` from the shell opens a console-like tool with many features such as autocomplete based on DSL grammar, persistent history across sessions, pretty-printing or previewing of JSON results, and more.  
+Dimcli provides an interactive environment which aims at simplifying the process of learning the grammar of the Dimensions Search Language ([DSL](https://app.dimensions.ai/dsl)). Calling `dimcli` from the terminal opens a CLI featuring autocomplete (based on the DSL syntax and vocabulary), persistent history across sessions, pretty-printing or previewing of JSON results, and more.  
 
-Current version: see [pypi homepage](https://pypi.org/project/dimcli/).
+Current version: see [pypi homepage](https://pypi.org/project/dimcli/). Source code hosted on [github](https://github.com/lambdamusic/dimcli).
 
 
-## Install
+## Installation
 
 ```
 $ pip install dimcli -U
@@ -40,25 +38,25 @@ Then you can check if the installation worked with
 $ dimcli --help
 ```
 
-## Using the Query Console
+#### Authentication 
 
-Run the command line application by typing
 
-```
-$ dimcli
-```
+After installation it's strongly advised to create a configuration file with your Dimensions account credentials. This can be done only once, and it'll save you from having to authenticate each time you use DimCli. 
 
-The only prerequisiste after installation is a configuration file with your Dimensions account credentials. These can be set up directly from the command line by typing:
+The easiest way to set up the authentication file is to use the command line helper: 
 
 ```
 $ dimcli --init
 ```
 
-For more info see the following section.
+The helper will guide you through the process of creating this file, which will be safely stored in your computer home folder. That's it - you're ready to hit the API! See below for more info on how to do that.
+
 
 #### The Credentials File
 
-The credentials file must be called `dsl.ini` and located in your user directory in the `.dimensions` folder. So if yoy want to set this up manually, this is what you'd do on unix systems:
+This section provides more details about where DimCli expects credentials data to be found, in case you want to set this up manually. 
+
+The credentials file must be called `dsl.ini` and located in your user directory in the `.dimensions` folder. If you want to set this up manually, this is what you'd do on unix systems:
 
 ```
 $ mkdir ~/.dimensions
@@ -98,11 +96,11 @@ $ dimcli private
 ```
 
 
-#### Overriding credentials e.g. with Jupyter Notebooks
+#### Overriding credentials at runtime e.g. with Jupyter Notebooks
 
-If you are using dimcli within a jupyter notebook and you do not want (or can) set up credentials at the user level, you can simply but a `dsl.ini` file in the current working directory (eg where the notebooks are located).  
+If you are using DimCli within a jupyter notebook and you do not want (or can) set up credentials at the user level, you can simply put a `dsl.ini` file in the current working directory (= where the notebook is located).  
 
-These credentials will take precedence over any other file previously defined.
+The file should look like this:
 
 ```
 [instance.live]
@@ -111,10 +109,28 @@ login=user@mail.com
 password=yourpasswordhere
 ```
 
+> Note: the same-directory credentials will take precedence over any system-level credentials previously defined.
+
+
+
+## Using DimCli as a CLI 
+
+DimCli includes a handy CLI which lets you query the Dimensions API interactively. The CLI has several features but, most importantly, it allows to use the TAB key to autocomplete your queries (based on the latest API syntax and fields), which makes it an ideal tool for both newbies and expert users.  
+
+Run the command line application by typing
+
+```
+$ dimcli
+```
+
+That'll launch the DimCli console, where you can hit `help` in case you need more support :-)
+
+![screenshot1](static/screenshot1.jpg)
+
 
 ## Using Dimcli as a Python library
 
-Dimcli can be used as a wrapper around the Dimensions API within a Python program. It makes it easier to authenticate, query the Dimensions endpoint and handle the results, normally returned as JSON. 
+Dimcli can also be used as a wrapper around the Dimensions API within a Python program. It makes it easier to authenticate, query the Dimensions endpoint and handle the results, normally returned as JSON. 
 
 ```
 >>> import dimcli
@@ -153,85 +169,8 @@ Once logged in, you can try some queries:
    'count': 59,
    'last_name': 'Marsh',
    'first_name': 'Kevin'},
-  {'id': 'ur.013570515662.78',
-   'count': 39,
-   'last_name': 'Day',
-   'orcid_id': ['0000-0003-2309-1171'],
-   'first_name': 'Nicholas P  J'},
-  {'id': 'ur.01246255474.14',
-   'count': 32,
-   'last_name': 'Tsuboi',
-   'first_name': 'Takafumi'},
-  {'id': 'ur.013621403537.53',
-   'count': 32,
-   'last_name': 'Molyneux',
-   'orcid_id': ['0000-0002-7093-8921'],
-   'first_name': 'Malcolm E'},
-  {'id': 'ur.0646650127.76',
-   'count': 32,
-   'last_name': 'Tanabe',
-   'first_name': 'Kazuyuki'},
-  {'id': 'ur.01004335615.66',
-   'count': 29,
-   'last_name': 'Hoffman',
-   'first_name': 'Stephen L'},
-  {'id': 'ur.01013145443.28',
-   'count': 29,
-   'last_name': 'Horii',
-   'first_name': 'Toshihiro'},
-  {'id': 'ur.011050223772.27',
-   'count': 29,
-   'last_name': 'Miller',
-   'orcid_id': ['0000-0003-3420-1284'],
-   'first_name': 'Louis H'},
-  {'id': 'ur.07764267264.89',
-   'count': 29,
-   'last_name': 'Nosten',
-   'orcid_id': ['0000-0002-7951-0745'],
-   'first_name': 'Francois'},
-  {'id': 'ur.01200142274.58',
-   'count': 28,
-   'last_name': 'Torii',
-   'first_name': 'Motomi'},
-  {'id': 'ur.01157022450.71',
-   'count': 25,
-   'last_name': 'Cowman',
-   'orcid_id': ['0000-0001-5145-9004'],
-   'first_name': 'Alan F'},
-  {'id': 'ur.01231001203.23',
-   'count': 25,
-   'last_name': 'Duffy',
-   'first_name': 'Patrick E'},
-  {'id': 'ur.01370151200.33',
-   'count': 24,
-   'last_name': 'Kawai',
-   'first_name': 'Satoru'},
-  {'id': 'ur.014032733622.20',
-   'count': 24,
-   'last_name': 'Craig',
-   'orcid_id': ['0000-0003-0914-6164'],
-   'first_name': 'Alister G'},
-  {'id': 'ur.01123513136.18',
-   'count': 23,
-   'last_name': 'Kawamoto',
-   'first_name': 'Fumihiko'},
-  {'id': 'ur.010634112405.45',
-   'count': 22,
-   'last_name': 'Hirai',
-   'first_name': 'Makoto'},
-  {'id': 'ur.0612737310.86',
-   'count': 22,
-   'last_name': 'Ferreira',
-   'orcid_id': ['0000-0002-5293-9090'],
-   'first_name': 'Marcelo U'},
-  {'id': 'ur.0725323667.50',
-   'count': 22,
-   'last_name': 'Kaneko',
-   'first_name': 'Osamu'},
-  {'id': 'ur.013471271621.48',
-   'count': 21,
-   'last_name': 'Wataya',
-   'first_name': 'Yusuke'}],
+  .............
+  ],
  '_stats': {'total_count': 8735}}
 
 # JSON keys are available also as dict attributes
@@ -244,28 +183,24 @@ Once logged in, you can try some queries:
 
 # so now let's pull out all names and surnames
 >>> [x['first_name'] + " " + x['last_name'] for x in res['researchers']]
-['Nicholas John White',
- 'Kevin Marsh',
- 'Nicholas Philip John Day',
- 'Takafumi Tsuboi',
- 'Malcolm Edward Molyneux',
- 'Kazuyuki Tanabe',
- 'Stephen Lev Hoffman',
- 'Toshihiro Horii',
- 'Louis H Miller',
- 'Francois Henri Nosten',
- 'Motomi Torii',
- 'Alan Frederick Cowman',
- 'Patrick Emmet Duffy',
- 'Satoru Kawai',
- 'Alister Gordon Craig',
- 'Fumihiko Kawamoto',
- 'Makoto Hirai',
- 'Marcelo Urbano Ferreira',
- 'Osamu Kaneko',
- 'Yusuke Wataya']
+['Nicholas John White',  'Kevin Marsh',
+ 'Nicholas Philip John Day', 'Takafumi Tsuboi',
+ 'Malcolm Edward Molyneux', 'Kazuyuki Tanabe',
+ 'Stephen Lev Hoffman', 'Toshihiro Horii',
+ 'Louis H Miller', 'Francois Henri Nosten',
+ 'Motomi Torii', 'Alan Frederick Cowman',
+ 'Patrick Emmet Duffy', 'Satoru Kawai',
+ 'Alister Gordon Craig', 'Fumihiko Kawamoto',
+ 'Makoto Hirai', 'Marcelo Urbano Ferreira',
+ 'Osamu Kaneko', 'Yusuke Wataya']
 
 ```
+
+## Using Dimcli in Jupyter Notebooks
+
+DimCli contains a couple of Python _magic_ commands that make it super easy to hit the API from a notebook. 
+
+> this section of the docs is incomplete, but you can see DimCli in action in this [notebook](https://nbviewer.jupyter.org/github/digital-science/dimensions-api-examples/blob/master/stable/1.%20Getting%20Started.ipynb) and this [repo](https://github.com/digital-science/dimensions-api-examples)
 
 
 ## Comments, bug reports
