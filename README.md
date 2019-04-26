@@ -130,7 +130,7 @@ That'll launch the DimCli console, where you can hit `help` in case you need mor
 
 ## Using Dimcli as a Python library
 
-Dimcli can also be used as a wrapper around the Dimensions API within a Python program. It makes it easier to authenticate, query the Dimensions endpoint and handle the results, normally returned as JSON. 
+Dimcli can be used as a wrapper around the Dimensions API within a Python program. It makes it easier to authenticate, query the Dimensions endpoint and handle the results, normally returned as JSON. 
 
 ```
 >>> import dimcli

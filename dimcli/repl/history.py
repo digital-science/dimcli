@@ -3,6 +3,8 @@
 
 from prompt_toolkit.history import FileHistory
 
+from ..core.dsl_grammar import *
+
 #
 #
 # HISTORY
@@ -22,7 +24,15 @@ class SelectiveFileHistory(FileHistory):
         super(SelectiveFileHistory, self).__init__(filename)
 
     def append_string(self, string):
-        " Add string to the history only if it is a DSL search statement "
-        if string.startswith("search"):
-            self._loaded_strings.append(string)
-            self.store_string(string)
+        " Add string to the history only if it is a valid DSL query"
+        l = G.allowed_starts_dsl_query()
+        test = False
+        for x in l:
+            if string.startswith(x):
+                self._loaded_strings.append(string)
+                self.store_string(string)
+                return
+        # valid_starts = ["search", ]
+        # if string.startswith("search") or string.startswith("describe") or string.startswith("describe"):
+        #     self._loaded_strings.append(string)
+        #     self.store_string(string)

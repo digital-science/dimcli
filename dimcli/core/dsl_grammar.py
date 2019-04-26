@@ -42,7 +42,7 @@ class DslGrammar():
     # 
 
     def allowed_starts(self, word=""):
-        "Get a the allowed starts dict"
+        "Get a the allowed starts dict for DimCli"
         if not word:
             return self.syntax['allowed_starts']
         else:
@@ -50,6 +50,10 @@ class DslGrammar():
                 return self.syntax['allowed_starts'][word]
             except:
                 return []
+    def allowed_starts_dsl_query(self):
+        "Get a the allowed starts specific to he DSL syntax"
+        return self.syntax['allowed_starts_dsl_query']
+
     def lang(self):
         "Get a list of all lang operators"
         return self.syntax['lang_all']

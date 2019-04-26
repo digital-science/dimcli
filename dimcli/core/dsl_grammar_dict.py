@@ -16,7 +16,12 @@ SYNTAX_DICT = {
         'show' : [ 'json_compact', 'json_pretty'],
         'search': [],
         'describe': [ 'version', 'source', 'entity', 'schema'],
+        'check_researcher_ids': [],
+        'classify': [],
+        'extract_grants': [],
+        'extract_terms': [],
     },
+    'allowed_starts_dsl_query': ['search' ,'describe', 'check_researcher_ids', 'classify', 'extract_grants', 'extract_terms'],
     'dimensions_urls' : {
         'publications' : 'https://app.dimensions.ai/details/publication/',
         'grants' : 'https://app.dimensions.ai/details/grant/',
