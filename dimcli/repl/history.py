@@ -26,13 +26,8 @@ class SelectiveFileHistory(FileHistory):
     def append_string(self, string):
         " Add string to the history only if it is a valid DSL query"
         l = G.allowed_starts_dsl_query()
-        test = False
         for x in l:
             if string.startswith(x):
                 self._loaded_strings.append(string)
                 self.store_string(string)
                 return
-        # valid_starts = ["search", ]
-        # if string.startswith("search") or string.startswith("describe") or string.startswith("describe"):
-        #     self._loaded_strings.append(string)
-        #     self.store_string(string)

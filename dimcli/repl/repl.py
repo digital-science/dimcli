@@ -38,7 +38,7 @@ from .lexer import *
 
 
 
-HELP_MESSAGE =  "HELP >>> Tab = suggest , Ctrl-c = abort query , Ctrl-d = exit , Ctrl-o = open online docs"
+HELP_MESSAGE =  """DIMCLI COMMANDS HELP \n>>> Tab:  autocomplete command. \n>>> Ctrl-o: search docs online. \n>>> show: pretty-print results from recent query. Number of results can be customized by adding a number e.g. `show 10`.\n>>> show json_compact: print our results of recent query as single-line JSON. \n>>> export_html: saves results from recent query as HTML page. \n>>> export_csv: saves results from recent query as CSV file.  \n>>> Ctrl-c: abort query.\n>>> Ctrl-d or quit: exit console."""
 
 
 #
