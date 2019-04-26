@@ -198,9 +198,9 @@ Once logged in, you can try some queries:
 
 ## Using Dimcli in Jupyter Notebooks
 
-DimCli contains a couple of Python _magic_ commands that make it super easy to hit the API from a notebook. 
+DimCli can simplify working with the Dimensions API within a Jupyter notebook. For example, it contains a couple of Python _magic_ commands that make it super easy to hit the API from a notebook. 
 
-> this section of the docs is incomplete, but you can see DimCli in action in this [notebook](https://nbviewer.jupyter.org/github/digital-science/dimensions-api-examples/blob/master/stable/1.%20Getting%20Started.ipynb) and this [repo](https://github.com/digital-science/dimensions-api-examples)
+> this section of the docs is incomplete, but you can see DimCli in action in this [repo](https://github.com/digital-science/dimensions-api-examples/tree/master/1%20Getting%20Started)
 
 
 ## Comments, bug reports
