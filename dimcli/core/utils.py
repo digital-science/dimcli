@@ -2,12 +2,15 @@
 # -*- coding: utf-8 -*-
 
 import click
+import time
 import json
 import sys
 import subprocess
 import os
+import webbrowser
 
 from .dsl_grammar import *
+from .html import html_template_interactive
 
 
 def print_json_summary(res, query=""):
@@ -255,3 +258,98 @@ def chunks_of(data, size):
     while chunk:
         yield chunk
         chunk = list(islice(it, size))
+
+
+
+
+def export_json_csv(jjson, query, USER_JSON_OUTPUTS_DIR):
+    """
+    requires the pandas library which is not installed by default
+
+    """
+    try:
+        from pandas.io.json import json_normalize
+    except:
+        click.secho("This feature requires the pandas library (`pip install pandas` from the terminal)", fg="red")
+        return
+    return_object = line_search_return(query)
+    try:
+        df =  json_normalize(jjson[return_object])
+    except:
+        df =  json_normalize(jjson)
+    filename = time.strftime("dsl_export_%Y%m%d-%H%M%S.csv")
+    url = save2File(df.to_csv(), filename, USER_JSON_OUTPUTS_DIR)
+    webbrowser.open(url)
+    # df.to_csv(USER_JSON_OUTPUTS_DIR + filename)
+    print("Exported: ", "%s%s" % (USER_JSON_OUTPUTS_DIR, filename))
+
+
+
+def export_json_html(jjson, query, USER_JSON_OUTPUTS_DIR):
+    "print out full json either as pretty_json or within an html template"
+    formatted_json = json.dumps(jjson, indent=4, sort_keys=True)
+    # if False and terminal: # json_pretty  # deprecated 2019-03-30
+    #     from pygments import highlight, lexers, formatters
+    #     colorful_json = highlight(formatted_json, lexers.JsonLexer(),
+    #                               formatters.TerminalFormatter())
+    #     print(colorful_json)
+
+    contents = html_template_interactive(query, formatted_json)
+    filename = time.strftime("%Y%m%d-%H%M%S.html")
+    url = save2File(contents, filename, USER_JSON_OUTPUTS_DIR)
+    webbrowser.open(url)
+    print("Exported: ", "%s%s" % (USER_JSON_OUTPUTS_DIR, filename))
+
+
+def print_json_compact(jsondata):
+    """
+    Show json in one line
+    NOTE: the logic is the same as the except clause in print_json_preview. Maybe some refactoring could be beneficial here..
+    """
+    counter = 0
+    for key in jsondata.keys():
+        if key == "_stats":
+            pass
+        else:
+            for row in jsondata[key]:
+                counter += 1
+                # full row
+                click.echo(
+                    click.style("[" + str(counter) + "] ", dim=True) +
+                    click.style(str(row)))
+
+
+def print_smart_preview(jsondata, maxitems=10):
+    """
+    Preview items in console
+    If it's one of the main sources, try to show title/id. Otherwise show json in one line
+    """
+    # click.secho("Showing first %d records from latest query.." % maxitems, dim=True)
+    # click.secho("")
+    counter = 0
+    for key in jsondata.keys():
+        if key == "_stats":
+            pass
+        else:
+            for row in jsondata[key]:
+                counter += 1
+                if counter <= maxitems:
+                    try:  # title and url/id if object has them
+                        url = get_dimensions_url(row['id'], key) or row['id']
+                        if 'title' in row.keys():
+                            name_or_title = row['title'].strip()
+                        else:
+                            name_or_title = row['first_name'] + " " + row['last_name']
+                        click.echo(
+                            click.style("[" + str(counter) + "] ", dim=True) +
+                            click.style(name_or_title , bold=True) +
+                            click.style(" (id: " + url + " )", fg='blue'))
+
+                    except:  # fallback: full row
+                        click.echo(
+                            click.style("[" + str(counter) + "] ", dim=True) +
+                            click.style(str(row)))
+            if False:
+                click.secho("---", dim=True)
+                click.secho("Tip: use 'show <number>' or show+Tab to see more options", dim=True)
+

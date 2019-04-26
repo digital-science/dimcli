@@ -22,13 +22,11 @@ import json
 import sys
 import os
 import time
-import webbrowser
 import requests
 
 from ..core.api import Dsl, USER_HISTORY_FILE, USER_JSON_OUTPUTS_DIR
 from ..core.dsl_grammar import *
 from ..core.utils import *
-from ..core.html import html_template_interactive
 
 from .autocompletion import *
 from .history import *
@@ -60,77 +58,6 @@ class DslResultsBuffer(object):
         return (self.current_json, self.current_query)
 
 
-def print_json_full(jjson, query, terminal=False):
-    "print out full json either as pretty_json or within an html template"
-    formatted_json = json.dumps(jjson, indent=4, sort_keys=True)
-    if False and terminal: # json_pretty  # deprecated 2019-03-30
-        from pygments import highlight, lexers, formatters
-        colorful_json = highlight(formatted_json, lexers.JsonLexer(),
-                                  formatters.TerminalFormatter())
-        print(colorful_json)
-    else: # json_html
-        contents = html_template_interactive(query, formatted_json)
-
-        filename = time.strftime("%Y%m%d-%H%M%S.html")
-
-        url = save2File(contents, filename, USER_JSON_OUTPUTS_DIR)
-
-        webbrowser.open(url)
-
-
-def print_json_compact(jsondata):
-    """
-    Show json in one line
-    NOTE: the logic is the same as the except clause in print_json_preview. Maybe some refactoring could be beneficial here..
-    """
-    counter = 0
-    for key in jsondata.keys():
-        if key == "_stats":
-            pass
-        else:
-            for row in jsondata[key]:
-                counter += 1
-                # full row
-                click.echo(
-                    click.style("[" + str(counter) + "] ", dim=True) +
-                    click.style(str(row)))
-
-def print_smart_preview(jsondata, maxitems=10):
-    """
-    Preview items in console
-    If it's one of the main sources, try to show title/id. Otherwise show json in one line
-    """
-    # click.secho("Showing first %d records from latest query.." % maxitems, dim=True)
-    # click.secho("")
-    counter = 0
-    for key in jsondata.keys():
-        if key == "_stats":
-            pass
-        else:
-            for row in jsondata[key]:
-                counter += 1
-                if counter <= maxitems:
-                    try:  # title and url/id if object has them
-                        url = get_dimensions_url(row['id'], key) or row['id']
-                        if 'title' in row.keys():
-                            name_or_title = row['title'].strip()
-                        else:
-                            name_or_title = row['first_name'] + " " + row['last_name']
-                        click.echo(
-                            click.style("[" + str(counter) + "] ", dim=True) +
-                            click.style(name_or_title , bold=True) +
-                            click.style(" (id: " + url + " )", fg='blue'))
-
-                    except:  # fallback: full row
-                        click.echo(
-                            click.style("[" + str(counter) + "] ", dim=True) +
-                            click.style(str(row)))
-            if False:
-                click.secho("---", dim=True)
-                click.secho("Tip: use 'show <number>' or show+Tab to see more options", dim=True)
-
-
-
 def show_command(text, databuffer):
     """
     show results of a query
@@ -145,10 +72,7 @@ def show_command(text, databuffer):
         print("Nothing to show - please run a search first.")
         return
     # cases
-    if text == "json_pretty":
-        print_json_full(jsondata, query, terminal=False)
-
-    elif text == "json_compact":
+    if text == "json_compact":
         print_json_compact(jsondata)
 
     else:
@@ -161,11 +85,35 @@ def show_command(text, databuffer):
 
 
 
+def export_command(text, databuffer):
+    """
+    save results of a query to a file
+    """
+    if databuffer: 
+        jsondata, query = databuffer.retrieve()
+    else:
+        jsondata, query = None, None
+    if not jsondata:
+        print("Nothing to export - please run a search first.")
+        return
+    # cases
+    if text == "export_html":
+        export_json_html(jsondata, query, USER_JSON_OUTPUTS_DIR)
+
+    elif text == "export_csv":
+        export_json_csv(jsondata, query, USER_JSON_OUTPUTS_DIR)
+
+
+
+
 def handle_query(CLIENT, text, databuffer):
     """main procedure after user input"""
 
     if text.replace("\n", "").strip().startswith("show"):
         show_command(text.replace("\n", "").strip(), databuffer)
+
+    elif text.replace("\n", "").strip().startswith("export"):
+        export_command(text.replace("\n", "").strip(), databuffer)
 
     else:
         # lazy complete

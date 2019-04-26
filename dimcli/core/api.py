@@ -71,9 +71,9 @@ class Result(IPython.display.JSON):
         else:
             return False
 
-    def __repr__(self):
-        return "<dimcli.Result object #%s: %s>" % (str(id(self)), str(self.keys_and_count()))
-        # return '{Query Results:'+self.id+', age:'+str(self.age)+ '}'
+    def json(self):
+        "return the raw json for this query"
+        return self.data 
 
     def keys(self,):
         return list(self.data.keys())
@@ -81,6 +81,9 @@ class Result(IPython.display.JSON):
     def keys_and_count(self,):
         return [(x, len(self.data[x])) for x in self.data.keys()]
 
+    def __repr__(self):
+        return "<dimcli.Result object #%s: %s>" % (str(id(self)), str(self.keys_and_count()))
+        # return '{Query Results:'+self.id+', age:'+str(self.age)+ '}'
 
 
 

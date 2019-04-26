@@ -13,7 +13,9 @@ SYNTAX_DICT = {
     'allowed_starts': {
         'help' : [],
         'quit' : [],
-        'show' : [ 'json_compact', 'json_pretty'],
+        'show' : [ 'json_compact'],
+        'export_html' : [],
+        'export_csv' : [],
         'search': [],
         'describe': [ 'version', 'source', 'entity', 'schema'],
         'check_researcher_ids': [],

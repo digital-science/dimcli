@@ -46,6 +46,7 @@ def html_template_interactive(query, formatted_json):
         <h3>Results: Table</h3><a name="table"></a>
         <div id="table">%s</div> 
         <div id="footer">
+            <hr>
             <p>Generated with <a href="https://github.com/lambdamusic/dimcli">DimCli</a> %s</p>
         </div>
     </body>
