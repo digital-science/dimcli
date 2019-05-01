@@ -11,6 +11,7 @@ from ..core.utils import *
 class DslMagics(Magics):
 
     connection = None
+    results_var = "_dsldata" # var automatically set to latest query results
 
     
     # @magic_arguments.magic_arguments()
@@ -27,6 +28,7 @@ class DslMagics(Magics):
         self.connection = Dsl(instance=instance, show_results=False) 
         print("DimCli %s - Succesfully connected to <%s>" % (str(VERSION), self.connection._url))
 
+
     @line_cell_magic
     def dsl_query(self, line, cell=None):
         """DimCli Magic
@@ -35,7 +37,9 @@ class DslMagics(Magics):
         if self.connection:
             if cell:
                 line = cell
-            return self._handle_query(line)
+            data = self._handle_query(line)
+            self.shell.user_ns[self.results_var] = data
+            return data
             
         else:
             print("Please login first: %dsl_login")
@@ -48,8 +52,9 @@ class DslMagics(Magics):
         if self.connection:
             if cell:
                 line = cell
-            return self._handle_query(line, loop=True)
-            # return self.connection.query_iterative(line)
+            data = self._handle_query(line, loop=True)
+            self.shell.user_ns[self.results_var] = data
+            return data
 
         else:
             print("Please login first: %dsl_login")
