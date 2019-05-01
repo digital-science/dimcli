@@ -73,9 +73,12 @@ class TestOne(unittest.TestCase):
         d = Dsl()
         res = d.query("search publications where year=2018 return publications")
         print("Query results: ")
+        print(" ==> res.json.keys(): ", res.json.keys())
         print(" ==> res['publications'][0]: ", res['publications'][0])
         print(" ==> res['stats']: ", res['stats'])
         print(" ==> res['not_there']: ", res['not_there'])
+        print(" ==> res.publications[0]: ", res.publications[0])
+        print(" ==> res._stats: ", res._stats)
         # ----
         click.secho("Completed test succesfully", fg="green")
 
