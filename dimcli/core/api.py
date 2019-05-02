@@ -64,7 +64,10 @@ class Result(IPython.display.JSON):
         IPython.display.JSON.__init__(self, data)
         self.json = self.data
         for k in self.keys(): # add result dict keys as attributes dynamically
-            setattr(self, k, self.json[k])
+            if k == "_stats":
+                setattr(self, k, self.json[k])
+            else:
+                setattr(self, "stats", self.json[k])
 
     def __getitem__(self, key):
         "return dict key as slice"
