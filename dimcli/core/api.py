@@ -163,7 +163,7 @@ class Dsl:
 
     def query(self, q, show_results=None, retry=0):
         """
-        Execute DSL query.
+        Execute a DSL query.
         By default it doesn't show results, but it uses the iPython rich widgets for it, optimized for Jupyter Notebooks.
         """
         #   Execute DSL query.
@@ -203,10 +203,9 @@ class Dsl:
 
     def query_iterative(self, q, show_results=None, skip=0, limit=1000):
         """
-        transform a query into a loop that pulls out all data available 
-        @TODO is there a hard limit of 50k results for limit/skip?
+        Runs a normal query iteratively, by automatically turning it into a loop with limit/skip operators until all the results available have been extracted. 
         """
-
+        # @TODO is there a hard limit of 50k results for limit/skip?
         if q.split().count('return') != 1:
             raise Exception("Loop queries support only 1 return statement")
         if "limit" in q or "skip" in q:
