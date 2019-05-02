@@ -11,7 +11,7 @@ from ..core.utils import *
 class DslMagics(Magics):
 
     connection = None
-    results_var = "_dsldata" # var automatically set to latest query results
+    results_var = "dsl_last_results" # var automatically set to latest query results
 
     
     # @magic_arguments.magic_arguments()
