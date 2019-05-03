@@ -38,55 +38,9 @@ from .dsl_grammar import G
 
 USER_DIR = os.path.expanduser("~/.dimensions/")
 USER_CONFIG_FILE_NAME = "dsl.ini"
-USER_CONFIG_FILE = os.path.expanduser(USER_DIR + USER_CONFIG_FILE_NAME)
+USER_CONFIG_FILE_PATH = os.path.expanduser(USER_DIR + USER_CONFIG_FILE_NAME)
 USER_JSON_OUTPUTS_DIR = os.path.expanduser(USER_DIR + "json/")
 USER_HISTORY_FILE = os.path.expanduser(USER_DIR + "history.txt")
-
-
-
-
-class Result(IPython.display.JSON):
-    """
-    Wrapper for JSON results from DSL
-
-    >>> res = dsl.query("search publications return publications")
-    >>> res.data # => shows the underlying JSON data
-    >>> res.json # => same 
-
-    # Magic methods: 
-
-    >>> res['publications'] # => the dict section
-    >>> res.['xxx'] # => false, not found
-    >>> res.['stats'] # => the _stats dict
-
-    """
-    def __init__(self, data):
-        IPython.display.JSON.__init__(self, data)
-        self.json = self.data
-        for k in self.keys(): # add result dict keys as attributes dynamically
-            if k == "_stats":
-                setattr(self, k, self.json[k])
-            else:
-                setattr(self, "stats", self.json[k])
-
-    def __getitem__(self, key):
-        "return dict key as slice"
-        if key == "stats":
-            key = "_stats" # syntactic sugar
-        if key in self.data:
-            return self.data[key]
-        else:
-            return False
-
-    def keys(self,):
-        return list(self.data.keys())
-
-    def keys_and_count(self,):
-        return [(x, len(self.data[x])) for x in self.data.keys()]
-
-    def __repr__(self):
-        return "<dimcli.Result object #%s: %s>" % (str(id(self)), str(self.keys_and_count()))
-        # return '{Query Results:'+self.id+', age:'+str(self.age)+ '}'
 
 
 
@@ -96,8 +50,9 @@ class Dsl:
     Most often you just want to instantiate, autheticate and query() - yeah!
 
     >>> import dimcli
-    # if you have set up a credentials file, no need to pass log in details
     >>> dsl = dimcli.Dsl()
+    # if you have set up a credentials file, no need to pass log in details
+    >>> dsl = dimcli.Dsl(user="me@mail.com", password="secret")
     # queries always return a Result object (subclassing IPython.display.JSON)
     >>> dsl.query("search grants for \"malaria\" return researchers")
     >>> <dimcli.dimensions.Result object>
@@ -137,7 +92,7 @@ class Dsl:
         if os.path.exists(os.getcwd() + "/" + USER_CONFIG_FILE_NAME):
             credentials = os.getcwd() + "/" + USER_CONFIG_FILE_NAME
         else:
-            credentials = os.path.expanduser(USER_CONFIG_FILE)
+            credentials = os.path.expanduser(USER_CONFIG_FILE_PATH )
         try:
             config.read(credentials)
         except:
@@ -254,5 +209,53 @@ class Dsl:
                 return result
             else:
                 return output
+
+
+
+
+
+
+class Result(IPython.display.JSON):
+    """
+    Wrapper for JSON results from DSL
+
+    >>> res = dsl.query("search publications return publications")
+    >>> res.data # => shows the underlying JSON data
+    >>> res.json # => same 
+
+    # Magic methods: 
+
+    >>> res['publications'] # => the dict section
+    >>> res.['xxx'] # => false, not found
+    >>> res.['stats'] # => the _stats dict
+
+    """
+    def __init__(self, data):
+        IPython.display.JSON.__init__(self, data)
+        self.json = self.data
+        for k in self.keys(): # add result dict keys as attributes dynamically
+            if k == "_stats":
+                setattr(self, k, self.json[k])
+            else:
+                setattr(self, "stats", self.json[k])
+
+    def __getitem__(self, key):
+        "return dict key as slice"
+        if key == "stats":
+            key = "_stats" # syntactic sugar
+        if key in self.data:
+            return self.data[key]
+        else:
+            return False
+
+    def keys(self,):
+        return list(self.data.keys())
+
+    def keys_and_count(self,):
+        return [(x, len(self.data[x])) for x in self.data.keys()]
+
+    def __repr__(self):
+        return "<dimcli.Result object #%s: %s>" % (str(id(self)), str(self.keys_and_count()))
+        # return '{Query Results:'+self.id+', age:'+str(self.age)+ '}'
 
 

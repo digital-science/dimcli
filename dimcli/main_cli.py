@@ -37,10 +37,10 @@ def main_cli(ctx, instance_name=None, init=False, config=False, history=False):
     # click.secho("------------", fg="white")
 
     if init:
-        init_config_folder(USER_DIR, USER_CONFIG_FILE)
+        init_config_folder(USER_DIR, USER_CONFIG_FILE_PATH)
         return
 
-    if not os.path.exists(USER_CONFIG_FILE):
+    if not os.path.exists(USER_CONFIG_FILE_PATH):
         click.secho(
             "Credentials file not found - you can create one by typing: `dimcli --init`",
             fg="red",
@@ -52,7 +52,7 @@ def main_cli(ctx, instance_name=None, init=False, config=False, history=False):
         return
 
     if config:
-        open_multi_platform(USER_CONFIG_FILE)
+        open_multi_platform(USER_CONFIG_FILE_PATH)
         return
 
     if history:

@@ -10,7 +10,7 @@ import unittest, os, sys, click
 import configparser
 
 from .. import *
-from ..core.api import USER_CONFIG_FILE
+from ..core.api import USER_CONFIG_FILE_PATH
 
 
 class TestOne(unittest.TestCase):
@@ -57,7 +57,7 @@ class TestOne(unittest.TestCase):
         # ----
         # get credentials from file as strings
         config = configparser.ConfigParser()
-        config.read(os.path.expanduser(USER_CONFIG_FILE))
+        config.read(os.path.expanduser(USER_CONFIG_FILE_PATH))
         section = config['instance.live' ]
         USER = section['login']
         PSW = section['password']
