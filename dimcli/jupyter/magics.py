@@ -40,7 +40,7 @@ class DslMagics(Magics):
 
         """
         args = magic_arguments.parse_argstring(self.dsl_login, line)
-        print(args)
+        # print(args)
         usr = args.usr
         psw = args.psw
         endpoint = args.endpoint or "https://app.dimensions.ai"
