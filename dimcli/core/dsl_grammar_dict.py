@@ -13,7 +13,7 @@ SYNTAX_DICT = {
     'allowed_starts': {
         'help' : [],
         'quit' : [],
-        'show' : [ 'json_compact'],
+        'show' : [ 'json_compact', 'json_full'],
         'export_html' : [],
         'export_csv' : [],
         'search': [],

@@ -74,7 +74,8 @@ def show_command(text, databuffer):
     # cases
     if text == "json_compact":
         print_json_compact(jsondata)
-
+    elif text == "json_full":
+        print_json_full(jsondata)
     else:
         try:
             slice_no = int(text)

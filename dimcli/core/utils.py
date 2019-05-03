@@ -301,22 +301,6 @@ def export_json_html(jjson, query, USER_JSON_OUTPUTS_DIR):
     print("Exported: ", "%s%s" % (USER_JSON_OUTPUTS_DIR, filename))
 
 
-def print_json_compact(jsondata):
-    """
-    Show json in one line
-    NOTE: the logic is the same as the except clause in print_json_preview. Maybe some refactoring could be beneficial here..
-    """
-    counter = 0
-    for key in jsondata.keys():
-        if key == "_stats":
-            pass
-        else:
-            for row in jsondata[key]:
-                counter += 1
-                # full row
-                click.echo(
-                    click.style("[" + str(counter) + "] ", dim=True) +
-                    click.style(str(row)))
 
 
 def print_smart_preview(jsondata, maxitems=10):
@@ -352,4 +336,35 @@ def print_smart_preview(jsondata, maxitems=10):
             if False:
                 click.secho("---", dim=True)
                 click.secho("Tip: use 'show <number>' or show+Tab to see more options", dim=True)
+
+
+
+def print_json_compact(jsondata):
+    """
+    Show json in one line
+    NOTE: the logic is the same as the except clause in print_json_preview. Maybe some refactoring could be beneficial here..
+    """
+    counter = 0
+    for key in jsondata.keys():
+        if key == "_stats":
+            pass
+        else:
+            for row in jsondata[key]:
+                counter += 1
+                # full row
+                click.echo(
+                    click.style("[" + str(counter) + "] ", dim=True) +
+                    click.style(str(row)))
+
+
+
+def print_json_full(jsondata):
+    """
+    pretty print json 
+    """
+    formatted_json = json.dumps(jsondata, indent=4, sort_keys=True)
+    from pygments import highlight, lexers, formatters
+    colorful_json = highlight(formatted_json, lexers.JsonLexer(),
+                                formatters.TerminalFormatter())
+    print(colorful_json)
 
