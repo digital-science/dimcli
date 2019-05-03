@@ -11,22 +11,51 @@ from ..core.utils import *
 class DslMagics(Magics):
 
     connection = None
-    results_var = "dsl_last_results" # var automatically set to latest query results
+    results_var = "dsl_last_results" # VAR AUTOMATICALLY SET TO LATEST QUERY RESULTS
 
     
-    # @magic_arguments.magic_arguments()
-    # @magic_arguments.argument('env', type="string",
-    #       help='Which dimensions backend to use'
-    # )
+    # NOTE line magics and arguments don't play well together when you need to parse a line content
+    # in that case the args parsing throws an error
+    # hence better to have a cell magic, and pass only the args in the line
+
     @line_magic
+    @magic_arguments.magic_arguments()
+    @magic_arguments.argument('--endpoint',
+      help='The query endpoint: default is https://app.dimensions.ai'
+    )
+    @magic_arguments.argument('--usr',
+      help='The account username'
+    )
+    @magic_arguments.argument('--psw',
+      help='The account password'
+    )
+    @magic_arguments.argument('--env',
+      help='The instance name as defined in init.py. Default: live.'
+    )
     def dsl_login(self, line):
         """DimCli Magic
-        Authenticate with the Dimensions.ai DSL backend. Requires a dsl.ini file (see https://github.com/lambdamusic/dimcli#the-credentials-file). 
-        Accepts an argument matching the instance name in the credentials file (default=live)
+        Authenticate with the Dimensions.ai DSL backend. If not args are passed, it assumed you have set up a dsl.ini file (see https://github.com/lambdamusic/dimcli#the-credentials-file).
+        Alternatively one can pass auth details explicitly eg
+        >>> %dsl_login --user=me@mail.com --password=secret
+
         """
-        instance = line.strip() or "live"
-        self.connection = Dsl(instance=instance, show_results=False) 
-        print("DimCli %s - Succesfully connected to <%s>" % (str(VERSION), self.connection._url))
+        args = magic_arguments.parse_argstring(self.dsl_login, line)
+        print(args)
+        usr = args.usr
+        psw = args.psw
+        endpoint = args.endpoint or "https://app.dimensions.ai"
+        instance = args.env or "live"
+
+        if usr and psw:
+            self.connection = Dsl(user=usr, password=psw, endpoint=endpoint, show_results=False)
+            print("DimCli %s - Succesfully connected to <%s> (method: manual login)" % (str(VERSION), self.connection._url)) 
+        else:
+            # try to use local init file
+            self.connection = Dsl(instance=instance, show_results=False) 
+            print("DimCli %s - Succesfully connected to <%s> (method: dsl.ini file)" % (str(VERSION), self.connection._url))
+
+        # self.connection = Dsl(instance=instance, show_results=False) 
+        
 
 
     @line_cell_magic
