@@ -152,10 +152,10 @@ class DslGrammar():
         json = self.get_field_json(field=field, source=source)
         try:
             desc = json['description'] or  ""
-            if json['is_facet']:
-                return "[FACET] " + desc
+            if json['is_entity']:
+                return "[ENTITY:%s] " % json['type'] + desc
             else:
-                return "[%s] " % json['type'] + desc
+                return "[LITERAL:%s] " % json['type'] + desc
         except:
             pass
 
@@ -224,7 +224,7 @@ class DslGrammar():
         json = self.get_field_json(field=field, entity=entity)
         try:
             desc = json['description'] or  ""
-            return "[%s] " % json['type'] + desc
+            return "[LITERAL:%s] " % json['type'] + desc
         except:
             pass
 
