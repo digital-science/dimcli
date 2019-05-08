@@ -55,6 +55,11 @@ class CleverCompleter(Completer):
             entity = G.entity_type_for_source_facet(source, entity_facet)
             candidates = G.fields_for_entity_from_source_facet(source, entity_facet)
 
+        elif in_square_brackets(line):
+            # https://docs.dimensions.ai/dsl/language.html#return-specific-fields
+            # search publications for "bmw" return journal[id + title]"
+            pass
+
         elif len(line_minus_current) == 0:  # remove the current stem from line
             candidates = G.allowed_starts()
 
@@ -86,10 +91,10 @@ class CleverCompleter(Completer):
         elif line_filter_is_partial(line_minus_current):
             candidates = G.lang_filter_operators()
 
-        elif line_filter_is_complete(line_minus_current):  # IMP this must to go after previous case
+        elif line_filter_is_complete(line_minus_current):  # IMP this must go after previous case
             candidates = G.lang_after_filter()
 
-        elif line_for_text_is_complete(line_minus_current):  # IMP this must to go after previous case
+        elif line_for_text_is_complete(line_minus_current):  # IMP this must go after previous case
             candidates = G.lang_after_for_text()
 
         elif line_for_text_search_inner(line_minus_current):
@@ -110,7 +115,7 @@ class CleverCompleter(Completer):
                 # if facet, can sort by aggregrates metrics if available, otherwise count
                 aggreg_object = line_search_aggregates(line)
                 if aggreg_object:
-                    candidates = ['aggreg_object']   
+                    candidates = [aggreg_object]   
                 else:
                     candidates = ['count']          
 
