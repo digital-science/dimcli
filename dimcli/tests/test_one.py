@@ -78,7 +78,17 @@ class TestOne(unittest.TestCase):
         print(" ==> res['stats']: ", res['stats'])
         print(" ==> res['not_there']: ", res['not_there'])
         print(" ==> res.publications[0]: ", res.publications[0])
-        print(" ==> res._stats: ", res._stats)
+        print(" ==> res.stats: ", res.stats)
+        # ----
+        click.secho("Query #2... returning facet", fg="green")
+        res = d.query("""search publications for \"bmw\" return year""")
+        print("Query results: ")
+        print(" ==> res.json.keys(): ", res.json.keys())
+        print(" ==> res['year'][0]: ", res['year'][0])
+        print(" ==> res['stats']: ", res['stats'])
+        print(" ==> res['not_there']: ", res['not_there'])
+        print(" ==> res.year[0]: ", res.year[0])
+        print(" ==> res.stats: ", res.stats)
         # ----
         click.secho("Completed test succesfully", fg="green")
 

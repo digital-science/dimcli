@@ -246,7 +246,7 @@ class Result(IPython.display.JSON):
         if key in self.data:
             return self.data[key]
         else:
-            return False
+            return [] # empty list so to support iteration tests / previously: False
 
     def keys(self,):
         return list(self.data.keys())
