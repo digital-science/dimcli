@@ -115,10 +115,10 @@ def export_command(text, databuffer):
         print("Nothing to export - please run a search first.")
         return
     # cases
-    if text == "export_html":
+    if text == "/export_html":
         export_json_html(jsondata, query, USER_JSON_OUTPUTS_DIR)
 
-    elif text == "export_csv":
+    elif text == "/export_csv":
         export_json_csv(jsondata, query, USER_JSON_OUTPUTS_DIR)
 
 
@@ -151,14 +151,16 @@ def handle_query(CLIENT, text, databuffer):
         elif text.strip().startswith("describe"):
             if databuffer: databuffer.load(res.data, text)
             click.secho("---", dim=True)
-            print_json_full(res.data, text, terminal=True)
+            print_json_full(res.data)
         else:
             print_json_summary(res, text)
-            # if res['stats']:
-            #     print("Tot Results: ", res['stats']["total_count"])
-            # for k in res.data.keys():
-            #     if k != "_stats":
-            #         print(k.capitalize() + ":", len(res.data[k]))
+            if False:
+                # verbose mode
+                if res['stats']:
+                    print("Tot Results: ", res['stats']["total_count"])
+                for k in res.data.keys():
+                    if k != "_stats":
+                        print(k.capitalize() + ":", len(res.data[k]))
             if databuffer: databuffer.load(res.data, text)
             if True:
                 click.secho("---", dim=True)

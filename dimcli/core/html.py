@@ -7,8 +7,6 @@ from json2html import *
 
 def html_template_interactive(query, formatted_json):
     """
-    * 2019-02-07: deprecated in favor of the interactive one above
-    
     This version just uses https://highlightjs.org/ to colorize the json code
     """
 
@@ -24,7 +22,7 @@ def html_template_interactive(query, formatted_json):
                 font-size: 20px;
                 padding: 50px;
                 margin-bottom: 30px;
-                color: black;
+                color: #888888;
                 background: #f0f0f0;
                 font-family: monospace;
             }
@@ -60,7 +58,7 @@ def html_template_interactive(query, formatted_json):
 
 
 
-def __html_template_interactive(query, formatted_json):
+def xx_html_template_interactive(query, formatted_json):
     """
     version that uses to open/close the json tree
     * https://github.com/caldwell/renderjson
@@ -141,7 +139,7 @@ def __html_template_interactive(query, formatted_json):
 
 
 
-def _html_template_interactive(query, formatted_json):
+def xxxx_html_template_interactive(query, formatted_json):
     """
     version that uses to open/close the json tree
     * https://github.com/caldwell/renderjson

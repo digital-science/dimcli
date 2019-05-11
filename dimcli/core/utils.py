@@ -315,12 +315,6 @@ def export_json_csv(jjson, query, USER_JSON_OUTPUTS_DIR):
 def export_json_html(jjson, query, USER_JSON_OUTPUTS_DIR):
     "print out full json either as pretty_json or within an html template"
     formatted_json = json.dumps(jjson, indent=4, sort_keys=True)
-    # if False and terminal: # json_pretty  # deprecated 2019-03-30
-    #     from pygments import highlight, lexers, formatters
-    #     colorful_json = highlight(formatted_json, lexers.JsonLexer(),
-    #                               formatters.TerminalFormatter())
-    #     print(colorful_json)
-
     contents = html_template_interactive(query, formatted_json)
     filename = time.strftime("%Y%m%d-%H%M%S.html")
     url = save2File(contents, filename, USER_JSON_OUTPUTS_DIR)
