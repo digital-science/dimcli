@@ -76,17 +76,18 @@ def line_last_two_words(line):
 
 def in_square_brackets(line):
     "if we are within the square brackets eg we have a valid 'return <source>[this+that - that' statement"
-    if line[-1] == "[":
-        return True
-    else:
-        found_opening = False
-        for el in reversed(line.split()):
-            if "]" in el: 
-                return False
-            if "[" in el:
-                found_opening = True
-            if el == "return" and found_opening:
-                return True
+    if line:
+        if line[-1] == "[":
+            return True
+        else:
+            found_opening = False
+            for el in reversed(line.split()):
+                if "]" in el: 
+                    return False
+                if "[" in el:
+                    found_opening = True
+                if el == "return" and found_opening:
+                    return True
     return False
 
 def line_last_return_subject(line):

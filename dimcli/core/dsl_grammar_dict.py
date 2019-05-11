@@ -11,11 +11,13 @@
 
 SYNTAX_DICT = {
     'allowed_starts': {
-        'help' : [],
-        'quit' : [],
-        'show' : [ 'json_compact', 'json_full'],
-        'export_html' : [],
-        'export_csv' : [],
+        '/help' : [],
+        '/quit' : [],
+        '/show' : [],
+        '/show_json_compact' : [],
+        '/show_json_full' : [],
+        '/export_html' : [],
+        '/export_csv' : [],
         'search': [],
         'describe': [ 'version', 'source', 'entity', 'schema'],
         'check_researcher_ids': [],
@@ -28,8 +30,8 @@ SYNTAX_DICT = {
         'publications' : 'https://app.dimensions.ai/details/publication/',
         'grants' : 'https://app.dimensions.ai/details/grant/',
         'patents' : 'https://app.dimensions.ai/details/patent/',
-        'policy_documents' : 'https://app.dimensions.ai/details/clinical_trial/',
-        'clinical_trials' : 'https://app.dimensions.ai/details/policy_documents/',
+        'policy_documents' : 'https://app.dimensions.ai/details/policy_documents/',
+        'clinical_trials' : 'https://app.dimensions.ai/details/clinical_trial/',
         'researchers' : 'https://app.dimensions.ai/discover/publication?and_facet_researcher=',
     },
     'lang_all': [

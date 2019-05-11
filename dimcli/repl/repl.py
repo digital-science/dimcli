@@ -36,7 +36,21 @@ from .lexer import *
 
 
 
-HELP_MESSAGE =  """DIMCLI COMMANDS HELP \n>>> Tab:  autocomplete command. \n>>> Ctrl-o: search docs online. \n>>> show: pretty-print results from recent query. Number of results can be customized by adding a number e.g. `show 10`.\n>>> show json_compact: print our results of recent query as single-line JSON. \n>>> export_html: saves results from recent query as HTML page. \n>>> export_csv: saves results from recent query as CSV file.  \n>>> Ctrl-c: abort query.\n>>> Ctrl-d or quit: exit console."""
+HELP_MESSAGE =  """DIMCLI COMMANDS HELP 
+Note: commands start with '/', anything else is sent to the Dimensions API.
+>>> Tab:  autocomplete. 
+>>> Ctrl-o: search docs online. 
+>>> Ctrl-c: abort query.
+>>> Ctrl-d or quit: exit console.
+>>> /export_csv: save results from last query as CSV file.  
+>>> /export_html: save results from last query as HTML page. 
+>>> /show [optional: N]: print N results from last query, trying to build URLs for objects. Default N=10.
+>>> /show_json_compact: print results of last query as single-line JSON. 
+>>> /show_json_full: print results of last query as formatted JSON. 
+"""
+
+WELCOME_MESSAGE = "Welcome! Type '/help' for more info. Ready to query endpoint: %s"
+
 
 
 #
@@ -62,7 +76,9 @@ def show_command(text, databuffer):
     """
     show results of a query
     """
-    text = text.replace("show", "").strip()
+    DEFAULT_NO_RECORDS = 10
+    # text = text.replace("/show", "").strip()
+    text = text.strip()
 
     if databuffer: 
         jsondata, query = databuffer.retrieve()
@@ -72,16 +88,17 @@ def show_command(text, databuffer):
         print("Nothing to show - please run a search first.")
         return
     # cases
-    if text == "json_compact":
+    if text == "/show_json_compact":
         print_json_compact(jsondata)
-    elif text == "json_full":
+    elif text == "/show_json_full":
         print_json_full(jsondata)
     else:
+        # must be a simple "/show" + X command
         try:
-            slice_no = int(text)
+            no = text.replace("/show", "").strip()
+            slice_no = int(no)
         except ValueError:
-            slice_no = 10
-            
+            slice_no = DEFAULT_NO_RECORDS
         print_smart_preview(jsondata, maxitems=slice_no)
 
 
@@ -110,10 +127,10 @@ def export_command(text, databuffer):
 def handle_query(CLIENT, text, databuffer):
     """main procedure after user input"""
 
-    if text.replace("\n", "").strip().startswith("show"):
+    if text.replace("\n", "").strip().startswith("/show"):
         show_command(text.replace("\n", "").strip(), databuffer)
 
-    elif text.replace("\n", "").strip().startswith("export"):
+    elif text.replace("\n", "").strip().startswith("/export"):
         export_command(text.replace("\n", "").strip(), databuffer)
 
     else:
@@ -169,7 +186,7 @@ def run(instance="live"):
         # if err.response.status_code == 401:
         #     print("here")
 
-    click.secho("Welcome! Type 'help' for more info. Ready to query endpoint: %s" % CLIENT._url)
+    click.secho(WELCOME_MESSAGE % CLIENT._url)
 
     # history
     session = PromptSession(history=SelectiveFileHistory(USER_HISTORY_FILE))
@@ -201,9 +218,9 @@ def run(instance="live"):
         else:
             if text.strip() == "":
                 continue
-            elif text == "quit":
+            elif text == "/quit":
                 break
-            elif text == "help":
+            elif text == "/help":
                 click.secho(HELP_MESSAGE, dim=True)
                 continue
             try:
