@@ -58,7 +58,13 @@ class CleverCompleter(Completer):
         elif in_square_brackets(line):
             # https://docs.dimensions.ai/dsl/language.html#return-specific-fields
             # search publications for "bmw" return journal[id + title]"
-            pass
+            test_return_obj = line_last_return_subject(line)
+            if test_return_obj == source:
+                # print("*" + test_return_obj + "*")
+                candidates = G.filters_for_source(test_return_obj)
+            elif test_return_obj in G.facets_for_source(source):
+                entity = G.entity_type_for_source_facet(source, test_return_obj)
+                candidates = G.fields_for_entity_from_source_facet(source, test_return_obj)
 
         elif len(line_minus_current) == 0:  # remove the current stem from line
             candidates = G.allowed_starts()
@@ -123,7 +129,9 @@ class CleverCompleter(Completer):
             candidates = [] # 2019-04-15
             # candidates = [x for x in G.lang() if x != "search"] # not destructive
 
+        #
         # finally
+        #
         if word.endswith("."):
             # print("***" + str(candidates) + "***")
             candidates = sorted([word + x for x in candidates])
@@ -134,6 +142,16 @@ class CleverCompleter(Completer):
                     display=keyword.replace(word, ""),
                     display_meta=build_help_string(keyword.replace(word, ""), entity=entity),
                     )
+        elif in_square_brackets(line):
+            # print("***" + str(candidates) + "***")
+            candidates = sorted([word + x for x in candidates])
+            for keyword in candidates:
+                yield Completion(
+                    keyword, 
+                    start_position=-len(word),
+                    display=keyword.replace(word, ""),
+                    display_meta=build_help_string(keyword.replace(word, ""), source=source),
+                    )            
         else:
             candidates = sorted(candidates)
             for keyword in candidates:
