@@ -72,9 +72,15 @@ class DslGrammar():
     def lang_after_filter(self):
         "Get a list of all lang operators after a valid `search -source- where -filter=?-` statement"
         return self.syntax['lang_after_filter']
+    def lang_after_sort_by(self):
+        "Get a list of all lang operators after a valid `return -source- sort by -field-` statement"
+        return self.syntax['lang_after_sort_by']
     def lang_after_return(self):
         "Get a list of all lang operators after a valid `return -source-` statement"
         return self.syntax['lang_after_return']
+    def lang_after_limit(self):
+        "Get a list of all lang operators after a valid `limit -N-` statement - ie skip"
+        return self.syntax['lang_after_limit']
 
     def url_for_source(self, source):
         "Get a the Dimensions URL for a specific source"

@@ -69,9 +69,6 @@ class CleverCompleter(Completer):
         elif len(line_minus_current) == 0:  # remove the current stem from line
             candidates = G.allowed_starts()
 
-        # elif line_last_word(line_minus_current) in ["/show"]:
-        #     candidates = G.allowed_starts("/show")
-
         elif line_last_word(line_minus_current) in ["describe"]:
             candidates = G.allowed_starts("describe")
 
@@ -86,6 +83,9 @@ class CleverCompleter(Completer):
             candidates = G.lang_after_search()
 
         elif line_return_subject_is_valid(line_minus_current):
+            test_return_obj = line_last_return_subject(line)
+            if test_return_obj == source:
+                candidates = G.lang_after_return().remove('aggregate')
             candidates = G.lang_after_return()
 
         elif line_last_word(line_minus_current) == "in":
@@ -97,14 +97,11 @@ class CleverCompleter(Completer):
         elif line_filter_is_partial(line_minus_current):
             candidates = G.lang_filter_operators()
 
-        elif line_filter_is_complete(line_minus_current):  # IMP this must go after previous case
-            candidates = G.lang_after_filter()
-
-        elif line_for_text_is_complete(line_minus_current):  # IMP this must go after previous case
-            candidates = G.lang_after_for_text()
-
         elif line_for_text_search_inner(line_minus_current):
             candidates = G.lang_text_operators()
+
+        elif line_last_two_words(line_minus_current) == "limit":
+            candidates = G.lang_after_limit()
 
         elif line_last_word(line_minus_current) == "aggregate":
             # aggr. can be used only when returning facets!
@@ -125,12 +122,20 @@ class CleverCompleter(Completer):
                 else:
                     candidates = ['count']          
 
+        elif line_last_three_words(line_minus_current).startswith("sort by"): 
+            candidates = G.lang_after_sort_by()
+
+        # IMP following two must go last
+        elif line_filter_is_complete(line_minus_current):  
+            candidates = G.lang_after_filter()
+        elif line_for_text_is_complete(line_minus_current): 
+            candidates = G.lang_after_for_text()
+        # finally
         else:
-            candidates = [] # 2019-04-15
-            # candidates = [x for x in G.lang() if x != "search"] # not destructive
+            candidates = [] 
 
         #
-        # finally
+        # now build the candidates list
         #
         if word.endswith("."):
             # print("***" + str(candidates) + "***")

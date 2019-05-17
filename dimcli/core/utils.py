@@ -74,6 +74,13 @@ def line_last_two_words(line):
     else:
         return False
 
+def line_last_three_words(line):
+    "return last three words"
+    if len(line.split()) > 2:
+        return " ".join([line.split()[-3], line.split()[-2], line.split()[-1]])
+    else:
+        return ""
+
 def in_square_brackets(line):
     "if we are within the square brackets eg we have a valid 'return <source>[this+that - that' statement"
     if line:
