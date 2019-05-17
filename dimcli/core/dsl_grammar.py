@@ -217,7 +217,12 @@ class DslGrammar():
         if facet not in self.facets_for_source(source):
             return []
         entity = self.entity_type_for_source_facet(source, facet)
-        return self.filters_for_entity(entity)  # only filters as used in 'where' context
+        if entity == "researchers":
+            # SPECIAL CASE / hardwired
+            # researchers is used as an entity, but it's actually a source
+            return self.filters_for_source('researchers')
+        else:
+            return self.filters_for_entity(entity)  # only filters as used in 'where' context
         
     def desc_for_entity_field(self, entity, field):
         "from a entity-field combination, return the description"
