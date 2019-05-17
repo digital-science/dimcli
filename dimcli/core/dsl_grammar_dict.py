@@ -12,6 +12,7 @@
 SYNTAX_DICT = {
     'allowed_starts': {
         '/help' : [],
+        '/docs' : [],
         '/quit' : [],
         '/show' : [],
         '/show_json_compact' : [],

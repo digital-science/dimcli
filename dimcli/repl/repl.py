@@ -92,6 +92,9 @@ class CommandsManager(object):
         elif text.replace("\n", "").strip().startswith("/export"):
             self.export(text.replace("\n", "").strip())
 
+        elif text.replace("\n", "").strip().startswith("/docs"):
+            self.docs(text.replace("\n", "").strip())
+
         else:
             return self.query(text)
 
@@ -122,6 +125,35 @@ class CommandsManager(object):
                 click.secho("---", dim=True)
                 print_smart_preview(res.data, maxitems=5)
             return res  # 2019-03-31
+
+    def docs(self, text):
+        """
+        print out docs infos quickly
+        """
+        text = text.replace("/docs", "").split()
+        if len(text) == 1:
+            # check if source or entity
+            # print nice rows preview
+            # if two args or dot notation, show all fields
+            res = self.dsl.query(f"describe source {text[0]}")
+            if "errors" in res.data.keys():
+                print(res.data["errors"])
+            else:
+                print("=====\nFIELDS\n=====")
+                for x in sorted(res.json['fields']):
+                    print(x, ": ", res.json['fields'][x]['description'])
+                print("=====\nFIELDSETS\n=====")
+                print(res.json['fieldsets'])
+                print("=====\nMETRICS\n=====")
+                for x in res.json['metrics']:
+                    print(x, ": ", res.json['metrics'][x]['description'])
+                print("=====\nSEARCH FIELDS\n=====")
+                print(res.json['search_fields'])
+
+        else:
+            res = self.dsl.query(f"describe schema")
+            print(res.json)
+
 
     def export(self, text):
         """
