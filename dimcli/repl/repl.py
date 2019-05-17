@@ -36,20 +36,24 @@ from .lexer import *
 
 
 
-HELP_MESSAGE =  """DIMCLI COMMANDS HELP 
-Note: commands start with '/', anything else is sent to the Dimensions API.
+HELP_MESSAGE =  """DIMCLI COMMANDS HELP
+====================
+Commands start with '/', anything else is sent to the Dimensions API.
+Tip: autocomplete works better when there are spaces between operators (eg `search where id = "xxx"`)
+----
 >>> Tab:  autocomplete. 
 >>> Ctrl-o: search docs online. 
 >>> Ctrl-c: abort query.
->>> Ctrl-d or quit: exit console.
->>> `export_csv: save results from last query as CSV file.  
->>> `export_html: save results from last query as HTML page. 
->>> `show [optional: N]: print N results from last query, trying to build URLs for objects. Default N=10.
->>> `show_json_compact: print results of last query as single-line JSON. 
->>> `show_json_full: print results of last query as formatted JSON. 
-"""
+>>> Ctrl-d or /quit: exit console.
+----
+>>> /export_csv: save results from last query as CSV file.  
+>>> /export_html: save results from last query as HTML page. 
+>>> /show [optional: N]: print N results from last query, trying to build URLs for objects. Default N=10.
+>>> /show_json_compact: print results of last query as single-line JSON. 
+>>> /show_json_full: print results of last query as formatted JSON.
+----"""
 
-WELCOME_MESSAGE = "Welcome! Type '/help' for more info. Ready to query endpoint: %s"
+WELCOME_MESSAGE = "Welcome! Type /help for more info; ready to query endpoint: %s"
 
 
 
