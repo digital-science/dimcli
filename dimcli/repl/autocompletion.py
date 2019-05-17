@@ -85,8 +85,9 @@ class CleverCompleter(Completer):
         elif line_return_subject_is_valid(line_minus_current):
             test_return_obj = line_last_return_subject(line)
             if test_return_obj == source:
-                candidates = G.lang_after_return().remove('aggregate')
-            candidates = G.lang_after_return()
+                candidates = [x for x in G.lang_after_return() if x != 'aggregate']
+            else:
+                candidates = G.lang_after_return()
 
         elif line_last_word(line_minus_current) == "in":
             candidates = G.search_fields_for_source(source)
@@ -100,8 +101,9 @@ class CleverCompleter(Completer):
         elif line_for_text_search_inner(line_minus_current):
             candidates = G.lang_text_operators()
 
-        elif line_last_two_words(line_minus_current) == "limit":
-            candidates = G.lang_after_limit()
+        elif line_last_two_words(line_minus_current).startswith("limit"):
+            if line_last_return_subject(line) == source:
+                candidates = G.lang_after_limit()
 
         elif line_last_word(line_minus_current) == "aggregate":
             # aggr. can be used only when returning facets!

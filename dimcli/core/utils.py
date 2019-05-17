@@ -64,7 +64,7 @@ def line_last_word(line):
     if len(line.split()) > 0:
         return line.split()[-1]
     else:
-        return False
+        return ""
 
 
 def line_last_two_words(line):
@@ -72,7 +72,7 @@ def line_last_two_words(line):
     if len(line.split()) > 1:
         return " ".join([line.split()[-2], line.split()[-1]])
     else:
-        return False
+        return ""
 
 def line_last_three_words(line):
     "return last three words"
