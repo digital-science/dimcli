@@ -69,6 +69,9 @@ class CleverCompleter(Completer):
         elif len(line_minus_current) == 0:  # remove the current stem from line
             candidates = G.allowed_starts()
 
+        elif line_last_word(line_minus_current) in ["/docs"]:
+            candidates = G.sources() + G.entities()
+
         elif line_last_word(line_minus_current) in ["describe"]:
             candidates = G.allowed_starts("describe")
 

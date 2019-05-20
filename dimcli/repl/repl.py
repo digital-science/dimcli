@@ -93,7 +93,7 @@ class CommandsManager(object):
             self.export(text.replace("\n", "").strip())
 
         elif text.replace("\n", "").strip().startswith("/docs"):
-            self.docs(text.replace("\n", "").strip())
+            self.docs_full(text.replace("\n", "").strip())
 
         else:
             return self.query(text)
@@ -126,33 +126,50 @@ class CommandsManager(object):
                 print_smart_preview(res.data, maxitems=5)
             return res  # 2019-03-31
 
-    def docs(self, text):
+    def docs_full(self, text):
         """
-        print out docs infos quickly
+        print out docs infos from 'describe' API
         """
         text = text.replace("/docs", "").split()
-        if len(text) == 1:
-            # check if source or entity
-            # print nice rows preview
-            # if two args or dot notation, show all fields
-            res = self.dsl.query(f"describe source {text[0]}")
+        if len(text) > 0:
+            if text[0] in G.entities():
+                res = self.dsl.query(f"describe entity {text[0]}")
+            else:
+                res = self.dsl.query(f"describe source {text[0]}")
             if "errors" in res.data.keys():
                 print(res.data["errors"])
-            else:
-                print("=====\nFIELDS\n=====")
-                for x in sorted(res.json['fields']):
-                    print(x, ": ", res.json['fields'][x]['description'])
-                print("=====\nFIELDSETS\n=====")
-                print(res.json['fieldsets'])
-                print("=====\nMETRICS\n=====")
+            # show all fields 
+            click.secho("=====\nFIELDS")
+            for x in sorted(res.json['fields']):
+                d = res.json['fields'][x].get('description') or  ""
+                typ = res.json['fields'][x].get('type', "")
+                ise = res.json['fields'][x].get('is_entity', "")
+                isfa = res.json['fields'][x].get('is_facet', "")
+                isfi = res.json['fields'][x].get('is_filter', "")
+                if isfa:
+                    infos = f"[type={typ}, filter={isfi}, facet={isfa}]"
+                else:
+                    infos = f"[type={typ}, filter={isfi}]"
+                click.echo(click.style(x, bold=True) + " " + click.style(infos, dim=True) + \
+                    " " + click.style(d))
+            if 'metrics' in res.json:
+                click.secho("=====\nMETRICS")
                 for x in res.json['metrics']:
-                    print(x, ": ", res.json['metrics'][x]['description'])
-                print("=====\nSEARCH FIELDS\n=====")
-                print(res.json['search_fields'])
+                    d = res.json['metrics'][x]['description'] or "no description"
+                    click.echo(click.style(x, bold=True) + " " + click.style(d, dim=True))
+            if 'fieldsets' in res.json:
+                click.secho("=====\nFIELDSETS")
+                f = res.json['fieldsets']
+                if f:
+                    click.secho(", ".join([x for x in f]), bold=True)
+            if 'search_fields' in res.json:
+                click.secho("=====\nSEARCH FIELDS")
+                f = res.json['search_fields']
+                if f:
+                    click.secho(", ".join([x for x in f]), bold=True)
 
         else:
-            res = self.dsl.query(f"describe schema")
-            print(res.json)
+            print("Please specify a source or entity.")
 
 
     def export(self, text):
