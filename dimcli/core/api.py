@@ -233,7 +233,7 @@ class Result(IPython.display.JSON):
     def __init__(self, data):
         IPython.display.JSON.__init__(self, data)
         self.json = self.data
-        for k in self.keys(): # add result dict keys as attributes dynamically
+        for k in self.json.keys(): # add result dict keys as attributes dynamically
             if k == "_stats":
                 setattr(self, "stats", self.json[k])
             else:
@@ -251,7 +251,7 @@ class Result(IPython.display.JSON):
     def keys_and_count(self,):
         return [(x, len(self.data[x])) for x in self.data.keys()]
 
-    def data_keys(self,):
+    def _good_data_keys(self,):
         "return the results keys other than stats"
         return [x for x in self.data.keys() if x != "stats"]
 
@@ -264,13 +264,13 @@ class Result(IPython.display.JSON):
             return
             
         if not key:
-            if len(self.data_keys() > 1):
-                print(f"Please specify a key from {self.data_keys()}")
+            if len(self._good_data_keys() > 1):
+                print(f"Please specify a key from {self._good_data_keys()}")
                 return
             else:
-                key = self.data_keys()[0]
-        elif key not in self.data_keys():
-            print(f"Invalid key: should be one of {self.data_keys()}")
+                key = self._good_data_keys()[0]
+        elif key not in self._good_data_keys():
+            print(f"Invalid key: should be one of {self._good_data_keys()}")
             return 
 
         return pd.DataFrame().from_dict(self.json[key])
