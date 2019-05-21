@@ -248,11 +248,32 @@ class Result(IPython.display.JSON):
         else:
             return [] # empty list so to support iteration tests / previously: False
 
-    def keys(self,):
-        return list(self.data.keys())
-
     def keys_and_count(self,):
         return [(x, len(self.data[x])) for x in self.data.keys()]
+
+    def data_keys(self,):
+        "return the results keys other than stats"
+        return [x for x in self.data.keys() if x != "stats"]
+
+    def as_dataframe(self, key=""):
+        "utility method: return inner json as a pandas dataframe"
+        try:
+            import pandas as pd
+        except:
+            print("Sorry this functionality requires the Pandas python library. Please install it first.")
+            return
+            
+        if not key:
+            if len(self.data_keys() > 1):
+                print(f"Please specify a key from {self.data_keys()}")
+                return
+            else:
+                key = self.data_keys()[0]
+        elif key not in self.data_keys():
+            print(f"Invalid key: should be one of {self.data_keys()}")
+            return 
+
+        return pd.DataFrame().from_dict(self.json[key])
 
     def __repr__(self):
         return "<dimcli.Result object #%s: %s>" % (str(id(self)), str(self.keys_and_count()))
