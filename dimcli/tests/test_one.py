@@ -90,6 +90,15 @@ class TestOne(unittest.TestCase):
         print(" ==> res.year[0]: ", res.year[0])
         print(" ==> res.stats: ", res.stats)
         # ----
+        click.secho("Query #3... returning dataframe", fg="green")
+        res = d.query("""search publications for \"mercedes\" return year""")
+        print("Query results: ")
+        print(" ==> res.json.keys(): ", res.json.keys())
+        print(" ==> res.stats: ", res.stats)
+        print(" ==> res.as_dataframe(): ", res.as_dataframe())
+        print(" ==> res.as_dataframe('year'): ", res.as_dataframe('year'))
+        print(" ==> res.as_dataframe('XXX'): ", res.as_dataframe('XXX'))
+        # ----
         click.secho("Completed test succesfully", fg="green")
 
     def test_004(self):

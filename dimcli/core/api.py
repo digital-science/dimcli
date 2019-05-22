@@ -253,7 +253,7 @@ class Result(IPython.display.JSON):
 
     def _good_data_keys(self,):
         "return the results keys other than stats"
-        return [x for x in self.data.keys() if x != "stats"]
+        return [x for x in self.data.keys() if x != "_stats"]
 
     def as_dataframe(self, key=""):
         "utility method: return inner json as a pandas dataframe"
@@ -264,7 +264,7 @@ class Result(IPython.display.JSON):
             return
             
         if not key:
-            if len(self._good_data_keys() > 1):
+            if len(self._good_data_keys()) > 1:
                 print(f"Please specify a key from {self._good_data_keys()}")
                 return
             else:
