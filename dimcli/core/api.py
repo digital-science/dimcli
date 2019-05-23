@@ -140,7 +140,12 @@ class Dsl:
             ###  
             # OK or Error Info :-)
             ###
-            result = Result(response.json())
+            try:
+                res_json = response.json()
+            except:
+                print('Unexpected error. JSON could not be parsed.')
+                return response
+            result = Result(res_json)
             if show_results or (show_results is None and self._show_results):
                 IPython.display.display(result)
             return result
