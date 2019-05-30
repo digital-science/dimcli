@@ -243,7 +243,7 @@ def run(instance="live"):
     # dynamically retrieve dsl version 
     click.secho(WELCOME_MESSAGE)
     try:
-        _info = CLIENT.query("describe version")['version']
+        _info = CLIENT.query("describe version")['release']
     except:
         _info = "not available"
     click.secho(f"Using endpoint: {CLIENT._url} - DSL version: {_info}", dim=True)
