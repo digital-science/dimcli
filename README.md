@@ -38,7 +38,7 @@ Then you can check if the installation worked with
 $ dimcli --help
 ```
 
-> [Anaconda](https://www.anaconda.com/) users: it's possible that a couple of libraries needed by DimCli need to be updated manually: `pip install prompt-toolkit -U` and `pip install ipython -U` (see also this [ticket](https://github.com/lambdamusic/dimcli/issues/21))
+> [Anaconda](https://www.anaconda.com/) errors: a couple of libraries needed by DimCli might need to be updated manually: `pip install prompt-toolkit -U` and `pip install ipython -U` (see also this [ticket](https://github.com/lambdamusic/dimcli/issues/21))
 
 
 #### Authentication 
