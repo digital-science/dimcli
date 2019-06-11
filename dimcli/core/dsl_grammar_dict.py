@@ -96,33 +96,11 @@ GRAMMAR_DICT = {
     'sources': {
         'publications': {
             'fields': {
-                'issue': {
-                    'type': 'string',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
-                },
-                'research_orgs': {
+                'reference_ids': {
                     'type':
-                    'orgs',
+                    'identifier',
                     'description':
-                    'Note: this field supports :ref:`filter-functions`: ``count``',
-                    'long_description':
-                    None,
-                    'is_entity':
-                    True,
-                    'is_filter':
-                    True,
-                    'is_facet':
-                    True
-                },
-                'relative_citation_ratio': {
-                    'type':
-                    'float',
-                    'description':
-                    'Relative citation performance of an article when compared to others in its area of research. Does not support emptiness filters',
+                    'Dimensions publication ID for publications in the references list, i.e. outgoing citations (see also: :ref:`data-model` section).',
                     'long_description':
                     None,
                     'is_entity':
@@ -133,34 +111,32 @@ GRAMMAR_DICT = {
                     False
                 },
                 'research_org_state_codes': {
-                    'type': 'states',
-                    'description': 'ISO\u200c-3166-2 code and name',
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'altmetric': {
-                    'type': 'float',
-                    'description': 'Altmetric attention score.',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
-                },
-                'book_series_title': {
-                    'type': 'text',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': False,
-                    'is_facet': False
-                },
-                'recent_citations': {
                     'type':
-                    'integer',
+                    'states',
                     'description':
-                    'Number of citations received in the last two years. Does not support emptiness filters',
+                    'State of the GRID organisations authors are affiliated to, expressed as GeoNames codes (ISO\u200c-3166-2).',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'issue': {
+                    'type': 'string',
+                    'description': 'The issue number of a publication.',
+                    'long_description': None,
+                    'is_entity': False,
+                    'is_filter': True,
+                    'is_facet': False
+                },
+                'author_affiliations': {
+                    'type':
+                    'json',
+                    'description':
+                    'Ordered list of authors names and their affiliations, as they appear in the original publication. The list can include researcher and organization identifiers, when available (note: in order to search for disambiguated authors, use the `in researchers` syntax).',
                     'long_description':
                     None,
                     'is_entity':
@@ -170,59 +146,103 @@ GRAMMAR_DICT = {
                     'is_facet':
                     False
                 },
+                'volume': {
+                    'type': 'string',
+                    'description': 'Publication volume.',
+                    'long_description': None,
+                    'is_entity': False,
+                    'is_filter': True,
+                    'is_facet': False
+                },
+                'type': {
+                    'type':
+                    'label',
+                    'description':
+                    'Publication type (one of: article, chapter, proceeding, monograph, preprint or book).',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'research_org_countries': {
+                    'type':
+                    'countries',
+                    'description':
+                    'Country of the GRID organisations authors are affiliated to, identified using GeoNames codes (note: this field supports :ref:`filter-functions`: ``count``).',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'concepts': {
+                    'type':
+                    'text',
+                    'description':
+                    'Concepts describing the main topics of a publication (note: automatically derived from the publication text using machine learning).',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    False,
+                    'is_facet':
+                    False
+                },
                 'supporting_grant_ids': {
-                    'type': 'identifier',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
+                    'type':
+                    'identifier',
+                    'description':
+                    'Grants supporting a publication, returned as a list of dimensions grants IDs  (see also: :ref:`data-model` section).',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    False
                 },
-                'id': {
-                    'type': 'identifier',
-                    'description': 'Dimensions publication id',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
+                'HRCS_RAC': {
+                    'type':
+                    'categories',
+                    'description':
+                    '`HRCS – Research Activity Codes <https://app.dimensions.ai/browse/publication/hrcs_rac>`_ .',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
                 },
-                'journal': {
-                    'type': 'journals',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'linkout': {
-                    'type': 'text',
-                    'description': 'URL address',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': False,
-                    'is_facet': False
-                },
-                'FOR': {
-                    'type': 'categories',
-                    'description': 'ANZSRC Fields of Research classification',
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'research_org_cities': {
-                    'type': 'cities',
-                    'description': 'GeoNames id and name',
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
+                'field_citation_ratio': {
+                    'type':
+                    'float',
+                    'description':
+                    'Relative citation performance of article when compared to similarly aged articles in its area of research (note: does not support emptiness filters).',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    False
                 },
                 'times_cited': {
                     'type':
                     'count',
                     'description':
-                    'Number of citations. Does not support emptiness filters',
+                    'Number of citations (note: does not support emptiness filters).',
                     'long_description':
                     None,
                     'is_entity':
@@ -233,20 +253,12 @@ GRAMMAR_DICT = {
                     False
                 },
                 'funder_countries': {
-                    'type': 'countries',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'open_access_categories': {
                     'type':
-                    'open_access',
+                    'countries',
                     'description':
-                    'Open Access category for publication.',
+                    'The country of the GRID organisation funding this publication.',
                     'long_description':
-                    'Open Access category data for publications values:\n\n        * `oa_all`: Article is freely available\n        * `gold_pure`: Version Of Record (VOR) is free under an open licence from a full OA journal\n        * `gold_hybrid`: Version Of Record (VOR) is free under an open licence in a paid-access journal\n        * `gold_bronze`: Freely available on publisher page, but without an open licence\n        * `green_pub`: Free copy of published version in an OA repository\n        * `green_acc`: Free copy of accepted version in an OA repository\n        * `green_sub`: Free copy of submitted version, or where version is unknown, in an OA repository\n        * `closed`: No freely available copy has been identified',
+                    None,
                     'is_entity':
                     True,
                     'is_filter':
@@ -254,15 +266,15 @@ GRAMMAR_DICT = {
                     'is_facet':
                     True
                 },
-                'type': {
+                'research_orgs': {
                     'type':
-                    'label',
+                    'orgs',
                     'description':
-                    'Publication type (article, chapter, proceeding, monograph, preprint or book)',
+                    'GRID organisations associated to a publication. Identifiers are automatically extracted from author affiliations text, so they can be missing in some cases (note: this field supports :ref:`filter-functions`: ``count``).',
                     'long_description':
                     None,
                     'is_entity':
-                    False,
+                    True,
                     'is_filter':
                     True,
                     'is_facet':
@@ -270,79 +282,69 @@ GRAMMAR_DICT = {
                 },
                 'pmcid': {
                     'type': 'identifier',
-                    'description': 'PubMed Central ID',
+                    'description': 'PubMed Central ID.',
                     'long_description': None,
                     'is_entity': False,
                     'is_filter': True,
                     'is_facet': False
                 },
-                'book_doi': {
+                'altmetric': {
+                    'type': 'float',
+                    'description': 'Altmetric attention score.',
+                    'long_description': None,
+                    'is_entity': False,
+                    'is_filter': True,
+                    'is_facet': False
+                },
+                'id': {
                     'type': 'identifier',
-                    'description': None,
+                    'description': 'Dimensions publication ID.',
                     'long_description': None,
                     'is_entity': False,
                     'is_filter': True,
                     'is_facet': False
                 },
-                'RCDC': {
+                'book_series_title': {
                     'type':
-                    'categories',
+                    'text',
                     'description':
-                    'Research, Condition, and Disease Categorization',
+                    'The title of the book series book, belong to.',
                     'long_description':
                     None,
                     'is_entity':
-                    True,
+                    False,
+                    'is_filter':
+                    False,
+                    'is_facet':
+                    False
+                },
+                'research_org_state_names': {
+                    'type':
+                    'string',
+                    'description':
+                    'State name of the GRID organisations authors are affiliated to, as a string.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
                     'is_filter':
                     True,
                     'is_facet':
-                    True
+                    False
                 },
                 'title': {
                     'type': 'text',
-                    'description': None,
+                    'description': 'Title of a publication.',
                     'long_description': None,
                     'is_entity': False,
                     'is_filter': False,
                     'is_facet': False
                 },
-                'research_org_country_names': {
-                    'type': 'string',
-                    'description': 'GeoNames country name',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
-                },
-                'pmid': {
-                    'type': 'identifier',
-                    'description': 'PubMed ID',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
-                },
-                'volume': {
-                    'type': 'string',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
-                },
-                'research_org_state_names': {
-                    'type': 'string',
-                    'description': 'GeoNames state name',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
-                },
-                'proceedings_title': {
+                'book_title': {
                     'type':
                     'text',
                     'description':
-                    'Title of a conference corresponding to documents that are `type` of "proceeding"',
+                    'The title of the book a chapter belongs to (note: this field is available only for chapters).',
                     'long_description':
                     None,
                     'is_entity':
@@ -352,35 +354,11 @@ GRAMMAR_DICT = {
                     'is_facet':
                     False
                 },
-                'year': {
-                    'type': 'integer',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'pages': {
-                    'type': 'string',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
-                },
-                'HRCS_RAC': {
-                    'type': 'categories',
-                    'description': 'HRCS – Research Activity Codes',
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'field_citation_ratio': {
+                'date': {
                     'type':
-                    'float',
+                    'date',
                     'description':
-                    'Relative citation performance of article when compared to similarly aged articles in its area of research. Does not support emptiness filters',
+                    'The publication date of a document, eg "2018-01-01" (note: dates can sometimes be incomplete and include only the month or the year).',
                     'long_description':
                     None,
                     'is_entity':
@@ -390,13 +368,33 @@ GRAMMAR_DICT = {
                     'is_facet':
                     False
                 },
-                'date': {
-                    'type': 'date',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
+                'RCDC': {
+                    'type':
+                    'categories',
+                    'description':
+                    '`Research, Condition, and Disease Categorization <https://app.dimensions.ai/browse/publication/rcdc>`_ .',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'category_for': {
+                    'type':
+                    'categories',
+                    'description':
+                    '`ANZSRC Fields of Research classification <https://app.dimensions.ai/browse/publication/for>`_',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
                 },
                 'mesh_terms': {
                     'type':
@@ -412,41 +410,11 @@ GRAMMAR_DICT = {
                     'is_facet':
                     True
                 },
-                'funders': {
-                    'type': 'orgs',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'HRCS_HC': {
-                    'type': 'categories',
-                    'description': 'HRCS - Health Categories',
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'journal_lists': {
+                'research_org_cities': {
                     'type':
-                    'string',
+                    'cities',
                     'description':
-                    'Independent grouping of journals outside of Dimensions',
-                    'long_description':
-                    None,
-                    'is_entity':
-                    False,
-                    'is_filter':
-                    True,
-                    'is_facet':
-                    False
-                },
-                'research_org_countries': {
-                    'type':
-                    'countries',
-                    'description':
-                    'Note: this field supports :ref:`filter-functions`: ``count``',
+                    'City of the GRID organisations authors are affiliated to, expressed as GeoNames ID and name.',
                     'long_description':
                     None,
                     'is_entity':
@@ -456,33 +424,11 @@ GRAMMAR_DICT = {
                     'is_facet':
                     True
                 },
-                'concepts': {
-                    'type': 'text',
-                    'description': 'Extracted concepts',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': False,
-                    'is_facet': False
-                },
-                'reference_ids': {
+                'book_doi': {
                     'type':
                     'identifier',
                     'description':
-                    'Dimensions publication id for documents referencing another document',
-                    'long_description':
-                    None,
-                    'is_entity':
-                    False,
-                    'is_filter':
-                    True,
-                    'is_facet':
-                    False
-                },
-                'date_inserted': {
-                    'type':
-                    'timestamp',
-                    'description':
-                    'Date when publication was inserted into Dimensions',
+                    'The DOI of the book a chapter belongs to (note: this field is available only for chapters).',
                     'long_description':
                     None,
                     'is_entity':
@@ -500,6 +446,36 @@ GRAMMAR_DICT = {
                     'is_filter': True,
                     'is_facet': False
                 },
+                'doi': {
+                    'type': 'identifier',
+                    'description': 'Digital object identifier.',
+                    'long_description': None,
+                    'is_entity': False,
+                    'is_filter': True,
+                    'is_facet': False
+                },
+                'proceedings_title': {
+                    'type':
+                    'text',
+                    'description':
+                    'Title of the conference proceedings volume associated to a publication.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    False,
+                    'is_facet':
+                    False
+                },
+                'linkout': {
+                    'type': 'text',
+                    'description': 'Original URL for a publication full text.',
+                    'long_description': None,
+                    'is_entity': False,
+                    'is_filter': False,
+                    'is_facet': False
+                },
                 'issn': {
                     'type': 'string',
                     'description': 'International Standard Serial Number',
@@ -508,35 +484,89 @@ GRAMMAR_DICT = {
                     'is_filter': True,
                     'is_facet': False
                 },
+                'year': {
+                    'type':
+                    'integer',
+                    'description':
+                    'The year of publication (note: when the `date` field is available, this is equal to the year part of the full date).',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'pages': {
+                    'type':
+                    'string',
+                    'description':
+                    'The pages of the publication, as they would appear in a citation record.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    False
+                },
+                'date_inserted': {
+                    'type':
+                    'timestamp',
+                    'description':
+                    "Date when the record was inserted into Dimensions (note: this field does not support exact match on the data, only range filters e.g. `<=` or `>=').",
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    False
+                },
+                'open_access_categories': {
+                    'type':
+                    'open_access',
+                    'description':
+                    'Open Access categories for publications. See below for more examples.',
+                    'long_description':
+                    'Open Access category data for publications values:\n\n        * `oa_all`: Article is freely available\n        * `gold_pure`: Version Of Record (VOR) is free under an open licence from a full OA journal\n        * `gold_hybrid`: Version Of Record (VOR) is free under an open licence in a paid-access journal\n        * `gold_bronze`: Freely available on publisher page, but without an open licence\n        * `green_pub`: Free copy of published version in an OA repository\n        * `green_acc`: Free copy of accepted version in an OA repository\n        * `green_sub`: Free copy of submitted version, or where version is unknown, in an OA repository\n        * `closed`: No freely available copy has been identified',
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'relative_citation_ratio': {
+                    'type':
+                    'float',
+                    'description':
+                    'Relative citation performance of an article when compared to others in its area of research (note: does not support emptiness filters).',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    False
+                },
                 'publisher': {
                     'type': 'label',
-                    'description': None,
+                    'description': 'Name of the publisher as a string.',
                     'long_description': None,
                     'is_entity': False,
                     'is_filter': True,
                     'is_facet': True
                 },
-                'book_title': {
-                    'type': 'text',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': False,
-                    'is_facet': False
-                },
-                'FOR_first': {
-                    'type': 'categories',
-                    'description': 'Division level FOR',
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'researchers': {
+                'funders': {
                     'type':
-                    'researchers',
+                    'orgs',
                     'description':
-                    'Note: this field supports :ref:`filter-functions`: ``count``',
+                    'The GRID organisation funding this publication.',
                     'long_description':
                     None,
                     'is_entity':
@@ -546,19 +576,11 @@ GRAMMAR_DICT = {
                     'is_facet':
                     True
                 },
-                'doi': {
-                    'type': 'identifier',
-                    'description': 'Digital object identifier',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
-                },
-                'author_affiliations': {
+                'recent_citations': {
                     'type':
-                    'json',
+                    'integer',
                     'description':
-                    "List of JSON lists of researchers' first and last names and affiliations",
+                    'Number of citations received in the last two years. Does not support emptiness filters',
                     'long_description':
                     None,
                     'is_entity':
@@ -567,6 +589,78 @@ GRAMMAR_DICT = {
                     True,
                     'is_facet':
                     False
+                },
+                'HRCS_HC': {
+                    'type':
+                    'categories',
+                    'description':
+                    '`HRCS - Health Categories <https://app.dimensions.ai/browse/publication/hrcs_hc>`_ .',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'research_org_country_names': {
+                    'type':
+                    'string',
+                    'description':
+                    'Country name of the GRID organisations authors are affiliated to, as a string.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    False
+                },
+                'journal_lists': {
+                    'type':
+                    'string',
+                    'description':
+                    "Independent grouping of journals outside of Dimensions, e.g. 'ERA 2015' or 'Norwegian register level 1'.",
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    False
+                },
+                'journal': {
+                    'type': 'journals',
+                    'description': 'The journal a publication belongs to.',
+                    'long_description': None,
+                    'is_entity': True,
+                    'is_filter': True,
+                    'is_facet': True
+                },
+                'pmid': {
+                    'type': 'identifier',
+                    'description': 'PubMed ID.',
+                    'long_description': None,
+                    'is_entity': False,
+                    'is_filter': True,
+                    'is_facet': False
+                },
+                'researchers': {
+                    'type':
+                    'researchers',
+                    'description':
+                    "Researcher IDs matched to the publication's authors list. (note: this returns only the disambiguated authors of a publication; in order to get the full authors list, the field `author_affiliations` should be used). This field supports :ref:`filter-functions`: ``count``.",
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
                 }
             },
             'fieldsets': ['all', 'basics', 'extras', 'book'],
@@ -598,161 +692,30 @@ GRAMMAR_DICT = {
                     'For a given article, in a given year, the number of citations accrued in the last two year period. Single value stored per document, year window rolls over in July.'
                 },
                 'rcr_avg': {
-                    'name': 'rcr_avg',
+                    'name':
+                    'rcr_avg',
                     'description':
-                    'Arithmetic mean of `relative_citation_ratio`'
+                    'Arithmetic mean of `relative_citation_ratio` field.'
                 },
                 'fcr_gavg': {
-                    'name': 'fcr_gavg',
-                    'description': 'Geometric mean of `field_citation_ratio`'
+                    'name':
+                    'fcr_gavg',
+                    'description':
+                    'Geometric mean of `field_citation_ratio` field.'
                 }
             },
             'search_fields': [
-                'noun_phrases', 'concepts', 'title_abstract_only',
-                'terms_experimental', 'full_data', 'authors', 'title_only'
+                'concepts', 'title_only', 'full_data', 'authors',
+                'title_abstract_only', 'noun_phrases'
             ]
         },
         'grants': {
             'fields': {
-                'research_orgs': {
-                    'type': 'orgs',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
                 'research_org_state_codes': {
-                    'type': 'states',
-                    'description': 'ISO\u200c-3166-2 code and name',
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'start_date': {
-                    'type': 'timestamp',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
-                },
-                'funding_cad': {
-                    'type': 'financial',
-                    'description': 'Funding amount awarded in CAD',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
-                },
-                'id': {
-                    'type': 'identifier',
-                    'description': 'Dimensions grant id',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
-                },
-                'linkout': {
-                    'type': 'text',
-                    'description': 'URL linked to grant',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': False,
-                    'is_facet': False
-                },
-                'funding_nzd': {
-                    'type': 'financial',
-                    'description': 'Funding amount awarded in NZD',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
-                },
-                'research_org_cities': {
-                    'type': 'cities',
-                    'description': 'GeoNames id and name',
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'original_title': {
-                    'type': 'text',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': False,
-                    'is_facet': False
-                },
-                'funder_countries': {
-                    'type': 'countries',
-                    'description': 'GeoNames code and name',
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'funding_jpy': {
-                    'type': 'financial',
-                    'description': 'Funding amount awarded in JPY',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
-                },
-                'FOR': {
-                    'type': 'categories',
-                    'description': 'ANZSRC Fields of Research classification',
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'active_year': {
-                    'type': 'integer',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'investigator_details': {
                     'type':
-                    'json',
+                    'states',
                     'description':
-                    'Additional details about investigators including affiliations and role',
-                    'long_description':
-                    None,
-                    'is_entity':
-                    False,
-                    'is_filter':
-                    True,
-                    'is_facet':
-                    False
-                },
-                'funding_aud': {
-                    'type': 'financial',
-                    'description': 'Funding amount awarded in AUD',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
-                },
-                'language': {
-                    'type': 'label',
-                    'description': 'ISO 639-1 language codes',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'RCDC': {
-                    'type':
-                    'categories',
-                    'description':
-                    'Research, Condition, and Disease Categorization',
+                    'State of the GRID organisations receiving the grant, expressed as GeoNames codes (ISO\u200c-3166-2).',
                     'long_description':
                     None,
                     'is_entity':
@@ -762,73 +725,247 @@ GRAMMAR_DICT = {
                     'is_facet':
                     True
                 },
-                'start_year': {
-                    'type': 'integer',
-                    'description': None,
+                'investigator_details': {
+                    'type':
+                    'json',
+                    'description':
+                    "Additional details about investigators, including affiliations and roles e.g. 'PI' or 'Co-PI' (note: if the investigator has a Dimensions researcher ID, that is returned as well).",
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    False
+                },
+                'funding_org_acronym': {
+                    'type': 'label',
+                    'description': 'Acronym for funding organisation.',
                     'long_description': None,
                     'is_entity': False,
                     'is_filter': True,
                     'is_facet': True
                 },
-                'funding_org_acronym': {
+                'research_org_countries': {
+                    'type':
+                    'countries',
+                    'description':
+                    'Country of the research organisations receiving the grant, expressed as GeoNames code and name.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'concepts': {
+                    'type':
+                    'text',
+                    'description':
+                    'Concepts describing the main topics of a grant (note: automatically derived from the grant text using machine learning).',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    False,
+                    'is_facet':
+                    False
+                },
+                'end_date': {
+                    'type': 'timestamp',
+                    'description': 'Date when the grant ends.',
+                    'long_description': None,
+                    'is_entity': False,
+                    'is_filter': True,
+                    'is_facet': False
+                },
+                'FOR': {
+                    'type':
+                    'categories',
+                    'description':
+                    '`ANZSRC Fields of Research classification <https://app.dimensions.ai/browse/publication/for>`_ , second level or 4 digit codes.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'HRCS_RAC': {
+                    'type':
+                    'categories',
+                    'description':
+                    '`HRCS – Research Activity Codes <https://app.dimensions.ai/browse/publication/hrcs_rac>`_ .',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'research_orgs': {
+                    'type':
+                    'orgs',
+                    'description':
+                    'GRID organisations receiving the grant (note: identifiers are automatically extracted from the source text and can be missing in some cases).',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'funder_countries': {
+                    'type':
+                    'countries',
+                    'description':
+                    'The country linked to the organisation funding the grant, expressed as GeoNames codes.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'id': {
+                    'type': 'identifier',
+                    'description': 'Dimensions grant ID.',
+                    'long_description': None,
+                    'is_entity': False,
+                    'is_filter': True,
+                    'is_facet': False
+                },
+                'project_num': {
+                    'type':
+                    'identifier',
+                    'description':
+                    'Grant identifier, as provided by the source (e.g., funder, aggregator) the grant was derived from.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    False
+                },
+                'funding_currency': {
                     'type': 'label',
-                    'description': 'Acronym for funding organisation',
+                    'description': 'Original funding currency.',
                     'long_description': None,
                     'is_entity': False,
                     'is_filter': True,
                     'is_facet': True
                 },
                 'title': {
+                    'type':
+                    'text',
+                    'description':
+                    'Title of the grant in English (if the grant language is not English, this field contains a translation of the title).',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    False,
+                    'is_facet':
+                    False
+                },
+                'language': {
+                    'type':
+                    'label',
+                    'description':
+                    'Grant original language, as ISO 639-1 language codes.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'RCDC': {
+                    'type':
+                    'categories',
+                    'description':
+                    '`Research, Condition, and Disease Categorization <https://app.dimensions.ai/browse/publication/rcdc>`_ .',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'title_language': {
+                    'type':
+                    'label',
+                    'description':
+                    'ISO 639-1 language code for the original grant title.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'start_year': {
+                    'type': 'integer',
+                    'description': 'Year when the grant starts.',
+                    'long_description': None,
+                    'is_entity': False,
+                    'is_filter': True,
+                    'is_facet': True
+                },
+                'research_org_cities': {
+                    'type':
+                    'cities',
+                    'description':
+                    'City of the research organisations receiving the grant, expressed as GeoNames id and name.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'linkout': {
                     'type': 'text',
-                    'description': None,
+                    'description': 'Original URL for the grant.',
                     'long_description': None,
                     'is_entity': False,
                     'is_filter': False,
                     'is_facet': False
                 },
-                'funding_org_name': {
-                    'type': 'label',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'abstract': {
-                    'type': 'text',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': False,
-                    'is_facet': False
-                },
-                'research_org_name': {
-                    'type': 'label',
-                    'description': 'Name for research organisation',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'HRCS_RAC': {
-                    'type': 'categories',
-                    'description': 'HRCS – Research Activity Codes',
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'end_date': {
-                    'type': 'timestamp',
-                    'description': None,
+                'funding_aud': {
+                    'type': 'financial',
+                    'description': 'Funding amount awarded in AUD.',
                     'long_description': None,
                     'is_entity': False,
                     'is_filter': True,
                     'is_facet': False
                 },
-                'funding_currency': {
+                'funding_org_city': {
                     'type': 'label',
-                    'description': 'Original funding currency',
+                    'description': 'City name for funding organisation.',
                     'long_description': None,
                     'is_entity': False,
                     'is_filter': True,
@@ -836,57 +973,61 @@ GRAMMAR_DICT = {
                 },
                 'funding_usd': {
                     'type': 'financial',
-                    'description': 'Funding amount awarded in USD',
+                    'description': 'Funding amount awarded in USD.',
                     'long_description': None,
                     'is_entity': False,
                     'is_filter': True,
                     'is_facet': False
                 },
-                'funders': {
-                    'type': 'orgs',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
+                'FOR_first': {
+                    'type':
+                    'categories',
+                    'description':
+                    '`ANZSRC Fields of Research classification <https://app.dimensions.ai/browse/publication/for>`_ , first level or 2 digit codes.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
                 },
-                'HRCS_HC': {
-                    'type': 'categories',
-                    'description': 'HRCS - Health Categories',
+                'funding_jpy': {
+                    'type': 'financial',
+                    'description': 'Funding amount awarded in JPY.',
                     'long_description': None,
-                    'is_entity': True,
+                    'is_entity': False,
                     'is_filter': True,
-                    'is_facet': True
+                    'is_facet': False
                 },
                 'funding_chf': {
                     'type': 'financial',
-                    'description': 'Funding amount awarded in CHF',
+                    'description': 'Funding amount awarded in CHF.',
                     'long_description': None,
                     'is_entity': False,
                     'is_filter': True,
                     'is_facet': False
                 },
-                'research_org_countries': {
-                    'type': 'countries',
-                    'description': 'GeoNames code and name',
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'concepts': {
-                    'type': 'text',
-                    'description': 'Extracted concepts',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': False,
-                    'is_facet': False
+                'start_date': {
+                    'type':
+                    'timestamp',
+                    'description':
+                    "Date when the grant starts, in the format 'YYYY-MM-DD'.",
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    False
                 },
                 'date_inserted': {
                     'type':
                     'timestamp',
                     'description':
-                    'Date when publication was inserted into Dimensions',
+                    'Date when the record was inserted into Dimensions (note: this field does not support exact match on the data, only range filters e.g. `<=` or `>=`).',
                     'long_description':
                     None,
                     'is_entity':
@@ -898,59 +1039,125 @@ GRAMMAR_DICT = {
                 },
                 'funding_gbp': {
                     'type': 'financial',
-                    'description': 'Funding amount awarded in GBP',
+                    'description': 'Funding amount awarded in GBP.',
                     'long_description': None,
                     'is_entity': False,
                     'is_filter': True,
                     'is_facet': False
                 },
-                'title_language': {
+                'funding_nzd': {
+                    'type': 'financial',
+                    'description': 'Funding amount awarded in NZD.',
+                    'long_description': None,
+                    'is_entity': False,
+                    'is_filter': True,
+                    'is_facet': False
+                },
+                'funders': {
+                    'type':
+                    'orgs',
+                    'description':
+                    'The organisation funding the grant. This is normally a GRID organisation, but in very few cases a Dimensions funder ID is used.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'abstract': {
+                    'type': 'text',
+                    'description':
+                    'Abstract or summary from a grant proposal.',
+                    'long_description': None,
+                    'is_entity': False,
+                    'is_filter': False,
+                    'is_facet': False
+                },
+                'funding_org_name': {
                     'type': 'label',
-                    'description': 'ISO 639-1 language code used in title',
+                    'description': 'Name of funding organisation.',
                     'long_description': None,
                     'is_entity': False,
                     'is_filter': True,
                     'is_facet': True
+                },
+                'HRCS_HC': {
+                    'type':
+                    'categories',
+                    'description':
+                    '`HRCS - Health Categories <https://app.dimensions.ai/browse/publication/hrcs_hc>`_ .',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
                 },
                 'funding_eur': {
                     'type': 'financial',
-                    'description': 'Funding amount awarded in EUR',
+                    'description': 'Funding amount awarded in EUR.',
                     'long_description': None,
                     'is_entity': False,
                     'is_filter': True,
                     'is_facet': False
                 },
-                'FOR_first': {
-                    'type': 'categories',
-                    'description': 'Division level FOR',
+                'original_title': {
+                    'type': 'text',
+                    'description':
+                    'Title of the grant in its original language.',
                     'long_description': None,
-                    'is_entity': True,
+                    'is_entity': False,
+                    'is_filter': False,
+                    'is_facet': False
+                },
+                'active_year': {
+                    'type': 'integer',
+                    'description': 'List of active years for a grant.',
+                    'long_description': None,
+                    'is_entity': False,
                     'is_filter': True,
                     'is_facet': True
                 },
-                'project_num': {
-                    'type': 'identifier',
-                    'description': None,
+                'research_org_name': {
+                    'type':
+                    'label',
+                    'description':
+                    'Name of the research organisations receiving the grant.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'funding_cad': {
+                    'type': 'financial',
+                    'description': 'Funding amount awarded in CAD.',
                     'long_description': None,
                     'is_entity': False,
                     'is_filter': True,
                     'is_facet': False
                 },
                 'researchers': {
-                    'type': 'researchers',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'funding_org_city': {
-                    'type': 'label',
-                    'description': 'City name for funding organisation',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': True
+                    'type':
+                    'researchers',
+                    'description':
+                    'Dimensions researchers IDs associated to the grant.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
                 }
             },
             'fieldsets': ['all', 'basics', 'extras'],
@@ -961,115 +1168,21 @@ GRAMMAR_DICT = {
                 },
                 'funding': {
                     'name': 'funding',
-                    'description': None
+                    'description': 'Total funding amount, in USD.'
                 }
             },
             'search_fields': [
-                'noun_phrases', 'concepts', 'title_abstract_only',
-                'investigators', 'full_data', 'title_only'
+                'concepts', 'investigators', 'title_only', 'full_data',
+                'title_abstract_only', 'noun_phrases'
             ]
         },
         'patents': {
             'fields': {
-                'ipcr': {
-                    'type':
-                    'identifier',
-                    'description':
-                    'International Patent Classification Reform number for a patent',
-                    'long_description':
-                    None,
-                    'is_entity':
-                    False,
-                    'is_filter':
-                    True,
-                    'is_facet':
-                    False
-                },
-                'assignee_names': {
-                    'type': 'string',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
-                },
                 'current_assignees': {
-                    'type': 'orgs',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'assignees': {
-                    'type': 'orgs',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'id': {
-                    'type': 'identifier',
-                    'description': 'Dimensions patent id',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
-                },
-                'assignee_countries': {
-                    'type': 'countries',
-                    'description': 'GeoNames code and name',
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'times_cited': {
-                    'type': 'count',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
-                },
-                'FOR': {
-                    'type': 'categories',
-                    'description': 'ANZSRC Fields of Research classification',
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'inventor_names': {
-                    'type': 'string',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
-                },
-                'publication_date': {
-                    'type': 'timestamp',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
-                },
-                'original_assignees': {
-                    'type': 'orgs',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'RCDC': {
                     'type':
-                    'categories',
+                    'orgs',
                     'description':
-                    'Research, Condition, and Disease Categorization',
+                    'GRID organisations currenlty owning the patent.',
                     'long_description':
                     None,
                     'is_entity':
@@ -1079,163 +1192,402 @@ GRAMMAR_DICT = {
                     'is_facet':
                     True
                 },
-                'cited_by_ids': {
-                    'type': 'identifier',
-                    'description': 'Patents which cite this patent',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
+                'associated_grant_ids': {
+                    'type':
+                    'identifier',
+                    'description':
+                    'Dimensions IDs of the grants associated to the patent (see also: :ref:`data-model` section).',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    False
                 },
-                'assignee_state_codes': {
-                    'type': 'states',
-                    'description': 'GeoNames code and name',
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
+                'reference_ids': {
+                    'type':
+                    'identifier',
+                    'description':
+                    'Dimensions IDs of the patents which are cited by this patent (see also: :ref:`data-model` section).',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    False
                 },
-                'title': {
-                    'type': 'text',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': False,
-                    'is_facet': False
+                'legal_status': {
+                    'type':
+                    'string',
+                    'description':
+                    "The legal status of the patent, e.g. 'Granted', 'Active', 'Abandoned' etc..",
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    False
+                },
+                'funder_groups': {
+                    'type':
+                    'org_groups',
+                    'description':
+                    'Organisation group the GRID patent funder belongs to.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'assignee_cities': {
+                    'type':
+                    'cities',
+                    'description':
+                    'City of the GRID assignees of the patent, expressed as GeoNames ID and name.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'FOR': {
+                    'type':
+                    'categories',
+                    'description':
+                    '`ANZSRC Fields of Research classification <https://app.dimensions.ai/browse/publication/for>`_ , second level or 4 digit codes.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'priority_date': {
+                    'type':
+                    'timestamp',
+                    'description':
+                    'The earliest filing date in a family of patent applications.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    False
                 },
                 'publication_year': {
                     'type': 'integer',
-                    'description': None,
+                    'description': 'Year of publication of a patent.',
                     'long_description': None,
                     'is_entity': False,
                     'is_filter': True,
                     'is_facet': True
                 },
-                'publication_ids': {
-                    'type': 'identifier',
-                    'description': 'Related publication IDs',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
-                },
-                'additional_filters': {
-                    'type': 'string',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
-                },
-                'current_assignee_names': {
-                    'type': 'string',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
-                },
-                'granted_year': {
-                    'type': 'integer',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'year': {
-                    'type': 'integer',
-                    'description': 'Year when the patent was filed',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'abstract': {
-                    'type': 'text',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': False,
-                    'is_facet': False
-                },
-                'jurisdiction': {
-                    'type': 'string',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
+                'original_assignee_names': {
+                    'type':
+                    'string',
+                    'description':
+                    'Name of the GRID organisation that first owned the patent.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    False
                 },
                 'HRCS_RAC': {
-                    'type': 'categories',
-                    'description': 'HRCS – Research Activity Codes',
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
+                    'type':
+                    'categories',
+                    'description':
+                    '`HRCS – Research Activity Codes <https://app.dimensions.ai/browse/publication/hrcs_rac>`_ .',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
                 },
-                'associated_grant_ids': {
-                    'type': 'identifier',
-                    'description': None,
+                'publication_date': {
+                    'type': 'timestamp',
+                    'description': 'Date of publication of a patent.',
                     'long_description': None,
                     'is_entity': False,
                     'is_filter': True,
                     'is_facet': False
                 },
                 'filing_status': {
-                    'type': 'string',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
+                    'type':
+                    'string',
+                    'description':
+                    "Filing Status of the patent e.g. 'Application' or 'Grant'.",
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    False
                 },
-                'assignee_cities': {
-                    'type': 'cities',
-                    'description': 'GeoNames id and name',
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'date': {
-                    'type': 'timestamp',
-                    'description': 'Date when the patent was filed',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
+                'times_cited': {
+                    'type':
+                    'count',
+                    'description':
+                    'The number of times the patent has been cited by other patents.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    False
                 },
                 'expiration_date': {
                     'type': 'timestamp',
-                    'description': None,
+                    'description': 'Date when the patent expires.',
                     'long_description': None,
                     'is_entity': False,
                     'is_filter': True,
                     'is_facet': False
                 },
-                'legal_status': {
-                    'type': 'string',
-                    'description': None,
+                'id': {
+                    'type': 'identifier',
+                    'description': 'Dimensions patent ID',
                     'long_description': None,
                     'is_entity': False,
                     'is_filter': True,
                     'is_facet': False
+                },
+                'assignee_names': {
+                    'type': 'string',
+                    'description': 'Name of the GRID assignees of the patent.',
+                    'long_description': None,
+                    'is_entity': False,
+                    'is_filter': True,
+                    'is_facet': False
+                },
+                'original_assignees': {
+                    'type':
+                    'orgs',
+                    'description':
+                    'GRID organisations that first owned the patent.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'jurisdiction': {
+                    'type':
+                    'string',
+                    'description':
+                    "The jurisdiction where the patent was granted, e.g. 'US', 'DE', 'EP'...",
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    False
+                },
+                'cited_by_ids': {
+                    'type':
+                    'identifier',
+                    'description':
+                    'Dimensions IDs of the patents that cite this patent (see also: :ref:`data-model` section).',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    False
+                },
+                'title': {
+                    'type': 'text',
+                    'description': 'The title of the patent.',
+                    'long_description': None,
+                    'is_entity': False,
+                    'is_filter': False,
+                    'is_facet': False
+                },
+                'date': {
+                    'type': 'timestamp',
+                    'description': 'Date when the patent was filed.',
+                    'long_description': None,
+                    'is_entity': False,
+                    'is_filter': True,
+                    'is_facet': False
+                },
+                'RCDC': {
+                    'type':
+                    'categories',
+                    'description':
+                    '`Research, Condition, and Disease Categorization <https://app.dimensions.ai/browse/publication/rcdc>`_ .',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'assignees': {
+                    'type':
+                    'orgs',
+                    'description':
+                    'GRID organisations who own or have owned the rights of a patent (note: this is a combination of `current_assignees` and `original_assigness` fields).',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'inventor_names': {
+                    'type': 'string',
+                    'description':
+                    'Names of the people who invented the patent.',
+                    'long_description': None,
+                    'is_entity': False,
+                    'is_filter': True,
+                    'is_facet': False
+                },
+                'publication_ids': {
+                    'type':
+                    'identifier',
+                    'description':
+                    'Dimensions IDs of the publications related to this patent (see also: :ref:`data-model` section).',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    False
+                },
+                'year': {
+                    'type': 'integer',
+                    'description': 'The year the patent was filed.',
+                    'long_description': None,
+                    'is_entity': False,
+                    'is_filter': True,
+                    'is_facet': True
+                },
+                'FOR_first': {
+                    'type':
+                    'categories',
+                    'description':
+                    '`ANZSRC Fields of Research classification <https://app.dimensions.ai/browse/publication/for>`_ , first level or 2 digit codes.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'date_inserted': {
+                    'type':
+                    'timestamp',
+                    'description':
+                    'Date when the record was inserted into Dimensions (note: this field does not support exact match on the data, only range filters e.g. `<=` or `>=`).',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    False
                 },
                 'funders': {
                     'type': 'orgs',
-                    'description': None,
+                    'description': 'GRID organisations funding the patent.',
                     'long_description': None,
                     'is_entity': True,
                     'is_filter': True,
                     'is_facet': True
                 },
-                'HRCS_HC': {
-                    'type': 'categories',
-                    'description': 'HRCS - Health Categories',
+                'ipcr': {
+                    'type':
+                    'identifier',
+                    'description':
+                    'International Patent Classification Reform number for a patent.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    False
+                },
+                'additional_filters': {
+                    'type':
+                    'string',
+                    'description':
+                    "Additional filters describing the patents, e.g. whether it's about a 'Research Organisation', or it is part of the 'Orange Book'.",
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    False
+                },
+                'abstract': {
+                    'type': 'text',
+                    'description': 'Abstract or description of the patent.',
                     'long_description': None,
-                    'is_entity': True,
+                    'is_entity': False,
+                    'is_filter': False,
+                    'is_facet': False
+                },
+                'assignee_state_names': {
+                    'type': 'label',
+                    'description': 'State name of GRID assignee, as a string.',
+                    'long_description': None,
+                    'is_entity': False,
+                    'is_filter': True,
+                    'is_facet': True
+                },
+                'granted_year': {
+                    'type': 'integer',
+                    'description': 'Year the patent was granted.',
+                    'long_description': None,
+                    'is_entity': False,
                     'is_filter': True,
                     'is_facet': True
                 },
@@ -1253,19 +1605,53 @@ GRAMMAR_DICT = {
                     'is_facet':
                     False
                 },
-                'reference_ids': {
-                    'type': 'identifier',
-                    'description': 'Patents which are cited by this patent',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
-                },
-                'date_inserted': {
+                'assignee_countries': {
                     'type':
-                    'timestamp',
+                    'countries',
                     'description':
-                    'Date when publication was inserted into Dimensions',
+                    'Country of the GRID assignees of the patent, expressed as GeoNames code and name.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'HRCS_HC': {
+                    'type':
+                    'categories',
+                    'description':
+                    '`HRCS - Health Categories <https://app.dimensions.ai/browse/publication/hrcs_hc>`_ .',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'assignee_state_codes': {
+                    'type':
+                    'states',
+                    'description':
+                    'State of the GRID assignee, expressed using GeoNames (ISO\u200c-3166-2) codes.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'current_assignee_names': {
+                    'type':
+                    'string',
+                    'description':
+                    'Names of the GRID organisations currently holding the patent.',
                     'long_description':
                     None,
                     'is_entity':
@@ -1274,46 +1660,6 @@ GRAMMAR_DICT = {
                     True,
                     'is_facet':
                     False
-                },
-                'funder_groups': {
-                    'type': 'org_groups',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'assignee_state_names': {
-                    'type': 'label',
-                    'description': 'GeoNames name',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'priority_date': {
-                    'type': 'timestamp',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
-                },
-                'FOR_first': {
-                    'type': 'categories',
-                    'description': 'Division level FOR',
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'original_assignee_names': {
-                    'type': 'string',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
                 }
             },
             'fieldsets': ['all', 'basics', 'extras'],
@@ -1324,63 +1670,15 @@ GRAMMAR_DICT = {
                 }
             },
             'search_fields':
-            ['title_only', 'full_data', 'title_abstract_only']
+            ['full_data', 'title_abstract_only', 'title_only']
         },
         'clinical_trials': {
             'fields': {
-                'active_years': {
-                    'type': 'integer',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'conditions': {
-                    'type': 'string',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
-                },
-                'id': {
-                    'type': 'identifier',
-                    'description': 'Dimensions clinical trial id',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
-                },
-                'linkout': {
-                    'type': 'text',
-                    'description': 'URL linked to clinical trial',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': False,
-                    'is_facet': False
-                },
-                'FOR': {
-                    'type': 'categories',
-                    'description': 'ANZSRC Fields of Research classification',
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'funder_countries': {
-                    'type': 'countries',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'investigator_details': {
+                'associated_grant_ids': {
                     'type':
-                    'json',
+                    'identifier',
                     'description':
-                    'JSON with names, titles, & roles (no ids) of involved researchers for display purposes',
+                    'Dimensions IDs of the grants associated to the clinical trial (see also: :ref:`data-model` section).',
                     'long_description':
                     None,
                     'is_entity':
@@ -1390,11 +1688,48 @@ GRAMMAR_DICT = {
                     'is_facet':
                     False
                 },
-                'RCDC': {
+                'registry': {
                     'type':
-                    'categories',
+                    'string',
                     'description':
-                    'Research, Condition, and Disease Categorization',
+                    "The platform where the clinical trial has been registered, e.g. 'ClinicalTrials.gov' or 'EU-CTR'.",
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    False
+                },
+                'investigator_details': {
+                    'type':
+                    'json',
+                    'description':
+                    'Additional details about investigators, including affiliations and roles.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    False
+                },
+                'active_years': {
+                    'type': 'integer',
+                    'description':
+                    'List of active years for a clinical trial.',
+                    'long_description': None,
+                    'is_entity': False,
+                    'is_filter': True,
+                    'is_facet': True
+                },
+                'funder_groups': {
+                    'type':
+                    'org_groups',
+                    'description':
+                    'The organisation group the GRID funding organisations.',
                     'long_description':
                     None,
                     'is_entity':
@@ -1404,9 +1739,59 @@ GRAMMAR_DICT = {
                     'is_facet':
                     True
                 },
-                'gender': {
+                'phase': {
                     'type': 'string',
-                    'description': None,
+                    'description': 'Phase of the clinical trial, as a string.',
+                    'long_description': None,
+                    'is_entity': False,
+                    'is_filter': True,
+                    'is_facet': False
+                },
+                'FOR': {
+                    'type':
+                    'categories',
+                    'description':
+                    '`ANZSRC Fields of Research classification <https://app.dimensions.ai/browse/publication/for>`_ , second level or 4 digit codes.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'HRCS_RAC': {
+                    'type':
+                    'categories',
+                    'description':
+                    '`HRCS – Research Activity Codes <https://app.dimensions.ai/browse/publication/hrcs_rac>`_ .',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'funder_countries': {
+                    'type':
+                    'countries',
+                    'description':
+                    'The country group the GRID funding organisations.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'id': {
+                    'type': 'identifier',
+                    'description': 'Dimensions clinical trial ID',
                     'long_description': None,
                     'is_entity': False,
                     'is_filter': True,
@@ -1414,103 +1799,25 @@ GRAMMAR_DICT = {
                 },
                 'title': {
                     'type': 'text',
-                    'description': None,
+                    'description': 'The title of the clinical trial.',
                     'long_description': None,
                     'is_entity': False,
                     'is_filter': False,
-                    'is_facet': False
-                },
-                'phase': {
-                    'type': 'string',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
-                },
-                'publication_ids': {
-                    'type': 'identifier',
-                    'description': 'Linked Publication IDs',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
-                },
-                'abstract': {
-                    'type': 'text',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': False,
-                    'is_facet': False
-                },
-                'HRCS_RAC': {
-                    'type': 'categories',
-                    'description': 'HRCS – Research Activity Codes',
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'associated_grant_ids': {
-                    'type': 'identifier',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
                     'is_facet': False
                 },
                 'date': {
                     'type': 'timestamp',
-                    'description': 'Start date of a clinical trial',
+                    'description': 'Start date of a clinical trial.',
                     'long_description': None,
                     'is_entity': False,
                     'is_filter': True,
                     'is_facet': False
                 },
-                'funders': {
-                    'type': 'orgs',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'HRCS_HC': {
-                    'type': 'categories',
-                    'description': 'HRCS - Health Categories',
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'date_inserted': {
+                'RCDC': {
                     'type':
-                    'timestamp',
+                    'categories',
                     'description':
-                    'Date when publication was inserted into Dimensions',
-                    'long_description':
-                    None,
-                    'is_entity':
-                    False,
-                    'is_filter':
-                    True,
-                    'is_facet':
-                    False
-                },
-                'funder_groups': {
-                    'type': 'org_groups',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'organizations': {
-                    'type':
-                    'orgs',
-                    'description':
-                    'IDs of any organizations involved in any way, e.g. as sponsors or collaborators',
+                    '`Research, Condition, and Disease Categorization <https://app.dimensions.ai/browse/publication/rcdc>`_ .',
                     'long_description':
                     None,
                     'is_entity':
@@ -1520,21 +1827,139 @@ GRAMMAR_DICT = {
                     'is_facet':
                     True
                 },
-                'FOR_first': {
-                    'type': 'categories',
-                    'description': 'Division level FOR',
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
+                'publication_ids': {
+                    'type':
+                    'identifier',
+                    'description':
+                    'Dimensions IDs of the publications related to this clinical trial (see also: :ref:`data-model` section).',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    False
                 },
-                'registry': {
-                    'type': 'string',
-                    'description': None,
+                'linkout': {
+                    'type': 'text',
+                    'description': 'Original URL for the clinical trial.',
                     'long_description': None,
                     'is_entity': False,
-                    'is_filter': True,
+                    'is_filter': False,
                     'is_facet': False
+                },
+                'FOR_first': {
+                    'type':
+                    'categories',
+                    'description':
+                    '`ANZSRC Fields of Research classification <https://app.dimensions.ai/browse/publication/for>`_ , first level or 2 digit codes.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'date_inserted': {
+                    'type':
+                    'timestamp',
+                    'description':
+                    "Date when the record was inserted into Dimensions (note: this field does not support exact match on the data, only range filters e.g. `<=` or `>=').",
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    False
+                },
+                'funders': {
+                    'type':
+                    'orgs',
+                    'description':
+                    'GRID funding organisations that are involved with the clinical trial.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'abstract': {
+                    'type':
+                    'text',
+                    'description':
+                    'Abstract or description of the clinical trial.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    False,
+                    'is_facet':
+                    False
+                },
+                'gender': {
+                    'type':
+                    'string',
+                    'description':
+                    "The gender of the clinical trial subjects e.g. 'Male', 'Female' or 'All'.",
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    False
+                },
+                'HRCS_HC': {
+                    'type':
+                    'categories',
+                    'description':
+                    '`HRCS - Health Categories <https://app.dimensions.ai/browse/publication/hrcs_hc>`_ .',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'conditions': {
+                    'type':
+                    'string',
+                    'description':
+                    "List of medical conditions names, e.g. 'Breast cancer' or 'Obesity'.",
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    False
+                },
+                'organizations': {
+                    'type':
+                    'orgs',
+                    'description':
+                    'GRID organizations involved, e.g. as sponsors or collaborators.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
                 }
             },
             'fieldsets': ['all', 'basics', 'extras'],
@@ -1545,57 +1970,17 @@ GRAMMAR_DICT = {
                 }
             },
             'search_fields': [
-                'title_only', 'full_data', 'investigators',
-                'title_abstract_only'
+                'full_data', 'title_abstract_only', 'investigators',
+                'title_only'
             ]
         },
         'policy_documents': {
             'fields': {
-                'publisher_org_country': {
-                    'type': 'countries',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'id': {
-                    'type': 'identifier',
-                    'description': 'Dimensions policy document id',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
-                },
-                'linkout': {
-                    'type': 'text',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': False,
-                    'is_facet': False
-                },
-                'FOR': {
-                    'type': 'categories',
-                    'description': 'ANZSRC Fields of Research classification',
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'health_research_areas': {
-                    'type': 'categories',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'RCDC': {
+                'publisher_org_state': {
                     'type':
-                    'categories',
+                    'states',
                     'description':
-                    'Research, Condition, and Disease Categorization',
+                    'State of the GRID organization publishing the policy document.',
                     'long_description':
                     None,
                     'is_entity':
@@ -1605,75 +1990,97 @@ GRAMMAR_DICT = {
                     'is_facet':
                     True
                 },
-                'title': {
-                    'type': 'string',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
-                },
-                'publication_ids': {
-                    'type': 'identifier',
-                    'description': 'Referenced Publication IDs',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
-                },
-                'year': {
-                    'type': 'integer',
-                    'description': 'Policy posted on year',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': True
+                'FOR': {
+                    'type':
+                    'categories',
+                    'description':
+                    '`ANZSRC Fields of Research classification <https://app.dimensions.ai/browse/publication/for>`_ , second level or 4 digit codes.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
                 },
                 'HRCS_RAC': {
-                    'type': 'categories',
-                    'description': 'HRCS – Research Activity Codes',
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'publisher_org_state': {
-                    'type': 'states',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'publisher_org': {
-                    'type': 'orgs',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
+                    'type':
+                    'categories',
+                    'description':
+                    '`HRCS – Research Activity Codes <https://app.dimensions.ai/browse/publication/hrcs_rac>`_ .',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
                 },
                 'broad_research_areas': {
-                    'type': 'categories',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'HRCS_HC': {
-                    'type': 'categories',
-                    'description': 'HRCS - Health Categories',
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'date_inserted': {
                     'type':
-                    'date',
+                    'categories',
                     'description':
-                    'Date when policy document was inserted into Dimensions',
+                    '`Broad Research Areas categorization <https://app.dimensions.ai/browse/publication/broad_research_areas>`_  .',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'id': {
+                    'type': 'identifier',
+                    'description': 'Dimensions policy document ID',
+                    'long_description': None,
+                    'is_entity': False,
+                    'is_filter': True,
+                    'is_facet': False
+                },
+                'title': {
+                    'type': 'string',
+                    'description': 'Title of the policy document.',
+                    'long_description': None,
+                    'is_entity': False,
+                    'is_filter': True,
+                    'is_facet': False
+                },
+                'RCDC': {
+                    'type':
+                    'categories',
+                    'description':
+                    '`Research, Condition, and Disease Categorization <https://app.dimensions.ai/browse/publication/rcdc>`_ .',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'publisher_org_country': {
+                    'type':
+                    'countries',
+                    'description':
+                    'Country of the GRID organization publishing the policy document.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'publication_ids': {
+                    'type':
+                    'identifier',
+                    'description':
+                    'Dimensions IDs of the publications related to this policy document (see also: :ref:`data-model` section).',
                     'long_description':
                     None,
                     'is_entity':
@@ -1683,21 +2090,106 @@ GRAMMAR_DICT = {
                     'is_facet':
                     False
                 },
-                'publisher_org_city': {
-                    'type': 'cities',
-                    'description': None,
+                'linkout': {
+                    'type': 'text',
+                    'description': 'Original URL for the policy document.',
                     'long_description': None,
-                    'is_entity': True,
+                    'is_entity': False,
+                    'is_filter': False,
+                    'is_facet': False
+                },
+                'year': {
+                    'type': 'integer',
+                    'description':
+                    'Year of publication of the policy document.',
+                    'long_description': None,
+                    'is_entity': False,
                     'is_filter': True,
                     'is_facet': True
                 },
                 'FOR_first': {
-                    'type': 'categories',
-                    'description': 'Division level FOR',
-                    'long_description': None,
-                    'is_entity': True,
-                    'is_filter': True,
-                    'is_facet': True
+                    'type':
+                    'categories',
+                    'description':
+                    '`ANZSRC Fields of Research classification <https://app.dimensions.ai/browse/publication/for>`_ , first level or 2 digit codes.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'health_research_areas': {
+                    'type':
+                    'categories',
+                    'description':
+                    '`Health Research Areas categorization <https://app.dimensions.ai/browse/publication/health_research_areas>`_ .',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'date_inserted': {
+                    'type':
+                    'date',
+                    'description':
+                    'Date when the record was inserted into Dimensions (note: this field does not support exact match on the data, only range filters e.g. `<=` or `>=`).',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    False
+                },
+                'publisher_org': {
+                    'type':
+                    'orgs',
+                    'description':
+                    'GRID organization publishing the policy document.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'HRCS_HC': {
+                    'type':
+                    'categories',
+                    'description':
+                    '`HRCS - Health Categories <https://app.dimensions.ai/browse/publication/hrcs_hc>`_ .',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'publisher_org_city': {
+                    'type':
+                    'cities',
+                    'description':
+                    'City of the GRID organization publishing the policy document.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
                 }
             },
             'fieldsets': ['all', 'basics', 'categories'],
@@ -1711,19 +2203,11 @@ GRAMMAR_DICT = {
         },
         'researchers': {
             'fields': {
-                'first_publication_year': {
-                    'type': 'integer',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': True
-                },
                 'research_orgs': {
                     'type':
                     'orgs',
                     'description':
-                    'All research organizations linked to the researcher',
+                    'All research organizations linked to the researcher.',
                     'long_description':
                     None,
                     'is_entity':
@@ -1733,25 +2217,9 @@ GRAMMAR_DICT = {
                     'is_facet':
                     True
                 },
-                'first_grant_year': {
-                    'type': 'integer',
-                    'description': None,
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': True
-                },
-                'orcid_id': {
-                    'type': 'text',
-                    'description': '`ORCID <https://orcid.org/>`_ ID',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': False,
-                    'is_facet': False
-                },
-                'total_publications': {
-                    'type': 'count',
-                    'description': 'Total publications count',
+                'first_name': {
+                    'type': 'string',
+                    'description': 'First Name.',
                     'long_description': None,
                     'is_entity': False,
                     'is_filter': True,
@@ -1759,15 +2227,23 @@ GRAMMAR_DICT = {
                 },
                 'last_name': {
                     'type': 'string',
-                    'description': 'Last Name',
+                    'description': 'Last Name.',
                     'long_description': None,
                     'is_entity': False,
                     'is_filter': True,
                     'is_facet': False
                 },
+                'orcid_id': {
+                    'type': 'text',
+                    'description': '`ORCID <https://orcid.org/>`_ ID.',
+                    'long_description': None,
+                    'is_entity': False,
+                    'is_filter': False,
+                    'is_facet': False
+                },
                 'total_grants': {
                     'type': 'count',
-                    'description': 'Total grants count',
+                    'description': 'Total grants count.',
                     'long_description': None,
                     'is_entity': False,
                     'is_filter': True,
@@ -1775,25 +2251,11 @@ GRAMMAR_DICT = {
                 },
                 'id': {
                     'type': 'identifier',
-                    'description': 'Dimensions researcher id',
+                    'description': 'Dimensions researcher ID.',
                     'long_description': None,
                     'is_entity': False,
                     'is_filter': True,
                     'is_facet': False
-                },
-                'current_research_org': {
-                    'type':
-                    'orgs',
-                    'description':
-                    'The most recent research organization linked to the researcher',
-                    'long_description':
-                    None,
-                    'is_entity':
-                    True,
-                    'is_filter':
-                    True,
-                    'is_facet':
-                    True
                 },
                 'last_publication_year': {
                     'type': 'integer',
@@ -1803,11 +2265,11 @@ GRAMMAR_DICT = {
                     'is_filter': True,
                     'is_facet': True
                 },
-                'obsolete': {
+                'first_grant_year': {
                     'type':
                     'integer',
                     'description':
-                    'Indicates researcher ID status. 0 means that the researcher ID is still active, 1 means that the researcher ID is no longer valid. See redirect field for further information on invalid researcher IDs.',
+                    'First year the researcher was awarded a grant.',
                     'long_description':
                     None,
                     'is_entity':
@@ -1815,21 +2277,13 @@ GRAMMAR_DICT = {
                     'is_filter':
                     True,
                     'is_facet':
-                    False
-                },
-                'first_name': {
-                    'type': 'string',
-                    'description': 'First Name',
-                    'long_description': None,
-                    'is_entity': False,
-                    'is_filter': True,
-                    'is_facet': False
+                    True
                 },
                 'redirect': {
                     'type':
                     'identifier',
                     'description':
-                    'Indicates status of obsolete researcher ID. Empty means that the researcher ID was deleted. Otherwise ID provided means that is the new id into which the obsolete one was redirected. If multiple values are available, it means that the original researcher ID was split into multiple IDs.',
+                    'Indicates status of a researcher ID marked as obsolete. Empty means that the researcher ID was deleted. Otherwise ID provided means that is the new ID into which the obsolete one was redirected. If multiple values are available, it means that the original researcher ID was split into multiple IDs.',
                     'long_description':
                     None,
                     'is_entity':
@@ -1839,13 +2293,63 @@ GRAMMAR_DICT = {
                     'is_facet':
                     False
                 },
-                'last_grant_year': {
+                'obsolete': {
+                    'type':
+                    'integer',
+                    'description':
+                    'Indicates researcher ID status. 0 means that the researcher ID is still active, 1 means that the researcher ID is no longer valid. See the `redirect` field for further information on invalid researcher IDs.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    False
+                },
+                'first_publication_year': {
                     'type': 'integer',
                     'description': None,
                     'long_description': None,
                     'is_entity': False,
                     'is_filter': True,
                     'is_facet': True
+                },
+                'current_research_org': {
+                    'type':
+                    'orgs',
+                    'description':
+                    'The most recent research organization linked to the researcher.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    True,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'last_grant_year': {
+                    'type':
+                    'integer',
+                    'description':
+                    'Last year the researcher was awarded a grant.',
+                    'long_description':
+                    None,
+                    'is_entity':
+                    False,
+                    'is_filter':
+                    True,
+                    'is_facet':
+                    True
+                },
+                'total_publications': {
+                    'type': 'count',
+                    'description': 'Total publications count.',
+                    'long_description': None,
+                    'is_entity': False,
+                    'is_filter': True,
+                    'is_facet': False
                 }
             },
             'fieldsets': ['all', 'basics', 'extras'],
@@ -1864,16 +2368,21 @@ GRAMMAR_DICT = {
                 'id': {
                     'name': 'id',
                     'type': 'string',
-                    'description': 'Dimensions category id',
+                    'description': 'Dimensions ID of the category.',
                     'long_description': None,
                     'is_filter': True
                 },
                 'name': {
-                    'name': 'name',
-                    'type': 'string',
-                    'description': None,
-                    'long_description': None,
-                    'is_filter': True
+                    'name':
+                    'name',
+                    'type':
+                    'string',
+                    'description':
+                    "Name of the category. Note: this may include an identifier from the original source. E.g., '2.1 Biological and endogenous factors' (HRCS_RAC codes) or '1103 Clinical Sciences' (FOR codes).",
+                    'long_description':
+                    None,
+                    'is_filter':
+                    True
                 }
             },
             'fieldsets': ['all', 'basics']
@@ -1881,16 +2390,21 @@ GRAMMAR_DICT = {
         'cities': {
             'fields': {
                 'id': {
-                    'name': 'id',
-                    'type': 'identifier',
-                    'description': 'Dimensions city id',
-                    'long_description': None,
-                    'is_filter': True
+                    'name':
+                    'id',
+                    'type':
+                    'identifier',
+                    'description':
+                    "GeoNames city ID (eg '5391811' for `geonames:5391811 <http://www.geonames.org/5391811>`_ )",
+                    'long_description':
+                    None,
+                    'is_filter':
+                    True
                 },
                 'name': {
                     'name': 'name',
                     'type': 'string',
-                    'description': None,
+                    'description': 'GeoNames city name.',
                     'long_description': None,
                     'is_filter': True
                 }
@@ -1900,16 +2414,21 @@ GRAMMAR_DICT = {
         'countries': {
             'fields': {
                 'id': {
-                    'name': 'id',
-                    'type': 'string',
-                    'description': 'Dimensions city id',
-                    'long_description': None,
-                    'is_filter': True
+                    'name':
+                    'id',
+                    'type':
+                    'string',
+                    'description':
+                    "GeoNames country code (eg 'US' for `geonames:6252001 <http://www.geonames.org/6252001>`_ )",
+                    'long_description':
+                    None,
+                    'is_filter':
+                    True
                 },
                 'name': {
                     'name': 'name',
                     'type': 'string',
-                    'description': None,
+                    'description': 'GeoNames country name.',
                     'long_description': None,
                     'is_filter': True
                 }
@@ -1919,18 +2438,28 @@ GRAMMAR_DICT = {
         'journals': {
             'fields': {
                 'id': {
-                    'name': 'id',
-                    'type': 'string',
-                    'description': 'Dimensions journal id',
-                    'long_description': None,
-                    'is_filter': True
+                    'name':
+                    'id',
+                    'type':
+                    'string',
+                    'description':
+                    'Dimensions ID of a journal. E.g., `jour.1016355 <https://app.dimensions.ai/discover/publication?and_facet_source_title=jour.1016355>`_ or `jour.1077219 <https://app.dimensions.ai/discover/publication?and_facet_source_title=jour.1077219>`_ .',
+                    'long_description':
+                    None,
+                    'is_filter':
+                    True
                 },
                 'title': {
-                    'name': 'title',
-                    'type': 'string',
-                    'description': None,
-                    'long_description': None,
-                    'is_filter': True
+                    'name':
+                    'title',
+                    'type':
+                    'string',
+                    'description':
+                    "Title of a journal publication. E.g. 'Nature' or 'The Lancet'",
+                    'long_description':
+                    None,
+                    'is_filter':
+                    True
                 }
             },
             'fieldsets': ['all', 'basics']
@@ -1940,16 +2469,21 @@ GRAMMAR_DICT = {
                 'id': {
                     'name': 'id',
                     'type': 'identifier',
-                    'description': 'Dimensions organization group id',
+                    'description': 'Dimensions ID of the organization group.',
                     'long_description': None,
                     'is_filter': True
                 },
                 'name': {
-                    'name': 'name',
-                    'type': 'string',
-                    'description': None,
-                    'long_description': None,
-                    'is_filter': True
+                    'name':
+                    'name',
+                    'type':
+                    'string',
+                    'description':
+                    "Name of the organization group. E.g., 'NIH' or 'ICRP'.",
+                    'long_description':
+                    None,
+                    'is_filter':
+                    True
                 }
             },
             'fieldsets': ['all', 'basics']
@@ -1957,32 +2491,52 @@ GRAMMAR_DICT = {
         'orgs': {
             'fields': {
                 'id': {
-                    'name': 'id',
-                    'type': 'identifier',
-                    'description': 'Dimensions organization id',
-                    'long_description': None,
-                    'is_filter': True
+                    'name':
+                    'id',
+                    'type':
+                    'identifier',
+                    'description':
+                    'GRID ID of the organization. E.g., "grid.26999.3d".',
+                    'long_description':
+                    None,
+                    'is_filter':
+                    True
                 },
                 'name': {
-                    'name': 'name',
-                    'type': 'string',
-                    'description': None,
-                    'long_description': None,
-                    'is_filter': True
+                    'name':
+                    'name',
+                    'type':
+                    'string',
+                    'description':
+                    'GRID name of the organization. E.g., "University of Tokyo" for `grid.26999.3d <https://grid.ac/institutes/grid.26999.3d>`_',
+                    'long_description':
+                    None,
+                    'is_filter':
+                    True
                 },
                 'acronym': {
-                    'name': 'acronym',
-                    'type': 'string',
-                    'description': None,
-                    'long_description': None,
-                    'is_filter': True
+                    'name':
+                    'acronym',
+                    'type':
+                    'string',
+                    'description':
+                    'GRID acronym of the organization. E.g., "UT" for `grid.26999.3d <https://grid.ac/institutes/grid.26999.3d>`_',
+                    'long_description':
+                    None,
+                    'is_filter':
+                    True
                 },
                 'country_name': {
-                    'name': 'country_name',
-                    'type': 'string',
-                    'description': None,
-                    'long_description': None,
-                    'is_filter': True
+                    'name':
+                    'country_name',
+                    'type':
+                    'string',
+                    'description':
+                    'GRID name of the organization country. E.g., "Japan" for `grid.26999.3d <https://grid.ac/institutes/grid.26999.3d>`_',
+                    'long_description':
+                    None,
+                    'is_filter':
+                    True
                 }
             },
             'fieldsets': ['all', 'basics']
@@ -1990,16 +2544,21 @@ GRAMMAR_DICT = {
         'states': {
             'fields': {
                 'id': {
-                    'name': 'id',
-                    'type': 'identifier',
-                    'description': 'Dimensions state id',
-                    'long_description': None,
-                    'is_filter': True
+                    'name':
+                    'id',
+                    'type':
+                    'identifier',
+                    'description':
+                    "GeoNames state code (ISO\u200c-3166-2). E.g., 'US.CA' for `geonames:5332921 <http://www.geonames.org/5332921>`_ .",
+                    'long_description':
+                    None,
+                    'is_filter':
+                    True
                 },
                 'name': {
                     'name': 'name',
                     'type': 'string',
-                    'description': None,
+                    'description': 'GeoNames state name (ISO\u200c-3166-2).',
                     'long_description': None,
                     'is_filter': True
                 }
@@ -2009,23 +2568,33 @@ GRAMMAR_DICT = {
         'open_access': {
             'fields': {
                 'id': {
-                    'name': 'id',
-                    'type': 'identifier',
-                    'description': None,
-                    'long_description': None,
-                    'is_filter': True
+                    'name':
+                    'id',
+                    'type':
+                    'identifier',
+                    'description':
+                    "Dimensions ID of the open access category. E.g., one of 'closed', 'oa_all', 'gold_bronze', 'gold_pure', 'green_sub', 'gold_hybrid', 'green_pub', 'green_acc'. (see also the :ref:`publications` field ``open_access``).",
+                    'long_description':
+                    None,
+                    'is_filter':
+                    True
                 },
                 'name': {
-                    'name': 'name',
-                    'type': 'string',
-                    'description': None,
-                    'long_description': None,
-                    'is_filter': True
+                    'name':
+                    'name',
+                    'type':
+                    'string',
+                    'description':
+                    "Name of the open access category. E.g., 'Closed' or 'Pure Gold'.",
+                    'long_description':
+                    None,
+                    'is_filter':
+                    True
                 },
                 'description': {
                     'name': 'description',
                     'type': 'text',
-                    'description': None,
+                    'description': 'Description of the open access category.',
                     'long_description': None,
                     'is_filter': False
                 }
@@ -2034,4 +2603,3 @@ GRAMMAR_DICT = {
         }
     }
 }
-
