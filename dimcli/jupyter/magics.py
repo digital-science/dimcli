@@ -34,7 +34,8 @@ class DslMagics(Magics):
     )
     def dsl_login(self, line):
         """DimCli Magic
-        Authenticate with the Dimensions.ai DSL backend. If not args are passed, it assumed you have set up a dsl.ini file (see https://github.com/lambdamusic/dimcli#the-credentials-file).
+        Authenticate with the Dimensions.ai DSL backend. If not args are passed, it assumed you have set up a dsl.ini file: see https://github.com/lambdamusic/dimcli#the-credentials-file).
+        
         Alternatively one can pass auth details explicitly eg
         >>> %dsl_login --user=me@mail.com --password=secret
 

@@ -65,7 +65,7 @@ class Dsl:
         "... JSON data continues ... "
 
     """
-    def __init__(self, instance="live", user="", password="", endpoint="https://app.dimensions.ai", show_results=True):
+    def __init__(self, instance="live", user="", password="", endpoint="https://app.dimensions.ai", show_results=False):
         # print(os.getcwd())
         if user and password:
             self._url = endpoint
