@@ -42,8 +42,8 @@ class DslMagics(Magics):
         """
         args = magic_arguments.parse_argstring(self.dsl_login, line)
         # print(args)
-        usr = args.usr
-        psw = args.psw
+        usr = args.user
+        psw = args.password
         endpoint = args.endpoint or "https://app.dimensions.ai"
         instance = args.env or "live"
 
@@ -54,9 +54,6 @@ class DslMagics(Magics):
             # try to use local init file
             self.connection = Dsl(instance=instance, show_results=False) 
             print("DimCli %s - Succesfully connected to <%s> (method: dsl.ini file)" % (str(VERSION), self.connection._url))
-
-        # self.connection = Dsl(instance=instance, show_results=False) 
-        
 
 
     @line_cell_magic

@@ -4,7 +4,6 @@ from .core.api import Dsl
 from .core.dsl_grammar import G 
 
 
-
 try:
     # https://stackoverflow.com/questions/32538758/nameerror-name-get-ipython-is-not-defined
     # if run outside iPython, the magic fails so we use this as a test 

@@ -9,31 +9,9 @@ import IPython.display
 from itertools import islice
 
 from .utils import line_search_return
+from .walkup import *
 from .dsl_grammar import G
 
-
-#
-#
-# File-based Authentication : how to
-# ===================
-#
-# Authentication details can be stored in a `dsl.ini` file in `~/.dimensions/`
-# File contents need to have this structure:
-#
-#
-# [instance.live]
-# url=https://app.dimensions.ai
-# login=your_username
-# password=your_password
-#
-#
-# The section name has to start with "instance.". 
-# "live" is the default name for most installations.
-#
-# If you have access to other Dimensions APIs just add an entry for them with a suitable name.
-#
-#
-#
 
 
 USER_DIR = os.path.expanduser("~/.dimensions/")
@@ -43,8 +21,67 @@ USER_JSON_OUTPUTS_DIR = os.path.expanduser(USER_DIR + "json/")
 USER_HISTORY_FILE = os.path.expanduser(USER_DIR + "history.txt")
 
 
+def _get_init_file():
+    """
+    LOGIC
 
-class Dsl:
+    a) if dsl.ini credentials file in WD that overrides everything
+    b) try user level credentials ("~/.dimensions/") 
+    c) try navigating up directory tree for dsl.ini
+
+    => a) and c) are useful for jup notebooks without system wide installation
+    => b) is the usual case for CLI
+
+    ===================
+    BACKGROUND 
+
+    Authentication details can be stored in a `dsl.ini` file
+    File contents need to have this structure:
+
+    [instance.live]
+    url=https://app.dimensions.ai
+    login=your_username
+    password=your_password
+
+    The section name has to start with "instance."
+    Keyword "live" is the default name for most installations.
+
+    If you have access to other Dimensions APIs just add an entry for them with a suitable name.
+    ===================
+    """
+    if os.path.exists(os.getcwd() + "/" + USER_CONFIG_FILE_NAME):
+        return os.getcwd() + "/" + USER_CONFIG_FILE_NAME
+    elif os.path.exists(os.path.expanduser(USER_CONFIG_FILE_PATH )):
+        return os.path.expanduser(USER_CONFIG_FILE_PATH )
+    else:
+        for c,d,f in walk_up(os.getcwd()):
+            if os.path.exists(c + "/" + USER_CONFIG_FILE_NAME):
+                return c + "/" + USER_CONFIG_FILE_NAME
+    return None
+
+def _get_file_contents(fpath, instance_name):
+    """
+    parse the credentials file
+    """
+    config = configparser.ConfigParser()
+    try:
+        config.read(fpath)
+    except:
+        click.secho(f"ERROR: `{USER_CONFIG_FILE_NAME}` credentials file not found." , fg="red")
+        click.secho("HowTo: https://github.com/lambdamusic/dimcli#credentials-file", fg="red")
+        raise
+    # we have a good config file
+    try:
+        section = config['instance.' + instance_name]
+    except:
+        click.secho(f"ERROR: Credentials file `{fpath}` does contain settings for instance: {instance_name}", fg="red")
+        click.secho("HowTo: https://github.com/lambdamusic/dimcli#credentials-file", fg="red")
+        raise
+    return section
+
+
+
+class Dsl():
     """
     Object for abstracting common interaction steps with the Dimensions API. 
     Most often you just want to instantiate, autheticate and query() - yeah!
@@ -72,40 +109,14 @@ class Dsl:
             self._username = user
             self._password = password
         else:
-            config_section = self._get_config_from_file(instance)
+            fpath = _get_init_file()
+            config_section = _get_file_contents(fpath, instance)
             self._url = config_section['url']
             self._username = config_section['login']
             self._password = config_section['password']
 
         self._show_results = show_results
         self._login()
-
-    def _get_config_from_file(self, instance_name):
-        """
-        get the dsl.ini file and extraction credentials
-        * first use the current WD 
-            => useful for jup notebooks without system wide installation
-        * second use the default system location 
-            => this is the usual case for CLI
-        """
-        config = configparser.ConfigParser()
-        if os.path.exists(os.getcwd() + "/" + USER_CONFIG_FILE_NAME):
-            credentials = os.getcwd() + "/" + USER_CONFIG_FILE_NAME
-        else:
-            credentials = os.path.expanduser(USER_CONFIG_FILE_PATH )
-        try:
-            config.read(credentials)
-        except:
-            click.secho("ERROR: Credentials file not found at: %s" % credentials, fg="red")
-            click.secho("HowTo: https://github.com/lambdamusic/dimcli#credentials-file", fg="red")
-            raise
-        try:
-            section = config['instance.' + instance_name]
-        except:
-            click.secho("ERROR: Credentials file does contain settings for instance: %s" % instance_name, fg="red")
-            click.secho("HowTo: https://github.com/lambdamusic/dimcli#credentials-file", fg="red")
-            raise
-        return section
 
     def _login(self):
         login = {'username': self._username, 'password': self._password}
@@ -283,5 +294,6 @@ class Result(IPython.display.JSON):
     def __repr__(self):
         return "<dimcli.Result object #%s: %s>" % (str(id(self)), str(self.keys_and_count()))
         # return '{Query Results:'+self.id+', age:'+str(self.age)+ '}'
+
 
 
