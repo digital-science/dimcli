@@ -23,10 +23,10 @@ class DslMagics(Magics):
     @magic_arguments.argument('--endpoint',
       help='The query endpoint: default is https://app.dimensions.ai'
     )
-    @magic_arguments.argument('--usr',
+    @magic_arguments.argument('--user',
       help='The account username'
     )
-    @magic_arguments.argument('--psw',
+    @magic_arguments.argument('--password',
       help='The account password'
     )
     @magic_arguments.argument('--env',
