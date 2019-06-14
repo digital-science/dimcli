@@ -46,8 +46,8 @@ Tip: autocomplete works better when there are spaces between operators (eg `sear
 >>> Ctrl-c: abort query.
 >>> Ctrl-d or /quit: exit console.
 ----
->>> /export_csv: save results from last query as CSV file.  
->>> /export_html: save results from last query as HTML page. 
+>>> /export_as_csv: save results from last query as CSV file.  
+>>> /export_as_html: save results from last query as HTML page. 
 >>> /show [optional: N]: print N results from last query, trying to build URLs for objects. Default N=10.
 >>> /show_json_compact: print results of last query as single-line JSON. 
 >>> /show_json_full: print results of last query as formatted JSON.
@@ -184,10 +184,10 @@ class CommandsManager(object):
             print("Nothing to export - please run a search first.")
             return
         # cases
-        if text == "/export_html":
+        if text == "/export_as_html":
             export_json_html(jsondata, query, USER_JSON_OUTPUTS_DIR)
 
-        elif text == "/export_csv":
+        elif text == "/export_as_csv":
             export_json_csv(jsondata, query, USER_JSON_OUTPUTS_DIR)
 
     def show(self, text):
