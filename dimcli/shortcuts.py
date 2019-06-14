@@ -2,12 +2,16 @@
 from . import *
 
 def dslquery(query_string):
-    """shortcut for backward compatibility
-    import dimcli
-    dslquery = dimcli.dslquery
-    # then can use old notebooks....
+    """shortcut for running a query
+    NOTE: this requires the file-based credentials file set up
+    """
+    dsl = Dsl()
+    return dsl.query(query_string)
 
-    NOTE: this assumes you have the file-based credentials file set up, always!
+
+def dslquery_json(query_string):
+    """shortcut for backward compatibility
+    Same as above but returns raw JSON instead of Api.Result object
     """
     dsl = Dsl()
     return dsl.query(query_string).json
