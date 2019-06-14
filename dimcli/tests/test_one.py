@@ -11,6 +11,7 @@ import configparser
 
 from .. import *
 from ..core.api import USER_CONFIG_FILE_PATH
+from ..shortcuts import *
 
 
 class TestOne(unittest.TestCase):
@@ -112,6 +113,20 @@ class TestOne(unittest.TestCase):
         # ----
         click.secho("Completed test succesfully", fg="green")
 
+    def test_005(self):
+        click.secho("\nTEST 005: Shortcuts", fg="green")
+        
+        # ----
+        res = dslquery("""search publications where journal.title="nature medicine" return publications limit 10""")
+        print("Query results for `dslquery`: ")
+        print(" ==> res['stats']: ", res['stats'])
+        print(" ==> len(res['publications']): ", len(res['publications']))
+        # ----
+        res = dslquery_json("""search publications where journal.title="nature medicine" return publications limit 10""")
+        print("Query results for `dslquery_json`: ")
+        print(" ==> type(res): ", type(res))
+        # ----
+        click.secho("Completed test succesfully", fg="green")
 
 
 
