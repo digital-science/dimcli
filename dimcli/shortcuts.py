@@ -15,3 +15,11 @@ def dslquery_json(query_string):
     """
     dsl = Dsl()
     return dsl.query(query_string).json
+
+
+def dslqueryall(query_string):
+    """shortcut for running a loop query
+    NOTE: this requires the file-based credentials file set up
+    """
+    dsl = Dsl()
+    return dsl.query_iterative(query_string)

@@ -126,6 +126,10 @@ class TestOne(unittest.TestCase):
         print("Query results for `dslquery_json`: ")
         print(" ==> type(res): ", type(res))
         # ----
+        res = dslqueryall("""search publications where year="1815" return publications""")
+        print("Query results for `dslqueryall`: ")
+        print(" ==> type(res): ", type(res))
+        # ----
         click.secho("Completed test succesfully", fg="green")
 
 
