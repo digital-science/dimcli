@@ -8,6 +8,7 @@ import sys
 import subprocess
 import os
 import webbrowser
+from itertools import islice
 
 from .dsl_grammar import *
 from .html import html_template_interactive
