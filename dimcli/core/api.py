@@ -291,6 +291,32 @@ class Result(IPython.display.JSON):
 
         return pd.DataFrame().from_dict(self.json[key])
 
+
+    def chunk(self, key="", size=400, ):
+        """
+        Return an iterator for going through chunks of the JSON results. 
+        NB the first available dict key is taken, to determine what is the data 
+        object being returned. 
+        Default size of chunks = 400 elements
+        """
+
+        if not key:
+            if len(self._good_data_keys()) > 1:
+                print(f"Please specify a key from {self._good_data_keys()}")
+                return
+            else:
+                key = self._good_data_keys()[0]
+        elif key not in self._good_data_keys():
+            print(f"Invalid key: should be one of {self._good_data_keys()}")
+            return 
+
+        it = iter(self.json[key])
+        chunk = list(islice(it, size))
+        while chunk:
+            yield chunk
+            chunk = list(islice(it, size))
+
+
     def __repr__(self):
         return "<dimcli.Result object #%s: %s>" % (str(id(self)), str(self.keys_and_count()))
         # return '{Query Results:'+self.id+', age:'+str(self.age)+ '}'

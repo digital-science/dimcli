@@ -133,6 +133,24 @@ class TestOne(unittest.TestCase):
         click.secho("Completed test succesfully", fg="green")
 
 
+    def test_006(self):
+        click.secho("\nTEST 005: Chunking Results", fg="green")
+        
+        # ----
+        res = dslquery("""search publications where journal.title="nature medicine" return publications limit 1000""")
+        print("Query results for standard query: ")
+        print(" ==> res['stats']: ", res['stats'])
+        print(" ==> len(res['publications']): ", len(res['publications']))
+        print("Now chunking with default size: ")
+        test = [len(x) for x in res.chunk()]
+        print(" ==> [len(x) for x in res.chunk()]: ", str(test)) 
+        print("Now chunking with size 50: ")
+        test = [len(x) for x in res.chunk()]
+        print(" ==> [len(x) for x in res.chunk()]: ", str(test)) 
+        print("Now chunking with wrong key (should fail): ")
+        test = [len(x) for x in res.chunk("badkey")]
+        # ----
+
 
 if __name__ == "__main__":
     unittest.main()
