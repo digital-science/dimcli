@@ -1,15 +1,15 @@
 
-- [Dimcli](#dimcli)
-    - [In a nutshell](#in-a-nutshell)
-  - [Installation](#installation)
-      - [Authentication](#authentication)
-      - [The Credentials File](#the-credentials-file)
-      - [Advanced: Multiple API Endpoints](#advanced-multiple-api-endpoints)
-      - [Overriding credentials at runtime e.g. with Jupyter Notebooks](#overriding-credentials-at-runtime-eg-with-jupyter-notebooks)
-  - [Using DimCli as a CLI](#using-dimcli-as-a-cli)
-  - [Using Dimcli as a Python library](#using-dimcli-as-a-python-library)
-  - [Using Dimcli in Jupyter Notebooks](#using-dimcli-in-jupyter-notebooks)
-  - [Comments, bug reports](#comments-bug-reports)
+- [Dimcli](#Dimcli)
+    - [In a nutshell](#In-a-nutshell)
+  - [Installation](#Installation)
+      - [Authentication](#Authentication)
+      - [The Credentials File](#The-Credentials-File)
+      - [Advanced: Multiple API Endpoints](#Advanced-Multiple-API-Endpoints)
+      - [Overriding credentials at runtime e.g. with Jupyter Notebooks](#Overriding-credentials-at-runtime-eg-with-Jupyter-Notebooks)
+  - [Using DimCli as a CLI](#Using-DimCli-as-a-CLI)
+  - [Using Dimcli as a Python library](#Using-Dimcli-as-a-Python-library)
+  - [Using Dimcli in Jupyter Notebooks](#Using-Dimcli-in-Jupyter-Notebooks)
+  - [Comments, bug reports](#Comments-bug-reports)
 
 
 # Dimcli
@@ -205,7 +205,7 @@ DimCli can simplify working with the Dimensions API within a Jupyter notebook.
 
 For example, it contains a couple of Python _magic_ commands that make it super easy to hit the API from a notebook, or to explore the documentation. 
 
-For more information and examples see the notebooks available in the official [Dimensions API examples repository](https://github.com/digital-science/dimensions-api/tree/master/1.Getting%20Started)
+For more information and examples see the notebooks available in the official [Dimensions API examples repository](https://github.com/digital-science/dimensions-api-lab)
 
 
 ## Comments, bug reports
