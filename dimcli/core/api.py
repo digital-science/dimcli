@@ -259,17 +259,17 @@ class Result(IPython.display.JSON):
         "return dict key as slice"
         if key == "stats":
             key = "_stats" # syntactic sugar
-        if key in self.data:
-            return self.data[key]
+        if key in self.json:
+            return self.json[key]
         else:
             return [] # empty list so to support iteration tests / previously: False
 
     def keys_and_count(self,):
-        return [(x, len(self.data[x])) for x in self.data.keys()]
+        return [(x, len(self.json[x])) for x in self.json.keys()]
 
     def _good_data_keys(self,):
         "return the results keys other than stats"
-        return [x for x in self.data.keys() if x != "_stats"]
+        return [x for x in self.json.keys() if x != "_stats"]
 
     def as_dataframe(self, key=""):
         "utility method: return inner json as a pandas dataframe"
@@ -292,12 +292,18 @@ class Result(IPython.display.JSON):
         return pd.DataFrame().from_dict(self.json[key])
 
 
-    def chunk(self, key="", size=400, ):
+    def chunks(self, key="", size=400, ):
         """
         Return an iterator for going through chunks of the JSON results. 
         NB the first available dict key is taken, to determine what is the data 
         object being returned. 
         Default size of chunks = 400 elements
+
+        EG
+
+        res = dslquery("search publications return publications limit 1000")
+        test = [len(x) for x in res.chunks()]
+
         """
 
         if not key:
@@ -318,8 +324,7 @@ class Result(IPython.display.JSON):
 
 
     def __repr__(self):
-        return "<dimcli.Result object #%s: %s>" % (str(id(self)), str(self.keys_and_count()))
-        # return '{Query Results:'+self.id+', age:'+str(self.age)+ '}'
+        return "<dimcli.Result object #%s. Dict keys: %s>" % (str(id(self)), ", ".join([f"'{x}'" for x in self.json]))
 
 
 

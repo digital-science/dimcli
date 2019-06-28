@@ -142,13 +142,13 @@ class TestOne(unittest.TestCase):
         print(" ==> res['stats']: ", res['stats'])
         print(" ==> len(res['publications']): ", len(res['publications']))
         print("Now chunking with default size: ")
-        test = [len(x) for x in res.chunk()]
-        print(" ==> [len(x) for x in res.chunk()]: ", str(test)) 
+        test = [len(x) for x in res.chunks()]
+        print(" ==> [len(x) for x in res.chunks()]: ", str(test)) 
         print("Now chunking with size 50: ")
-        test = [len(x) for x in res.chunk()]
-        print(" ==> [len(x) for x in res.chunk()]: ", str(test)) 
+        test = [len(x) for x in res.chunks()]
+        print(" ==> [len(x) for x in res.chunks()]: ", str(test)) 
         print("Now chunking with wrong key (should fail): ")
-        test = [len(x) for x in res.chunk("badkey")]
+        test = [len(x) for x in res.chunks("badkey")]
         # ----
 
 
