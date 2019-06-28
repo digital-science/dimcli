@@ -159,7 +159,7 @@ class TestOne(unittest.TestCase):
     def test_007(self):
         click.secho("\nTEST 007: Non-search queries.", fg="green")
         # ----
-        res= dslquery("""extract_grants (funder_name="Department of Biotechnology , Ministry of Science and Technology", grant_number="b52cc8da7ebee12d1e42f8e3f9622e9a")""")
+        res= dslquery("""extract_grants(grant_number="185247", funder_name="Swiss National Science Foundation")""")
         print("Query results: ")
         print(" ==> res: ", res)
         print(" ==> res.json: ", res.json)
