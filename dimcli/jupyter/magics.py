@@ -110,7 +110,7 @@ class DslMagics(Magics):
             else:
                 print(res.data["errors"])
         else:
-            print_json_summary(res, text)
+            print_json_stats(res, text)
             return res
 
 

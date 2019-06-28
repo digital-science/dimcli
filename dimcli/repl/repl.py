@@ -114,17 +114,20 @@ class CommandsManager(object):
                     print(key)
             else:
                 print(res.data["errors"])
-        elif text.strip().startswith("describe"):
-            if self.bf: self.bf.load(res.data, text)
-            click.secho("---", dim=True)
-            print_json_full(res.data)
-        else:
-            print_json_summary(res, text)
+        elif text.strip().startswith("search"):
+            print_json_stats(res, text)
             if self.bf: self.bf.load(res.data, text)
             if True:
                 click.secho("---", dim=True)
                 print_smart_preview(res.data, maxitems=5)
             return res  # 2019-03-31
+
+        else:
+            # describe queries and other functions: just show the data
+            if self.bf: self.bf.load(res.data, text)
+            click.secho("---", dim=True)
+            print_json_full(res.data)
+
 
     def docs_full(self, text):
         """

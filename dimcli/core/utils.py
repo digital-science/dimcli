@@ -14,13 +14,10 @@ from .dsl_grammar import *
 from .html import html_template_interactive
 
 
-def print_json_summary(res, query=""):
+def print_json_stats(res, query=""):
     """
     from a dimcli.Result object, print out basic stats
-    * ignore if it isn't a search type of query
-    eg output:
-        Tot Grants:  4565325
-        Returned Researchers: 20
+    * works primarily for 'search' types of query
     """
     # what is searched for
     source = line_search_subject(query)
