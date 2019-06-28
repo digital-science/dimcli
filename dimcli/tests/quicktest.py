@@ -22,8 +22,8 @@ def main(test_number=1):
     test_number = int(test_number)
 
     if test_number == 1:
-        res= dslquery("""extract_grants (funder_name="Department of Biotechnology , Ministry of Science and Technology", grant_number="b52cc8da7ebee12d1e42f8e3f9622e9a")""")
-        print(res)
+        res= dslquery("""extract_grants(grant_number="185247", funder_name="Swiss National Science Foundation")""")
+        print(len(res))
 
 if __name__ == '__main__':
     main()

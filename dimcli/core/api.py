@@ -264,12 +264,22 @@ class Result(IPython.display.JSON):
         else:
             return [] # empty list so to support iteration tests / previously: False
 
-    def keys_and_count(self,):
-        return [(x, len(self.json[x])) for x in self.json.keys()]
+    def __len__(self):
+        "Return length of first object in JSON (skipping '_stats'"
+        k = self._good_data_keys()
+        try:
+            return len(self.json[k[0]])
+        except:
+            return 0
 
     def _good_data_keys(self,):
         "return the results keys other than stats"
-        return [x for x in self.json.keys() if x != "_stats"]
+        skips = ["_warnings", "_stats"]
+        return [x for x in self.json.keys() if x not in skips]
+
+    def keys_and_count(self,):
+        "Utility to preview contents of results object"
+        return [(x, len(self.json[x])) for x in self.json.keys()]
 
     def as_dataframe(self, key=""):
         "utility method: return inner json as a pandas dataframe"

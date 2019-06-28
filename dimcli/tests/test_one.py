@@ -72,10 +72,12 @@ class TestOne(unittest.TestCase):
         click.secho("\nTEST 003: Try magic methods on result object.", fg="green")
         # ----
         d = Dsl()
+        click.secho("Query #1... returning publications", fg="green")
         res = d.query("search publications where year=2018 return publications")
         print("Query results: ")
         print(" ==> res.json.keys(): ", res.json.keys())
         print(" ==> res['publications'][0]: ", res['publications'][0])
+        print(" ==> len(res): ", len(res))
         print(" ==> res['stats']: ", res['stats'])
         print(" ==> res['not_there']: ", res['not_there'])
         print(" ==> res.publications[0]: ", res.publications[0])
@@ -86,6 +88,7 @@ class TestOne(unittest.TestCase):
         print("Query results: ")
         print(" ==> res.json.keys(): ", res.json.keys())
         print(" ==> res['year'][0]: ", res['year'][0])
+        print(" ==> len(res): ", len(res))
         print(" ==> res['stats']: ", res['stats'])
         print(" ==> res['not_there']: ", res['not_there'])
         print(" ==> res.year[0]: ", res.year[0])
@@ -95,6 +98,7 @@ class TestOne(unittest.TestCase):
         res = d.query("""search publications for \"mercedes\" return year""")
         print("Query results: ")
         print(" ==> res.json.keys(): ", res.json.keys())
+        print(" ==> len(res): ", len(res))
         print(" ==> res.stats: ", res.stats)
         print(" ==> res.as_dataframe(): ", res.as_dataframe())
         print(" ==> res.as_dataframe('year'): ", res.as_dataframe('year'))
@@ -108,6 +112,7 @@ class TestOne(unittest.TestCase):
         d = Dsl()
         res = d.query_iterative("""search publications where journal.title="nature medicine" return publications""")
         print("Query results: ")
+        print(" ==> len(res): ", len(res))
         print(" ==> res['stats']: ", res['stats'])
         print(" ==> len(res['publications']): ", len(res['publications']))
         # ----
@@ -134,7 +139,7 @@ class TestOne(unittest.TestCase):
 
 
     def test_006(self):
-        click.secho("\nTEST 005: Chunking Results", fg="green")
+        click.secho("\nTEST 006: Chunking Results", fg="green")
         
         # ----
         res = dslquery("""search publications where journal.title="nature medicine" return publications limit 1000""")
@@ -150,6 +155,17 @@ class TestOne(unittest.TestCase):
         print("Now chunking with wrong key (should fail): ")
         test = [len(x) for x in res.chunks("badkey")]
         # ----
+
+    def test_007(self):
+        click.secho("\nTEST 007: Non-search queries.", fg="green")
+        # ----
+        res= dslquery("""extract_grants (funder_name="Department of Biotechnology , Ministry of Science and Technology", grant_number="b52cc8da7ebee12d1e42f8e3f9622e9a")""")
+        print("Query results: ")
+        print(" ==> res: ", res)
+        print(" ==> res.json: ", res.json)
+        # ----
+        click.secho("Completed test succesfully", fg="green")
+
 
 
 if __name__ == "__main__":
