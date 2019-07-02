@@ -302,7 +302,7 @@ class Result(IPython.display.JSON):
         return pd.DataFrame().from_dict(self.json[key])
 
 
-    def chunks(self, key="", size=400, ):
+    def chunks(self, size=400, key=""):
         """
         Return an iterator for going through chunks of the JSON results. 
         NB the first available dict key is taken, to determine what is the data 

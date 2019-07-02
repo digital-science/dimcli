@@ -150,10 +150,10 @@ class TestOne(unittest.TestCase):
         test = [len(x) for x in res.chunks()]
         print(" ==> [len(x) for x in res.chunks()]: ", str(test)) 
         print("Now chunking with size 50: ")
-        test = [len(x) for x in res.chunks()]
+        test = [len(x) for x in res.chunks(50)]
         print(" ==> [len(x) for x in res.chunks()]: ", str(test)) 
         print("Now chunking with wrong key (should fail): ")
-        test = [len(x) for x in res.chunks("badkey")]
+        test = [len(x) for x in res.chunks(key="badkey")]
         # ----
 
     def test_007(self):
