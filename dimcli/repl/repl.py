@@ -38,7 +38,7 @@ from .lexer import *
 
 HELP_MESSAGE =  """DIMCLI COMMANDS HELP
 ====================
-Commands start with '/', anything else is sent to the Dimensions API.
+Special commands start with '/'. Anything else is sent to the Dimensions API.
 Tip: autocomplete works better when there are spaces between operators (eg `search where id = "xxx"`)
 ----
 >>> Tab:  autocomplete. 
