@@ -397,3 +397,5 @@ def print_json_full(jsondata):
                                 formatters.TerminalFormatter())
     print(colorful_json)
 
+
+
