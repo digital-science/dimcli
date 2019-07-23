@@ -3,7 +3,7 @@ from . import *
 
 def dslquery(query_string):
     """shortcut for running a query
-    NOTE: this requires the file-based credentials file set up
+    NOTE: this requires the file-based credentials file set up and by default only uses the LIVE settings.
     """
     dsl = Dsl()
     return dsl.query(query_string)
@@ -19,7 +19,7 @@ def dslquery_json(query_string):
 
 def dslqueryall(query_string):
     """shortcut for running a loop query
-    NOTE: this requires the file-based credentials file set up
+    NOTE: this requires the file-based credentials file set up and by default only uses the LIVE settings.
     """
     dsl = Dsl()
     return dsl.query_iterative(query_string)

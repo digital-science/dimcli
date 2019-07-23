@@ -249,6 +249,7 @@ class DslGrammar():
         except:
             pass
 
+# init grammar object from data
 G = DslGrammar(vocab_data, syntax_data)
 
 
