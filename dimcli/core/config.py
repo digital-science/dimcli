@@ -78,7 +78,7 @@ def read_init_file(fpath, instance_name):
 
 
 
-def do_login(instance="live", username="", password="", url="https://app.dimensions.ai"):
+def do_global_login(instance="live", username="", password="", url="https://app.dimensions.ai"):
     "Login into DSL and set the connection object with token"
     
     global CONNECTION
@@ -108,4 +108,4 @@ def do_login(instance="live", username="", password="", url="https://app.dimensi
 
 def refresh_login():
     "login again using previously used details"
-    do_login(CONNECTION['instance'], CONNECTION['username'], CONNECTION['password'], CONNECTION['url'])
+    do_global_login(CONNECTION['instance'], CONNECTION['username'], CONNECTION['password'], CONNECTION['url'])

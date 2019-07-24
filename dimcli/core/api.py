@@ -38,10 +38,23 @@ class Dsl():
         "... JSON data continues ... "
 
     """
-    def __init__(self, instance="live", user="", password="", endpoint="https://app.dimensions.ai", show_results=False):
+    def __init__(self, instance="live", user="", password="", endpoint="https://app.dimensions.ai", show_results=False, force_login=False):
         # print(os.getcwd())
-        do_login(instance, user, password, endpoint)
         self._show_results = show_results
+        if CONNECTION['token'] and not force_login:
+            # if already logged in, reuse connection 
+            print(
+                'Reusing previous login details. TIP use dsl.login(**new_details) to update them.'
+            )            
+            self._url = CONNECTION['url']
+            self._headers = {'Authorization': "JWT " + CONNECTION['token']}
+            
+        else:
+            self.login(instance, user, password, endpoint)
+
+    def login(self, instance, username, password, url):
+        "This can be called explicitly to force a new login"
+        do_global_login(instance, username, password, url)
         self._url = CONNECTION['url']
         self._headers = {'Authorization': "JWT " + CONNECTION['token']}
 

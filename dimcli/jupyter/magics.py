@@ -5,12 +5,13 @@ from IPython.core.magic import line_magic, cell_magic, line_cell_magic, Magics, 
 from ..VERSION import VERSION
 
 from ..core.api import Dsl
+from ..core.config import *
 from ..core.utils import *
+
 
 @magics_class
 class DslMagics(Magics):
 
-    connection = None
     results_var = "dsl_last_results" # VAR AUTOMATICALLY SET TO LATEST QUERY RESULTS
 
     
@@ -48,12 +49,12 @@ class DslMagics(Magics):
         instance = args.env or "live"
 
         if usr and psw:
-            self.connection = Dsl(user=usr, password=psw, endpoint=endpoint, show_results=False)
-            print("DimCli %s - Succesfully connected to <%s> (method: manual login)" % (str(VERSION), self.connection._url)) 
+            self.dsl = Dsl(user=usr, password=psw, endpoint=endpoint, show_results=False, force_login=True)
+            print("DimCli %s - Succesfully connected to <%s> (method: manual login)" % (str(VERSION), self.dsl._url)) 
         else:
-            # try to use local init file
-            self.connection = Dsl(instance=instance, show_results=False) 
-            print("DimCli %s - Succesfully connected to <%s> (method: dsl.ini file)" % (str(VERSION), self.connection._url))
+            # try to use local init file using instance parameter
+            self.dsl = Dsl(instance=instance, show_results=False, force_login=True) 
+            print("DimCli %s - Succesfully connected to <%s> (method: dsl.ini file)" % (str(VERSION), self.dsl._url))
 
 
     @line_cell_magic
@@ -61,7 +62,7 @@ class DslMagics(Magics):
         """DimCli Magic
         Query the Dimensions DSL API with the text passed. 
         """
-        if self.connection:
+        if self._handle_login():
             if cell:
                 line = cell
             data = self._handle_query(line)
@@ -76,7 +77,7 @@ class DslMagics(Magics):
         """DimCli Magic
         Query the Dimensions DSL API with the text passed, looping over all results pages. The final object returns contains all results into a single JSON object.  
         """
-        if self.connection:
+        if self._handle_login():
             if cell:
                 line = cell
             data = self._handle_query(line, loop=True)
@@ -85,6 +86,16 @@ class DslMagics(Magics):
 
         else:
             print("Please login first: %dsl_login")
+
+
+    def _handle_login(self):
+        if self.dsl: 
+            return True
+        else:
+            if CONNECTION['token']:
+                self.dsl = Dsl(show_results=False)
+                return True
+        return False
 
 
     def _handle_query(self, text, loop=False):
@@ -96,9 +107,9 @@ class DslMagics(Magics):
 
         # RUN QUERY
         if not loop:
-            res = self.connection.query(text)
+            res = self.dsl.query(text)
         else:
-            res = self.connection.query_iterative(text)
+            res = self.dsl.query_iterative(text)
             return res
         
         # print results
@@ -119,7 +130,7 @@ class DslMagics(Magics):
         """DimCli Magic
         Wrapper around the dsl `describe` function - outputs live documentation for a source or entity
         """
-        if not self.connection:
+        if not self.dsl:
             print("Please login first: %dsl_login")
             return
         try:
