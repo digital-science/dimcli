@@ -15,6 +15,12 @@ else:
     pass 
 
 
+# simple util that must stay here to avoid circular imports with utils.py
+def merge_two_dicts(x, y):
+    z = x.copy()   # start with x's keys and values
+    z.update(y)    # modifies z with y's keys and values & returns None
+    return z
+
 
 class DslGrammar():
     """
@@ -43,16 +49,20 @@ class DslGrammar():
 
     def allowed_starts(self, word=""):
         "Get a the allowed starts dict for DimCli"
+        allowed_starts = merge_two_dicts(self.allowed_starts_dsl_query(), self.allowed_starts_special_commands())
         if not word:
-            return self.syntax['allowed_starts']
+            return allowed_starts
         else:
             try:
-                return self.syntax['allowed_starts'][word]
+                return allowed_starts[word]
             except:
                 return []
     def allowed_starts_dsl_query(self):
-        "Get a the allowed starts specific to he DSL syntax"
+        "Get a the allowed starts dict specific to he DSL syntax"
         return self.syntax['allowed_starts_dsl_query']
+    def allowed_starts_special_commands(self):
+        "Get a the allowed starts dict specific to he DIMCLI special syntax"
+        return self.syntax['allowed_starts_special_commands']
 
     def lang(self):
         "Get a list of all lang operators"
@@ -239,6 +249,7 @@ class DslGrammar():
         except:
             pass
 
+# init grammar object from data
 G = DslGrammar(vocab_data, syntax_data)
 
 

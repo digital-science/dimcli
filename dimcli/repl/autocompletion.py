@@ -50,7 +50,13 @@ class CleverCompleter(Completer):
         # line_minus_current = line
         candidates = []
 
-        if word.endswith("."):
+        if not line:  # no letter, all empty
+            candidates = G.allowed_starts_dsl_query()
+
+        elif len(line_minus_current) == 0:  # single word, beginning of line
+            candidates = G.allowed_starts()
+
+        elif line_minus_current and word.endswith("."):
             entity_facet = line_last_word(line).replace(".", "")
             entity = G.entity_type_for_source_facet(source, entity_facet)
             candidates = G.fields_for_entity_from_source_facet(source, entity_facet)
@@ -66,10 +72,7 @@ class CleverCompleter(Completer):
                 entity = G.entity_type_for_source_facet(source, test_return_obj)
                 candidates = G.fields_for_entity_from_source_facet(source, test_return_obj)
 
-        elif len(line_minus_current) == 0:  # remove the current stem from line
-            candidates = G.allowed_starts()
-
-        elif line_last_word(line_minus_current) in ["/docs"]:
+        elif line_last_word(line_minus_current) in [".docs"]:
             candidates = G.sources() + G.entities()
 
         elif line_last_word(line_minus_current) in ["describe"]:
@@ -142,7 +145,7 @@ class CleverCompleter(Completer):
         #
         # now build the candidates list
         #
-        if word.endswith("."):
+        if line_minus_current and word.endswith("."):
             # print("***" + str(candidates) + "***")
             candidates = sorted([word + x for x in candidates])
             for keyword in candidates:

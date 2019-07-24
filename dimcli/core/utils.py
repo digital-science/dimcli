@@ -20,13 +20,16 @@ def print_json_stats(res, query=""):
     * works primarily for 'search' types of query
     """
     # what is searched for
-    source = line_search_subject(query)
+    source, tot = line_search_subject(query), None
     if source:
         if res['stats']:
-            print("Tot %s: " % source.capitalize(), res['stats']["total_count"])
-        for k in res.data.keys():
-            if k != "_stats":
-                print("Returned " + k.capitalize() + ":", len(res.data[k]))
+            tot = res['stats']["total_count"]
+        for k in res._good_data_keys():
+            if tot and source == k:
+                print(f"Returned {source.capitalize()}: {len(res[source])} (total = {tot})")
+            else:
+                print(f"Returned {k.capitalize()}: {len(res[k])}")
+
 
 
 
@@ -393,4 +396,6 @@ def print_json_full(jsondata):
     colorful_json = highlight(formatted_json, lexers.JsonLexer(),
                                 formatters.TerminalFormatter())
     print(colorful_json)
+
+
 

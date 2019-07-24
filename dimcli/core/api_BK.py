@@ -38,25 +38,30 @@ class Dsl():
         "... JSON data continues ... "
 
     """
-    def __init__(self, instance="live", user="", password="", endpoint="https://app.dimensions.ai", show_results=False, force_login=False):
+    def __init__(self, instance="live", user="", password="", endpoint="https://app.dimensions.ai", show_results=False):
         # print(os.getcwd())
-        self._show_results = show_results
-        if CONNECTION['token'] and not force_login:
-            # if already logged in, reuse connection 
-            # print(
-            #     'Reusing previous login details. TIP use dsl.login(**new_details) to update them.'
-            # )            
-            self._url = CONNECTION['url']
-            self._headers = {'Authorization': "JWT " + CONNECTION['token']}
-            
+        if user and password:
+            self._url = endpoint
+            self._username = user
+            self._password = password
         else:
-            self.login(instance, user, password, endpoint)
+            fpath = get_init_file()
+            config_section = read_init_file(fpath, instance)
+            self._url = config_section['url']
+            self._username = config_section['login']
+            self._password = config_section['password']
 
-    def login(self, instance="live", username="", password="", url="https://app.dimensions.ai"):
-        "This can be called explicitly to force a new login"
-        do_global_login(instance, username, password, url)
-        self._url = CONNECTION['url']
-        self._headers = {'Authorization': "JWT " + CONNECTION['token']}
+        self._show_results = show_results
+        self._login()
+
+    def _login(self):
+        login = {'username': self._username, 'password': self._password}
+        response = requests.post(
+            '{}/api/auth.json'.format(self._url), json=login)
+        response.raise_for_status()
+
+        token = response.json()['token']
+        self._headers = {'Authorization': "JWT " + token}
 
     def query(self, q, show_results=None, retry=0):
         """
@@ -76,8 +81,7 @@ class Dsl():
         elif response.status_code == 403:  
             # Forbidden:
             print('Login token expired. Logging in again.')
-            refresh_login()
-            self._headers = {'Authorization': "JWT " + CONNECTION['token']}
+            self._login()
             return self.query(q)
         elif response.status_code in [200, 400, 500]:  
             ###  
@@ -158,9 +162,6 @@ class Dsl():
             else:
                 return output
 
-
-    def __repr__(self):
-        return f"<dimcli.Dsl #{id(self)}. API endpoint: {self._url}>"
 
 
 

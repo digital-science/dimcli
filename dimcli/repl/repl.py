@@ -38,23 +38,30 @@ from .lexer import *
 
 HELP_MESSAGE =  """DIMCLI COMMANDS HELP
 ====================
-Commands start with '/', anything else is sent to the Dimensions API.
+Default: enter a DSL query and click return to send it to the Dimensions API.
+Special commands start with '.'
 Tip: autocomplete works better when there are spaces between operators (eg `search where id = "xxx"`)
 ----
->>> Tab:  autocomplete. 
->>> Ctrl-o: search docs online. 
->>> Ctrl-c: abort query.
->>> Ctrl-d or /quit: exit console.
+>>> help: show this help message
 ----
->>> /export_as_csv: save results from last query as CSV file.  
->>> /export_as_html: save results from last query as HTML page. 
->>> /show [optional: N]: print N results from last query, trying to build URLs for objects. Default N=10.
->>> /show_json_compact: print results of last query as single-line JSON. 
->>> /show_json_full: print results of last query as formatted JSON.
+>>> <tab>:  autocomplete. 
+----
+>>> .docs: print out documentation for DSL data objects.  
+>>> .export_as_csv: save results from last query as CSV file.  
+>>> .export_as_html: save results from last query as HTML page. 
+>>> .print [optional: N]: print N results from last query, trying to build URLs for objects. Default N=10.
+>>> .print_json_compact: print results of last query as single-line JSON. 
+>>> .print_json_full: print results of last query as formatted JSON.
+----
+>>> <Ctrl-o>: search docs online. 
+>>> <Ctrl-c>: abort query.
+>>> <Ctrl-d>: exit console.
+----
+>>> quit: exit console
 ----"""
 
-WELCOME_MESSAGE = "Welcome! Type /help for more info."
-# WELCOME_MESSAGE = "Welcome! Type /help for more info. Ready to query endpoint: %s"
+WELCOME_MESSAGE = "Welcome! Type help for more info."
+# WELCOME_MESSAGE = "Welcome! Type help for more info. Ready to query endpoint: %s"
 
 
 
@@ -86,13 +93,13 @@ class CommandsManager(object):
 
     def handle(self, text):
         "process text and delegate"
-        if text.replace("\n", "").strip().startswith("/show"):
+        if text.replace("\n", "").strip().startswith(".print"):
             self.show(text.replace("\n", "").strip())
 
         elif text.replace("\n", "").strip().startswith("/export"):
             self.export(text.replace("\n", "").strip())
 
-        elif text.replace("\n", "").strip().startswith("/docs"):
+        elif text.replace("\n", "").strip().startswith(".docs"):
             self.docs_full(text.replace("\n", "").strip())
 
         else:
@@ -133,7 +140,7 @@ class CommandsManager(object):
         """
         print out docs infos from 'describe' API
         """
-        text = text.replace("/docs", "").split()
+        text = text.replace(".docs", "").split()
         if len(text) > 0:
             if text[0] in G.entities():
                 res = self.dsl.query(f"describe entity {text[0]}")
@@ -187,10 +194,10 @@ class CommandsManager(object):
             print("Nothing to export - please run a search first.")
             return
         # cases
-        if text == "/export_as_html":
+        if text == ".export_as_html":
             export_json_html(jsondata, query, USER_JSON_OUTPUTS_DIR)
 
-        elif text == "/export_as_csv":
+        elif text == ".export_as_csv":
             export_json_csv(jsondata, query, USER_JSON_OUTPUTS_DIR)
 
     def show(self, text):
@@ -198,7 +205,7 @@ class CommandsManager(object):
         show results of a query
         """
         DEFAULT_NO_RECORDS = 10
-        # text = text.replace("/show", "").strip()
+        # text = text.replace(".print", "").strip()
         text = text.strip()
 
         if self.bf: 
@@ -209,14 +216,14 @@ class CommandsManager(object):
             print("Nothing to show - please run a search first.")
             return
         # cases
-        if text == "/show_json_compact":
+        if text == ".print_json_compact":
             print_json_compact(jsondata)
-        elif text == "/show_json_full":
+        elif text == ".print_json_full":
             print_json_full(jsondata)
         else:
-            # must be a simple "/show" + X command
+            # must be a simple ".print" + X command
             try:
-                no = text.replace("/show", "").strip()
+                no = text.replace(".print", "").strip()
                 slice_no = int(no)
             except ValueError:
                 slice_no = DEFAULT_NO_RECORDS
@@ -281,9 +288,9 @@ def run(instance="live"):
         else:
             if text.strip() == "":
                 continue
-            elif text == "/quit":
+            elif text == "quit":
                 break
-            elif text == "/help":
+            elif text == "help":
                 click.secho(HELP_MESSAGE, dim=True)
                 continue
             try:
