@@ -43,16 +43,16 @@ class Dsl():
         self._show_results = show_results
         if CONNECTION['token'] and not force_login:
             # if already logged in, reuse connection 
-            print(
-                'Reusing previous login details. TIP use dsl.login(**new_details) to update them.'
-            )            
+            # print(
+            #     'Reusing previous login details. TIP use dsl.login(**new_details) to update them.'
+            # )            
             self._url = CONNECTION['url']
             self._headers = {'Authorization': "JWT " + CONNECTION['token']}
             
         else:
             self.login(instance, user, password, endpoint)
 
-    def login(self, instance, username, password, url):
+    def login(self, instance="live", username="", password="", url="https://app.dimensions.ai"):
         "This can be called explicitly to force a new login"
         do_global_login(instance, username, password, url)
         self._url = CONNECTION['url']
@@ -158,6 +158,9 @@ class Dsl():
             else:
                 return output
 
+
+    def __repr__(self):
+        return f"<dimcli.Dsl #{id(self)}. API endpoint: {self._url}>"
 
 
 

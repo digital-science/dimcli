@@ -66,7 +66,21 @@ class TestOne(unittest.TestCase):
         res = d.query("search publications where year=2018 return publications")
         # print("Query results: ", res.keys_and_count())
         # ----
-        click.secho("\n--------\nCompleted all tests", fg="green")
+        click.secho("\n--------\nCompleted test succesfully", fg="green")
+
+    def test_002_1(self):
+        click.secho("\nTEST 002-1: Retain login info and force new login.", fg="green")
+        # ----
+        d = Dsl(instance="live")
+        print(""" Dsl(instance="live"): ==> url=""", d._url)
+        res = d.query("""search publications where authors="Pasin" return publications""")
+        print(" ==> res.json.keys(): ", res.json.keys())
+        d.login(instance="test")
+        print(""" d.login(instance="test"): ==> url=""", d._url)
+        res = d.query("""search publications where authors="Pasin" return publications""")
+        print(" ==> res.json.keys(): ", res.json.keys())
+        # ----
+        click.secho("\n--------\nCompleted test succesfully", fg="green")
 
     def test_003(self):
         click.secho("\nTEST 003: Try magic methods on result object.", fg="green")

@@ -4,7 +4,7 @@ import os.path
 import os
 import time
 import json
-
+import click
 
 USER_DIR = os.path.expanduser("~/.dimensions/")
 USER_CONFIG_FILE_NAME = "dsl.ini"
