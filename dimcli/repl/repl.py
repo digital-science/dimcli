@@ -49,9 +49,9 @@ Tip: autocomplete works better when there are spaces between operators (eg `sear
 >>> .docs: print out documentation for DSL data objects.  
 >>> .export_as_csv: save results from last query as CSV file.  
 >>> .export_as_html: save results from last query as HTML page. 
->>> .print [optional: N]: print N results from last query, trying to build URLs for objects. Default N=10.
->>> .print_json_compact: print results of last query as single-line JSON. 
->>> .print_json_full: print results of last query as formatted JSON.
+>>> .show [optional: N]: print N results from last query, trying to build URLs for objects. Default N=10.
+>>> .show_json_compact: print results of last query as single-line JSON. 
+>>> .show_json_full: print results of last query as formatted JSON.
 ----
 >>> <Ctrl-o>: search docs online. 
 >>> <Ctrl-c>: abort query.
@@ -93,10 +93,10 @@ class CommandsManager(object):
 
     def handle(self, text):
         "process text and delegate"
-        if text.replace("\n", "").strip().startswith(".print"):
+        if text.replace("\n", "").strip().startswith(".show"):
             self.show(text.replace("\n", "").strip())
 
-        elif text.replace("\n", "").strip().startswith("/export"):
+        elif text.replace("\n", "").strip().startswith(".export"):
             self.export(text.replace("\n", "").strip())
 
         elif text.replace("\n", "").strip().startswith(".docs"):
@@ -126,7 +126,7 @@ class CommandsManager(object):
             if self.bf: self.bf.load(res.data, text)
             if True:
                 click.secho("---", dim=True)
-                print_smart_preview(res.data, maxitems=5)
+                preview_results(res, maxitems=5)
             return res  # 2019-03-31
 
         else:
@@ -205,7 +205,7 @@ class CommandsManager(object):
         show results of a query
         """
         DEFAULT_NO_RECORDS = 10
-        # text = text.replace(".print", "").strip()
+        # text = text.replace(".show", "").strip()
         text = text.strip()
 
         if self.bf: 
@@ -216,18 +216,18 @@ class CommandsManager(object):
             print("Nothing to show - please run a search first.")
             return
         # cases
-        if text == ".print_json_compact":
+        if text == ".show_json_compact":
             print_json_compact(jsondata)
-        elif text == ".print_json_full":
+        elif text == ".show_json_full":
             print_json_full(jsondata)
         else:
-            # must be a simple ".print" + X command
+            # must be a simple ".show" + X command
             try:
-                no = text.replace(".print", "").strip()
+                no = text.replace(".show", "").strip()
                 slice_no = int(no)
             except ValueError:
                 slice_no = DEFAULT_NO_RECORDS
-            print_smart_preview(jsondata, maxitems=slice_no)
+            preview_results(jsondata, maxitems=slice_no)
 
 
 

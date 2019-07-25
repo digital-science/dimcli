@@ -201,13 +201,13 @@ class Result(IPython.display.JSON):
 
     def __len__(self):
         "Return length of first object in JSON (skipping '_stats'"
-        k = self._good_data_keys()
+        k = self.good_data_keys()
         try:
             return len(self.json[k[0]])
         except:
             return 0
 
-    def _good_data_keys(self,):
+    def good_data_keys(self,):
         "return the results keys other than stats"
         skips = ["_warnings", "_stats"]
         return [x for x in self.json.keys() if x not in skips]
@@ -225,13 +225,13 @@ class Result(IPython.display.JSON):
             return
             
         if not key:
-            if len(self._good_data_keys()) > 1:
-                print(f"Please specify a key from {self._good_data_keys()}")
+            if len(self.good_data_keys()) > 1:
+                print(f"Please specify a key from {self.good_data_keys()}")
                 return
             else:
-                key = self._good_data_keys()[0]
-        elif key not in self._good_data_keys():
-            print(f"Invalid key: should be one of {self._good_data_keys()}")
+                key = self.good_data_keys()[0]
+        elif key not in self.good_data_keys():
+            print(f"Invalid key: should be one of {self.good_data_keys()}")
             return 
 
         return pd.DataFrame().from_dict(self.json[key])
@@ -252,13 +252,13 @@ class Result(IPython.display.JSON):
         """
 
         if not key:
-            if len(self._good_data_keys()) > 1:
-                print(f"Please specify a key from {self._good_data_keys()}")
+            if len(self.good_data_keys()) > 1:
+                print(f"Please specify a key from {self.good_data_keys()}")
                 return
             else:
-                key = self._good_data_keys()[0]
-        elif key not in self._good_data_keys():
-            print(f"Invalid key: should be one of {self._good_data_keys()}")
+                key = self.good_data_keys()[0]
+        elif key not in self.good_data_keys():
+            print(f"Invalid key: should be one of {self.good_data_keys()}")
             return 
 
         it = iter(self.json[key])
