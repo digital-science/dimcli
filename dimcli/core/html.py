@@ -22,8 +22,8 @@ def html_template_interactive(query, formatted_json):
                 font-size: 20px;
                 padding: 50px;
                 margin-bottom: 30px;
-                color: #888888;
-                background: #f0f0f0;
+                color: #f0f0f0;
+                background: #bc6060;
                 font-family: monospace;
             }
         </style>
@@ -32,16 +32,15 @@ def html_template_interactive(query, formatted_json):
         <script>hljs.initHighlightingOnLoad();</script>
     </head>
     <div>
-        <div id="header"><h1>Dimensions DSL Results for Query:&nbsp;
-            <span style="font-size: 40%%; font-weight: normal;">jump to <a href="#json">json</a> | <a href="#table">table</a></span>
-            </h1></div>
+        <div id="header"><h1>Dimensions DSL Results for Query:&nbsp;</h1></div>
         <div id="query">
-            <p class="query">$ %s</p></p>
+            <p class="query">%s</p></p>
         </div>
-        <h3>Results: JSON</h3><a name="json">
+        <h3>Results: JSON&nbsp;<span style="font-size: 70%%; font-weight: normal;">view as <a href="#table">table</a></span></h3><a name="json">
         <div id="code"></a><pre><code>%s</code></pre>
         </div> 
-        <h3>Results: Table</h3><a name="table"></a>
+        <hr>
+        <h3>Results: Table&nbsp;<span style="font-size: 70%%; font-weight: normal;">view as <a href="#json">json</a></span></h3><a name="table"></a>
         <div id="table">%s</div> 
         <div id="footer">
             <hr>
