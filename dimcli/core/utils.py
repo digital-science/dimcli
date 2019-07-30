@@ -330,6 +330,18 @@ def export_json_html(jjson, query, USER_JSON_OUTPUTS_DIR):
     print("Exported: ", "%s%s" % (USER_JSON_OUTPUTS_DIR, filename))
 
 
+def export_json_json(jjson, query, USER_JSON_OUTPUTS_DIR):
+    """
+    requires the pandas library which is not installed by default
+
+    """
+    formatted_json = json.dumps(jjson, indent=4, sort_keys=True)
+    filename = time.strftime("dsl_export_%Y%m%d-%H%M%S.json")
+    url = save2File(formatted_json, filename, USER_JSON_OUTPUTS_DIR)
+    webbrowser.open(url)
+    # df.to_csv(USER_JSON_OUTPUTS_DIR + filename)
+    print("Exported: ", "%s%s" % (USER_JSON_OUTPUTS_DIR, filename))
+
 
 
 def preview_results(jsondata, maxitems=10):

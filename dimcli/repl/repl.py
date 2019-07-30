@@ -47,8 +47,9 @@ Tip: autocomplete works better when there are spaces between operators (eg `sear
 >>> <tab>:  autocomplete. 
 ----
 >>> .docs: print out documentation for DSL data objects.  
+>>> .export_as_json: save results from last query as JSON file.  
 >>> .export_as_csv: save results from last query as CSV file.  
->>> .export_as_html: save results from last query as HTML page. 
+>>> .export_as_html: save results from last query as HTML file. 
 >>> .show [optional: N]: print N results from last query, trying to build URLs for objects. Default N=10.
 >>> .show_json_compact: print results of last query as single-line JSON. 
 >>> .show_json_full: print results of last query as formatted JSON.
@@ -199,6 +200,9 @@ class CommandsManager(object):
 
         elif text == ".export_as_csv":
             export_json_csv(jsondata, query, USER_JSON_OUTPUTS_DIR)
+
+        elif text == ".export_as_json":
+            export_json_json(jsondata, query, USER_JSON_OUTPUTS_DIR)
 
     def show(self, text):
         """

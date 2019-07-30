@@ -10,22 +10,6 @@
 #
 
 SYNTAX_DICT = {
-    # 'allowed_starts': {
-    #     'help' : [],
-    #     '.docs' : [],
-    #     'quit' : [],
-    #     '.show' : [],
-    #     '.show_json_compact' : [],
-    #     '.show_json_full' : [],
-    #     '.export_as_html' : [],
-    #     '.export_as_csv' : [],
-    #     'search': [],
-    #     'describe': [ 'version', 'source', 'entity', 'schema'],
-    #     'check_researcher_ids': [],
-    #     'classify': [],
-    #     'extract_grants': [],
-    #     'extract_terms': [],
-    # },
     'allowed_starts_special_commands': {
         'help' : [],
         '.docs' : [],
@@ -35,6 +19,7 @@ SYNTAX_DICT = {
         '.show_json_full' : [],
         '.export_as_html' : [],
         '.export_as_csv' : [],
+        '.export_as_json' : [],
     },
     'allowed_starts_dsl_query': {
         'search': [],
@@ -44,9 +29,6 @@ SYNTAX_DICT = {
         'extract_grants': [],
         'extract_terms': [],
     },
-    # 'allowed_starts_dsl_query': [
-    #     'search' ,'describe', 'check_researcher_ids', 'classify', 'extract_grants', 'extract_terms'
-    #     ],
     'dimensions_urls' : {
         'publications' : 'https://app.dimensions.ai/details/publication/',
         'grants' : 'https://app.dimensions.ai/details/grant/',
