@@ -332,7 +332,7 @@ def export_json_html(jjson, query, USER_JSON_OUTPUTS_DIR):
 
 
 
-def preview_results(result_obj, maxitems=10):
+def preview_results(jsondata, maxitems=10):
     """
     Preview items in console
     If it's one of the main sources, try to show title/id. Otherwise show json in one line
@@ -340,28 +340,29 @@ def preview_results(result_obj, maxitems=10):
     # click.secho("Showing first %d records from latest query.." % maxitems, dim=True)
     # click.secho("")
     counter = 0
-    for key in result_obj.good_data_keys():
-        for row in result_obj.json[key]:
-            counter += 1
-            if counter <= maxitems:
-                try:  # title and url/id if object has them
-                    url = get_dimensions_url(row['id'], key) or row['id']
-                    if 'title' in row.keys():
-                        name_or_title = row['title'].strip()
-                    else:
-                        name_or_title = row['first_name'] + " " + row['last_name']
-                    click.echo(
-                        click.style("[" + str(counter) + "] ", dim=True) +
-                        click.style(name_or_title , bold=True) +
-                        click.style(" (id: " + url + " )", fg='blue'))
+    for key in jsondata.keys():
+        if key not in ["_stats", "_warnings"]:
+            for row in jsondata[key]:
+                counter += 1
+                if counter <= maxitems:
+                    try:  # title and url/id if object has them
+                        url = get_dimensions_url(row['id'], key) or row['id']
+                        if 'title' in row.keys():
+                            name_or_title = row['title'].strip()
+                        else:
+                            name_or_title = row['first_name'] + " " + row['last_name']
+                        click.echo(
+                            click.style("[" + str(counter) + "] ", dim=True) +
+                            click.style(name_or_title , bold=True) +
+                            click.style(" (id: " + url + " )", fg='blue'))
 
-                except:  # fallback: full row
-                    click.echo(
-                        click.style("[" + str(counter) + "] ", dim=True) +
-                        click.style(str(row)))
-        if False:
-            click.secho("---", dim=True)
-            click.secho("Tip: use 'show <number>' or show+Tab to see more options", dim=True)
+                    except:  # fallback: full row
+                        click.echo(
+                            click.style("[" + str(counter) + "] ", dim=True) +
+                            click.style(str(row)))
+            if False:
+                click.secho("---", dim=True)
+                click.secho("Tip: use 'show <number>' or show+Tab to see more options", dim=True)
 
 
 
