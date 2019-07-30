@@ -28,8 +28,7 @@ def main(test_number=1):
         print(len(res))
 
 
-
-
-
 if __name__ == '__main__':
     main()
+
+

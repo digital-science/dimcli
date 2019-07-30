@@ -104,3 +104,5 @@ ENV/
 
 # IDEs
 .vscode
+
+/tools/apitest*
