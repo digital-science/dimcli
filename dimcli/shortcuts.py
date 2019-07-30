@@ -3,19 +3,18 @@ from . import *
 from .core.utils import print_json_stats
 
 def dslquery(query_string):
-    """shortcut for running a query
-    NOTE: this requires the file-based credentials file set up and by default only uses the LIVE settings.
+    """shortcut for running a query - meant to be used only within interactive computing environments
+    NOTE: this requires the file-based credentials file set up.
     """
     dsl = Dsl()
     res = dsl.query(query_string)
     # print results
-    print_json_stats(res, text)
+    print_json_stats(res, query_string)
     return res
-    # return dsl.query(query_string)
 
 
 def dslquery_json(query_string):
-    """shortcut for backward compatibility
+    """shortcut for backward compatibility 
     Same as above but returns raw JSON instead of Api.Result object
     """
     dsl = Dsl()
@@ -23,8 +22,8 @@ def dslquery_json(query_string):
 
 
 def dslqueryall(query_string):
-    """shortcut for running a loop query
-    NOTE: this requires the file-based credentials file set up and by defrefactorault only uses the LIVE settings.
+    """shortcut for running a loop query - meant to be used only within interactive computing environments
+    NOTE: this requires the file-based credentials file set up.
     """
     dsl = Dsl()
     return dsl.query_iterative(query_string)
