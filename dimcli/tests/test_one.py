@@ -180,6 +180,20 @@ class TestOne(unittest.TestCase):
         # ----
         click.secho("Completed test succesfully", fg="green")
 
+    def test_008(self):
+        click.secho("\nTEST 008: UTILS: normalize_key", fg="green")
+        
+        # ----
+        res = dslquery("""search publications where journal.title="nature medicine" return publications[doi+FOR] limit 1000""")
+        print("Query results for standard query: ")
+        print(" ==> res['stats']: ", res['stats'])
+        print(" ==> len(res['publications']): ", len(res['publications']))
+        print(" ==> len([x for x in res.publications if 'FOR' in x]): ", len([x for x in res.publications if 'FOR' in x]))
+        print("Now Normalizing the FOR key...")
+        normalize_key("FOR", res.publications)
+        print(" ==> len([x for x in res.publications if 'FOR' in x]): ", len([x for x in res.publications if 'FOR' in x]))
+        # ----
+        click.secho("Completed test succesfully", fg="green")
 
 
 if __name__ == "__main__":

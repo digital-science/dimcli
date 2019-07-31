@@ -1,6 +1,7 @@
 
 from . import *
-from .core.utils import print_json_stats
+from .core.utils import print_json_stats, chunks_of, normalize_key
+# chunks_of/normalize_key imported so that it's in the shortcuts namespace and easier to import
 
 def dslquery(query_string):
     """shortcut for running a query - meant to be used only within interactive computing environments

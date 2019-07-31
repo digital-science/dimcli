@@ -295,6 +295,25 @@ def chunks_of(data, size):
         chunk = list(islice(it, size))
 
 
+def normalize_key(key_name, dict_list):
+    """
+    Ensures the key always appear in a JSON dict/objects list, by adding it when missing 
+
+    EG
+
+    for x in pubs_details.publications:
+        if not 'FOR' in x:
+            x['FOR'] = ""
+
+    becomes
+
+    normalize_key("FOR", pubs_details.publications)
+
+    Changes happen in-place.
+    """
+    for x in dict_list:
+        if not key_name in x:
+            x[key_name] = ""
 
 
 def export_json_csv(jjson, query, USER_JSON_OUTPUTS_DIR):

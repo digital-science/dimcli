@@ -12,7 +12,7 @@ $ dimcli_quicktest 1
 
 import click 
 from .. import *
-from ..shortcuts import dslquery
+from ..shortcuts import *
 
 import requests
 
@@ -27,8 +27,21 @@ def main(test_number=1):
         res= dslquery("""extract_grants(grant_number="185247", funder_name="Swiss National Science Foundation")""")
         print(len(res))
 
+    elif test_number == 2:
+        res = dslquery("""search publications where journal.title="nature medicine" return publications[doi+FOR] limit 1000""")
+        print("Query results for standard query: ")
+        print(" ==> res['stats']: ", res['stats'])
+        print(" ==> len(res['publications']): ", len(res['publications']))
+        print(" ==> len([x for x in res.publications if 'FOR' in x]): ", len([x for x in res.publications if 'FOR' in x]))
+        print("Now Normalizing the FOR key...")
+        normalize_key("FOR", res.publications)
+        print(" ==> len([x for x in res.publications if 'FOR' in x]): ", len([x for x in res.publications if 'FOR' in x]))
+        
+
+
 
 if __name__ == '__main__':
     main()
+
 
 
