@@ -310,10 +310,15 @@ def normalize_key(key_name, dict_list):
     normalize_key("FOR", pubs_details.publications)
 
     Changes happen in-place.
+    TODO add third argument to pass a lambda function for modifying key
     """
     for x in dict_list:
         if not key_name in x:
             x[key_name] = ""
+
+
+
+# {'name' : x['name'][5:]}
 
 
 def export_json_csv(jjson, query, USER_JSON_OUTPUTS_DIR):

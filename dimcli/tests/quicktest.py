@@ -35,8 +35,7 @@ def main(test_number=1):
         print(" ==> len([x for x in res.publications if 'FOR' in x]): ", len([x for x in res.publications if 'FOR' in x]))
         print("Now Normalizing the FOR key...")
         normalize_key("FOR", res.publications)
-        print(" ==> len([x for x in res.publications if 'FOR' in x]): ", len([x for x in res.publications if 'FOR' in x]))
-        
+        print(" ==> len([x for x in res.publications if 'FOR' in x]): ", len([x for x in res.publications if 'FOR' in x]))       
 
 
 
