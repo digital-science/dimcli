@@ -2,9 +2,13 @@ import configparser
 import requests
 import os.path
 import os
+import sys
 import time
 import json
 import click
+
+from .walkup import *
+
 
 USER_DIR = os.path.expanduser("~/.dimensions/")
 USER_CONFIG_FILE_NAME = "dsl.ini"
@@ -66,14 +70,14 @@ def read_init_file(fpath, instance_name):
     except:
         click.secho(f"ERROR: `{USER_CONFIG_FILE_NAME}` credentials file not found." , fg="red")
         click.secho("HowTo: https://github.com/lambdamusic/dimcli#credentials-file", fg="red")
-        raise
+        sys.exit(0)
     # we have a good config file
     try:
         section = config['instance.' + instance_name]
     except:
         click.secho(f"ERROR: Credentials file `{fpath}` does contain settings for instance: {instance_name}", fg="red")
         click.secho("HowTo: https://github.com/lambdamusic/dimcli#credentials-file", fg="red")
-        raise
+        sys.exit(0)
     return section
 
 
