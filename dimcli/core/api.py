@@ -229,10 +229,10 @@ class Result(IPython.display.JSON):
         if key and (key in self.good_data_keys()):
             output = output.from_dict(self.json[key])
         elif key and (key not in self.good_data_keys()):
-            print(f"Warning: Dataframe cannot be created: invalid key. Should be one of {self.good_data_keys()}")
+            print(f"[Warning] Dataframe cannot be created: invalid key. Should be one of {self.good_data_keys()}")
         elif not key and self.good_data_keys():
             if len(self.good_data_keys()) > 1:
-                print(f"Warning: Dataframe created from first available key, but more than one JSON key found: {self.good_data_keys()}")
+                print(f"[Warning] Dataframe created from first available key, but more than one JSON key found: {self.good_data_keys()}")
             key = self.good_data_keys()[0]
             output = output.from_dict(self.json[key])
         else:
@@ -295,7 +295,7 @@ class Result(IPython.display.JSON):
             output = json_normalize(self.publications, record_path=['author_affiliations'], meta=['id'], errors='ignore')
             output.rename(columns={"id": "pub_id"}, inplace=True)
         else:
-            print(f"Warning: Dataframe cannot be created as 'publications' were not found in results: {self.good_data_keys()}")
+            print(f"[Warning] Dataframe cannot be created as 'publications' were not found in data. Available: {self.good_data_keys()}")
 
         return output
 

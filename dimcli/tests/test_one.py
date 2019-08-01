@@ -108,7 +108,7 @@ class TestOne(unittest.TestCase):
         print(" ==> res.year[0]: ", res.year[0])
         print(" ==> res.stats: ", res.stats)
         # ----
-        click.secho("Query #3... returning dataframe", fg="green")
+        click.secho("Query #3... returning dataframes", fg="green")
         res = d.query("""search publications for \"mercedes\" return year""")
         print("Query results: ")
         print(" ==> res.json.keys(): ", res.json.keys())
@@ -117,6 +117,17 @@ class TestOne(unittest.TestCase):
         print(" ==> res.as_dataframe(): ", res.as_dataframe())
         print(" ==> res.as_dataframe('year'): ", res.as_dataframe('year'))
         print(" ==> res.as_dataframe('XXX'): ", res.as_dataframe('XXX'))
+        # ----
+        res = d.query("""search publications for \"CRISPR\" return publications limit 5""")
+        print("Testing as_dataframe_authors on PUBLICATIONS data: ")
+        print(" ==> res.as_dataframe_authors(): ", res.as_dataframe_authors())
+        print(" ==> res.as_dataframe_authors_affiliations(): ", res.as_dataframe_authors_affiliations())
+        # ----
+        print("Testing as_dataframe_authors on FOR data: ")
+        res = d.query("""search publications for \"CRISPR\" return FOR""")
+        print(" ==> res.as_dataframe(): ", res.as_dataframe())
+        print(" ==> res.as_dataframe_authors(): [=>fails and issue a warning]", res.as_dataframe_authors())
+        print(" ==> res.as_dataframe_authors_affiliations(): [=>fails and issue a warning]", res.as_dataframe_authors_affiliations())
         # ----
         click.secho("Completed test succesfully", fg="green")
 
