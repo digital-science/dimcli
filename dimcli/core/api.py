@@ -223,18 +223,140 @@ class Result(IPython.display.JSON):
         except:
             print("Sorry this functionality requires the Pandas python library. Please install it first.")
             return
-            
-        if not key:
-            if len(self.good_data_keys()) > 1:
-                print(f"Please specify a key from {self.good_data_keys()}")
-                return
-            else:
-                key = self.good_data_keys()[0]
-        elif key not in self.good_data_keys():
-            print(f"Invalid key: should be one of {self.good_data_keys()}")
-            return 
 
-        return pd.DataFrame().from_dict(self.json[key])
+        output = pd.DataFrame()
+        
+        if key and (key in self.good_data_keys()):
+            output = output.from_dict(self.json[key])
+        elif key and (key not in self.good_data_keys()):
+            print(f"Warning: Dataframe cannot be created: invalid key. Should be one of {self.good_data_keys()}")
+        elif not key and self.good_data_keys():
+            if len(self.good_data_keys()) > 1:
+                print(f"Warning: Dataframe created from first available key, but more than one JSON key found: {self.good_data_keys()}")
+            key = self.good_data_keys()[0]
+            output = output.from_dict(self.json[key])
+        else:
+            pass 
+
+        return output
+
+
+    def as_dataframe_authors(self):
+        """Utility method
+        return inner json as a pandas dataframe, exposing authors + pubId
+        affiliations are not broken down and are returned as JSON 
+        So one gets one row per author
+
+        NOTE this is valid only for publications searches
+
+        Each publication.author_affiliations object has a nested list structure like this:
+        ```
+        [[{'first_name': 'Laura',
+            'last_name': 'Pasin',
+            'orcid': '',
+            'current_organization_id': '',
+            'researcher_id': '',
+            'affiliations': [{'name': 'Department of Anesthesia and Intensive Care, Ospedale S. Antonio, Via Facciolati, 71, Padova, Italy'}]},
+            {'first_name': 'Sabrina',
+            'last_name': 'Boraso',
+            'orcid': '',
+            'current_organization_id': '',
+            'researcher_id': '',
+            'affiliations': [{'name': 'Department of Anesthesia and Intensive Care, Ospedale S. Antonio, Via Facciolati, 71, Padova, Italy'}]},
+            {'first_name': 'Ivo',
+            'last_name': 'Tiberio',
+            'orcid': '',
+            'current_organization_id': '',
+            'researcher_id': '',
+            'affiliations': [{'name': 'Department of Anesthesia and Intensive Care, Ospedale S. Antonio, Via Facciolati, 71, Padova, Italy'}]}]]
+        ```
+
+        """
+        try:
+            import pandas as pd
+            from pandas.io.json import json_normalize
+        except:
+            print("Sorry this functionality requires the Pandas python library. Please install it first.")
+            return
+
+        output = pd.DataFrame()
+
+        if 'publications' in self.good_data_keys():
+            # simplify dict structure 
+            for x in self.publications:
+                if 'author_affiliations' in x:
+                    if type(x['author_affiliations'][0]) == list: # then break down nested dict structure
+                        x['author_affiliations'] = x['author_affiliations'][0]
+                    elif type(x['author_affiliations'][0]) == dict: # = it's already been broken down
+                        pass
+                else: # put in defaul empty element
+                    x['author_affiliations'] = []
+        
+            output = json_normalize(self.publications, record_path=['author_affiliations'], meta=['id'], errors='ignore')
+        else:
+            print(f"Warning: Dataframe cannot be created as 'publications' were not found in results: {self.good_data_keys()}")
+
+        return output
+
+
+
+
+    def as_dataframe_authors_affiliations(self):
+        """Utility method
+        return inner json as a pandas dataframe, exposing authors + affiliations + pubId
+        affiliations ARE broken down and are returned as JSON 
+        So one gets one row per affiliation (+1 row per author if having more than one affiliation)
+
+        NOTE this is valid only for publications searches
+
+        Each publication.author_affiliations object has a nested list structure like this:
+        ```
+        [[{'first_name': 'Laura',
+            'last_name': 'Pasin',
+            'orcid': '',
+            'current_organization_id': '',
+            'researcher_id': '',
+            'affiliations': [{'name': 'Department of Anesthesia and Intensive Care, Ospedale S. Antonio, Via Facciolati, 71, Padova, Italy'}]},
+            {'first_name': 'Sabrina',
+            'last_name': 'Boraso',
+            'orcid': '',
+            'current_organization_id': '',
+            'researcher_id': '',
+            'affiliations': [{'name': 'Department of Anesthesia and Intensive Care, Ospedale S. Antonio, Via Facciolati, 71, Padova, Italy'}]},
+            {'first_name': 'Ivo',
+            'last_name': 'Tiberio',
+            'orcid': '',
+            'current_organization_id': '',
+            'researcher_id': '',
+            'affiliations': [{'name': 'Department of Anesthesia and Intensive Care, Ospedale S. Antonio, Via Facciolati, 71, Padova, Italy'}]}]]
+        ```
+
+        """
+        try:
+            import pandas as pd
+            from pandas.io.json import json_normalize
+        except:
+            print("Sorry this functionality requires the Pandas python library. Please install it first.")
+            return
+
+        output = pd.DataFrame()
+
+        if 'publications' in self.good_data_keys():
+            # simplify dict structure 
+            for x in self.publications:
+                if 'author_affiliations' in x:
+                    if type(x['author_affiliations'][0]) == list: # then break down nested dict structure
+                        x['author_affiliations'] = x['author_affiliations'][0]
+                    elif type(x['author_affiliations'][0]) == dict: # = it's already been broken down
+                        pass
+                else: # put in defaul empty element
+                    x['author_affiliations'] = []
+        
+            output = json_normalize(self.publications, record_path=['author_affiliations'], meta=['id'], errors='ignore')
+        else:
+            print(f"Warning: Dataframe cannot be created as 'publications' were not found in results: {self.good_data_keys()}")
+
+        return output
 
 
     def chunks(self, size=400, key=""):
@@ -266,6 +388,48 @@ class Result(IPython.display.JSON):
         while chunk:
             yield chunk
             chunk = list(islice(it, size))
+
+
+    def __repr__(self):
+        return "<dimcli.Result object #%s. Dict keys: %s>" % (str(id(self)), ", ".join([f"'{x}'" for x in self.json]))
+
+
+
+
+
+
+
+class DataframeWrapper(object):
+    """
+    Wrapper for a dataframe representation of the results
+    """
+    def __init__(self, data):
+        sef.__init__(self, data)
+
+    def as_dataframe(self, key=""):
+        "utility method: return inner json as a pandas dataframe"
+        try:
+            import pandas as pd
+        except:
+            print("Sorry this functionality requires the Pandas python library. Please install it first.")
+            return
+
+        output = pd.DataFrame()
+        
+        if key and (key in self.good_data_keys()):
+            output = output.from_dict(self.json[key])
+        elif key and (key not in self.good_data_keys()):
+            print(f"Warning: Dataframe cannot be created: invalid key. Should be one of {self.good_data_keys()}")
+        elif not key and self.good_data_keys():
+            if len(self.good_data_keys()) > 1:
+                print(f"Warning: Dataframe created from first available key, but more than one JSON key found: {self.good_data_keys()}")
+            key = self.good_data_keys()[0]
+            output = output.from_dict(self.json[key])
+        else:
+            pass 
+
+        return output
+
 
 
     def __repr__(self):
