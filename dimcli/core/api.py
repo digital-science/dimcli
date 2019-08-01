@@ -247,7 +247,7 @@ class Result(IPython.display.JSON):
         affiliations are not broken down and are returned as JSON 
         So one gets one row per author
 
-        NOTE this is valid only for publications searches
+        NOTE this method works only for publications searches
 
         Each publication.author_affiliations object has a nested list structure like this:
         ```
@@ -284,15 +284,16 @@ class Result(IPython.display.JSON):
         if 'publications' in self.good_data_keys():
             # simplify dict structure 
             for x in self.publications:
-                if 'author_affiliations' in x:
+                if 'author_affiliations' in x and x['author_affiliations']:  # if key exists and contents are not empty eg '[]'
                     if type(x['author_affiliations'][0]) == list: # then break down nested dict structure
                         x['author_affiliations'] = x['author_affiliations'][0]
                     elif type(x['author_affiliations'][0]) == dict: # = it's already been broken down
                         pass
-                else: # put in defaul empty element
+                else: # put in default empty element
                     x['author_affiliations'] = []
         
             output = json_normalize(self.publications, record_path=['author_affiliations'], meta=['id'], errors='ignore')
+            output.rename(columns={"id": "pub_id"}, inplace=True)
         else:
             print(f"Warning: Dataframe cannot be created as 'publications' were not found in results: {self.good_data_keys()}")
 
@@ -307,29 +308,7 @@ class Result(IPython.display.JSON):
         affiliations ARE broken down and are returned as JSON 
         So one gets one row per affiliation (+1 row per author if having more than one affiliation)
 
-        NOTE this is valid only for publications searches
-
-        Each publication.author_affiliations object has a nested list structure like this:
-        ```
-        [[{'first_name': 'Laura',
-            'last_name': 'Pasin',
-            'orcid': '',
-            'current_organization_id': '',
-            'researcher_id': '',
-            'affiliations': [{'name': 'Department of Anesthesia and Intensive Care, Ospedale S. Antonio, Via Facciolati, 71, Padova, Italy'}]},
-            {'first_name': 'Sabrina',
-            'last_name': 'Boraso',
-            'orcid': '',
-            'current_organization_id': '',
-            'researcher_id': '',
-            'affiliations': [{'name': 'Department of Anesthesia and Intensive Care, Ospedale S. Antonio, Via Facciolati, 71, Padova, Italy'}]},
-            {'first_name': 'Ivo',
-            'last_name': 'Tiberio',
-            'orcid': '',
-            'current_organization_id': '',
-            'researcher_id': '',
-            'affiliations': [{'name': 'Department of Anesthesia and Intensive Care, Ospedale S. Antonio, Via Facciolati, 71, Padova, Italy'}]}]]
-        ```
+        NOTE this method builds on self.as_dataframe_authors()
 
         """
         try:
@@ -338,25 +317,17 @@ class Result(IPython.display.JSON):
         except:
             print("Sorry this functionality requires the Pandas python library. Please install it first.")
             return
-
-        output = pd.DataFrame()
-
-        if 'publications' in self.good_data_keys():
-            # simplify dict structure 
-            for x in self.publications:
-                if 'author_affiliations' in x:
-                    if type(x['author_affiliations'][0]) == list: # then break down nested dict structure
-                        x['author_affiliations'] = x['author_affiliations'][0]
-                    elif type(x['author_affiliations'][0]) == dict: # = it's already been broken down
-                        pass
-                else: # put in defaul empty element
-                    x['author_affiliations'] = []
         
-            output = json_normalize(self.publications, record_path=['author_affiliations'], meta=['id'], errors='ignore')
+        authors = self.as_dataframe_authors()
+        if len(authors):
+            affiliations = json_normalize(json.loads(authors.to_json(orient='records')), record_path=['affiliations'], 
+               meta=['pub_id', 'researcher_id', 'first_name', 'last_name'], record_prefix='aff_')
         else:
-            print(f"Warning: Dataframe cannot be created as 'publications' were not found in results: {self.good_data_keys()}")
+            affiliations = authors # empty df
+        return affiliations
 
-        return output
+
+
 
 
     def chunks(self, size=400, key=""):
