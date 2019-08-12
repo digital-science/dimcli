@@ -220,6 +220,7 @@ class Result(IPython.display.JSON):
         "utility method: return inner json as a pandas dataframe"
         try:
             import pandas as pd
+            from pandas.io.json import json_normalize
         except:
             print("Sorry this functionality requires the Pandas python library. Please install it first.")
             return
@@ -227,19 +228,18 @@ class Result(IPython.display.JSON):
         output = pd.DataFrame()
         
         if key and (key in self.good_data_keys()):
-            output = output.from_dict(self.json[key])
+            output = json_normalize(self.json[key])
         elif key and (key not in self.good_data_keys()):
             print(f"[Warning] Dataframe cannot be created: invalid key. Should be one of {self.good_data_keys()}")
         elif not key and self.good_data_keys():
             if len(self.good_data_keys()) > 1:
                 print(f"[Warning] Dataframe created from first available key, but more than one JSON key found: {self.good_data_keys()}")
             key = self.good_data_keys()[0]
-            output = output.from_dict(self.json[key])
+            output = json_normalize(self.json[key])
         else:
             pass 
 
         return output
-
 
     def as_dataframe_authors(self):
         """Utility method
