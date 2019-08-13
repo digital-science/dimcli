@@ -8,6 +8,9 @@ import click
 import IPython.display
 from itertools import islice
 
+import pandas as pd
+from pandas.io.json import json_normalize
+
 from .config import *
 from .utils import line_search_return
 from .walkup import *
@@ -164,7 +167,34 @@ class Dsl():
 
 
 
+class DfFactory(object):
+    """
 
+    """
+    def __init__(self):
+        self.input_data = None
+        self.output_data = pd.DataFrame()
+
+    def dataframe(self, data, key=""):
+        "utility method: return inner json as a pandas dataframe"
+
+        output = pd.DataFrame()
+        
+        if key and (key in self.good_data_keys()):
+            output = json_normalize(self.json[key])
+        elif key and (key not in self.good_data_keys()):
+            print(f"[Warning] Dataframe cannot be created: invalid key. Should be one of {self.good_data_keys()}")
+        elif not key and self.good_data_keys():
+            if len(self.good_data_keys()) > 1:
+                print(f"[Warning] Dataframe created from first available key, but more than one JSON key found: {self.good_data_keys()}")
+            key = self.good_data_keys()[0]
+            output = json_normalize(self.json[key])
+        else:
+            pass 
+
+        return output
+
+        
 
 class Result(IPython.display.JSON):
     """
@@ -218,12 +248,6 @@ class Result(IPython.display.JSON):
 
     def as_dataframe(self, key=""):
         "utility method: return inner json as a pandas dataframe"
-        try:
-            import pandas as pd
-            from pandas.io.json import json_normalize
-        except:
-            print("Sorry this functionality requires the Pandas python library. Please install it first.")
-            return
 
         output = pd.DataFrame()
         
@@ -272,12 +296,6 @@ class Result(IPython.display.JSON):
         ```
 
         """
-        try:
-            import pandas as pd
-            from pandas.io.json import json_normalize
-        except:
-            print("Sorry this functionality requires the Pandas python library. Please install it first.")
-            return
 
         output = pd.DataFrame()
 
@@ -311,12 +329,6 @@ class Result(IPython.display.JSON):
         NOTE this method builds on self.as_dataframe_authors()
 
         """
-        try:
-            import pandas as pd
-            from pandas.io.json import json_normalize
-        except:
-            print("Sorry this functionality requires the Pandas python library. Please install it first.")
-            return
         
         authors = self.as_dataframe_authors()
         if len(authors):
@@ -328,7 +340,21 @@ class Result(IPython.display.JSON):
 
 
 
+    def as_dataframe_funders(self):
+        """Utility method
+        return inner json as a pandas dataframe, for grants funders
 
+        NOTE this method works only for grants searches
+        """
+
+        output = pd.DataFrame()
+
+        if 'grants' in self.good_data_keys():       
+            json_normalize(res.grants, record_path=['funders'], meta=['id', 'title', 'start_date', 'end_date'], meta_prefix="grant_", errors='ignore')
+        else:
+            print(f"[Warning] Dataframe cannot be created as 'grants' were not found in data. Available: {self.good_data_keys()}")
+
+        return output
 
     def chunks(self, size=400, key=""):
         """
@@ -379,11 +405,6 @@ class DataframeWrapper(object):
 
     def as_dataframe(self, key=""):
         "utility method: return inner json as a pandas dataframe"
-        try:
-            import pandas as pd
-        except:
-            print("Sorry this functionality requires the Pandas python library. Please install it first.")
-            return
 
         output = pd.DataFrame()
         

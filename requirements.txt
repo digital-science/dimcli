@@ -6,3 +6,4 @@ pygments>=2.3.1
 prompt-toolkit>=2.0.9
 ipython>=7.2.0
 json2html>=1.2.1
+pandas>=0.24.2
