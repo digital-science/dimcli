@@ -88,6 +88,36 @@ class DslMagics(Magics):
             print("Please login first: %dsl_login")
 
 
+    @line_cell_magic
+    def dsl_query_as_df(self, line, cell=None):
+        """DimCli Magic
+        Query the Dimensions DSL API with the text passed - return a pandas dataframe
+        """
+        if self._handle_login():
+            if cell:
+                line = cell
+            data = self._handle_query(line).as_dataframe()
+            self.shell.user_ns[self.results_var] = data
+            return data
+            
+        else:
+            print("Please login first: %dsl_login")
+
+    @line_cell_magic
+    def dsl_query_loop_as_df(self, line, cell=None):
+        """DimCli Magic
+        Query the Dimensions DSL API with the text passed, looping over all results pages - return a pandas dataframe
+        """
+        if self._handle_login():
+            if cell:
+                line = cell
+            data = self._handle_query(line, loop=True).as_dataframe()
+            self.shell.user_ns[self.results_var] = data
+            return data
+
+        else:
+            print("Please login first: %dsl_login")
+
     def _handle_login(self):
         if self.dsl: 
             return True
