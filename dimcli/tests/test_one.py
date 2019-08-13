@@ -129,6 +129,10 @@ class TestOne(unittest.TestCase):
         print(" ==> res.as_dataframe_authors(): [=>fails and issue a warning]", res.as_dataframe_authors())
         print(" ==> res.as_dataframe_authors_affiliations(): [=>fails and issue a warning]", res.as_dataframe_authors_affiliations())
         # ----
+        print("Testing as_dataframe_funders on Grants data: ")
+        res= d.query("""search grants return grants[basics+investigator_details]""")
+        print(" ==> res.as_dataframe_funders(): ", res.as_dataframe_funders())
+        print(" ==> res.as_dataframe_investigators(): ", res.as_dataframe_investigators())
         click.secho("Completed test succesfully", fg="green")
 
     def test_004(self):

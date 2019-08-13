@@ -24,8 +24,13 @@ def main(test_number=1):
     test_number = int(test_number)
 
     if test_number == 1:
-        res= dslquery("""extract_grants(grant_number="185247", funder_name="Swiss National Science Foundation")""")
-        print(len(res))
+        # res= dslquery("""search publications for "graphene" return publications""")
+        # print(res.as_dataframe_authors())
+        # print(res.as_dataframe_authors_affiliations())
+        # print(res.as_dataframe_funders())
+        res= dslquery("""search grants return grants[basics+investigator_details]""")
+        print(res.as_dataframe_funders())
+        print(res.as_dataframe_investigators())
 
     elif test_number == 2:
         res = dslquery("""search publications where journal.title="nature medicine" return publications[doi+FOR] limit 1000""")

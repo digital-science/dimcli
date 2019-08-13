@@ -15,7 +15,7 @@ from .config import *
 from .utils import line_search_return
 from .walkup import *
 from .dsl_grammar import G
-
+from .dataframe_factory import DfFactory
 
 
 
@@ -167,33 +167,6 @@ class Dsl():
 
 
 
-class DfFactory(object):
-    """
-
-    """
-    def __init__(self):
-        self.input_data = None
-        self.output_data = pd.DataFrame()
-
-    def dataframe(self, data, key=""):
-        "utility method: return inner json as a pandas dataframe"
-
-        output = pd.DataFrame()
-        
-        if key and (key in self.good_data_keys()):
-            output = json_normalize(self.json[key])
-        elif key and (key not in self.good_data_keys()):
-            print(f"[Warning] Dataframe cannot be created: invalid key. Should be one of {self.good_data_keys()}")
-        elif not key and self.good_data_keys():
-            if len(self.good_data_keys()) > 1:
-                print(f"[Warning] Dataframe created from first available key, but more than one JSON key found: {self.good_data_keys()}")
-            key = self.good_data_keys()[0]
-            output = json_normalize(self.json[key])
-        else:
-            pass 
-
-        return output
-
         
 
 class Result(IPython.display.JSON):
@@ -219,6 +192,8 @@ class Result(IPython.display.JSON):
                 setattr(self, "stats", self.json[k])
             else:
                 setattr(self, k, self.json[k])
+
+        self.df_factory = DfFactory(good_data_keys=self.good_data_keys())
 
     def __getitem__(self, key):
         "return dict key as slice"
@@ -246,115 +221,6 @@ class Result(IPython.display.JSON):
         "Utility to preview contents of results object"
         return [(x, len(self.json[x])) for x in self.json.keys()]
 
-    def as_dataframe(self, key=""):
-        "utility method: return inner json as a pandas dataframe"
-
-        output = pd.DataFrame()
-        
-        if key and (key in self.good_data_keys()):
-            output = json_normalize(self.json[key])
-        elif key and (key not in self.good_data_keys()):
-            print(f"[Warning] Dataframe cannot be created: invalid key. Should be one of {self.good_data_keys()}")
-        elif not key and self.good_data_keys():
-            if len(self.good_data_keys()) > 1:
-                print(f"[Warning] Dataframe created from first available key, but more than one JSON key found: {self.good_data_keys()}")
-            key = self.good_data_keys()[0]
-            output = json_normalize(self.json[key])
-        else:
-            pass 
-
-        return output
-
-    def as_dataframe_authors(self):
-        """Utility method
-        return inner json as a pandas dataframe, exposing authors + pubId
-        affiliations are not broken down and are returned as JSON 
-        So one gets one row per author
-
-        NOTE this method works only for publications searches
-
-        Each publication.author_affiliations object has a nested list structure like this:
-        ```
-        [[{'first_name': 'Laura',
-            'last_name': 'Pasin',
-            'orcid': '',
-            'current_organization_id': '',
-            'researcher_id': '',
-            'affiliations': [{'name': 'Department of Anesthesia and Intensive Care, Ospedale S. Antonio, Via Facciolati, 71, Padova, Italy'}]},
-            {'first_name': 'Sabrina',
-            'last_name': 'Boraso',
-            'orcid': '',
-            'current_organization_id': '',
-            'researcher_id': '',
-            'affiliations': [{'name': 'Department of Anesthesia and Intensive Care, Ospedale S. Antonio, Via Facciolati, 71, Padova, Italy'}]},
-            {'first_name': 'Ivo',
-            'last_name': 'Tiberio',
-            'orcid': '',
-            'current_organization_id': '',
-            'researcher_id': '',
-            'affiliations': [{'name': 'Department of Anesthesia and Intensive Care, Ospedale S. Antonio, Via Facciolati, 71, Padova, Italy'}]}]]
-        ```
-
-        """
-
-        output = pd.DataFrame()
-
-        if 'publications' in self.good_data_keys():
-            # simplify dict structure 
-            for x in self.publications:
-                if 'author_affiliations' in x and x['author_affiliations']:  # if key exists and contents are not empty eg '[]'
-                    if type(x['author_affiliations'][0]) == list: # then break down nested dict structure
-                        x['author_affiliations'] = x['author_affiliations'][0]
-                    elif type(x['author_affiliations'][0]) == dict: # = it's already been broken down
-                        pass
-                else: # put in default empty element
-                    x['author_affiliations'] = []
-        
-            output = json_normalize(self.publications, record_path=['author_affiliations'], meta=['id'], errors='ignore')
-            output.rename(columns={"id": "pub_id"}, inplace=True)
-        else:
-            print(f"[Warning] Dataframe cannot be created as 'publications' were not found in data. Available: {self.good_data_keys()}")
-
-        return output
-
-
-
-
-    def as_dataframe_authors_affiliations(self):
-        """Utility method
-        return inner json as a pandas dataframe, exposing authors + affiliations + pubId
-        affiliations ARE broken down and are returned as JSON 
-        So one gets one row per affiliation (+1 row per author if having more than one affiliation)
-
-        NOTE this method builds on self.as_dataframe_authors()
-
-        """
-        
-        authors = self.as_dataframe_authors()
-        if len(authors):
-            affiliations = json_normalize(json.loads(authors.to_json(orient='records')), record_path=['affiliations'], 
-               meta=['pub_id', 'researcher_id', 'first_name', 'last_name'], record_prefix='aff_')
-        else:
-            affiliations = authors # empty df
-        return affiliations
-
-
-
-    def as_dataframe_funders(self):
-        """Utility method
-        return inner json as a pandas dataframe, for grants funders
-
-        NOTE this method works only for grants searches
-        """
-
-        output = pd.DataFrame()
-
-        if 'grants' in self.good_data_keys():       
-            json_normalize(res.grants, record_path=['funders'], meta=['id', 'title', 'start_date', 'end_date'], meta_prefix="grant_", errors='ignore')
-        else:
-            print(f"[Warning] Dataframe cannot be created as 'grants' were not found in data. Available: {self.good_data_keys()}")
-
-        return output
 
     def chunks(self, size=400, key=""):
         """
@@ -386,6 +252,39 @@ class Result(IPython.display.JSON):
             yield chunk
             chunk = list(islice(it, size))
 
+    # Dataframe Methods 
+
+    def as_dataframe(self, key=""):
+        "utility method: return inner json as a pandas dataframe"
+
+        return self.df_factory.df_simple(self.json, key)
+
+
+    def as_dataframe_authors(self):
+        """Utility method: return inner json as a pandas dataframe, exposing authors + pubId
+            Note: affiliations are not broken down. So one gets one row per author
+        """
+
+        return self.df_factory.df_authors(self.json)
+
+
+    def as_dataframe_authors_affiliations(self):
+        """Utility method: return inner json as a pandas dataframe, exposing authors + affiliations + pubId
+        Affiliations ARE broken down and are returned as JSON - So one gets one row per affiliation (+1 row per author if having more than one affiliation)
+        """
+        
+        return self.df_factory.df_authors_affiliations(self.json)
+
+
+    def as_dataframe_funders(self):
+        """Utility method: return inner json as a pandas dataframe, for grants funders
+        """
+        return self.df_factory.df_grant_funders(self.json)
+
+    def as_dataframe_investigators(self):
+        """Utility method: return inner json as a pandas dataframe, for grants funders
+        """
+        return self.df_factory.df_grant_investigators(self.json)
 
     def __repr__(self):
         return "<dimcli.Result object #%s. Dict keys: %s>" % (str(id(self)), ", ".join([f"'{x}'" for x in self.json]))
