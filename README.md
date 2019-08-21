@@ -1,15 +1,15 @@
 
-- [Dimcli](#Dimcli)
-    - [In a nutshell](#In-a-nutshell)
-  - [Installation](#Installation)
-      - [Authentication](#Authentication)
-      - [The Credentials File](#The-Credentials-File)
-      - [Advanced: Multiple API Endpoints](#Advanced-Multiple-API-Endpoints)
-      - [Overriding credentials at runtime e.g. with Jupyter Notebooks](#Overriding-credentials-at-runtime-eg-with-Jupyter-Notebooks)
-  - [Using DimCli as a CLI](#Using-DimCli-as-a-CLI)
-  - [Using Dimcli as a Python library](#Using-Dimcli-as-a-Python-library)
-  - [Using Dimcli in Jupyter Notebooks](#Using-Dimcli-in-Jupyter-Notebooks)
-  - [Comments, bug reports](#Comments-bug-reports)
+- [Dimcli](#dimcli)
+    - [In a nutshell](#in-a-nutshell)
+  - [Installation](#installation)
+  - [Authentication](#authentication)
+    - [Using a credentials file (recommended)](#using-a-credentials-file-recommended)
+    - [Overriding credentials at runtime (e.g. with Jupyter Notebooks)](#overriding-credentials-at-runtime-eg-with-jupyter-notebooks)
+    - [Advanced: multiple API endpoints](#advanced-multiple-api-endpoints)
+  - [Dimcli as a Command Line Interface](#dimcli-as-a-command-line-interface)
+  - [Dimcli in Jupyter notebooks](#dimcli-in-jupyter-notebooks)
+  - [Dimcli as a Python module](#dimcli-as-a-python-module)
+  - [Comments, bug reports](#comments-bug-reports)
 
 
 # Dimcli
@@ -41,7 +41,7 @@ $ dimcli --help
 > [Anaconda](https://www.anaconda.com/) errors: a couple of libraries needed by DimCli might need to be updated manually: `pip install prompt-toolkit -U` and `pip install ipython -U` (see also this [ticket](https://github.com/lambdamusic/dimcli/issues/21))
 
 
-#### Authentication 
+## Authentication 
 
 
 After installation it's strongly advised to create a configuration file with your Dimensions account credentials. This can be done only once, and it'll save you from having to authenticate each time you use DimCli. 
@@ -55,7 +55,7 @@ $ dimcli --init
 The helper will guide you through the process of creating this file, which will be safely stored in your computer home folder. That's it - you're ready to hit the API! See below for more info on how to do that.
 
 
-#### The Credentials File
+### Using a credentials file (recommended)
 
 This section provides more details about where DimCli expects credentials data to be found, in case you want to set this up manually. 
 
@@ -79,7 +79,24 @@ In most situations you can simply copy/paste the text above and change the login
 
 > Note: you must always have an entry in the configuration called `[instance.live]`
 
-#### Advanced: Multiple API Endpoints
+
+### Overriding credentials at runtime (e.g. with Jupyter Notebooks)
+
+If you are using DimCli within a Jupyter notebook and you do not want (or can) set up credentials at the user level, you can simply put a `dsl.ini` file in the current working directory (= where the notebook is located).  
+
+The file should look like this:
+
+```
+[instance.live]
+url=https://app.dimensions.ai
+login=user@mail.com
+password=yourpasswordhere
+```
+
+> Note: the same-directory credentials will take precedence over any system-level credentials previously defined.
+
+
+### Advanced: multiple API endpoints
 
 If you have access to multiple Dimensions API endpoints (or instances), you can just add more entries to the credentials file.
 
@@ -99,26 +116,10 @@ $ dimcli private
 ```
 
 
-#### Overriding credentials at runtime e.g. with Jupyter Notebooks
 
-If you are using DimCli within a jupyter notebook and you do not want (or can) set up credentials at the user level, you can simply put a `dsl.ini` file in the current working directory (= where the notebook is located).  
+## Dimcli as a Command Line Interface
 
-The file should look like this:
-
-```
-[instance.live]
-url=https://app.dimensions.ai
-login=user@mail.com
-password=yourpasswordhere
-```
-
-> Note: the same-directory credentials will take precedence over any system-level credentials previously defined.
-
-
-
-## Using DimCli as a CLI 
-
-DimCli includes a handy CLI which lets you query the Dimensions API interactively. The CLI has several features but, most importantly, it allows to use the TAB key to autocomplete your queries (based on the latest API syntax and fields), which makes it an ideal tool for both newbies and expert users.  
+DimCli includes a handy Command Line Interface (CLI) which lets you query the Dimensions API interactively. The CLI has several features but, most importantly, it allows to use the TAB key to autocomplete your queries (based on the latest API syntax and fields), which makes it an ideal tool for both newbies and expert users.  
 
 Run the command line application by typing
 
@@ -131,7 +132,16 @@ That'll launch the DimCli console, where you can hit `help` in case you need mor
 ![screenshot1](static/screenshot1.jpg)
 
 
-## Using Dimcli as a Python library
+## Dimcli in Jupyter notebooks
+
+DimCli includes a number of features that simplify working with the Dimensions API within a Jupyter notebook. 
+
+For example, it contains a couple of Python _magic_ commands that make it super easy to hit the API from a notebook, or to explore the documentation. 
+
+For more information and examples see the notebooks available in the official [Dimensions API examples repository](https://github.com/digital-science/dimensions-api-lab)
+
+
+## Dimcli as a Python module
 
 Dimcli can be used as a wrapper around the Dimensions API within a Python program. It makes it easier to authenticate, query the Dimensions endpoint and handle the results, normally returned as JSON. 
 
@@ -198,15 +208,6 @@ Once logged in, you can try some queries:
  'Osamu Kaneko', 'Yusuke Wataya']
 
 ```
-
-## Using Dimcli in Jupyter Notebooks
-
-DimCli can simplify working with the Dimensions API within a Jupyter notebook. 
-
-For example, it contains a couple of Python _magic_ commands that make it super easy to hit the API from a notebook, or to explore the documentation. 
-
-For more information and examples see the notebooks available in the official [Dimensions API examples repository](https://github.com/digital-science/dimensions-api-lab)
-
 
 ## Comments, bug reports
 
