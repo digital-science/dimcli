@@ -2,6 +2,7 @@
 - [Dimcli](#dimcli)
     - [In a nutshell](#in-a-nutshell)
   - [Installation](#installation)
+    - [Anaconda users](#anaconda-users)
   - [Authentication](#authentication)
     - [Using a credentials file (recommended)](#using-a-credentials-file-recommended)
     - [Overriding credentials at runtime (e.g. with Jupyter Notebooks)](#overriding-credentials-at-runtime-eg-with-jupyter-notebooks)
@@ -23,7 +24,9 @@ Dimcli is a Python library for accessing the [Dimensions Analytics API](https://
 
 Dimcli provides an interactive environment which aims at simplifying the process of learning the grammar of the Dimensions Search Language ([DSL](https://app.dimensions.ai/dsl)). Calling `dimcli` from the terminal opens a CLI featuring autocomplete (based on the DSL syntax and vocabulary), persistent history across sessions, pretty-printing and preview of JSON results, export to HTML and CSV, and more.  
 
-Current version: see [pypi homepage](https://pypi.org/project/dimcli/). Source code hosted on [github](https://github.com/lambdamusic/dimcli).
+Current version: see [pypi homepage](https://pypi.org/project/dimcli/). Source code hosted on [github](https://github.com/lambdamusic/dimcli). 
+
+> See also: the [Dimensions API Lab](https://github.com/digital-science/dimensions-api-lab) website contains various Jupyter notebooks using Dimcli. 
 
 
 ## Installation
@@ -38,7 +41,13 @@ Then you can check if the installation worked with
 $ dimcli --help
 ```
 
-> [Anaconda](https://www.anaconda.com/) errors: a couple of libraries needed by DimCli might need to be updated manually: `pip install prompt-toolkit -U` and `pip install ipython -U` (see also this [ticket](https://github.com/lambdamusic/dimcli/issues/21))
+### Anaconda users
+
+A couple of libraries needed by DimCli might need to be updated manually: 
+* `pip install prompt-toolkit -U` 
+* `pip install ipython -U` 
+
+See also this [ticket](https://github.com/lambdamusic/dimcli/issues/21).
 
 
 ## Authentication 
