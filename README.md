@@ -2,7 +2,7 @@
 - [Dimcli](#dimcli)
     - [In a nutshell](#in-a-nutshell)
   - [Installation](#installation)
-    - [Anaconda users](#anaconda-users)
+      - [Anaconda users](#anaconda-users)
   - [Authentication](#authentication)
     - [Using a credentials file (recommended)](#using-a-credentials-file-recommended)
     - [Overriding credentials at runtime (e.g. with Jupyter Notebooks)](#overriding-credentials-at-runtime-eg-with-jupyter-notebooks)
@@ -41,13 +41,12 @@ Then you can check if the installation worked with
 $ dimcli --help
 ```
 
-### Anaconda users
+#### Anaconda users
 
-A couple of libraries needed by DimCli might need to be updated manually: 
+There's been [reports](https://github.com/lambdamusic/dimcli/issues/21) of Dimcli failing to install on Anacoda. This can be solved by updating manually a couple of libraries Dimcli relies on:
 * `pip install prompt-toolkit -U` 
 * `pip install ipython -U` 
 
-See also this [ticket](https://github.com/lambdamusic/dimcli/issues/21).
 
 
 ## Authentication 
