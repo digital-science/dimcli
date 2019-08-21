@@ -4,9 +4,10 @@
   - [Installation](#installation)
       - [Anaconda users](#anaconda-users)
   - [Authentication](#authentication)
-    - [Using a credentials file (recommended)](#using-a-credentials-file-recommended)
+    - [Creating a credentials file using the helper script (recommended)](#creating-a-credentials-file-using-the-helper-script-recommended)
+    - [Creating a credentials file manually](#creating-a-credentials-file-manually)
     - [Overriding credentials at runtime (e.g. with Jupyter Notebooks)](#overriding-credentials-at-runtime-eg-with-jupyter-notebooks)
-    - [Advanced: multiple API endpoints](#advanced-multiple-api-endpoints)
+    - [Using multiple API endpoints (for advanced users)](#using-multiple-api-endpoints-for-advanced-users)
   - [Dimcli as a Command Line Interface](#dimcli-as-a-command-line-interface)
   - [Dimcli in Jupyter notebooks](#dimcli-in-jupyter-notebooks)
   - [Dimcli as a Python module](#dimcli-as-a-python-module)
@@ -54,6 +55,8 @@ There's been [reports](https://github.com/lambdamusic/dimcli/issues/21) of Dimcl
 
 After installation it's strongly advised to create a configuration file with your Dimensions account credentials. This can be done only once, and it'll save you from having to authenticate each time you use DimCli. 
 
+### Creating a credentials file using the helper script (recommended)
+
 The easiest way to set up the authentication file is to use the command line helper: 
 
 ```
@@ -63,7 +66,7 @@ $ dimcli --init
 The helper will guide you through the process of creating this file, which will be safely stored in your computer home folder. That's it - you're ready to hit the API! See below for more info on how to do that.
 
 
-### Using a credentials file (recommended)
+### Creating a credentials file manually
 
 This section provides more details about where DimCli expects credentials data to be found, in case you want to set this up manually. 
 
@@ -104,7 +107,7 @@ password=yourpasswordhere
 > Note: the same-directory credentials will take precedence over any system-level credentials previously defined.
 
 
-### Advanced: multiple API endpoints
+### Using multiple API endpoints (for advanced users)
 
 If you have access to multiple Dimensions API endpoints (or instances), you can just add more entries to the credentials file.
 
