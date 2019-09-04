@@ -75,8 +75,12 @@ def read_init_file(fpath, instance_name):
     try:
         section = config['instance.' + instance_name]
     except:
-        click.secho(f"ERROR: Credentials file `{fpath}` does contain settings for instance: {instance_name}", fg="red")
-        click.secho("HowTo: https://github.com/lambdamusic/dimcli#credentials-file", fg="red")
+        click.secho(f"ERROR: Credentials file `{fpath}` does contain settings for instance: '{instance_name}''", fg="red")
+        click.secho(f"Available instances are:")
+        for x in config.sections():
+            click.secho("'%s'" % x)
+        click.secho("---\nSee Also: https://github.com/lambdamusic/dimcli#credentials-file")
+        config.sections()
         sys.exit(0)
     return section
 
