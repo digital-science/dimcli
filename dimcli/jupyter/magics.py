@@ -219,7 +219,7 @@ class DslMagics(Magics):
 
 
 ip = get_ipython()
-# ip.register_magics(DslMagics)
+ip.register_magics(DslMagics)
 
 from ..repl.autocompletion import CleverCompleter
 from prompt_toolkit.document import Document
