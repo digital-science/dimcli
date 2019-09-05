@@ -53,7 +53,17 @@ There's been [reports](https://github.com/lambdamusic/dimcli/issues/21) of Dimcl
 ## Authentication 
 
 
-After installation it's strongly advised to create a configuration file with your Dimensions account credentials. This can be done only once, and it'll save you from having to authenticate each time you use DimCli. 
+After installation it's **strongly advised to create a configuration file** with your Dimensions account credentials. This can be done only once, and it'll save you from having to authenticate each time you use DimCli. 
+
+If you can't create a configuration file you can log in as follows (see also the [Python section](#dimcli-as-a-python-module) for more options).
+
+```
+>>> import dimcli
+
+# you can specify endpoint, which by default is set to "https://app.dimensions.ai"
+>>> dsl = dimcli.Dsl(user="mary.poppins", password="chimneysweeper", ednpoint="https://nannies-research.dimensions.ai")
+```
+
 
 ### Creating a credentials file using the helper script (recommended)
 
