@@ -57,6 +57,18 @@ class DslMagics(Magics):
             print("DimCli %s - Succesfully connected to <%s> (method: dsl.ini file)" % (str(VERSION), self.dsl._url))
 
 
+    @line_magic
+    def dslq(self, line):
+        """DimCli Magic / testing version for autocomplete
+        """
+        if self._handle_login():
+            data = self._handle_query(line)
+            self.shell.user_ns[self.results_var] = data
+            return data
+            
+        else:
+            print("Please login first: %dsl_login")
+
     @line_cell_magic
     def dsl_query(self, line, cell=None):
         """DimCli Magic
@@ -206,8 +218,45 @@ class DslMagics(Magics):
 
 
 
-
-
 ip = get_ipython()
-ip.register_magics(DslMagics)
+# ip.register_magics(DslMagics)
 
+from ..repl.autocompletion import CleverCompleter
+from prompt_toolkit.document import Document
+
+def load_ipython_custom_completers(ipython):
+    def dslq_completers(self, event):
+        """ This should return a list of strings with possible completions.
+
+        Note that all the included strings that don't start with event.symbol
+        are removed, in order to not confuse readline.
+
+        eg Typing %%apt foo then hitting tab would yield an event like so: namespace(command='%%apt', line='%%apt foo', symbol='foo', text_until_cursor='%%apt foo')
+
+        https://stackoverflow.com/questions/36479197/ipython-custom-tab-completion-for-user-magic-function
+
+        > https://github.com/ipython/ipython/issues/11878
+        """
+        # print(dir(event), event)
+        doc = Document(event.line.replace("%dslq", ""))
+        c = CleverCompleter()
+        res = c.get_completions(doc, None)
+        # print(res)
+        return [x.text for x in res]
+        # return ['update', 'upgrade', 'install', 'remove']
+
+    ipython.set_hook('complete_command', dslq_completers, re_key = '%dslq')
+
+    def test_completers(self, event):
+        """ 
+        """
+        return ["morning", "evening"]
+
+    ipython.set_hook('complete_command', test_completers, str_key = 'good')
+
+load_ipython_custom_completers(ip)
+
+
+# TODO 
+# check more Completer behaviour in order to remove extra suggestions eg
+# https://www.programcreek.com/python/example/50972/IPython.get_ipython
