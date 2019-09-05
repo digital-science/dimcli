@@ -61,7 +61,9 @@ If you can't create a configuration file you can log in as follows (see also the
 >>> import dimcli
 
 # you can specify endpoint, which by default is set to "https://app.dimensions.ai"
->>> dsl = dimcli.Dsl(user="mary.poppins", password="chimneysweeper", ednpoint="https://nannies-research.dimensions.ai")
+>>> dsl = dimcli.Dsl( user="mary.poppins", 
+                      password="chimneysweeper", 
+                      ednpoint="https://nannies.dimensions.ai")
 ```
 
 
