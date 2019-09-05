@@ -83,7 +83,8 @@ SYNTAX_DICT = {
 # GRAMMAR_DICT is a dictionary rendering of the DSL grammar JSON
 # which can be obtained with the query `describe schema`
 #
-# last updated: v1.16 2019-04-26
+# last updated: v 1.19 2019-09-05
+#
 # how to create:
 #
 # In [1]: import dimcli
