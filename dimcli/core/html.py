@@ -23,7 +23,7 @@ def html_template_interactive(query, formatted_json):
                 padding: 50px;
                 margin-bottom: 30px;
                 color: #f0f0f0;
-                background: #1f7199;
+                background: #3b3d3e;
                 font-family: monospace;
             }
         </style>
