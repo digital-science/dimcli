@@ -45,11 +45,17 @@ class TestOne(unittest.TestCase):
         click.secho("Completed test succesfully", fg="green")
 
     def test_001(self):
-        click.secho("\nTEST 001: load Dimcli using file-based credentials.", fg="green")
+        click.secho("\nTEST 001: load Dimcli using file-based credentials and basic stats methods.", fg="green")
         # ----
         d = Dsl()
         res = d.query("search publications where year=2018 return publications")
-        # print("Query results: ", res.keys_and_count())
+        print("Query TOT results: ", res.total_count)
+        print("Query errors: ", res.errors_string)
+        # ----
+        res = d.query("search publications where year=2018 return icecreams")
+        print("NOW a BAD query: search publications where year=2018 return icecreams")
+        print("Query TOT results: ", res.total_count)
+        print("Query errors: ", res.errors_string)
         # ----
         click.secho("Completed test succesfully", fg="green")
 

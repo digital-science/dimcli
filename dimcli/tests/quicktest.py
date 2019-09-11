@@ -24,13 +24,10 @@ def main(test_number=1):
     test_number = int(test_number)
 
     if test_number == 1:
-        # res= dslquery("""search publications for "graphene" return publications""")
-        # print(res.as_dataframe_authors())
-        # print(res.as_dataframe_authors_affiliations())
-        # print(res.as_dataframe_funders())
-        res= dslquery("""search grants return grants[basics+investigator_details]""")
-        print(res.as_dataframe_funders())
-        print(res.as_dataframe_investigators())
+        res = dslquery("search publications where year=2018 return icecreams")
+        print("NOW a BAD query: search publications where year=2018 return icecreams")
+        print("Query TOT results: ", res.total_count)
+        print("Query errors: ", res.errors_string)
 
     elif test_number == 2:
         res = dslquery("""search publications where journal.title="nature medicine" return publications[doi+FOR] limit 1000""")

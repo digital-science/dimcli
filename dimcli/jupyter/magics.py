@@ -58,8 +58,8 @@ class DslMagics(Magics):
 
 
     @line_magic
-    def dslq(self, line):
-        """DimCli Magic / testing version for autocomplete
+    def dsl(self, line):
+        """DimCli Magic - new version (unstable) featuring basic DSL autocomplete
         """
         if self._handle_login():
             data = self._handle_query(line)
@@ -238,21 +238,25 @@ def load_ipython_custom_completers(ipython):
         > https://github.com/ipython/ipython/issues/11878
         """
         # print(dir(event), event)
-        doc = Document(event.line.replace("%dslq", ""))
+        if "%%dsl_query" in event.line:
+            # FIXME only first line gets the autocomplete!
+            doc = Document(event.line.replace("%%dsl_query", ""))
+        else:
+            doc = Document(event.line.replace("%dsl_query", ""))
         c = CleverCompleter()
         res = c.get_completions(doc, None)
         # print(res)
         return [x.text for x in res]
-        # return ['update', 'upgrade', 'install', 'remove']
 
-    ipython.set_hook('complete_command', dslq_completers, re_key = '%dslq')
+    ipython.set_hook('complete_command', dslq_completers, re_key = '%dsl_query')
+    ipython.set_hook('complete_command', dslq_completers, re_key = '%%dsl_query')
 
-    def test_completers(self, event):
-        """ 
-        """
-        return ["morning", "evening"]
+    # def test_completers(self, event):
+    #     """ 
+    #     """
+    #     return ["morning", "evening"]
 
-    ipython.set_hook('complete_command', test_completers, str_key = 'good')
+    # ipython.set_hook('complete_command', test_completers, str_key = 'good')
 
 load_ipython_custom_completers(ip)
 

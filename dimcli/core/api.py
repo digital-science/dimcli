@@ -180,8 +180,8 @@ class Result(IPython.display.JSON):
     # Magic methods: 
 
     >>> res['publications'] # => the dict section
-    >>> res.['xxx'] # => false, not found
-    >>> res.['stats'] # => the _stats dict
+    >>> res['xxx'] # => false, not found
+    >>> res['stats'] # => the _stats dict
 
     """
     def __init__(self, data):
@@ -221,6 +221,21 @@ class Result(IPython.display.JSON):
         "Utility to preview contents of results object"
         return [(x, len(self.json[x])) for x in self.json.keys()]
 
+    @property
+    def total_count(self,):
+        "Quickly return tot count for query (not for current payload)"
+        if self.json.get("_stats"):
+            return self.json['_stats']['total_count']
+        else:
+            return None
+
+    @property
+    def errors_string(self,):  # can't be called 'error' due to conflict with auto-set field
+        "Quickly return errors string"
+        if self.json.get("errors"):
+            return self.json['errors']['query']['header'] + self.json['errors']['query']['details'][0]
+        else:
+            return None
 
     def chunks(self, size=400, key=""):
         """
