@@ -5,7 +5,7 @@ from IPython.core.magic import line_magic, cell_magic, line_cell_magic, Magics, 
 from ..VERSION import VERSION
 
 from ..core.api import Dsl
-from ..core.auth import get_connection
+from ..core.auth import get_connection, is_logged_in
 from ..core.utils import *
 
 
@@ -17,8 +17,7 @@ class DslMagics(Magics):
 
 
     def _handle_login(self):
-        CONNECTION = get_connection()
-        if CONNECTION['token']:
+        if is_logged_in():
             self.dslobject = Dsl(show_results=False)
             return True
         else:

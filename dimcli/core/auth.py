@@ -69,6 +69,13 @@ def get_connection():
     return CONNECTION
 
 
+def is_logged_in():
+    if CONNECTION['token']:
+        return True
+    else:
+        print("Warning: you are not logged in. Please use `dimcli.login(username, password)` before querying.")
+        return False
+
 
 def get_init_file():
     """
