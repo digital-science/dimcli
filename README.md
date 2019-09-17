@@ -53,17 +53,23 @@ There's been [reports](https://github.com/lambdamusic/dimcli/issues/21) of Dimcl
 ## Authentication 
 
 
-After installation it's **strongly advised to create a configuration file** with your Dimensions account credentials. This can be done only once, and it'll save you from having to authenticate each time you use DimCli. 
+After installation it's **strongly advised to create a configuration file** with your Dimensions account credentials. This can be done only once, and it'll save you from having to type in credentials each time you use DimCli. E.g. 
 
-If you can't create a configuration file you can log in as follows (see also the [Python section](#dimcli-as-a-python-module) for more options).
+```
+>>> import dimcli
+>>> dimcli.login() # config file is picked up automatically 
+```
+
+If you can't create a configuration file you can explicitly provide log in credentials as follows (see also the [Python section](#dimcli-as-a-python-module) for more options).
 
 ```
 >>> import dimcli
 
 # you can specify endpoint, which by default is set to "https://app.dimensions.ai"
->>> dsl = dimcli.Dsl( user="mary.poppins", 
-                      password="chimneysweeper", 
-                      endpoint="https://nannies.dimensions.ai")
+>>> dimcli.login(user="mary.poppins", 
+                 password="chimneysweeper", 
+                 endpoint="https://app.dimensions.ai")
+
 ```
 
 
@@ -159,7 +165,7 @@ That'll launch the DimCli console, where you can hit `help` in case you need mor
 
 DimCli includes a number of features that simplify working with the Dimensions API within a Jupyter notebook. 
 
-For example, it contains a couple of Python _magic_ commands that make it super easy to hit the API from a notebook, or to explore the documentation. 
+For example, it contains a couple of [magic commands](https://github.com/lambdamusic/dimcli/blob/master/dimcli/jupyter/magics.py) that make it super easy to hit the API from a notebook, or to explore the documentation. 
 
 For more information and examples see the notebooks available in the official [Dimensions API examples repository](https://github.com/digital-science/dimensions-api-lab)
 
@@ -172,18 +178,22 @@ Dimcli can be used as a wrapper around the Dimensions API within a Python progra
 >>> import dimcli
 
 # if you have already set up the credentials file (see above), no need to pass log in details
->>> dsl = dimcli.Dsl()
+>>> dimcli.login()
 
 # otherwise you can authenticate by passing your login details as arguments
->>> dsl = dimcli.Dsl(user="mary.poppins", password="chimneysweeper")
+>>> dimcli.login(user="mary.poppins", password="chimneysweeper")
 
 # you can specify endpoint, which by default is set to "https://app.dimensions.ai"
->>> dsl = dimcli.Dsl(user="mary.poppins", password="chimneysweeper", ednpoint="https://nannies-research.dimensions.ai")
-```
-
-Once logged in, you can try some queries:
+>>> dimcli.login(user="mary.poppins", password="chimneysweeper", ednpoint="https://nannies-research.dimensions.ai")
 
 ```
+
+Once logged in, you can get a query object and try some queries:
+
+```
+
+>>> dsl = dimcli.Dsl()
+
 # queries always return a Result object (subclassing IPython.display.JSON)
 >>> dsl.query("search grants for \"malaria\" return publications")
 <dimcli.dimensions.Result object>
