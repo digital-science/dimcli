@@ -53,7 +53,7 @@ def logout():
     CONNECTION = get_connection()
     if CONNECTION['token']:
         reset_login()
-        print("Logged out from the Dimensions API") 
+        print("Logging out... done") 
     else:
         print("Please login first") 
 

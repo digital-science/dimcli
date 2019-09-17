@@ -10,7 +10,7 @@ import unittest, os, sys, click
 import configparser
 
 from .. import *
-from ..core.api import USER_CONFIG_FILE_PATH
+from ..core.auth import USER_CONFIG_FILE_PATH
 from ..shortcuts import *
 
 
@@ -47,6 +47,7 @@ class TestOne(unittest.TestCase):
     def test_001(self):
         click.secho("\nTEST 001: load Dimcli using file-based credentials and basic stats methods.", fg="green")
         # ----
+        login()
         d = Dsl()
         res = d.query("search publications where year=2018 return publications")
         print("Query TOT results: ", res.total_count)
@@ -56,6 +57,7 @@ class TestOne(unittest.TestCase):
         print("NOW a BAD query: search publications where year=2018 return icecreams")
         print("Query TOT results: ", res.total_count)
         print("Query errors: ", res.errors_string)
+        logout()
         # ----
         click.secho("Completed test succesfully", fg="green")
 
@@ -68,29 +70,36 @@ class TestOne(unittest.TestCase):
         section = config['instance.live' ]
         USER = section['login']
         PSW = section['password']
-        d = Dsl(user=USER, password=PSW)
+        login(USER, PSW)
+        d = Dsl()
         res = d.query("search publications where year=2018 return publications")
         # print("Query results: ", res.keys_and_count())
         # ----
+        logout()
         click.secho("\n--------\nCompleted test succesfully", fg="green")
 
     def test_002_1(self):
         click.secho("\nTEST 002-1: Retain login info and force new login.", fg="green")
         # ----
-        d = Dsl(instance="live")
+        login(instance="live")
+        d = Dsl()
         print(""" Dsl(instance="live"): ==> url=""", d._url)
         res = d.query("""search publications where authors="Pasin" return publications""")
         print(" ==> res.json.keys(): ", res.json.keys())
-        d.login(instance="test")
+        logout()
+        login(instance="test")
+        d = Dsl()
         print(""" d.login(instance="test"): ==> url=""", d._url)
         res = d.query("""search publications where authors="Pasin" return publications""")
         print(" ==> res.json.keys(): ", res.json.keys())
+        logout()
         # ----
         click.secho("\n--------\nCompleted test succesfully", fg="green")
 
     def test_003(self):
         click.secho("\nTEST 003: Try magic methods on result object.", fg="green")
         # ----
+        login(instance="live")
         d = Dsl()
         click.secho("Query #1... returning publications", fg="green")
         res = d.query("search publications where year=2018 return publications")
