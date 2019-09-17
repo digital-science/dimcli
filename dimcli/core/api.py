@@ -84,7 +84,7 @@ class Dsl():
         
         #   Execute DSL query.
         response = requests.post(
-            '{}/api/dsl.json'.format(self._url), data=q, headers=self._headers)
+            '{}/api/dsl.json'.format(self._url), data=q.encode(), headers=self._headers)
         if response.status_code == 429:  
             # Too Many Requests
             print(

@@ -1,5 +1,9 @@
 # Changelog
 
+## v 0.5.6.2
+
+* fixed bug with dimcli shell
+* fixed issue with UTF-8 encoding of queries
 
 ## v 0.5.6
 

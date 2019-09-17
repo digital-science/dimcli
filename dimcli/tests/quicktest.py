@@ -20,7 +20,8 @@ import requests
 @click.argument('test_number', nargs=1)
 def main(test_number=1):
     
-    
+    login()
+
     test_number = int(test_number)
 
     if test_number == 1:
@@ -39,6 +40,9 @@ def main(test_number=1):
         normalize_key("FOR", res.publications)
         print(" ==> len([x for x in res.publications if 'FOR' in x]): ", len([x for x in res.publications if 'FOR' in x]))       
 
+    elif test_number == 3:
+        res = dslquery("""search publications for "乳がん" return publications""")
+        print(" ==> res['stats']: ", res['stats'])
 
 
 if __name__ == '__main__':
