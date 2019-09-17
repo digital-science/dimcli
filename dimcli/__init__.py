@@ -49,7 +49,7 @@ def logout():
     """
     from .core.auth import reset_login, CONNECTION
     reset_login()
-    if CONNECTION['token']
+    if CONNECTION['token']:
         print("Log out failed!") 
     else:
         print("Log out operation successful.") 

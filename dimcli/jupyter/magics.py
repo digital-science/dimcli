@@ -13,48 +13,61 @@ from ..core.utils import *
 class DslMagics(Magics):
 
     results_var = "dsl_last_results" # VAR AUTOMATICALLY SET TO LATEST QUERY RESULTS
+    dslobject = None
 
-    
-    # NOTE line magics and arguments don't play well together when you need to parse a line content
-    # in that case the args parsing throws an error
-    # hence better to have a cell magic, and pass only the args in the line
+
+    def _handle_login(self):
+        if CONNECTION['token']:
+            self.dsl = Dsl(show_results=False)
+            return True
+        else:
+            print("Please login first: `dimcli.login(username, password)`")
+            return False
+
+    # def _handle_login(self):
+    #     if self.dsl: 
+    #         return True
+    #     else:
+    #         if CONNECTION['token']:
+    #             self.dsl = Dsl(show_results=False)
+    #             return True
+    #     return False
+
+
+    def _handle_query(self, text, loop=False):
+        """main procedure after user input"""
+       
+        # lazy complete
+        text = line_add_lazy_return(text)
+        text = line_add_lazy_describe(text)
+
+        # RUN QUERY
+        if not loop:
+            res = self.dslobject.query(text)
+        else:
+            res = self.dslobject.query_iterative(text)
+            return res
+        
+        # print results
+        if "errors" in res.data.keys():
+            if "query" in res.data["errors"]:
+                print(res.data["errors"]["query"]["header"])
+                for key in res.data["errors"]["query"]["details"]:
+                    print(key)
+            else:
+                print(res.data["errors"])
+        else:
+            print_json_stats(res, text)
+            return res
+
 
     @line_magic
-    @magic_arguments.magic_arguments()
-    @magic_arguments.argument('--endpoint',
-      help='The query endpoint: default is https://app.dimensions.ai'
-    )
-    @magic_arguments.argument('--user',
-      help='The account username'
-    )
-    @magic_arguments.argument('--password',
-      help='The account password'
-    )
-    @magic_arguments.argument('--env',
-      help='The instance name as defined in init.py. Default: live.'
-    )
     def dsl_login(self, line):
-        """DimCli Magic
-        Authenticate with the Dimensions.ai DSL backend. If not args are passed, it assumed you have set up a dsl.ini file: see https://github.com/lambdamusic/dimcli#the-credentials-file).
-        
-        Alternatively one can pass auth details explicitly eg
-        >>> %dsl_login --user=me@mail.com --password=secret
-
         """
-        args = magic_arguments.parse_argstring(self.dsl_login, line)
-        # print(args)
-        usr = args.user
-        psw = args.password
-        endpoint = args.endpoint or "https://app.dimensions.ai"
-        instance = args.env or "live"
-
-        if usr and psw:
-            self.dsl = Dsl(user=usr, password=psw, endpoint=endpoint, show_results=False, force_login=True)
-            print("DimCli %s - Succesfully connected to <%s> (method: manual login)" % (str(VERSION), self.dsl._url)) 
-        else:
-            # try to use local init file using instance parameter
-            self.dsl = Dsl(instance=instance, show_results=False, force_login=True) 
-            print("DimCli %s - Succesfully connected to <%s> (method: dsl.ini file)" % (str(VERSION), self.dsl._url))
+        DEPRECATED Magic - please use `dimcli.login()` instead. 
+        """
+        print("DEPRECATED Magic - please use `dimcli.login()` instead. ")
+        print("""e.g. `import dimcli; dimcli.login(username="", password="", endpoint="https://app.dimensions.ai", instance="live")`""")
 
 
     @line_magic
@@ -130,51 +143,15 @@ class DslMagics(Magics):
         else:
             print("Please login first: %dsl_login")
 
-    def _handle_login(self):
-        if self.dsl: 
-            return True
-        else:
-            if CONNECTION['token']:
-                self.dsl = Dsl(show_results=False)
-                return True
-        return False
-
-
-    def _handle_query(self, text, loop=False):
-        """main procedure after user input"""
-       
-        # lazy complete
-        text = line_add_lazy_return(text)
-        text = line_add_lazy_describe(text)
-
-        # RUN QUERY
-        if not loop:
-            res = self.dsl.query(text)
-        else:
-            res = self.dsl.query_iterative(text)
-            return res
-        
-        # print results
-        if "errors" in res.data.keys():
-            if "query" in res.data["errors"]:
-                print(res.data["errors"]["query"]["header"])
-                for key in res.data["errors"]["query"]["details"]:
-                    print(key)
-            else:
-                print(res.data["errors"])
-        else:
-            print_json_stats(res, text)
-            return res
-
 
     @line_magic
     def dsl_docs(self, line):
         """DimCli Magic
         Wrapper around the dsl `describe` function - outputs live documentation for a source or entity
         """
-        if not self.dsl:
-            print("Please login first: %dsl_login")
+        if not self._handle_login():
             return
+
         try:
             import pandas as pd
             df = pd.DataFrame()
@@ -264,3 +241,35 @@ load_ipython_custom_completers(ip)
 # TODO 
 # check more Completer behaviour in order to remove extra suggestions eg
 # https://www.programcreek.com/python/example/50972/IPython.get_ipython
+
+
+
+
+# ****************************************************************************
+
+# 
+# MEMOS 
+# 
+
+# ARGUMENTS AND LINE MAGICS 
+# 
+# line magics and arguments don't play well together when you need to parse a line content
+# in that case the args parsing throws an error
+# hence better to have a cell magic, and pass only the args in the line
+
+# @magic_arguments.magic_arguments()
+# @magic_arguments.argument('--endpoint',
+#     help='The query endpoint: default is https://app.dimensions.ai'
+# )
+# @magic_arguments.argument('--user',
+#     help='The account username'
+# )
+# @magic_arguments.argument('--password',
+#     help='The account password'
+# )
+# @magic_arguments.argument('--env',
+#     help='The instance name as defined in init.py. Default: live.'
+# )
+
+
+# ****************************************************************************
