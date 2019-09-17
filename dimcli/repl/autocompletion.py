@@ -120,7 +120,7 @@ class CleverCompleter(Completer):
         elif line_last_two_words(line_minus_current) == "sort by":  
             return_object = line_search_return(line)  
             if return_object in G.sources(): 
-                # if source, can sort by fields
+                # if source, can sort by fields FIXME
                 candidates = G.fields_for_source(source) + ['relevance']
             elif return_object in G.facets_for_source(source):
                 # if facet, can sort by aggregrates metrics if available, otherwise count
