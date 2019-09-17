@@ -23,15 +23,6 @@ class DslMagics(Magics):
         else:
             return False
 
-    # def _handle_login(self):
-    #     if self.dsl: 
-    #         return True
-    #     else:
-    #         if CONNECTION['token']:
-    #             self.dsl = Dsl(show_results=False)
-    #             return True
-    #     return False
-
 
     def _handle_query(self, text, loop=False):
         """main procedure after user input"""
@@ -60,29 +51,15 @@ class DslMagics(Magics):
             return res
 
 
-    @line_magic
-    def dsl_login(self, line):
-        """
-        DEPRECATED Magic - please use `dimcli.login()` instead. 
-        """
-        print("DEPRECATED Magic - please use `dimcli.login()` instead. ")
-        print("""e.g. `import dimcli; dimcli.login(username="", password="", endpoint="https://app.dimensions.ai", instance="live")`""")
-
-
-    @line_magic
-    def dsl(self, line):
-        """DimCli Magic - new version (unstable) featuring basic DSL autocomplete
-        """
-        if self._handle_login():
-            data = self._handle_query(line)
-            self.shell.user_ns[self.results_var] = data
-            return data
+    #
+    # MAGIC METHODS
+    # 
 
 
     @line_cell_magic
-    def dsl_query(self, line, cell=None):
-        """DimCli Magic
-        Query the Dimensions DSL API with the text passed. 
+    def dsl(self, line, cell=None):
+        """
+        DimCli Magic Method: enter a DSL query string and send it directly to Dimensions API. 
         """
         if self._handle_login():
             if cell:
@@ -93,9 +70,8 @@ class DslMagics(Magics):
 
 
     @line_cell_magic
-    def dsl_query_loop(self, line, cell=None):
-        """DimCli Magic
-        Query the Dimensions DSL API with the text passed, looping over all results pages. The final object returns contains all results into a single JSON object.  
+    def dslloop(self, line, cell=None):
+        """DimCli Magic Method: transforms a simple query into a loop, by adding limit/skip parameters automatically. The final object returns contains all results into a single JSON object.  
         """
         if self._handle_login():
             if cell:
@@ -105,11 +81,9 @@ class DslMagics(Magics):
             return data
 
 
-
     @line_cell_magic
-    def dsl_query_as_df(self, line, cell=None):
-        """DimCli Magic
-        Query the Dimensions DSL API with the text passed - return a pandas dataframe
+    def dsl_to_dataframe(self, line, cell=None):
+        """DimCli Magic method: query the Dimensions DSL API with the text passed - return a pandas dataframe.
         """
         if self._handle_login():
             if cell:
@@ -120,9 +94,8 @@ class DslMagics(Magics):
 
 
     @line_cell_magic
-    def dsl_query_loop_as_df(self, line, cell=None):
-        """DimCli Magic
-        Query the Dimensions DSL API with the text passed, looping over all results pages - return a pandas dataframe
+    def dslloop_to_dataframe(self, line, cell=None):
+        """DimCli Magic method: query the Dimensions DSL API with the text passed, looping over all results pages - return a pandas dataframe.
         """
         if self._handle_login():
             if cell:
@@ -132,11 +105,10 @@ class DslMagics(Magics):
             return data
 
 
-
     @line_magic
-    def dsl_docs(self, line):
-        """DimCli Magic
-        Wrapper around the dsl `describe` function - outputs live documentation for a source or entity
+    def dsldocs(self, line):
+        """
+        DimCli Magic method: wrapper around the dsl `describe` function - outputs documentation for a DSL Source or Entity as a pandas dataframe.
         """
         if not self._handle_login():
             return
@@ -183,6 +155,40 @@ class DslMagics(Magics):
 
 
 
+    #
+    # ===DEPRECATED==== MAGIC METHODS (from v 0.5.6)
+    # 
+
+    @line_magic
+    def dsl_login(self, line):
+        print("DEPRECATED Magic - please use `dimcli.login()` instead. ")
+        print("""e.g. `import dimcli; dimcli.login(username="", password="", endpoint="https://app.dimensions.ai", instance="live")`""")
+
+    @line_cell_magic
+    def dsl_query(self, line, cell=None):
+        print("DEPRECATED Magic - please use `%dsl` instead. ")
+
+    @line_cell_magic
+    def dsl_query_loop(self, line, cell=None):
+        print("DEPRECATED Magic - please use `%dslloop` instead. ")
+
+    @line_cell_magic
+    def dsl_query_as_df(self, line, cell=None):
+        print("DEPRECATED Magic - please use `%dsl_to_dataframe` instead. ")
+
+
+    @line_cell_magic
+    def dsl_query_loop_as_df(self, line, cell=None):
+        print("DEPRECATED Magic - please use `%dslloop_to_dataframe` instead. ")
+
+    @line_magic
+    def dsl_docs(self, line):
+        print("DEPRECATED Magic - please use `%dsldocs` instead. ")
+
+
+
+
+
 
 ip = get_ipython()
 ip.register_magics(DslMagics)
@@ -204,24 +210,30 @@ def load_ipython_custom_completers(ipython):
         > https://github.com/ipython/ipython/issues/11878
         """
         # print(dir(event), event)
-        if "%%dsl_query" in event.line:
-            # FIXME only first line gets the autocomplete!
-            doc = Document(event.line.replace("%%dsl_query", ""))
-        else:
-            doc = Document(event.line.replace("%dsl_query", ""))
-        c = CleverCompleter()
-        res = c.get_completions(doc, None)
-        # print(res)
-        return [x.text for x in res]
 
-    ipython.set_hook('complete_command', dslq_completers, re_key = '%dsl_query')
-    ipython.set_hook('complete_command', dslq_completers, re_key = '%%dsl_query')
+        # FIXME only first line gets the autocomplete!
+        if event.line.startswith("%%"):
+            event.line = event.line[1:] #  reduce cell symbol (double %) to line symbol
+        for command in ["%dslloop_to_dataframe", "%dsl_to_dataframe", "%dslloop", "%dsl"]:
+            if command in event.line: # first match will return results
+                doc = Document(event.line.replace(command, ""))
+                c = CleverCompleter()
+                res = c.get_completions(doc, None)
+                # print(res)
+                return [x.text for x in res]
+            
+            
+
+    
+    # loader
+
+    for command in ["%dslloop_to_dataframe", "%dsl_to_dataframe", "%dslloop", "%dsl"]:
+        ipython.set_hook('complete_command', dslq_completers, re_key = command)
+        ipython.set_hook('complete_command', dslq_completers, re_key = "%" + command)
+
 
     # def test_completers(self, event):
-    #     """ 
-    #     """
     #     return ["morning", "evening"]
-
     # ipython.set_hook('complete_command', test_completers, str_key = 'good')
 
 load_ipython_custom_completers(ip)
