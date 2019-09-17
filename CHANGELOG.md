@@ -6,7 +6,7 @@
 * refactored login approach: `dimcli.login(username, password)` is now the main method that should be used
 * various improvements to ensure dimcli login works seamlessly in jupyter notebooks 
 * refactored magic command names `%dsl`, `%dslloop`, `%dsldocs` and also `%dsl_to_dataframe`, `%dslloop_to_dataframe`,
-* basic DSL language autocomplete enabled on magic commands  
+* basic DSL language autocomplete enabled on magic commands (both query and docs) 
 
 
 ## v 0.5.5
