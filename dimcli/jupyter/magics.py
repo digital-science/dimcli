@@ -5,7 +5,7 @@ from IPython.core.magic import line_magic, cell_magic, line_cell_magic, Magics, 
 from ..VERSION import VERSION
 
 from ..core.api import Dsl
-from ..core.auth import *
+from ..core.auth import get_connection
 from ..core.utils import *
 
 
@@ -17,8 +17,9 @@ class DslMagics(Magics):
 
 
     def _handle_login(self):
+        CONNECTION = get_connection()
         if CONNECTION['token']:
-            self.dsl = Dsl(show_results=False)
+            self.dslobject = Dsl(show_results=False)
             return True
         else:
             print("Please login first: `dimcli.login(username, password)`")
@@ -78,9 +79,7 @@ class DslMagics(Magics):
             data = self._handle_query(line)
             self.shell.user_ns[self.results_var] = data
             return data
-            
-        else:
-            print("Please login first: %dsl_login")
+
 
     @line_cell_magic
     def dsl_query(self, line, cell=None):
@@ -93,9 +92,7 @@ class DslMagics(Magics):
             data = self._handle_query(line)
             self.shell.user_ns[self.results_var] = data
             return data
-            
-        else:
-            print("Please login first: %dsl_login")
+
 
     @line_cell_magic
     def dsl_query_loop(self, line, cell=None):
@@ -109,8 +106,6 @@ class DslMagics(Magics):
             self.shell.user_ns[self.results_var] = data
             return data
 
-        else:
-            print("Please login first: %dsl_login")
 
 
     @line_cell_magic
@@ -124,9 +119,7 @@ class DslMagics(Magics):
             data = self._handle_query(line).as_dataframe()
             self.shell.user_ns[self.results_var] = data
             return data
-            
-        else:
-            print("Please login first: %dsl_login")
+
 
     @line_cell_magic
     def dsl_query_loop_as_df(self, line, cell=None):
@@ -140,8 +133,6 @@ class DslMagics(Magics):
             self.shell.user_ns[self.results_var] = data
             return data
 
-        else:
-            print("Please login first: %dsl_login")
 
 
     @line_magic

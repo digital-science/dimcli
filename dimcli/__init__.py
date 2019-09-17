@@ -27,13 +27,15 @@ def login(username="", password="", endpoint="https://app.dimensions.ai", instan
     * endpoint (defaults to "https://app.dimensions.ai")
     * instance (defaults to "live")
     """
-    from .core.auth import do_global_login, CONNECTION
+    from .core.auth import do_global_login, get_connection
 
     try:
         do_global_login(instance, username, password, endpoint)
     except Exception as e:
         print(str(e))
         print("Login failed: please ensure your credentials are correct.")
+
+    CONNECTION = get_connection()
 
     if CONNECTION['token']:
         if username and password:
@@ -47,9 +49,23 @@ def logout():
     """
     Reset the connectiont to the Dimensions API. This allows to create a new connection subsequently, eg to a different endpoint.
     """
-    from .core.auth import reset_login, CONNECTION
-    reset_login()
+    from .core.auth import reset_login, get_connection
+    CONNECTION = get_connection()
     if CONNECTION['token']:
-        print("Log out failed!") 
+        reset_login()
+        print("Logged out from the Dimensions API") 
     else:
-        print("Log out operation successful.") 
+        print("Please login first") 
+
+
+
+def login_status():
+    """Simply output info on whether we are logged in or not"""
+    from .core.auth import get_connection
+    CONNECTION = get_connection()
+    if CONNECTION['token']:
+        print("DimCli %s - Succesfully connected to <%s>" % (str(VERSION), CONNECTION['url'])) 
+        return True
+    else:
+        print("Status: not logged in") 
+        return False

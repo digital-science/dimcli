@@ -64,6 +64,12 @@ def reset_login():
     CONNECTION = {'instance': None, 'url': None, 'username': None, 'password': None,  'token' : None}
 
 
+def get_connection():
+    global CONNECTION
+    return CONNECTION
+
+
+
 def get_init_file():
     """
     LOGIC
