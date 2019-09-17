@@ -22,6 +22,40 @@ CONNECTION = {'instance': None, 'url': None, 'username': None, 'password': None,
 
 
 
+
+def do_global_login(instance="live", username="", password="", url="https://app.dimensions.ai"):
+    "Login into DSL and set the connection object with token"
+    
+    global CONNECTION
+
+    if not (username and password):
+        fpath = get_init_file()
+        config_section = read_init_file(fpath, instance)
+        url = config_section['url']
+        username = config_section['login']
+        password = config_section['password']
+
+
+    login_data = {'username': username, 'password': password}
+    response = requests.post(
+        '{}/api/auth.json'.format(url), json=login_data)
+    response.raise_for_status()
+
+    token = response.json()['token']
+
+    CONNECTION['instance'] = instance
+    CONNECTION['url'] = url
+    CONNECTION['username'] = username
+    CONNECTION['password'] = password
+    CONNECTION['token'] = token
+
+
+
+
+def refresh_login():
+    "login again using previously used details"
+    do_global_login(CONNECTION['instance'], CONNECTION['username'], CONNECTION['password'], CONNECTION['url'])
+
 def get_init_file():
     """
     LOGIC
@@ -85,35 +119,3 @@ def read_init_file(fpath, instance_name):
     return section
 
 
-
-def do_global_login(instance="live", username="", password="", url="https://app.dimensions.ai"):
-    "Login into DSL and set the connection object with token"
-    
-    global CONNECTION
-
-    if not (username and password):
-        fpath = get_init_file()
-        config_section = read_init_file(fpath, instance)
-        url = config_section['url']
-        username = config_section['login']
-        password = config_section['password']
-
-
-    login_data = {'username': username, 'password': password}
-    response = requests.post(
-        '{}/api/auth.json'.format(url), json=login_data)
-    response.raise_for_status()
-
-    token = response.json()['token']
-
-    CONNECTION['instance'] = instance
-    CONNECTION['url'] = url
-    CONNECTION['username'] = username
-    CONNECTION['password'] = password
-    CONNECTION['token'] = token
-
-
-
-def refresh_login():
-    "login again using previously used details"
-    do_global_login(CONNECTION['instance'], CONNECTION['username'], CONNECTION['password'], CONNECTION['url'])
