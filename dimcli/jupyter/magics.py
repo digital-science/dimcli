@@ -5,7 +5,7 @@ from IPython.core.magic import line_magic, cell_magic, line_cell_magic, Magics, 
 from ..VERSION import VERSION
 
 from ..core.api import Dsl
-from ..core.config import *
+from ..core.auth import *
 from ..core.utils import *
 
 

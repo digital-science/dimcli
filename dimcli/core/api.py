@@ -11,7 +11,7 @@ from itertools import islice
 import pandas as pd
 from pandas.io.json import json_normalize
 
-from .config import *
+from .auth import *
 from .utils import line_search_return
 from .walkup import *
 from .dsl_grammar import G
