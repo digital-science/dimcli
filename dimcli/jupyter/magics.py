@@ -21,7 +21,6 @@ class DslMagics(Magics):
             self.dslobject = Dsl(show_results=False)
             return True
         else:
-            print("Warning: you are not logged in. Please use `dimcli.login(username, password)` before querying.")
             return False
 
     # def _handle_login(self):
