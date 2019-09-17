@@ -56,7 +56,7 @@ class Dsl():
             self.login(instance, user, password, endpoint)
 
     def login(self, instance="live", username="", password="", url="https://app.dimensions.ai"):
-        "This can be called explicitly to force a new login"
+        """DEPRECATED METHOD - please use `dimcli.login()` instead """
         do_global_login(instance, username, password, url)
         self._url = CONNECTION['url']
         self._headers = {'Authorization': "JWT " + CONNECTION['token']}

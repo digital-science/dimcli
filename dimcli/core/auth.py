@@ -51,10 +51,18 @@ def do_global_login(instance="live", username="", password="", url="https://app.
 
 
 
-
 def refresh_login():
-    "login again using previously used details"
+    """
+    Method used to login again if the TOKEN has expired - using previously entered credentials
+    """
     do_global_login(CONNECTION['instance'], CONNECTION['username'], CONNECTION['password'], CONNECTION['url'])
+
+
+def reset_login():
+    ""
+    global CONNECTION
+    CONNECTION = {'instance': None, 'url': None, 'username': None, 'password': None,  'token' : None}
+
 
 def get_init_file():
     """
