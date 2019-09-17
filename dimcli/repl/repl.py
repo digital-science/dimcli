@@ -24,7 +24,8 @@ import os
 import time
 import requests
 
-from ..core.api import Dsl, USER_HISTORY_FILE, USER_JSON_OUTPUTS_DIR
+from ..core.api import Dsl
+from ..core.auth import USER_HISTORY_FILE, USER_JSON_OUTPUTS_DIR, do_global_login
 from ..core.dsl_grammar import *
 from ..core.utils import *
 
@@ -249,7 +250,8 @@ def run(instance="live"):
     """
 
     try:
-        CLIENT = Dsl(instance=instance, show_results=False)
+        do_global_login(instance=instance)
+        CLIENT = Dsl()
     except requests.exceptions.HTTPError as err:
         print(err)
         sys.exit(1)

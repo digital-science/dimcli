@@ -7,6 +7,7 @@ from pprint import pprint
 
 from .VERSION import *
 
+from .core.auth import USER_DIR, USER_CONFIG_FILE_PATH
 from .core.api import *
 from .core.utils import open_multi_platform, init_config_folder
 
