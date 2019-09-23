@@ -11,13 +11,8 @@ Press [Tab] to complete the current word.
 
 from __future__ import unicode_literals
 
+# NOTE this is compatible also with older versions of prompt-toolkit (eg < 2) so will run in Google Colab or Conda 
 from prompt_toolkit.completion import Completion, Completer
-from prompt_toolkit.shortcuts import CompleteStyle
-from prompt_toolkit.formatted_text import HTML
-
-# from prompt_toolkit import prompt   #using session instead
-from prompt_toolkit import PromptSession
-from prompt_toolkit.styles import Style
 
 from ..core.dsl_grammar import *
 from ..core.utils import *
