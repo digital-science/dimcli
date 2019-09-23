@@ -7,35 +7,37 @@ from pprint import pprint
 
 from .VERSION import *
 
-from .core.auth import USER_DIR, USER_CONFIG_FILE_PATH
+from .core.auth import USER_DIR, USER_CONFIG_FILE_PATH, USER_HISTORY_FILE
 from .core.api import *
-from .core.utils import open_multi_platform, init_config_folder
+from .core.utils import open_multi_platform, init_config_folder, print_warning_prompt_version
 
-from .repl import repl
-
+try:
+    from .repl import repl
+    PROMPT_TOOLKIT_VERSION_OK = True
+except:
+    PROMPT_TOOLKIT_VERSION_OK = False
+    pass
 
 
 @click.command()
 @click.argument("instance_name", nargs=1, default="live")
 @click.option(
-    "--init",
+    "--init", "-i",
     is_flag=True,
     help="Initialize the configuration file with your Dimensions account details.")
 @click.option(
-    "--config",
+    "--config", "-c",
     is_flag=True,
     help="Open configuration file with default editor.")
 @click.option(
-    "--history", is_flag=True, help="Open history file with default editor.")
+    "--history", "-h", is_flag=True, help="Open history file with default editor.")
 @click.pass_context
 def main_cli(ctx, instance_name=None, init=False, config=False, history=False):
     """
     Python client for the Dimensions DSL.
     More info: https://github.com/lambdamusic/dimcli
     """
-
     click.secho("Dimcli - dimensions console (" + VERSION + ")", dim=True)
-    # click.secho("------------", fg="white")
 
     if init:
         init_config_folder(USER_DIR, USER_CONFIG_FILE_PATH)
@@ -61,8 +63,11 @@ def main_cli(ctx, instance_name=None, init=False, config=False, history=False):
             open_multi_platform(USER_HISTORY_FILE)
         return
 
-    # launch REPL
-    repl.run(instance_name)
+    if PROMPT_TOOLKIT_VERSION_OK:
+        # launch REPL
+        repl.run(instance_name)
+    else:
+        print_warning_prompt_version()
 
 
 
