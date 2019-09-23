@@ -10,12 +10,24 @@ Press [Tab] to complete the current word.
 from __future__ import unicode_literals
 
 from prompt_toolkit.completion import Completion, Completer
-from prompt_toolkit.shortcuts import CompleteStyle
-from prompt_toolkit.formatted_text import HTML
+
+from ..core.utils import print_warning_prompt_version
+
+try:
+    from prompt_toolkit.formatted_text import HTML
+    from prompt_toolkit.shortcuts import CompleteStyle
+    from prompt_toolkit import PromptSession
+    from prompt_toolkit.styles import Style
+
+    from .autocompletion import *
+    from .history import *
+    from .key_bindings import *
+    from .lexer import *
+except:
+    raise
 
 # from prompt_toolkit import prompt   #using session instead
-from prompt_toolkit import PromptSession
-from prompt_toolkit.styles import Style
+
 
 import click
 import json
@@ -29,10 +41,6 @@ from ..core.auth import USER_HISTORY_FILE, USER_JSON_OUTPUTS_DIR, do_global_logi
 from ..core.dsl_grammar import *
 from ..core.utils import *
 
-from .autocompletion import *
-from .history import *
-from .key_bindings import *
-from .lexer import *
 
 
 
