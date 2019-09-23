@@ -1,5 +1,13 @@
 # Changelog
 
+## v 0.5.7
+
+* downgraded dependencies versions, to allow Dimcli to work better with Google Colab
+  * `ipython >=5.5.0`, `prompt-toolkit>=1.0.16`  (instead of `ipython>=7.2.0`, `prompt-toolkit>=2.0.9`)
+  * users of the CLI can upgrade on demand 
+
+
+
 ## v 0.5.6.2
 
 * fixed bug with dimcli shell
@@ -9,7 +17,7 @@
 
 * refactored login approach: `dimcli.login(username, password)` is now the main method that should be used
 * various improvements to ensure dimcli login works seamlessly in jupyter notebooks 
-* refactored magic command names `%dsl`, `%dslloop`, `%dsldocs` and also `%dsl_to_dataframe`, `%dslloop_to_dataframe`,
+* refactored magic command names `%dsl`, `%dslloop`, `%dsldocs` and also `%dsldf`, `%dslloopdf`,
 * basic DSL language autocomplete enabled on magic commands (both query and docs) 
 
 
