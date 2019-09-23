@@ -5,7 +5,7 @@
 * downgraded dependencies versions, to allow Dimcli to work better with Google Colab
   * `ipython >=5.5.0`, `prompt-toolkit>=1.0.16`  (instead of `ipython>=7.2.0`, `prompt-toolkit>=2.0.9`)
   * users of the CLI can upgrade on demand 
-
+* CLI has now autocomplete on category fields: `category_rcdc`, `category_hrcs_rac`, `category_hrcs_hc`, `category_hra`, `category_bra`, `category_for`
 
 
 ## v 0.5.6.2
