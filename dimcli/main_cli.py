@@ -37,7 +37,7 @@ def main_cli(ctx, instance_name=None, init=False, config=False, history=False):
     Python client for the Dimensions DSL.
     More info: https://github.com/lambdamusic/dimcli
     """
-    click.secho("Dimcli - dimensions console (" + VERSION + ")", dim=True)
+    click.secho("Dimcli - Dimensions API Console (" + VERSION + ")", dim=True)
 
     if init:
         init_config_folder(USER_DIR, USER_CONFIG_FILE_PATH)

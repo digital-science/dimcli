@@ -235,7 +235,7 @@ def print_warning_prompt_version():
         from prompt_toolkit import __version__ as prompt_toolkit_version
     except:
         prompt_toolkit_version = "unknown"
-    click.secho("WARNING: Dimcli Command Line Interface requires prompt-toolkit version >=2. You are running version '%s'." % prompt_toolkit_version,  fg="red")
+    click.secho("WARNING: Dimcli console requires prompt-toolkit version >=2. You are running version '%s'." % prompt_toolkit_version,  fg="red")
     print("You can still use Dimcli as Python library. Or upgrade the dependencies with `pip install ipython prompt-toolkit -U`.")
 
 
