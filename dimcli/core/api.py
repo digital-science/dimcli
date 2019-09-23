@@ -22,13 +22,15 @@ from .dataframe_factory import DfFactory
 class Dsl():
     """
     Object for abstracting common interaction steps with the Dimensions API. 
-    Most often you just want to instantiate, authenticate and query() - yeah!
+    Most often you just want to instantiate and query() - yeah!
 
     >>> import dimcli
-    # if you have set up a credentials file, no need to pass log in details
+    # if you have already set up the credentials file (see above), no need to pass log in details
+    >>> dimcli.login()
+    # otherwise you can authenticate by passing your login details as arguments
+    >>> dimcli.login(user="mary.poppins", password="chimneysweeper")
+    # instantiate the query object
     >>> dsl = dimcli.Dsl()
-    # you can also pass them explicitly
-    >>> dsl = dimcli.Dsl(user="me@mail.com", password="secret")
     # queries always return a Result object (subclassing IPython.display.JSON)
     >>> dsl.query("search grants for \"malaria\" return researchers")
     >>> <dimcli.dimensions.Result object>
