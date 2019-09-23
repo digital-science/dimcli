@@ -70,6 +70,18 @@ class DslMagics(Magics):
 
 
     @line_cell_magic
+    def dsldf(self, line, cell=None):
+        """DimCli Magic method: query the Dimensions DSL API with the text passed - return a pandas dataframe.
+        """
+        if self._handle_login():
+            if cell:
+                line = cell
+            data = self._handle_query(line).as_dataframe()
+            self.shell.user_ns[self.results_var] = data
+            return data
+
+
+    @line_cell_magic
     def dslloop(self, line, cell=None):
         """DimCli Magic Method: transforms a simple query into a loop, by adding limit/skip parameters automatically. The final object returns contains all results into a single JSON object.  
         """
@@ -82,19 +94,7 @@ class DslMagics(Magics):
 
 
     @line_cell_magic
-    def dsl_to_dataframe(self, line, cell=None):
-        """DimCli Magic method: query the Dimensions DSL API with the text passed - return a pandas dataframe.
-        """
-        if self._handle_login():
-            if cell:
-                line = cell
-            data = self._handle_query(line).as_dataframe()
-            self.shell.user_ns[self.results_var] = data
-            return data
-
-
-    @line_cell_magic
-    def dslloop_to_dataframe(self, line, cell=None):
+    def dslloopdf(self, line, cell=None):
         """DimCli Magic method: query the Dimensions DSL API with the text passed, looping over all results pages - return a pandas dataframe.
         """
         if self._handle_login():
@@ -174,12 +174,12 @@ class DslMagics(Magics):
 
     @line_cell_magic
     def dsl_query_as_df(self, line, cell=None):
-        print("DEPRECATED Magic - please use `%dsl_to_dataframe` instead. ")
+        print("DEPRECATED Magic - please use `%dsldf` instead. ")
 
 
     @line_cell_magic
     def dsl_query_loop_as_df(self, line, cell=None):
-        print("DEPRECATED Magic - please use `%dslloop_to_dataframe` instead. ")
+        print("DEPRECATED Magic - please use `%dslloopdf` instead. ")
 
     @line_magic
     def dsl_docs(self, line):
@@ -223,7 +223,7 @@ def load_ipython_custom_completers(ipython):
         # FIXME only first line gets the autocomplete!
         if event.line.startswith("%%"):
             event.line = event.line[1:] #  reduce cell symbol (double %) to line symbol
-        for command in ["%dslloop_to_dataframe", "%dsl_to_dataframe", "%dslloop", "%dsl"]:
+        for command in ["%dslloopdf", "%dsldf", "%dslloop", "%dsl"]:
             if command in event.line: # first match will return results
                 doc = Document(event.line.replace(command, ""))
                 c = CleverCompleter()
