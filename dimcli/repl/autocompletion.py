@@ -56,6 +56,11 @@ class CleverCompleter(Completer):
             entity = G.entity_type_for_source_facet(source, entity_facet)
             candidates = G.fields_for_entity_from_source_facet(source, entity_facet)
 
+        elif in_categories_search(line):
+            this_category = in_categories_search(line)
+            # print(this_category)
+            candidates = G.categories(this_category)
+ 
         elif in_square_brackets(line):
             # https://docs.dimensions.ai/dsl/language.html#return-specific-fields
             # search publications for "bmw" return journal[id + title]"
@@ -150,6 +155,17 @@ class CleverCompleter(Completer):
                     display=keyword.replace(word, ""),
                     display_meta=build_help_string(keyword.replace(word, ""), entity=entity),
                     )
+
+        elif in_categories_search(line):
+            candidates = sorted([word + x for x in candidates])
+            for keyword in candidates:
+                yield Completion(
+                    keyword, 
+                    start_position=-len(word),
+                    display=keyword.replace(word, ""),
+                    display_meta=build_help_string(keyword),
+                    )  
+
         elif in_square_brackets(line):
             # print("***" + str(candidates) + "***")
             candidates = sorted([word + x for x in candidates])

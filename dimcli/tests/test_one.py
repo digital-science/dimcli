@@ -31,6 +31,7 @@ class TestOne(unittest.TestCase):
         print("*LANG*", g.lang())
         print("*SOURCES*", g.sources())
         print("*ENTITIES*", g.entities())
+        print("*CATEGORIES*", g.categories())
         for x in g.sources():
             print("============", x, "============")
             print(g.url_for_source(x))
@@ -41,6 +42,10 @@ class TestOne(unittest.TestCase):
             print("============", x, "============")
             for y in g.fields_for_entity(x):
                 print("...",  y, " => ", str(g.desc_for_entity_field(x, y)))
+        for x in g.categories():
+            print("============", x, "============")
+            for y in g.categories(x):
+                print("...",  y)
         # ----
         click.secho("Completed test succesfully", fg="green")
 

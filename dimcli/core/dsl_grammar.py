@@ -6,10 +6,12 @@
 # then maybe we can have 'children' as a key for nested objects
 
 from .dsl_grammar_dict import *
+from .dsl_grammar_categories import *
 
 if True:
     vocab_data = GRAMMAR_DICT 
     syntax_data = SYNTAX_DICT 
+    categories_data = CATEGORIES_DICT 
 else:
     # @TODO get in real time from DSL
     pass 
@@ -27,9 +29,11 @@ class DslGrammar():
     Wrapper for the DSL Grammar dict
 
     """
-    def __init__(self, grammar_dict, extra_syntax):
+    def __init__(self, grammar_dict, extra_syntax, categories_dict=None):
         self.grammar = grammar_dict
         self.syntax = extra_syntax
+        self.categories_names = list(categories_dict.keys())
+        self.categories_data = categories_dict
         # DslGrammar.__init__(self, data)
 
     def __getitem__(self, key):
@@ -249,7 +253,18 @@ class DslGrammar():
         except:
             pass
 
+    # research categories
+
+    def categories(self, name=None):
+        "Get a list of all research categories available"
+        if not name:
+            return self.categories_names
+        else:
+            if self.categories_data.get(name, ""):
+                return [x['name'] for x in self.categories_data[name]]            
+
+
 # init grammar object from data
-G = DslGrammar(vocab_data, syntax_data)
+G = DslGrammar(vocab_data, syntax_data, categories_data)
 
 

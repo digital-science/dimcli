@@ -25,10 +25,12 @@ def main(test_number=1):
     test_number = int(test_number)
 
     if test_number == 1:
-        res = dslquery("search publications where year=2018 return icecreams")
-        print("NOW a BAD query: search publications where year=2018 return icecreams")
-        print("Query TOT results: ", res.total_count)
-        print("Query errors: ", res.errors_string)
+        g = G
+        print("*CATEGORIES*", g.categories())
+        for x in g.categories():
+            print("============", x, "============")
+            for y in g.categories(x):
+                print("...",  y)
 
     elif test_number == 2:
         res = dslquery("""search publications where journal.title="nature medicine" return publications[doi+FOR] limit 1000""")

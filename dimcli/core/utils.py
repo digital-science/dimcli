@@ -98,6 +98,19 @@ def in_square_brackets(line):
                     return True
     return False
 
+def in_categories_search(line):
+    """if we are within the `category.name="` bit... """
+    pattern = ".name=\""
+    if line:
+        if line.endswith(pattern):
+            for x in G.categories():
+                # print("\ntesting", x, "**"+test)
+                if line.endswith(x+pattern):
+                    # print("found", x)
+                    return x
+    return False
+
+
 def line_last_return_subject(line):
     "get the last 'return <object>' statement "
     lista = list(reversed(line.split()))
