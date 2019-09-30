@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from ..VERSION import VERSION
-from json2html import *
+# from json2html import *
 
 
 def html_template_interactive(query, formatted_json):
@@ -10,7 +10,7 @@ def html_template_interactive(query, formatted_json):
     This version just uses https://highlightjs.org/ to colorize the json code
     """
 
-    table = json2html.convert(json = formatted_json)
+    # table = json2html.convert(json = formatted_json)
 
     s = """
     <html>
@@ -23,7 +23,7 @@ def html_template_interactive(query, formatted_json):
                 padding: 50px;
                 margin-bottom: 30px;
                 color: #f0f0f0;
-                background: #3b3d3e;
+                background: #880000;
                 font-family: monospace;
             }
         </style>
@@ -36,12 +36,10 @@ def html_template_interactive(query, formatted_json):
         <div id="query">
             <p class="query">%s</p></p>
         </div>
-        <h3>Results: JSON&nbsp;<span style="font-size: 70%%; font-weight: normal;">view as <a href="#table">table</a></span></h3><a name="json">
+        <h3>Results: JSON</h3>
+        <a name="json">
         <div id="code"></a><pre><code>%s</code></pre>
         </div> 
-        <hr>
-        <h3>Results: Table&nbsp;<span style="font-size: 70%%; font-weight: normal;">view as <a href="#json">json</a></span></h3><a name="table"></a>
-        <div id="table">%s</div> 
         <div id="footer">
             <hr>
             <p>Generated with <a href="https://github.com/lambdamusic/dimcli">DimCli</a> %s</p>
@@ -49,7 +47,7 @@ def html_template_interactive(query, formatted_json):
     </body>
     </html>
     
-    """ % (query, formatted_json, table, VERSION)
+    """ % (query, formatted_json , VERSION)
     return s
 
 

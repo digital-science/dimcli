@@ -1,5 +1,11 @@
 # Changelog
 
+
+## v 0.5.8
+
+* removed `json2html` dependency and simplified html export (from console)
+
+
 ## v 0.5.7
 
 * downgraded dependencies versions, to allow Dimcli to work better with [Google Colab](https://colab.research.google.com/)
