@@ -60,8 +60,8 @@ Tip: autocomplete works better when there are spaces between operators (eg `sear
 >>> .export_as_csv: save results from last query as CSV file.  
 >>> .export_as_html: save results from last query as HTML file. 
 >>> .show [optional: N]: print N results from last query, trying to build URLs for objects. Default N=10.
->>> .show_json_compact: print results of last query as single-line JSON. 
->>> .show_json_full: print results of last query as formatted JSON.
+>>> .json_compact: print results of last query as single-line JSON. 
+>>> .json_full: print results of last query as formatted JSON.
 ----
 >>> <Ctrl-o>: search docs online. 
 >>> <Ctrl-c>: abort query.
@@ -229,9 +229,9 @@ class CommandsManager(object):
             print("Nothing to show - please run a search first.")
             return
         # cases
-        if text == ".show_json_compact":
+        if text == ".json_compact":
             print_json_compact(jsondata)
-        elif text == ".show_json_full":
+        elif text == ".json_full":
             print_json_full(jsondata)
         else:
             # must be a simple ".show" + X command
