@@ -100,7 +100,7 @@ class DfFactory(object):
                meta=['pub_id', 'researcher_id', 'first_name', 'last_name'], record_prefix='aff_')
         else:
             affiliations = authors # empty df
-        return affiliations
+        return affiliations.fillna('', inplace=True) # 2019-09-30: simplifies subsequent operations
 
 
     def df_grant_funders(self, data):

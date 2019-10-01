@@ -3,7 +3,10 @@
 
 ## v 0.5.8
 
-* removed `json2html` dependency and simplified html export (from console)
+* dimcli CLI
+  * simplified html output of `export_as_html` command
+  * '.show_json_compact' and '.show_json_full' commands renamed to `.json_compact` and `.json_full`
+* removed `json2html` dependency 
 
 
 ## v 0.5.7
