@@ -273,6 +273,14 @@ def open_multi_platform(fpath):
 
 
 def get_dimensions_url(obj_id, obj_type):
+    """
+    Generate a valid Dimensions URL for one of the available sources.
+    obj_id: the dimensions ID of the object
+    obj_type: one of 'publications', 'grants', 'patents', 'policy_documents', 'clinical_trials', 'researchers'
+    """
+    if obj_type not in G.sources():
+        print("Valid sources are: ", " ".join([x for x in G.sources()]))
+        return 
     url = G.url_for_source(obj_type)
     if url:
         return url + obj_id
