@@ -9,7 +9,7 @@
     - [Overriding credentials at runtime (e.g. with Jupyter Notebooks)](#overriding-credentials-at-runtime-eg-with-jupyter-notebooks)
     - [Using multiple API endpoints (for advanced users)](#using-multiple-api-endpoints-for-advanced-users)
   - [Dimcli as a Command Line Interface](#dimcli-as-a-command-line-interface)
-  - [Dimcli in Jupyter notebooks](#dimcli-in-jupyter-notebooks)
+  - [Dimcli with Jupyter Notebooks](#dimcli-with-jupyter-notebooks)
   - [Dimcli as a Python module](#dimcli-as-a-python-module)
   - [Comments, bug reports](#comments-bug-reports)
 
@@ -21,13 +21,12 @@
 
 ### In a nutshell
 
-Dimcli is a Python library for accessing the [Dimensions Analytics API](https://www.dimensions.ai/). It makes it easier to authenticate, query the API endpoint and process the results, normally returned as JSON. 
+Dimcli is a Python client for accessing the [Dimensions Analytics API](https://www.dimensions.ai/). It makes it easier to authenticate against the API, send queries to it and process the JSON data being returned.  
 
-Dimcli provides an interactive environment which aims at simplifying the process of learning the grammar of the Dimensions Search Language ([DSL](https://app.dimensions.ai/dsl)). Calling `dimcli` from the terminal opens a CLI featuring autocomplete (based on the DSL syntax and vocabulary), persistent history across sessions, pretty-printing and preview of JSON results, export to HTML and CSV, and more.  
+Dimcli includes also a command line interface (CLI) that aims at simplifying the process of learning the grammar of the Dimensions Search Language ([DSL](https://app.dimensions.ai/dsl)). Calling `dimcli` from the terminal opens an interactive query console with syntax autocomplete, persistent history across sessions, pretty-printing and preview of JSON results, export to HTML and CSV, and more.  
 
 Current version: see [pypi homepage](https://pypi.org/project/dimcli/). Source code hosted on [github](https://github.com/lambdamusic/dimcli). 
 
-> See also: the [Dimensions API Lab](https://github.com/digital-science/dimensions-api-lab) website contains various Jupyter notebooks using Dimcli. 
 
 
 ## Installation
@@ -161,13 +160,13 @@ That'll launch the DimCli console, where you can hit `help` in case you need mor
 ![screenshot1](static/screenshot1.jpg)
 
 
-## Dimcli in Jupyter notebooks
+## Dimcli with Jupyter Notebooks
 
 DimCli includes a number of features that simplify working with the Dimensions API within a Jupyter notebook. 
 
 For example, it contains a couple of [magic commands](https://github.com/lambdamusic/dimcli/blob/master/dimcli/jupyter/magics.py) that make it super easy to hit the API from a notebook, or to explore the documentation. 
 
-For more information and examples see the notebooks available in the official [Dimensions API examples repository](https://github.com/digital-science/dimensions-api-lab)
+For more information and examples see the notebooks available in the official [Dimensions API Lab](https://github.com/digital-science/dimensions-api-lab) repository.
 
 
 ## Dimcli as a Python module
