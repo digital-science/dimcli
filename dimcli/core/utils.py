@@ -408,7 +408,7 @@ def preview_results(jsondata, maxitems=10):
                 counter += 1
                 if counter <= maxitems:
                     try:  # title and url/id if object has them
-                        url = dimensions_url(row['id'], key) or row['id']
+                        url = dimensions_url(row['id'], key, verbose=False) or row['id']
                         if 'title' in row.keys():
                             name_or_title = row['title'].strip()
                         else:
@@ -460,29 +460,14 @@ def print_json_full(jsondata):
 
 
 
-def dimensions_url(obj_id, obj_type):
+def dimensions_url(obj_id, obj_type, verbose=True):
     """
     Generate a valid Dimensions URL for one of the available sources.
     obj_id: the dimensions ID of the object
     obj_type: one of 'publications', 'grants', 'patents', 'policy_documents', 'clinical_trials', 'researchers'
     """
     if obj_type not in G.sources():
-        print("Valid sources are: ", " ".join([x for x in G.sources()]))
-        return 
-    url = G.url_for_source(obj_type)
-    if url:
-        return url + obj_id
-
-
-def dimensions_url(obj_id, obj_type):
-    """
-    Generate a valid Dimensions URL for one of the available sources.
-    obj_id: the dimensions ID of the object
-    obj_type: one of 'publications', 'grants', 'patents', 'policy_documents', 'clinical_trials', 'researchers'
-    """
-    if obj_type not in G.sources():
-        print("Valid sources are: ", " ".join([x for x in G.sources()]))
-        return 
+        if verbose: print("Valid sources are: ", " ".join([x for x in G.sources()]))
     url = G.url_for_source(obj_type)
     if url:
         return url + obj_id
