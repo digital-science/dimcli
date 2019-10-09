@@ -11,7 +11,7 @@ import configparser
 
 from .. import *
 from ..core.auth import USER_CONFIG_FILE_PATH
-from ..core.utils import get_dimensions_url
+from ..core.utils import dimensions_url
 from ..shortcuts import *
 
 
@@ -48,8 +48,8 @@ class TestOne(unittest.TestCase):
             for y in g.categories(x):
                 print("...",  y)
 
-        print("....Testing get_dimensions_url....\n", get_dimensions_url("01", "stff",))
-        print(get_dimensions_url("01", "publications"))
+        print("....Testing dimensions_url....\n", dimensions_url("01", "stff",))
+        print(dimensions_url("01", "publications"))
         # ----
         click.secho("Completed test succesfully", fg="green")
 

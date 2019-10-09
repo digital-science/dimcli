@@ -30,9 +30,13 @@ except:
     is_flag=True,
     help="Open configuration file with default editor.")
 @click.option(
+    "--versioncheck", "-v",
+    is_flag=True,
+    help="Check online if your dimcli version is the latest.")
+@click.option(
     "--history", "-h", is_flag=True, help="Open history file with default editor.")
 @click.pass_context
-def main_cli(ctx, instance_name=None, init=False, config=False, history=False):
+def main_cli(ctx, instance_name=None, init=False, config=False, versioncheck=False, history=False):
     """
     Python client for the Dimensions DSL.
     More info: https://github.com/lambdamusic/dimcli
@@ -41,6 +45,11 @@ def main_cli(ctx, instance_name=None, init=False, config=False, history=False):
 
     if init:
         init_config_folder(USER_DIR, USER_CONFIG_FILE_PATH)
+        return
+
+    if versioncheck:
+        from .core.version_utils import print_dimcli_report
+        print_dimcli_report()
         return
 
     if not os.path.exists(USER_CONFIG_FILE_PATH):

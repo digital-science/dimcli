@@ -43,9 +43,9 @@ def main(test_number=1):
         print(" ==> len([x for x in res.publications if 'FOR' in x]): ", len([x for x in res.publications if 'FOR' in x]))       
 
     elif test_number == 3:
-        from ..core.utils import get_dimensions_url
-        print(get_dimensions_url("01", "stff",))
-        print(get_dimensions_url("01", "publications"))
+        from ..core.utils import dimensions_url
+        print(dimensions_url("01", "stff",))
+        print(dimensions_url("01", "publications"))
 
 
 if __name__ == '__main__':

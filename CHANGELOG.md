@@ -7,6 +7,10 @@
   * simplified html output of `export_as_html` command
   * '.show_json_compact' and '.show_json_full' commands renamed to `.json_compact` and `.json_full`
 * removed `json2html` dependency 
+* couple of utility methods for data analysis
+  * dimcli.core.utils.dimensions_url for generating valid Dimensions webapp URLs from object IDs
+  * dimcli.core.utils.google_url for generating a google search URL from a string
+
 
 
 ## v 0.5.7
