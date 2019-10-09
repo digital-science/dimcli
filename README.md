@@ -31,6 +31,8 @@ Current version: see [pypi homepage](https://pypi.org/project/dimcli/). Source c
 
 ## Installation
 
+Install / upgrade the package as follows:
+
 ```
 $ pip install dimcli -U
 ```

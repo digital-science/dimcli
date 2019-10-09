@@ -13,8 +13,11 @@ from .walkup import *
 USER_DIR = os.path.expanduser("~/.dimensions/")
 USER_CONFIG_FILE_NAME = "dsl.ini"
 USER_CONFIG_FILE_PATH = os.path.expanduser(USER_DIR + USER_CONFIG_FILE_NAME)
-USER_JSON_OUTPUTS_DIR = os.path.expanduser(USER_DIR + "json/")
 USER_HISTORY_FILE = os.path.expanduser(USER_DIR + "history.txt")
+#
+USER_EXPORTS_DIR = os.path.expanduser("~/dimcli-exports/")
+# _USER_JSON_OUTPUTS_DIR = os.path.expanduser(USER_EXPORTS_DIR + "json/")
+
 
 
 

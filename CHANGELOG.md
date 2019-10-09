@@ -10,7 +10,10 @@
 * couple of utility methods for data analysis
   * dimcli.core.utils.dimensions_url for generating valid Dimensions webapp URLs from object IDs
   * dimcli.core.utils.google_url for generating a google search URL from a string
-
+* command line utils to check if a newer version of the library is available
+  * `dimcli -v` or `dimcli --versioncheck`
+  * run by default when CLI starts as well
+ 
 
 
 ## v 0.5.7

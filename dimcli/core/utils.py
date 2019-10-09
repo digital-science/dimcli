@@ -305,6 +305,14 @@ def init_config_folder(user_dir, user_config_file):
 
 
 
+def init_exports_folder(export_dir):
+    """
+    Create the folder where json and csv exports are stored
+    """
+    if not os.path.exists(export_dir):
+        os.mkdir(export_dir)
+
+
 def chunks_of(data, size):
     it = iter(data)
     chunk = list(islice(it, size))
@@ -339,7 +347,7 @@ def normalize_key(key_name, dict_list):
 # {'name' : x['name'][5:]}
 
 
-def export_json_csv(jjson, query, USER_JSON_OUTPUTS_DIR):
+def export_json_csv(jjson, query, USER_EXPORTS_DIR):
     """
     requires the pandas library which is not installed by default
 
@@ -355,34 +363,34 @@ def export_json_csv(jjson, query, USER_JSON_OUTPUTS_DIR):
     except:
         df =  json_normalize(jjson)
     filename = time.strftime("dsl_export_%Y%m%d-%H%M%S.csv")
-    url = save2File(df.to_csv(), filename, USER_JSON_OUTPUTS_DIR)
+    url = save2File(df.to_csv(), filename, USER_EXPORTS_DIR)
     webbrowser.open(url)
-    # df.to_csv(USER_JSON_OUTPUTS_DIR + filename)
-    print("Exported: ", "%s%s" % (USER_JSON_OUTPUTS_DIR, filename))
+    # df.to_csv(USER_EXPORTS_DIR + filename)
+    print("Exported: ", "%s%s" % (USER_EXPORTS_DIR, filename))
 
 
 
-def export_json_html(jjson, query, USER_JSON_OUTPUTS_DIR):
+def export_json_html(jjson, query, USER_EXPORTS_DIR):
     "print out full json either as pretty_json or within an html template"
     formatted_json = json.dumps(jjson, indent=4, sort_keys=True)
     contents = html_template_interactive(query, formatted_json)
     filename = time.strftime("%Y%m%d-%H%M%S.html")
-    url = save2File(contents, filename, USER_JSON_OUTPUTS_DIR)
+    url = save2File(contents, filename, USER_EXPORTS_DIR)
     webbrowser.open(url)
-    print("Exported: ", "%s%s" % (USER_JSON_OUTPUTS_DIR, filename))
+    print("Exported: ", "%s%s" % (USER_EXPORTS_DIR, filename))
 
 
-def export_json_json(jjson, query, USER_JSON_OUTPUTS_DIR):
+def export_json_json(jjson, query, USER_EXPORTS_DIR):
     """
     requires the pandas library which is not installed by default
 
     """
     formatted_json = json.dumps(jjson, indent=4, sort_keys=True)
     filename = time.strftime("dsl_export_%Y%m%d-%H%M%S.json")
-    url = save2File(formatted_json, filename, USER_JSON_OUTPUTS_DIR)
+    url = save2File(formatted_json, filename, USER_EXPORTS_DIR)
     webbrowser.open(url)
-    # df.to_csv(USER_JSON_OUTPUTS_DIR + filename)
-    print("Exported: ", "%s%s" % (USER_JSON_OUTPUTS_DIR, filename))
+    # df.to_csv(USER_EXPORTS_DIR + filename)
+    print("Exported: ", "%s%s" % (USER_EXPORTS_DIR, filename))
 
 
 

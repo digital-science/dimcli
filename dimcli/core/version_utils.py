@@ -29,7 +29,7 @@ def get_version(package, url_pattern=URL_PATTERN):
 def print_dimcli_report(version=VERSION):
     try:
         v = get_version("dimcli")
-        print("The latest Dimcli version is ", v.base_version )
+        print("====\nThe latest Dimcli version is ", v.base_version )
         print("You have installed: ", VERSION)
         if v.base_version > VERSION:
             print("====\nPlease upgrade: `pip install dimcli -U`")
@@ -37,8 +37,17 @@ def print_dimcli_report(version=VERSION):
             print("====\nLooks like you're good.")
     except:
         print("Couldn't connect to the pypi server. Are you online?")
-    
 
+
+def is_dimcli_outdated(version=VERSION):
+    try:
+        v = get_version("dimcli")
+        if v.base_version > VERSION:
+            return True
+        else:
+            return False
+    except:
+        return None
 
 
 if __name__ == '__main__':

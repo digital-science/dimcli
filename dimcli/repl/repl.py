@@ -37,7 +37,7 @@ import time
 import requests
 
 from ..core.api import Dsl
-from ..core.auth import USER_HISTORY_FILE, USER_JSON_OUTPUTS_DIR, do_global_login
+from ..core.auth import USER_HISTORY_FILE, USER_EXPORTS_DIR, do_global_login
 from ..core.dsl_grammar import *
 from ..core.utils import *
 
@@ -196,6 +196,7 @@ class CommandsManager(object):
         """
         save results of a query to a file
         """
+        init_exports_folder(USER_EXPORTS_DIR)
         if self.bf: 
             jsondata, query = self.bf.retrieve()
         else:
@@ -205,13 +206,13 @@ class CommandsManager(object):
             return
         # cases
         if text == ".export_as_html":
-            export_json_html(jsondata, query, USER_JSON_OUTPUTS_DIR)
+            export_json_html(jsondata, query, USER_EXPORTS_DIR)
 
         elif text == ".export_as_csv":
-            export_json_csv(jsondata, query, USER_JSON_OUTPUTS_DIR)
+            export_json_csv(jsondata, query, USER_EXPORTS_DIR)
 
         elif text == ".export_as_json":
-            export_json_json(jsondata, query, USER_JSON_OUTPUTS_DIR)
+            export_json_json(jsondata, query, USER_EXPORTS_DIR)
 
     def show(self, text):
         """

@@ -10,6 +10,7 @@ from .VERSION import *
 from .core.auth import USER_DIR, USER_CONFIG_FILE_PATH, USER_HISTORY_FILE
 from .core.api import *
 from .core.utils import open_multi_platform, init_config_folder, print_warning_prompt_version
+from .core.version_utils import print_dimcli_report, is_dimcli_outdated
 
 try:
     from .repl import repl
@@ -48,7 +49,6 @@ def main_cli(ctx, instance_name=None, init=False, config=False, versioncheck=Fal
         return
 
     if versioncheck:
-        from .core.version_utils import print_dimcli_report
         print_dimcli_report()
         return
 
@@ -73,6 +73,10 @@ def main_cli(ctx, instance_name=None, init=False, config=False, versioncheck=Fal
         return
 
     if PROMPT_TOOLKIT_VERSION_OK:
+        # try online version check
+        test = is_dimcli_outdated()
+        if test:
+            click.secho("====\nWarning: there is a newer version of Dimcli available at https://pypi.org/project/dimcli/.\n====", bold=True)
         # launch REPL
         repl.run(instance_name)
     else:
