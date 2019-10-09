@@ -13,7 +13,7 @@
 * command line utils to check if a newer version of the library is available
   * `dimcli -v` or `dimcli --versioncheck`
   * run by default when CLI starts as well
- 
+* query results exports now go to `~/dimcli-exports` folder (instead of `.dimensions`) 
 
 
 ## v 0.5.7
