@@ -211,6 +211,7 @@ class Result(IPython.display.JSON):
     def __init__(self, data):
         IPython.display.JSON.__init__(self, data)
         self.json = self.data
+        self.errors = None
         for k in self.json.keys(): # add result dict keys as attributes dynamically
             if k == "_stats":
                 setattr(self, "stats", self.json[k])
@@ -220,7 +221,8 @@ class Result(IPython.display.JSON):
         self.df_factory = DfFactory(good_data_keys=self.good_data_keys())
 
     def __getitem__(self, key):
-        "return dict key as slice"
+        "Trick to return any dict key as a property"
+        # print(key, "==========")
         if key == "stats":
             key = "_stats" # syntactic sugar
         if key in self.json:
@@ -246,7 +248,7 @@ class Result(IPython.display.JSON):
         return [(x, len(self.json[x])) for x in self.json.keys()]
 
     @property
-    def total_count(self,):
+    def count_total(self,):
         "Quickly return tot count for query (not for current payload)"
         if self.json.get("_stats"):
             return self.json['_stats']['total_count']
@@ -254,12 +256,17 @@ class Result(IPython.display.JSON):
             return None
 
     @property
+    def count_batch(self,):
+        "Quickly return tot count for current batch from query"
+        return len(self)
+
+    @property
     def errors_string(self,):  # can't be called 'error' due to conflict with auto-set field
         "Quickly return errors string"
         if self.json.get("errors"):
             return self.json['errors']['query']['header'] + self.json['errors']['query']['details'][0]
         else:
-            return None
+            return ""
 
     def chunks(self, size=400, key=""):
         """

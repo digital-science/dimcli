@@ -43,9 +43,11 @@ def main(test_number=1):
         print(" ==> len([x for x in res.publications if 'FOR' in x]): ", len([x for x in res.publications if 'FOR' in x]))       
 
     elif test_number == 3:
-        from ..core.utils import dimensions_url
-        print(dimensions_url("01", "stff",))
-        print(dimensions_url("01", "publications"))
+        res = dslquery("search publications where year=2018 return publipcations")
+        print("Query BATCH results: ", res.count_batch)
+        print("Query TOT results: ", res.count_total)
+        print("Query errors: ", res.errors)
+        print("Query errors_string: ", res.errors_string)
 
 
 if __name__ == '__main__':
