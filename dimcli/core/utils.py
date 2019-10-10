@@ -480,3 +480,12 @@ def google_url(stringa):
     from urllib.parse import quote   
     s = quote(stringa)    
     return f"https://www.google.com/search?q={s}"                                                                                                           
+
+
+def dsl_escape(stringa):
+    """
+    Util to escape quotes in full-text query strings so that they work nicely with Python.
+    From '"' to '\\"'  
+    See also https://docs.dimensions.ai/dsl/language.html#full-text-searching
+    """
+    return stringa.replace('"', '\\"')
