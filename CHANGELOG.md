@@ -3,7 +3,7 @@
 ## unreleased
 
 * `dsl_escape` util
-
+* `api.Result.errors` helper method
 
 
 ## v 0.5.8
