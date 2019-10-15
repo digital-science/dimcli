@@ -16,6 +16,21 @@ if ipython_env:
     from .jupyter import magics
 
 
+#
+# determine if we are in Google Colab or Jupyter
+try:
+    from google.colab import files
+    from IPython import get_ipython
+    get_ipython().run_line_magic("load_ext", "google.colab.data_table")
+#   %load_ext google.colab.data_table
+#   !mkdir data # to save temp data -- needed?
+#   !dimcli --init
+    COLAB_ENV = True
+except:
+    COLAB_ENV = False
+
+
+
 
 def login(username="", password="", endpoint="https://app.dimensions.ai", instance="live"):
     """
