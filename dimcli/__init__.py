@@ -21,10 +21,10 @@ if ipython_env:
 try:
     from google.colab import files
     from IPython import get_ipython
-    get_ipython().run_line_magic("load_ext", "google.colab.data_table")
 #   %load_ext google.colab.data_table
-#   !mkdir data # to save temp data -- needed?
 #   !dimcli --init
+    get_ipython().run_line_magic("load_ext", "google.colab.data_table")
+    get_ipython().run_line_magic("sx", "dimcli --init")
     COLAB_ENV = True
 except:
     COLAB_ENV = False
