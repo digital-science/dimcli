@@ -103,7 +103,7 @@ class CommandsManager(object):
 
     def handle(self, text):
         "process text and delegate"
-        if text.replace("\n", "").strip().startswith(".show"):
+        if text.replace("\n", "").strip().startswith(".show") or text.replace("\n", "").strip().startswith(".json"):
             self.show(text.replace("\n", "").strip())
 
         elif text.replace("\n", "").strip().startswith(".export"):
