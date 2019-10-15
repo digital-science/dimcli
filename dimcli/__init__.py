@@ -20,21 +20,19 @@ if ipython_env:
 # determine if we are in Google Colab or Jupyter
 try:
     from google.colab import files
-    from IPython import get_ipython
 #   %load_ext google.colab.data_table
-#   !dimcli --init
     get_ipython().run_line_magic("load_ext", "google.colab.data_table")
-    get_ipython().run_line_magic("sx", "dimcli --init")
     COLAB_ENV = True
 except:
     COLAB_ENV = False
 
 
 
-
 def login(username="", password="", endpoint="https://app.dimensions.ai", instance="live"):
     """
-    Login into the Dimensions API and obtain a query token. If credentials are not passed, we attempt to login using the local dsl.ini credentials file. 
+    Login into the Dimensions API and obtain a query token. 
+    - If credentials are not passed, we attempt to login using the local dsl.ini credentials file. 
+    - If COLAB is detected and user/psw is not available, try running the interactive login
 
     Args: 
     * username
@@ -43,6 +41,12 @@ def login(username="", password="", endpoint="https://app.dimensions.ai", instan
     * instance (defaults to "live")
     """
     from .core.auth import do_global_login, get_connection
+
+    if COLAB_ENV and not (username and password): 
+        print("..running Google Colab auto-init..")
+        get_ipython().run_line_magic("sx", "dimcli --init")
+    else:
+        pass
 
     try:
         do_global_login(instance, username, password, endpoint)

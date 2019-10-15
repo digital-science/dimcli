@@ -32,6 +32,7 @@ def do_global_login(instance="live", username="", password="", url="https://app.
     global CONNECTION
 
     if not (username and password):
+        # then use 'instance' shortcut to get local credentials
         fpath = get_init_file()
         config_section = read_init_file(fpath, instance)
         url = config_section['url']
