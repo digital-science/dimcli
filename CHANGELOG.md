@@ -4,6 +4,7 @@
 
 * `dsl_escape` util
 * `api.Result.errors` helper method
+* improved integration with Google Colab
 
 
 ## v 0.5.8
