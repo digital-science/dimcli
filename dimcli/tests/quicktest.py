@@ -43,11 +43,8 @@ def main(test_number=1):
         print(" ==> len([x for x in res.publications if 'FOR' in x]): ", len([x for x in res.publications if 'FOR' in x]))       
 
     elif test_number == 3:
-        res = dslquery("search publications where year=2018 return publipcations")
-        print("Query BATCH results: ", res.count_batch)
-        print("Query TOT results: ", res.count_total)
-        print("Query errors: ", res.errors)
-        print("Query errors_string: ", res.errors_string)
+        res = dslquery("""search publications for "bmw" return publications limit 500""")
+        print(res.as_dataframe_authors_affiliations())
 
 
 if __name__ == '__main__':
