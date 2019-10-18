@@ -156,6 +156,23 @@ class CleverCompleter(Completer):
                     display_meta=build_help_string(keyword.replace(word, ""), entity=entity),
                     )
 
+        elif in_square_brackets(line):
+            # print("***" + str(candidates) + "***")
+            # print("***" + str(word) + "***")
+            candidates = sorted(candidates)
+            for keyword in candidates:
+                if word.rfind("+") > 0:
+                    word = word[word.find("+")+1:]
+                else:
+                    word = word[word.find("[")+1:]
+                if keyword.startswith(word):
+                    yield Completion(
+                        keyword, 
+                        start_position=-len(word),
+                        display=keyword,
+                        display_meta=build_help_string(keyword, source=source),
+                        )      
+
         elif in_categories_search(line):
             candidates = sorted([word + x for x in candidates])
             for keyword in candidates:
@@ -165,17 +182,7 @@ class CleverCompleter(Completer):
                     display=keyword.replace(word, ""),
                     display_meta=build_help_string(keyword),
                     )  
-
-        elif in_square_brackets(line):
-            # print("***" + str(candidates) + "***")
-            candidates = sorted([word + x for x in candidates])
-            for keyword in candidates:
-                yield Completion(
-                    keyword, 
-                    start_position=-len(word),
-                    display=keyword.replace(word, ""),
-                    display_meta=build_help_string(keyword.replace(word, ""), source=source),
-                    )            
+     
         else:
             candidates = sorted(candidates)
             for keyword in candidates:
