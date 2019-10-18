@@ -1,10 +1,12 @@
 # Changelog
 
-## unreleased
+## v 0.5.9
 
 * `dsl_escape` util
 * `api.Result.errors` helper method
 * improved integration with Google Colab
+  * `dimcli.login()` will launch interactive init if usr and psw aren't provided
+  * `%load_ext google.colab.data_table` ran by default
 
 
 ## v 0.5.8

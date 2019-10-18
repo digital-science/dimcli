@@ -20,7 +20,7 @@ if ipython_env:
 # determine if we are in Google Colab or Jupyter
 try:
     from google.colab import files
-#   %load_ext google.colab.data_table
+    # load table plugin => %load_ext google.colab.data_table
     get_ipython().run_line_magic("load_ext", "google.colab.data_table")
     COLAB_ENV = True
 except:
@@ -42,7 +42,8 @@ def login(username="", password="", endpoint="https://app.dimensions.ai", instan
     """
     from .core.auth import do_global_login, get_connection
 
-    if COLAB_ENV and not (username and password): 
+    test_CONNECTION = get_connection() # for legacy code: avoid generating init file again, if one has already called --init manually
+    if COLAB_ENV and not (username and password) and not test_CONNECTION['token']: 
         print("..running Google Colab auto-init..")
         get_ipython().run_line_magic("sx", "dimcli --init")
     else:
