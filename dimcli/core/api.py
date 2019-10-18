@@ -48,31 +48,31 @@ class Dsl():
         self._show_results = show_results
         self._url = None
         self._headers = None
-        self.CONNECTION = get_connection()
+        self._CONNECTION = get_connection()
 
-        if self.CONNECTION['token']:
+        if self._CONNECTION['token']:
             # if already logged in, reuse connection          
-            self._url = self.CONNECTION['url']
-            self._headers = {'Authorization': "JWT " + self.CONNECTION['token']}
+            self._url = self._CONNECTION['url']
+            self._headers = {'Authorization': "JWT " + self._CONNECTION['token']}
         elif user and password:
             print("Warning: this log in method is DEPRECATED - please use `dimcli.login(username, password)` instead. ")
             self.login(instance, user, password, endpoint)
         else:
-            self.print_please_login()
+            self._print_please_login()
 
     def login(self, instance="live", username="", password="", url="https://app.dimensions.ai"):
         """DEPRECATED METHOD - please use `dimcli.login()` instead """
         do_global_login(instance, username, password, url)
-        self.CONNECTION = get_connection()
-        self._url = self.CONNECTION['url']
-        self._headers = {'Authorization': "JWT " + self.CONNECTION['token']}
+        self._CONNECTION = get_connection()
+        self._url = self._CONNECTION['url']
+        self._headers = {'Authorization': "JWT " + self._CONNECTION['token']}
 
     @property
     def is_logged_in(self):
         if self._url and  self._headers: return True
         else: return False
 
-    def print_please_login(self):
+    def _print_please_login(self):
         print("Warning: you are not logged in. Please use `dimcli.login(username, password)` before querying.")
 
     def query(self, q, show_results=None, retry=0):
@@ -81,7 +81,7 @@ class Dsl():
         By default it doesn't show results, but it uses the iPython rich widgets for it, optimized for Jupyter Notebooks.
         """
         if not self.is_logged_in:
-            self.print_please_login()
+            self._print_please_login()
             return False
         
         #   Execute DSL query.
@@ -98,9 +98,9 @@ class Dsl():
             # Forbidden:
             print('Login token expired. Logging in again.')
             refresh_login()
-            self.CONNECTION = get_connection()
-            self._url = self.CONNECTION['url']
-            self._headers = {'Authorization': "JWT " + self.CONNECTION['token']}
+            self._CONNECTION = get_connection()
+            self._url = self._CONNECTION['url']
+            self._headers = {'Authorization': "JWT " + self._CONNECTION['token']}
             return self.query(q)
         elif response.status_code in [200, 400, 500]:  
             ###  
@@ -132,7 +132,7 @@ class Dsl():
         Runs a normal query iteratively, by automatically turning it into a loop with limit/skip operators until all the results available have been extracted. 
         """
         if not self.is_logged_in:
-            self.print_please_login()
+            self._print_please_login()
             return False
 
         # @TODO is there a hard limit of 50k results for limit/skip? can we catch it?

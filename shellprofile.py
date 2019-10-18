@@ -7,4 +7,5 @@
 #
 
 import dimcli
+dimcli.login()
 dsl = dimcli.Dsl()
