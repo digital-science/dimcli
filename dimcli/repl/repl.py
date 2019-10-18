@@ -45,11 +45,9 @@ from ..core.utils import *
 
 
 
-HELP_MESSAGE =  """DIMCLI COMMANDS HELP
+HELP_MESSAGE =  """COMMANDS LIST
 ====================
-Default: enter a DSL query and click return to send it to the Dimensions API.
-Special commands start with '.'
-Tip: autocomplete works better when there are spaces between operators (eg `search where id = "xxx"`)
+All special commands start with '.'
 ----
 >>> help: show this help message
 ----
@@ -68,7 +66,9 @@ Tip: autocomplete works better when there are spaces between operators (eg `sear
 >>> <Ctrl-d>: exit console.
 ----
 >>> quit: exit console
-----"""
+====================
+*ABOUT AUTOCOMPLETE*
+Including a space between query elements (= keywords and operators) leads to better autocomplete results."""
 
 WELCOME_MESSAGE = "Welcome! Type help for more info."
 # WELCOME_MESSAGE = "Welcome! Type help for more info. Ready to query endpoint: %s"
