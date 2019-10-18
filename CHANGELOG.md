@@ -7,7 +7,7 @@
 * improved integration with Google Colab
   * `dimcli.login()` will launch interactive init if usr and psw aren't provided
   * `%load_ext google.colab.data_table` ran by default
-
+* repl: improved autocomplete with `[fieldname1+fieldname2]` syntax
 
 ## v 0.5.8
 

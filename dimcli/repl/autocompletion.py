@@ -145,6 +145,7 @@ class CleverCompleter(Completer):
         #
         # now build the candidates list
         #
+
         if line_minus_current and word.endswith("."):
             # print("***" + str(candidates) + "***")
             candidates = sorted([word + x for x in candidates])
@@ -157,7 +158,6 @@ class CleverCompleter(Completer):
                     )
 
         elif in_square_brackets(line):
-            # print("***" + str(candidates) + "***")
             # print("***" + str(word) + "***")
             candidates = sorted(candidates)
             for keyword in candidates:
