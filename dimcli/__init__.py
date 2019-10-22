@@ -42,12 +42,13 @@ def login(username="", password="", endpoint="https://app.dimensions.ai", instan
     """
     from .core.auth import do_global_login, get_connection
 
-    test_CONNECTION = get_connection() # for legacy code: avoid generating init file again, if one has already called --init manually
-    if COLAB_ENV and not (username and password) and not test_CONNECTION['token']: 
-        print("..running Google Colab auto-init..")
-        get_ipython().run_line_magic("sx", "dimcli --init")
-    else:
-        pass
+    if False:
+        test_CONNECTION = get_connection() # for legacy code: avoid generating init file again, if one has already called --init manually
+        if COLAB_ENV and not (username and password) and not test_CONNECTION['token']: 
+            print("..running Google Colab auto-init..")
+            get_ipython().run_line_magic("sx", "dimcli --init")
+        else:
+            pass
 
     try:
         do_global_login(instance, username, password, endpoint)
