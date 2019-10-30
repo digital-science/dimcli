@@ -487,5 +487,11 @@ def dsl_escape(stringa):
     Util to escape quotes in full-text query strings so that they work nicely with Python.
     From '"' to '\\"'  
     See also https://docs.dimensions.ai/dsl/language.html#full-text-searching
+
+    EG
+    from dimcli.core.utils import dsl_escape
+    a = dsl_escape(\""" "phrase 1" AND "phrase 2" \""")
+    dsl.query(f\"""search publications for "{a}" return publications\""")
+
     """
     return stringa.replace('"', '\\"')
