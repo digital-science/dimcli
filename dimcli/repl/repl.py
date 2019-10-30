@@ -129,8 +129,10 @@ class CommandsManager(object):
                 print(res.data["errors"])
         elif text.strip().startswith("search"):
             if "_warnings" in res.data.keys():
-                print("WARNINGS [{}]".format(len(res.data["_warnings"])))
+                click.secho("WARNINGS [{}]".format(len(res.data["_warnings"])), fg="red")
+                # print("WARNINGS [{}]".format(len(res.data["_warnings"])))
                 print("\n".join([s for s in res.data["_warnings"]]))
+                click.secho("---", dim=True)
             print_json_stats(res, text)
             if self.bf: self.bf.save(res.data, text)
             if True:
