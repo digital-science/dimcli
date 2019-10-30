@@ -248,8 +248,7 @@ def print_warning_prompt_version():
         from prompt_toolkit import __version__ as prompt_toolkit_version
     except:
         prompt_toolkit_version = "unknown"
-    click.secho("WARNING: Dimcli console requires prompt-toolkit version >=2. You are running version '%s'." % prompt_toolkit_version,  fg="red")
-    print("You can still use Dimcli as Python library. Or upgrade the dependencies with `pip install ipython prompt-toolkit -U`.")
+    click.secho("WARNING: Dimcli console requires prompt-toolkit version >=2. You are running version '%s'.\nYou can still use Dimcli as Python library. Or upgrade the dependencies with `pip install ipython prompt-toolkit -U" % prompt_toolkit_version,  fg="red")
 
 
 
@@ -271,6 +270,14 @@ def open_multi_platform(fpath):
         except OSError:
             print("Couldnt find suitable opener for %s" % fpath)
 
+
+def preview_contents(fpath):
+    click.secho("File: {}".format(fpath), bold=True)
+    try:
+        with open(fpath) as f:
+            print(f.read())
+    except:
+        print("An unknown error occured..")
 
 
 def init_config_folder(user_dir, user_config_file):

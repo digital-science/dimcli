@@ -9,15 +9,17 @@ from .VERSION import *
 
 from .core.auth import USER_DIR, USER_CONFIG_FILE_PATH, USER_HISTORY_FILE
 from .core.api import *
-from .core.utils import open_multi_platform, init_config_folder, print_warning_prompt_version
+from .core.utils import open_multi_platform, init_config_folder, print_warning_prompt_version, preview_contents
 from .core.version_utils import print_dimcli_report, is_dimcli_outdated
 
 try:
-    from .repl import repl
+    from prompt_toolkit.formatted_text import HTML
+    from prompt_toolkit.shortcuts import CompleteStyle
+    from prompt_toolkit import PromptSession
+    from prompt_toolkit.styles import Style
     PROMPT_TOOLKIT_VERSION_OK = True
 except:
-    PROMPT_TOOLKIT_VERSION_OK = False
-    pass
+    PROMPT_TOOLKIT_VERSION_OK = False # => repl disabled
 
 
 @click.command()
@@ -29,7 +31,7 @@ except:
 @click.option(
     "--config", "-c",
     is_flag=True,
-    help="Open configuration file with default editor.")
+    help="Show configuration file.")
 @click.option(
     "--versioncheck", "-v",
     is_flag=True,
@@ -64,7 +66,7 @@ def main_cli(ctx, instance_name=None, init=False, config=False, versioncheck=Fal
         return
 
     if config:
-        open_multi_platform(USER_CONFIG_FILE_PATH)
+        preview_contents(USER_CONFIG_FILE_PATH)
         return
 
     if history:
@@ -73,6 +75,7 @@ def main_cli(ctx, instance_name=None, init=False, config=False, versioncheck=Fal
         return
 
     if PROMPT_TOOLKIT_VERSION_OK:
+        from .repl import repl
         # try online version check
         test = is_dimcli_outdated()
         if test:

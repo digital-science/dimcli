@@ -10,21 +10,17 @@ Press [Tab] to complete the current word.
 from __future__ import unicode_literals
 
 from prompt_toolkit.completion import Completion, Completer
+from prompt_toolkit.formatted_text import HTML
+from prompt_toolkit.shortcuts import CompleteStyle
+from prompt_toolkit import PromptSession
+from prompt_toolkit.styles import Style
 
-from ..core.utils import print_warning_prompt_version
+from .autocompletion import *
+from .history import *
+from .key_bindings import *
+from .lexer import *
 
-try:
-    from prompt_toolkit.formatted_text import HTML
-    from prompt_toolkit.shortcuts import CompleteStyle
-    from prompt_toolkit import PromptSession
-    from prompt_toolkit.styles import Style
 
-    from .autocompletion import *
-    from .history import *
-    from .key_bindings import *
-    from .lexer import *
-except:
-    raise
 
 # from prompt_toolkit import prompt   #using session instead
 
@@ -132,6 +128,9 @@ class CommandsManager(object):
             else:
                 print(res.data["errors"])
         elif text.strip().startswith("search"):
+            if "_warnings" in res.data.keys():
+                print("WARNINGS [{}]".format(len(res.data["_warnings"])))
+                print("\n".join([s for s in res.data["_warnings"]]))
             print_json_stats(res, text)
             if self.bf: self.bf.save(res.data, text)
             if True:
