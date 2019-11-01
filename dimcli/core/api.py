@@ -117,7 +117,7 @@ class Dsl():
                 return response
             result = Result(res_json)
             if verbose: print_json_stats(result, q)
-            if verbose: print_json_errors(result)
+            print_json_errors(result) # always print errors
             if verbose: print_json_warnings(result)
             if show_results or (show_results is None and self._show_results):
                 IPython.display.display(result)
@@ -145,7 +145,6 @@ class Dsl():
         if verbose == None:
             verbose = self._verbose
 
-        # @TODO is there a hard limit of 50k results for limit/skip? can we catch it?
         if q.split().count('return') != 1:
             raise Exception("Loop queries support only 1 return statement")
         if "limit" in q or "skip" in q:
@@ -153,11 +152,27 @@ class Dsl():
         sourcetype = line_search_return(q)  
         if not (sourcetype in G.sources()):
             raise Exception("Loop queries can return only one of the Dimensions sources: %s" % ", ".join([s for s in G.sources()])) 
-        
+        #
+        # ensure we stop the loop at 50k **
+        #
+        MAXLIMIT = 50000
+        flag_last_round = False
+        if skip + limit >= MAXLIMIT:
+            flag_last_round = True
+            if skip + limit > MAXLIMIT:
+                limit = MAXLIMIT - skip
+
+
         output = []
         q2 = q + " limit %d skip %d" % (limit, skip)
         
+        start = time.time()
         res = self.query(q2, show_results=False, retry=0, verbose=False)
+        end = time.time()
+        # print(end - start)
+        if (end - start) < 2:
+            # print("sleeping")
+            time.sleep(1.5)
 
         if res['errors']:
             return res
@@ -169,8 +184,8 @@ class Dsl():
                 batch = tot
             if verbose: print("%d / %d" % (batch, tot  ))
 
-            if len(res[sourcetype]) == limit:
-                output = res[sourcetype] + self.query_iterative(q, show_results, skip+limit, verbose=verbose)
+            if len(res[sourcetype]) == limit and not flag_last_round:
+                output = res[sourcetype] + self.query_iterative(q, show_results, skip+limit, limit, verbose)
             else:
                 output = res[sourcetype]
 

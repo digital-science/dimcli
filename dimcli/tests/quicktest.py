@@ -29,6 +29,11 @@ def main(test_number=1):
         print(res.json)
         # print(res.as_dataframe_authors_affiliations())
 
+    if test_number == 2:
+        dsl = Dsl()
+        res = dsl.query_iterative("""search publications for "bmw" where year in [2018:2020] return publications""")
+
+
 
 if __name__ == '__main__':
     main()
