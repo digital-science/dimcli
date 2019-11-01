@@ -2,8 +2,12 @@
 
 ## v 0.6 [next]
 
-* ..
-
+* Query Warnings and Error messages printed out by default in Jupyter environments
+* Added `verbose` option to suppress all messages (default = True)
+  * `dsl = dimcli.Dls(verbose=False)`: global 
+  * `dsl.query(q, verbose=False)`: local for a specific query
+* Improved `query_iterative` to handle max 50k results and timeouts (from too many queries)
+* Refactored REPL module and imports 
 
 
 ## v 0.5.9
@@ -11,7 +15,6 @@
 * `dsl_escape` util
 * `api.Result.errors` helper method
 * improved integration with Google Colab
-  * `dimcli.login()` will launch interactive init if usr and psw aren't provided
   * `%load_ext google.colab.data_table` ran by default
 * CLI: improved autocomplete with `[fieldname1+fieldname2]` syntax
 * cleanup of `Dsl` object
