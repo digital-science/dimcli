@@ -1,6 +1,6 @@
 # Changelog
 
-## v 0.6 [next]
+## v 0.6
 
 * Query Warnings and Error messages printed out by default in Jupyter environments
 * Added `verbose` option to suppress all messages (default = True)
