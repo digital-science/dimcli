@@ -128,7 +128,7 @@ def read_init_file(fpath, instance_name):
         config.read(fpath)
     except:
         click.secho(f"ERROR: `{USER_CONFIG_FILE_NAME}` credentials file not found." , fg="red")
-        click.secho("HowTo: https://github.com/lambdamusic/dimcli#credentials-file", fg="red")
+        click.secho("HowTo: https://github.com/digital-science/dimcli#credentials-file", fg="red")
         sys.exit(0)
     # we have a good config file
     try:
@@ -138,7 +138,7 @@ def read_init_file(fpath, instance_name):
         click.secho(f"Available instances are:")
         for x in config.sections():
             click.secho("'%s'" % x)
-        click.secho("---\nSee Also: https://github.com/lambdamusic/dimcli#credentials-file")
+        click.secho("---\nSee Also: https://github.com/digital-science/dimcli#credentials-file")
         config.sections()
         sys.exit(0)
     return section

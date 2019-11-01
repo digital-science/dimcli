@@ -42,7 +42,7 @@ except:
 def main_cli(ctx, instance_name=None, init=False, config=False, versioncheck=False, history=False):
     """
     Python client for the Dimensions DSL.
-    More info: https://github.com/lambdamusic/dimcli
+    More info: https://github.com/digital-science/dimcli
     """
     click.secho("Dimcli - Dimensions API Console (" + VERSION + ")", dim=True)
 
@@ -60,7 +60,7 @@ def main_cli(ctx, instance_name=None, init=False, config=False, versioncheck=Fal
             fg="red",
         )
         click.secho(
-            "More info: https://github.com/lambdamusic/dimcli#credentials-file",
+            "More info: https://github.com/digital-science/dimcli#credentials-file",
             dim=True,
         )
         return

@@ -25,7 +25,7 @@ Dimcli is a Python client for accessing the [Dimensions Analytics API](https://w
 
 Dimcli includes also a command line interface (CLI) that aims at simplifying the process of learning the grammar of the Dimensions Search Language ([DSL](https://app.dimensions.ai/dsl)). Calling `dimcli` from the terminal opens an interactive query console with syntax autocomplete, persistent history across sessions, pretty-printing and preview of JSON results, export to HTML and CSV, and more.  
 
-Current version: see [pypi homepage](https://pypi.org/project/dimcli/). Source code hosted on [github](https://github.com/lambdamusic/dimcli). 
+Current version: see [pypi homepage](https://pypi.org/project/dimcli/). Source code hosted on [github](https://github.com/digital-science/dimcli). 
 
 
 
@@ -45,7 +45,7 @@ $ dimcli --help
 
 #### Anaconda users
 
-There's been [reports](https://github.com/lambdamusic/dimcli/issues/21) of Dimcli failing to install on Anacoda. This can be solved by updating manually a couple of libraries Dimcli relies on:
+There's been [reports](https://github.com/digital-science/dimcli/issues/21) of Dimcli failing to install on Anacoda. This can be solved by updating manually a couple of libraries Dimcli relies on:
 * `pip install prompt-toolkit -U` 
 * `pip install ipython -U` 
 
@@ -166,7 +166,7 @@ That'll launch the DimCli console, where you can hit `help` in case you need mor
 
 DimCli includes a number of features that simplify working with the Dimensions API within a Jupyter notebook. 
 
-For example, it contains a couple of [magic commands](https://github.com/lambdamusic/dimcli/blob/master/dimcli/jupyter/magics.py) that make it super easy to hit the API from a notebook, or to explore the documentation. 
+For example, it contains a couple of [magic commands](https://github.com/digital-science/dimcli/blob/master/dimcli/jupyter/magics.py) that make it super easy to hit the API from a notebook, or to explore the documentation. 
 
 For more information and examples see the notebooks available in the official [Dimensions API Lab](https://github.com/digital-science/dimensions-api-lab) repository.
 
@@ -245,4 +245,4 @@ Once logged in, you can get a query object and try some queries:
 
 ## Comments, bug reports
 
-Dimcli lives on [Github](https://github.com/lambdamusic/dimcli/). You can file [issues]([issues](https://github.com/lambdamusic/dimcli/issues/new)) or pull requests there. Suggestions, pull requests and improvements welcome!
+Dimcli lives on [Github](https://github.com/digital-science/dimcli/). You can file [issues]([issues](https://github.com/digital-science/dimcli/issues/new)) or pull requests there. Suggestions, pull requests and improvements welcome!

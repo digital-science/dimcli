@@ -42,7 +42,7 @@ def html_template_interactive(query, formatted_json):
         </div> 
         <div id="footer">
             <hr>
-            <p>Generated with <a href="https://github.com/lambdamusic/dimcli">DimCli</a> %s</p>
+            <p>Generated with <a href="https://github.com/digital-science/dimcli">DimCli</a> %s</p>
         </div>
     </body>
     </html>

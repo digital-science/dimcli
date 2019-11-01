@@ -40,7 +40,7 @@ setup(
     description="Python REPL/API for accessing dimensions.ai.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/lambdamusic/dimcli",
+    url="https://github.com/digital-science/dimcli",
     packages=find_packages(),
     include_package_data=True,
     install_requires=REQUIREMENTS_DATA,
