@@ -14,24 +14,6 @@ from .dsl_grammar import *
 from .html import html_template_interactive
 
 
-def print_json_stats(res, query=""):
-    """
-    from a dimcli.Result object, print out basic stats
-    * works primarily for 'search' types of query
-    """
-    # what is searched for
-    source, tot = line_search_subject(query), None
-    if source:
-        if res['stats']:
-            tot = res['stats']["total_count"]
-        for k in res.good_data_keys():
-            if tot and source == k:
-                print(f"Returned {source.capitalize()}: {len(res[source])} (total = {tot})")
-            else:
-                print(f"Returned {k.capitalize()}: {len(res[k])}")
-
-
-
 
 def listify_and_unify(*args):
     "util to handle listing together dict.keys() sequences"
@@ -398,6 +380,46 @@ def export_json_json(jjson, query, USER_EXPORTS_DIR):
     webbrowser.open(url)
     # df.to_csv(USER_EXPORTS_DIR + filename)
     print("Exported: ", "%s%s" % (USER_EXPORTS_DIR, filename))
+
+
+
+def print_json_stats(res, query=""):
+    """
+    from a dimcli.Result object, print out basic stats
+    * works primarily for 'search' types of query
+    """
+    # what is searched for
+    source, tot = line_search_subject(query), None
+    if source:
+        if res['stats']:
+            tot = res['stats']["total_count"]
+        for k in res.good_data_keys():
+            if tot and source == k:
+                print(f"Returned {source.capitalize()}: {len(res[source])} (total = {tot})")
+            else:
+                print(f"Returned {k.capitalize()}: {len(res[k])}")
+
+
+
+def print_json_errors(res):
+    """
+    from a dimcli.Result object, print out an errors summary
+    """
+    if "errors" in res.json.keys():
+        if "query" in res.json["errors"]:
+            print(res.json["errors"]["query"]["header"].strip("\n"))
+            for key in res.json["errors"]["query"]["details"]:
+                print(key)
+        else:
+            print(res.json["errors"])
+
+def print_json_warnings(res):
+    """
+    from a dimcli.Result object, print out a warnings
+    """
+    if "_warnings" in res.json.keys():
+        print("WARNINGS [{}]".format(len(res.json["_warnings"])))
+        print("\n".join([s for s in res.json["_warnings"]]))
 
 
 

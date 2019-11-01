@@ -9,9 +9,7 @@ def dslquery(query_string):
     from .core.auth import is_logged_in
     if is_logged_in():
         dsl = Dsl()
-        res = dsl.query(query_string)
-        # print results
-        print_json_stats(res, query_string)
+        res = dsl.query(query_string, verbose=True)
         return res
 
 

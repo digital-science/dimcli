@@ -12,7 +12,7 @@ import pandas as pd
 from pandas.io.json import json_normalize
 
 from .auth import do_global_login, get_connection, refresh_login
-from .utils import line_search_return
+from .utils import *
 from .walkup import *
 from .dsl_grammar import G
 from .dataframe_factory import DfFactory
@@ -43,9 +43,10 @@ class Dsl():
         "... JSON data continues ... "
 
     """
-    def __init__(self, instance="live", user="", password="", endpoint="https://app.dimensions.ai", show_results=False):
+    def __init__(self, instance="live", user="", password="", endpoint="https://app.dimensions.ai", show_results=False, verbose=True):
         # print(os.getcwd())
         self._show_results = show_results
+        self._verbose = verbose
         self._url = None
         self._headers = None
         self._CONNECTION = get_connection()
@@ -75,7 +76,7 @@ class Dsl():
     def _print_please_login(self):
         print("Warning: you are not logged in. Please use `dimcli.login(username, password)` before querying.")
 
-    def query(self, q, show_results=None, retry=0):
+    def query(self, q, show_results=None, retry=0, verbose=None):
         """
         Execute a DSL query.
         By default it doesn't show results, but it uses the iPython rich widgets for it, optimized for Jupyter Notebooks.
@@ -83,7 +84,10 @@ class Dsl():
         if not self.is_logged_in:
             self._print_please_login()
             return False
-        
+
+        if verbose == None:
+            verbose = self._verbose
+
         #   Execute DSL query.
         response = requests.post(
             '{}/api/dsl.json'.format(self._url), data=q.encode(), headers=self._headers)
@@ -112,6 +116,9 @@ class Dsl():
                 print('Unexpected error. JSON could not be parsed.')
                 return response
             result = Result(res_json)
+            if verbose: print_json_stats(result, q)
+            if verbose: print_json_errors(result)
+            if verbose: print_json_warnings(result)
             if show_results or (show_results is None and self._show_results):
                 IPython.display.display(result)
             return result
@@ -127,13 +134,16 @@ class Dsl():
 
 
 
-    def query_iterative(self, q, show_results=None, skip=0, limit=1000):
+    def query_iterative(self, q, show_results=None, skip=0, limit=1000, verbose=None):
         """
         Runs a normal query iteratively, by automatically turning it into a loop with limit/skip operators until all the results available have been extracted. 
         """
         if not self.is_logged_in:
             self._print_please_login()
             return False
+
+        if verbose == None:
+            verbose = self._verbose
 
         # @TODO is there a hard limit of 50k results for limit/skip? can we catch it?
         if q.split().count('return') != 1:
@@ -147,7 +157,7 @@ class Dsl():
         output = []
         q2 = q + " limit %d skip %d" % (limit, skip)
         
-        res = self.query(q2, show_results=False, retry=0)
+        res = self.query(q2, show_results=False, retry=0, verbose=False)
 
         if res['errors']:
             return res
@@ -157,10 +167,10 @@ class Dsl():
             batch = skip+limit
             if batch > tot:
                 batch = tot
-            print("%d / %d" % (batch, tot  ))
+            if verbose: print("%d / %d" % (batch, tot  ))
 
             if len(res[sourcetype]) == limit:
-                output = res[sourcetype] + self.query_iterative(q, show_results, skip+limit)
+                output = res[sourcetype] + self.query_iterative(q, show_results, skip+limit, verbose=verbose)
             else:
                 output = res[sourcetype]
 

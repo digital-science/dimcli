@@ -120,31 +120,26 @@ class CommandsManager(object):
         # RUN QUERY
         res = self.dsl.query(text)
         # #
-        if "errors" in res.data.keys():
-            if "query" in res.data["errors"]:
-                print(res.data["errors"]["query"]["header"])
-                for key in res.data["errors"]["query"]["details"]:
-                    print(key)
-            else:
-                print(res.data["errors"])
-        elif text.strip().startswith("search"):
-            if "_warnings" in res.data.keys():
-                click.secho("WARNINGS [{}]".format(len(res.data["_warnings"])), fg="red")
-                # print("WARNINGS [{}]".format(len(res.data["_warnings"])))
-                print("\n".join([s for s in res.data["_warnings"]]))
-                click.secho("---", dim=True)
-            print_json_stats(res, text)
-            if self.bf: self.bf.save(res.data, text)
-            if True:
-                click.secho("---", dim=True)
-                preview_results(res.data, maxitems=5)
-            return res  # 2019-03-31
-
+        if "errors" in res.json.keys():
+            print_json_errors(res)
         else:
-            # describe queries and other functions: just show the data
-            if self.bf: self.bf.save(res.data, text)
-            click.secho("---", dim=True)
-            print_json_full(res.data)
+            if "_warnings" in res.json.keys():
+                click.secho("WARNINGS [{}]".format(len(res.json["_warnings"])), fg="red")
+                # print("WARNINGS [{}]".format(len(res.json["_warnings"])))
+                print("\n".join([s for s in res.json["_warnings"]]))
+                click.secho("---", dim=True)
+            if text.strip().startswith("search"):
+                print_json_stats(res, text)
+                if self.bf: self.bf.save(res.json, text)
+                if True:
+                    click.secho("---", dim=True)
+                    preview_results(res.json, maxitems=5)
+                return res  # 2019-03-31
+            else:
+                # describe queries and other functions: just show the data
+                if self.bf: self.bf.save(res.json, text)
+                click.secho("---", dim=True)
+                print_json_full(res.json)
 
 
     def docs_full(self, text):
@@ -157,8 +152,8 @@ class CommandsManager(object):
                 res = self.dsl.query(f"describe entity {text[0]}")
             else:
                 res = self.dsl.query(f"describe source {text[0]}")
-            if "errors" in res.data.keys():
-                print(res.data["errors"])
+            if "errors" in res.json.keys():
+                print(res.json["errors"])
             # show all fields 
             click.secho("=====\nFIELDS")
             for x in sorted(res.json['fields']):
@@ -261,7 +256,7 @@ def run(instance="live"):
 
     try:
         do_global_login(instance=instance)
-        CLIENT = Dsl()
+        CLIENT = Dsl(verbose=False)
     except requests.exceptions.HTTPError as err:
         print(err)
         sys.exit(1)
