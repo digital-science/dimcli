@@ -119,15 +119,14 @@ class CommandsManager(object):
         click.secho("You said: %s" % text, fg="black", dim=True)
         # RUN QUERY
         res = self.dsl.query(text)
-        # #
-        if "errors" in res.json.keys():
-            print_json_errors(res)
-        else:
+        # errors info gets printed out by the API by default
+        if not "errors" in res.json.keys():
             if "_warnings" in res.json.keys():
                 click.secho("WARNINGS [{}]".format(len(res.json["_warnings"])), fg="red")
                 # print("WARNINGS [{}]".format(len(res.json["_warnings"])))
                 print("\n".join([s for s in res.json["_warnings"]]))
                 click.secho("---", dim=True)
+            # search query
             if text.strip().startswith("search"):
                 print_json_stats(res, text)
                 if self.bf: self.bf.save(res.json, text)
@@ -135,8 +134,8 @@ class CommandsManager(object):
                     click.secho("---", dim=True)
                     preview_results(res.json, maxitems=5)
                 return res  # 2019-03-31
+            # describe queries and other functions: just show the data
             else:
-                # describe queries and other functions: just show the data
                 if self.bf: self.bf.save(res.json, text)
                 click.secho("---", dim=True)
                 print_json_full(res.json)
