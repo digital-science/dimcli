@@ -31,7 +31,7 @@ def main(test_number=1):
 
     if test_number == 2:
         dsl = Dsl()
-        res = dsl.query_iterative("""search publications for "bmw" where year in [2018:2020] return publications""")
+        res = dsl.query_iterative("""search publications for "bmw" where year in [2018:2020] return publications""", verbose=False)
 
 
 
