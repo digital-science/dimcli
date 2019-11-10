@@ -1,5 +1,13 @@
 # Changelog
 
+## v 0.6.1 
+
+* fix for double-printed error messages in REPL
+* removed deprecated magic commands 
+* improved printouts on magic methods 
+* ensuring magic methods with dataframe work only with `search` queries 
+
+
 ## v 0.6
 
 * Query Warnings and Error messages printed out by default in Jupyter environments

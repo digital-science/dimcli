@@ -156,6 +156,15 @@ def line_for_text_is_complete(line):
         if l[-1].count("\"") > 1 and l[-1].strip()[-1] == "\"":
             return True
 
+def line_is_search_query(line):
+    "checks if it is a `search` query"
+    l = line.strip().split()
+    if len(l) > 1 and l[0] ==  "search":
+        return True
+    else:
+        return False 
+
+
 def line_search_subject(line):
     "get the source one searches for"
     l = line.split()

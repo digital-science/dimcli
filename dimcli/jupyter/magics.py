@@ -18,7 +18,7 @@ class DslMagics(Magics):
 
     def _handle_login(self):
         if is_logged_in():
-            self.dslobject = Dsl(show_results=False)
+            self.dslobject = Dsl(show_results=False, verbose=True)
             return True
         else:
             return False
@@ -34,22 +34,11 @@ class DslMagics(Magics):
         # RUN QUERY
         if not loop:
             res = self.dslobject.query(text)
+            return res
         else:
             res = self.dslobject.query_iterative(text)
             return res
         
-        # print results
-        if "errors" in res.data.keys():
-            if "query" in res.data["errors"]:
-                print(res.data["errors"]["query"]["header"])
-                for key in res.data["errors"]["query"]["details"]:
-                    print(key)
-            else:
-                print(res.data["errors"])
-        else:
-            print_json_stats(res, text)
-            return res
-
 
     #
     # MAGIC METHODS
@@ -76,6 +65,9 @@ class DslMagics(Magics):
         if self._handle_login():
             if cell:
                 line = cell
+            if not line_is_search_query(line):
+                print("Sorry - DSL to dataframe magic methods work only with `search` queries.")
+                return None
             data = self._handle_query(line).as_dataframe()
             self.shell.user_ns[self.results_var] = data
             return data
@@ -100,6 +92,9 @@ class DslMagics(Magics):
         if self._handle_login():
             if cell:
                 line = cell
+            if not line_is_search_query(line):
+                print("Sorry - DSL to dataframe magic methods work only with `search` queries.")
+                return None
             data = self._handle_query(line, loop=True).as_dataframe()
             self.shell.user_ns[self.results_var] = data
             return data
@@ -153,37 +148,6 @@ class DslMagics(Magics):
         return df.from_dict(d)
 
 
-
-
-    #
-    # ===DEPRECATED==== MAGIC METHODS (from v 0.5.6)
-    # 
-
-    @line_magic
-    def dsl_login(self, line):
-        print("DEPRECATED Magic - please use `dimcli.login()` instead. ")
-        print("""e.g. `import dimcli; dimcli.login(username="", password="", endpoint="https://app.dimensions.ai", instance="live")`""")
-
-    @line_cell_magic
-    def dsl_query(self, line, cell=None):
-        print("DEPRECATED Magic - please use `%dsl` instead. ")
-
-    @line_cell_magic
-    def dsl_query_loop(self, line, cell=None):
-        print("DEPRECATED Magic - please use `%dslloop` instead. ")
-
-    @line_cell_magic
-    def dsl_query_as_df(self, line, cell=None):
-        print("DEPRECATED Magic - please use `%dsldf` instead. ")
-
-
-    @line_cell_magic
-    def dsl_query_loop_as_df(self, line, cell=None):
-        print("DEPRECATED Magic - please use `%dslloopdf` instead. ")
-
-    @line_magic
-    def dsl_docs(self, line):
-        print("DEPRECATED Magic - please use `%dsldocs` instead. ")
 
 
 

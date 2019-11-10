@@ -328,74 +328,49 @@ class Result(IPython.display.JSON):
     def as_dataframe(self, key=""):
         "utility method: return inner json as a pandas dataframe"
 
-        return self.df_factory.df_simple(self.json, key)
+        if not self.json.get("errors"):
+            return self.df_factory.df_simple(self.json, key)
 
 
     def as_dataframe_authors(self):
         """Utility method: return inner json as a pandas dataframe, exposing authors + pubId
             Note: affiliations are not broken down. So one gets one row per author
         """
-
-        return self.df_factory.df_authors(self.json)
+        if not self.json.get("errors"):
+            return self.df_factory.df_authors(self.json)
 
 
     def as_dataframe_authors_affiliations(self):
         """Utility method: return inner json as a pandas dataframe, exposing authors + affiliations + pubId
         Affiliations ARE broken down and are returned as JSON - So one gets one row per affiliation (+1 row per author if having more than one affiliation)
         """
-        
-        return self.df_factory.df_authors_affiliations(self.json)
+        if not self.json.get("errors"):
+            return self.df_factory.df_authors_affiliations(self.json)
 
 
     def as_dataframe_funders(self):
         """Utility method: return inner json as a pandas dataframe, for grants funders
         """
-        return self.df_factory.df_grant_funders(self.json)
+        if not self.json.get("errors"):
+            return self.df_factory.df_grant_funders(self.json)
 
     def as_dataframe_investigators(self):
         """Utility method: return inner json as a pandas dataframe, for grants funders
         """
-        return self.df_factory.df_grant_investigators(self.json)
+        if not self.json.get("errors"):
+            return self.df_factory.df_grant_investigators(self.json)
 
     def __repr__(self):
-        return "<dimcli.Result object #%s. Dict keys: %s>" % (str(id(self)), ", ".join([f"'{x}'" for x in self.json]))
-
-
-
-
-
-
-
-class DataframeWrapper(object):
-    """
-    Wrapper for a dataframe representation of the results
-    """
-    def __init__(self, data):
-        sef.__init__(self, data)
-
-    def as_dataframe(self, key=""):
-        "utility method: return inner json as a pandas dataframe"
-
-        output = pd.DataFrame()
-        
-        if key and (key in self.good_data_keys()):
-            output = output.from_dict(self.json[key])
-        elif key and (key not in self.good_data_keys()):
-            print(f"Warning: Dataframe cannot be created: invalid key. Should be one of {self.good_data_keys()}")
-        elif not key and self.good_data_keys():
-            if len(self.good_data_keys()) > 1:
-                print(f"Warning: Dataframe created from first available key, but more than one JSON key found: {self.good_data_keys()}")
-            key = self.good_data_keys()[0]
-            output = output.from_dict(self.json[key])
+        if self.json.get("errors"):
+            return "<dimcli.Result object #%s. Errors: %d>" % (str(id(self)), len(self.json['errors']))
         else:
-            pass 
+            try:
+                return "<dimcli.Result object #%s. Records: %d/%d>" % (str(id(self)), self.count_batch, self.count_total)
+            except:
+                # non-search queries
+                return "<dimcli.Result object #%s. Dict keys: %s>" % (str(id(self)), ", ".join([f"'{x}'" for x in self.json]))
 
-        return output
 
-
-
-    def __repr__(self):
-        return "<dimcli.Result object #%s. Dict keys: %s>" % (str(id(self)), ", ".join([f"'{x}'" for x in self.json]))
 
 
 

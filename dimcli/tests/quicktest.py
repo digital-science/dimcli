@@ -21,16 +21,16 @@ import requests
 def main(test_number=1):
     
     login()
-
+    dsl = Dsl()
     test_number = int(test_number)
 
     if test_number == 1:
-        res = dslquery("""search publications for "bmw" return journals limit 1000""")
-        print(res.json)
-        # print(res.as_dataframe_authors_affiliations())
+        res= dsl.query("""extract_grants(grant_number="185247", funder_name="Swiss National Science Foundation")""")
+        print("Query results: ")
+        print(" ==> res: ", res)
+        print(" ==> res.json: ", res.json)
 
     if test_number == 2:
-        dsl = Dsl()
         res = dsl.query_iterative("""search publications for "bmw" where year in [2018:2020] return publications""", verbose=False)
 
 
