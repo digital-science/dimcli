@@ -227,14 +227,19 @@ class TestOne(unittest.TestCase):
         click.secho("\nTEST 008: UTILS: normalize_key", fg="green")
         
         # ----
-        res = dslquery("""search publications where journal.title="nature medicine" return publications[doi+FOR] limit 1000""")
+        res = dslquery("""search publications where category_for is empty and journal is empty return publications[doi+category_for+journal] limit 1000""")
         print("Query results for standard query: ")
         print(" ==> res['stats']: ", res['stats'])
         print(" ==> len(res['publications']): ", len(res['publications']))
-        print(" ==> len([x for x in res.publications if 'FOR' in x]): ", len([x for x in res.publications if 'FOR' in x]))
-        print("Now Normalizing the FOR key...")
-        normalize_key("FOR", res.publications)
-        print(" ==> len([x for x in res.publications if 'FOR' in x]): ", len([x for x in res.publications if 'FOR' in x]))
+        # check predicates
+        print(" ==> len([x for x in res.publications if x['category_for'] == None]): ", len([x for x in res.publications if x['category_for'] == None]))
+        print(" ==> len([x for x in res.publications if x['journal'] == None]): ", len([x for x in res.publications if x['journal'] == None]))
+        print("Now Normalizing the category_for key...")
+        normalize_key("category_for", res.publications, {})
+        print("Now Normalizing the JOURNAL key...")
+        normalize_key("journal", res.publications, [])
+        print(" ==> len([x for x in res.publications if x['category_for'] == None]): ", len([x for x in res.publications if x['category_for'] == None]))
+        print(" ==> len([x for x in res.publications if x['journal'] == None]): ", len([x for x in res.publications if x['journal'] == None]))
         # ----
         click.secho("Completed test succesfully", fg="green")
 
