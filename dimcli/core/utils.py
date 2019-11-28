@@ -319,24 +319,37 @@ def chunks_of(data, size):
         chunk = list(islice(it, size))
 
 
-def normalize_key(key_name, dict_list):
+def normalize_key(key_name, dict_list, new_val=None):
     """
     Ensures the key always appear in a JSON dict/objects list, by adding it when missing 
     EG
+    ```
     for x in pubs_details.publications:
         if not 'FOR' in x:
-            x['FOR'] = ""
+            x['FOR'] = []
+    ```
     becomes
+    
+    ```
     normalize_key("FOR", pubs_details.publications)
+    ```
     Changes happen in-place.
-    TODO add third argument to pass a lambda function for modifying key
 
+    TIP If `new_val` is not passed, it is inferred from first available non-empty value
+
+    TODO add third argument to pass a lambda function for modifying key
     UPDATE 2019-11-28
-    1.21 DSL: normalizes also 'None' values 
+    v0.6.1.2: normalizes also 'None' values (to address 1.21 DSL change)
     """
+    if new_val == None:
+        for x in dict_list:
+            if key_name in x:
+                new_val = type(x[key_name])() # create empty object eg `list()`
+                # print(new_val)
+                break 
     for x in dict_list:
         if (not key_name in x) or (x[key_name] == None):
-            x[key_name] = ""
+            x[key_name] = new_val
 
 
 
