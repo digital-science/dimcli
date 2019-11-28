@@ -322,27 +322,22 @@ def chunks_of(data, size):
 def normalize_key(key_name, dict_list):
     """
     Ensures the key always appear in a JSON dict/objects list, by adding it when missing 
-
     EG
-
     for x in pubs_details.publications:
         if not 'FOR' in x:
             x['FOR'] = ""
-
     becomes
-
     normalize_key("FOR", pubs_details.publications)
-
     Changes happen in-place.
     TODO add third argument to pass a lambda function for modifying key
+
+    UPDATE 2019-11-28
+    1.21 DSL: normalizes also 'None' values 
     """
     for x in dict_list:
-        if not key_name in x:
+        if (not key_name in x) or (x[key_name] == None):
             x[key_name] = ""
 
-
-
-# {'name' : x['name'][5:]}
 
 
 def export_json_csv(jjson, query, USER_EXPORTS_DIR):
