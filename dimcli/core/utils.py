@@ -93,6 +93,13 @@ def in_categories_search(line):
     return False
 
 
+def line_has_limit_or_skip(line):
+    "check if there is a limit or skip statement"
+    if "return" in line:
+        pos = line.rindex("return") # last position right side
+        if "limit" in line[pos:] or "skip" in line[pos:]:
+            return True
+
 def line_last_return_subject(line):
     "get the last 'return <object>' statement "
     lista = list(reversed(line.split()))

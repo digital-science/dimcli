@@ -1,5 +1,12 @@
 # Changelog
 
+
+## v 0.6.1 
+
+* fixed error with `as_dataframe_investigators` 
+* fixed error with `limit` keyword wrongly found in iterative_query
+
+
 ## v 0.6.1 
 
 * fix for double-printed error messages in REPL

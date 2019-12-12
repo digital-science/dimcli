@@ -147,7 +147,7 @@ class Dsl():
 
         if q.split().count('return') != 1:
             raise Exception("Loop queries support only 1 return statement")
-        if "limit" in q or "skip" in q:
+        if line_has_limit_or_skip(q):
             raise Exception("Loop queries should not contain the keywords `limit` or `skip`")
         sourcetype = line_search_return(q)  
         if not (sourcetype in G.sources()):
