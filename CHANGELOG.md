@@ -5,7 +5,7 @@
 
 * fixed error with `as_dataframe_investigators` 
 * fixed error with `limit` keyword wrongly found in iterative_query
-
+* new methods to build datasets from raw data (instead of from a query), so to reuse as_dataframe() methods etc..
 
 ## v 0.6.1 
 

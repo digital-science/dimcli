@@ -198,5 +198,21 @@ class TestOne(unittest.TestCase):
         click.secho("Completed test succesfully", fg="green")
 
 
+    def test_008(self):
+        click.secho("\nTEST 008: Building dimcli.Result objects from data.", fg="green")
+        from ..core.api import Result
+        # ----
+        data = dslquery("""search publications for "malaria" return publications""")
+        res = Result.from_publications_list(data.publications)
+        res.as_dataframe_authors()
+        res.count_total
+        data = dslquery("""search patents for "graphene" return patents""")
+        res = Result.from_patents_list(data.patents)
+        res.as_dataframe()
+        res.count_total
+        # ----
+        click.secho("Completed test succesfully", fg="green")
+
+
 if __name__ == "__main__":
     unittest.main()
