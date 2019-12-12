@@ -135,32 +135,6 @@ class TestOne(unittest.TestCase):
         print(" ==> res['not_there']: ", res['not_there'])
         print(" ==> res.year[0]: ", res.year[0])
         print(" ==> res.stats: ", res.stats)
-        # ----
-        click.secho("Query #3... returning dataframes", fg="green")
-        res = d.query("""search publications for \"mercedes\" return year""")
-        print("Query results: ")
-        print(" ==> res.json.keys(): ", res.json.keys())
-        print(" ==> len(res): ", len(res))
-        print(" ==> res.stats: ", res.stats)
-        print(" ==> res.as_dataframe(): ", res.as_dataframe())
-        print(" ==> res.as_dataframe('year'): ", res.as_dataframe('year'))
-        print(" ==> res.as_dataframe('XXX'): ", res.as_dataframe('XXX'))
-        # ----
-        res = d.query("""search publications for \"CRISPR\" return publications limit 5""")
-        print("Testing as_dataframe_authors on PUBLICATIONS data: ")
-        print(" ==> res.as_dataframe_authors(): ", res.as_dataframe_authors())
-        print(" ==> res.as_dataframe_authors_affiliations(): ", res.as_dataframe_authors_affiliations())
-        # ----
-        print("Testing as_dataframe_authors on FOR data: ")
-        res = d.query("""search publications for \"CRISPR\" return FOR""")
-        print(" ==> res.as_dataframe(): ", res.as_dataframe())
-        print(" ==> res.as_dataframe_authors(): [=>fails and issue a warning]", res.as_dataframe_authors())
-        print(" ==> res.as_dataframe_authors_affiliations(): [=>fails and issue a warning]", res.as_dataframe_authors_affiliations())
-        # ----
-        print("Testing as_dataframe_funders on Grants data: ")
-        res= d.query("""search grants return grants[basics+investigator_details]""")
-        print(" ==> res.as_dataframe_funders(): ", res.as_dataframe_funders())
-        print(" ==> res.as_dataframe_investigators(): ", res.as_dataframe_investigators())
         click.secho("Completed test succesfully", fg="green")
 
     def test_004(self):
@@ -220,26 +194,6 @@ class TestOne(unittest.TestCase):
         print("Query results: ")
         print(" ==> res: ", res)
         print(" ==> res.json: ", res.json)
-        # ----
-        click.secho("Completed test succesfully", fg="green")
-
-    def test_008(self):
-        click.secho("\nTEST 008: UTILS: normalize_key", fg="green")
-        
-        # ----
-        res = dslquery("""search publications where category_for is empty and journal is empty return publications[doi+category_for+journal] limit 1000""")
-        print("Query results for standard query: ")
-        print(" ==> res['stats']: ", res['stats'])
-        print(" ==> len(res['publications']): ", len(res['publications']))
-        # check predicates
-        print(" ==> len([x for x in res.publications if x['category_for'] == None]): ", len([x for x in res.publications if x['category_for'] == None]))
-        print(" ==> len([x for x in res.publications if x['journal'] == None]): ", len([x for x in res.publications if x['journal'] == None]))
-        print("Now Normalizing the category_for key...")
-        normalize_key("category_for", res.publications, {})
-        print("Now Normalizing the JOURNAL key...")
-        normalize_key("journal", res.publications, [])
-        print(" ==> len([x for x in res.publications if x['category_for'] == None]): ", len([x for x in res.publications if x['category_for'] == None]))
-        print(" ==> len([x for x in res.publications if x['journal'] == None]): ", len([x for x in res.publications if x['journal'] == None]))
         # ----
         click.secho("Completed test succesfully", fg="green")
 

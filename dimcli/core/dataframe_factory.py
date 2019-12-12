@@ -1,6 +1,7 @@
 import json
 import pandas as pd
 from pandas.io.json import json_normalize
+from .utils import normalize_key, exists_key_in_dicts_list
 
 
 class DfFactory(object):
@@ -34,12 +35,12 @@ class DfFactory(object):
 
 
     def df_authors(self, data):
-        """Utility method
-        return inner json as a pandas dataframe, exposing authors + pubId
-        affiliations are not broken down and are returned as JSON 
-        So one gets one row per author
+        """Utility 
+        Returns inner json as a pandas dataframe, exposing authors + pubId.
+        List of affiliations per each author are not broken down and are returned as JSON. 
+        So in essence you get one row per author.
 
-        NOTE this method works only for publications searches
+        NOTE this method works only for publications searches -and it's clever enough to know if `authors` or `author_affiliations` (deprecated) field is used.
 
         Each publication.author_affiliations object has a nested list structure like this:
         ```
@@ -67,21 +68,32 @@ class DfFactory(object):
         output = pd.DataFrame()
 
         if 'publications' in self.gdk:
-            # simplify dict structure 
-            for x in data['publications']:
-                if 'author_affiliations' in x and x['author_affiliations']:  # if key exists and contents are not empty eg '[]'
-                    if type(x['author_affiliations'][0]) == list: # then break down nested dict structure
-                        x['author_affiliations'] = x['author_affiliations'][0]
-                    elif type(x['author_affiliations'][0]) == dict: # = it's already been broken down
-                        pass
-                else: # put in default empty element
-                    x['author_affiliations'] = []
-        
-            output = json_normalize(data['publications'], record_path=['author_affiliations'], meta=['id'], errors='ignore')
-            output.rename(columns={"id": "pub_id"}, inplace=True)
+
+            if exists_key_in_dicts_list(data['publications'], "author_affiliations"):
+                FIELD = "author_affiliations"
+            elif exists_key_in_dicts_list(data['publications'], "authors"):
+                FIELD = "authors"
+            else:
+                FIELD = ""
+
+            if FIELD == "author_affiliations":
+                # simplify deep nested dict structure for deprecated field 
+                for x in data['publications']:
+                    if 'author_affiliations' in x and x['author_affiliations']:  # if key exists and contents are not empty eg '[]'
+                        if type(x['author_affiliations'][0]) == list: # then break down nested dict structure
+                            x['author_affiliations'] = x['author_affiliations'][0]
+                        elif type(x['author_affiliations'][0]) == dict: # = it's already been broken down
+                            pass
+                    else: # put in default empty element
+                        x['author_affiliations'] = []
+            elif FIELD == "authors":
+                normalize_key("authors", data['publications'], [])
+            
+            if FIELD:
+                output = json_normalize(data['publications'], record_path=[FIELD], meta=['id'], errors='ignore')
+                output.rename(columns={"id": "pub_id"}, inplace=True)
         else:
             print(f"[Warning] Dataframe cannot be created as 'publications' were not found in data. Available: {self.gdk}")
-
         return output
 
 
@@ -108,9 +120,11 @@ class DfFactory(object):
         """Utility method: return inner json as a pandas dataframe, for grants funders
         """
         output = pd.DataFrame()
+        FIELD = "funders"
 
-        if 'grants' in self.gdk:       
-            output = json_normalize(data['grants'], record_path=['funders'], meta=['id', 'title', 'start_date', 'end_date'], meta_prefix="grant_", errors='ignore')
+        if 'grants' in self.gdk:    
+            normalize_key(FIELD, data['grants'], [])   
+            output = json_normalize(data['grants'], record_path=[FIELD], meta=['id', 'title', 'start_date', 'end_date'], meta_prefix="grant_", errors='ignore')
         else:
             print(f"[Warning] Dataframe cannot be created as 'grants' were not found in data. Available: {self.gdk}")
 
@@ -120,13 +134,16 @@ class DfFactory(object):
         """Utility method: return inner json as a pandas dataframe, for grants investigators 
         """
         output = pd.DataFrame()
+        FIELD = "investigator_details"
 
         if 'grants' in self.gdk:    
-            if 'investigator_details' in data['grants'][0]:   
-                output = json_normalize(data['grants'], record_path=['investigator_details'], meta=['id', 'title', 'start_date', 'end_date'], meta_prefix="grant_", errors='ignore')
-            else:
-                print(f"[Warning] Dataframe cannot be created as 'investigator_details' were not found in data. You need a query like this: search grants return grants[basics+investigator_details]")
+            normalize_key(FIELD, data['grants'], [])
+            output = json_normalize(data['grants'], record_path=[FIELD], meta=['id', 'title', 'start_date', 'end_date'], meta_prefix="grant_", errors='ignore')
         else:
             print(f"[Warning] Dataframe cannot be created as 'grants' were not found in data. Available: {self.gdk}")
 
         return output
+
+
+
+

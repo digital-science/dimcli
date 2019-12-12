@@ -11,6 +11,12 @@ sleep 1
 python -m dimcli.tests.test_one
 sleep 2
 
+echo "=================="
+echo "CALLING [test_dataframes] in 1 second..."
+echo "=================="
+sleep 1
+python -m dimcli.tests.test_dataframes
+sleep 2
 
 echo ""
 echo "=================="

@@ -319,6 +319,18 @@ def chunks_of(data, size):
         chunk = list(islice(it, size))
 
 
+
+def exists_key_in_dicts_list(dict_list, key):
+    """
+    From a list of dicts,  indicate if a certain key is in one of the dicts in the list.
+    https://stackoverflow.com/questions/14790980/how-can-i-check-if-key-exists-in-list-of-dicts-in-python
+    pass next a default value like None to avoid StopIteration 
+    """
+    # return next((i for i,d in enumerate(dict_list) if key in d), None)
+    return next((d for i,d in enumerate(dict_list) if key in d), None)
+
+
+
 def normalize_key(key_name, dict_list, new_val=None):
     """
     Ensures the key always appear in a JSON dict/objects list, by adding it when missing 
