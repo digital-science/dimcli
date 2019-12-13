@@ -5,10 +5,24 @@
 clear
 
 echo "=================="
-echo "CALLING [test_one] in 1 second..."
+echo "CALLING [test_login] in 1 second..."
 echo "=================="
 sleep 1
-python -m dimcli.tests.test_one
+python -m dimcli.tests.test_login
+sleep 2
+
+echo "=================="
+echo "CALLING [test_grammar] in 1 second..."
+echo "=================="
+sleep 1
+python -m dimcli.tests.test_grammar
+sleep 2
+
+echo "=================="
+echo "CALLING [test_queries] in 1 second..."
+echo "=================="
+sleep 1
+python -m dimcli.tests.test_queries
 sleep 2
 
 echo "=================="
