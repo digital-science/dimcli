@@ -12,6 +12,7 @@ import configparser
 from .. import *
 from ..core.auth import USER_CONFIG_FILE_PATH
 from ..core.utils import dimensions_url
+from ..core.api import Dataset
 from ..shortcuts import *
 
 
@@ -22,6 +23,8 @@ class TestOne(unittest.TestCase):
     """
 
     click.secho("**TESTS**", fg="red")
+    login(instance="live")
+    d = Dsl()
 
     def test_001(self):
         click.secho("\nTEST 001: Iterative querying.", fg="green")
@@ -115,7 +118,6 @@ class TestOne(unittest.TestCase):
 
     def test_006(self):
         click.secho("\nTEST 006: Building dimcli.Dataset objects from data.", fg="green")
-        from ..core.api import Dataset
         # ----
         data = dslquery("""search publications for "malaria" return publications""")
         res = Dataset.from_publications_list(data.publications)

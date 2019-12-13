@@ -97,7 +97,7 @@ class Dsl():
                 'Too Many Requests for the Server. Sleeping for 30 seconds and then retrying.'
             )
             time.sleep(30)
-            return self.query(q)
+            return self.query(q, show_results, retry, verbose)
         elif response.status_code == 403:  
             # Forbidden:
             print('Login token expired. Logging in again.')
@@ -105,7 +105,7 @@ class Dsl():
             self._CONNECTION = get_connection()
             self._url = self._CONNECTION['url']
             self._headers = {'Authorization': "JWT " + self._CONNECTION['token']}
-            return self.query(q)
+            return self.query(q, show_results, retry, verbose)
         elif response.status_code in [200, 400, 500]:  
             ###  
             # OK or Error Info :-)
@@ -128,7 +128,9 @@ class Dsl():
                 time.sleep(30)
                 return self.query(
                     q,
-                    retry=retry - 1)
+                    show_results,
+                    retry=retry - 1, 
+                    verbose)
             else:
                 response.raise_for_status()
 

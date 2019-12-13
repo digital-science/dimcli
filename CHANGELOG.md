@@ -7,6 +7,7 @@
 * fixed error with `limit` keyword wrongly found in iterative_query
 * new methods to build datasets from raw data (instead of from a query), so to reuse as_dataframe() methods etc..
 * `dimcli.Dataset`  is the new name of dimcli.Result  and is available at module level
+* `dimcli.login()` method now accepts an optional argument `verbose=True/False` to enable/suppress feedback 
 
 
 ## v 0.6.1 
