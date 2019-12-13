@@ -286,7 +286,7 @@ def init_config_folder(user_dir, user_config_file):
         os.mkdir(user_dir)
         # click.secho("Created %s" % user_dir, dim=True)
     if os.path.exists(user_config_file):
-        click.secho("The config file `%s` already exists." % user_config_file, fg="red")
+        click.secho("Looks like you have already setup a config file: `%s`." % user_config_file, fg="red")
         if click.confirm("Overwrite?"):
             pass
         else:

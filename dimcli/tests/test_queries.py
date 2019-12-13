@@ -30,7 +30,7 @@ class TestOne(unittest.TestCase):
         click.secho("\nTEST 001: Iterative querying.", fg="green")
         # ----
         d = Dsl()
-        res = d.query_iterative("""search publications where journal.title="nature medicine" and year>1995 return publications""")
+        res = d.query_iterative("""search publications where journal.title="nature medicine" and year>2000 return publications""")
         print("Query results: ")
         print(" ==> len(res): ", len(res))
         print(" ==> res['stats']: ", res['stats'])
@@ -137,6 +137,16 @@ class TestOne(unittest.TestCase):
         res.as_dataframe()
         res.count_total
         # ----
+        click.secho("\nBuilding dimcli.Dataset objects from DATAFRAME data.", fg="green")
+        # ----
+        data = dslquery("""search publications for "malaria" return publications""").as_dataframe()
+        res = Dataset.from_publications_list(data)
+        res.as_dataframe_authors()
+        res.count_total
+        data = dslquery("""search patents for "graphene" return patents""").as_dataframe()
+        res = Dataset.from_patents_list(data)
+        res.as_dataframe()
+        res.count_total
         click.secho("Completed test succesfully", fg="green")
 
 

@@ -244,25 +244,37 @@ class Dataset(IPython.display.JSON):
     # these allow to then take advantage of other functionalities in Dataset objects eg dataframes etc...
     @classmethod
     def from_publications_list(cls, data):
-        return cls({"publications" : data, '_stats' : {'total_count' : len(data)}})
+        return cls.from_any_list(data, "publications")
     @classmethod
     def from_grants_list(cls, data):
-        return cls({"grants" : data, '_stats' : {'total_count' : len(data)}})
+        return cls.from_any_list(data, "grants")
     @classmethod
     def from_researchers_list(cls, data):
-        return cls({"researchers" : data, '_stats' : {'total_count' : len(data)}})
+        return cls.from_any_list(data, "researchers")
     @classmethod
     def from_clinical_trials_list(cls, data):
-        return cls({"clinical_trials" : data, '_stats' : {'total_count' : len(data)}})
+        return cls.from_any_list(data, "clinical_trials")
     @classmethod
     def from_patents_list(cls, data):
-        return cls({"patents" : data, '_stats' : {'total_count' : len(data)}})
+        return cls.from_any_list(data, "patents")
     @classmethod
     def from_policy_documents_list(cls, data):
-        return cls({"policy_documents" : data, '_stats' : {'total_count' : len(data)}})
+        return cls.from_any_list(data, "policy_documents")
     @classmethod
     def from_organizations_list(cls, data):
-        return cls({"organizations" : data, '_stats' : {'total_count' : len(data)}})
+        return cls.from_any_list(data, "organizations")
+    @classmethod
+    def from_any_list(cls, data, source_type):
+        "Generic method used by all the ones above"
+        if type(data) == list:
+            return cls({source_type : data, '_stats' : {'total_count' : len(data)}})
+        elif type(data) == pd.DataFrame:
+            jsondata = json.loads(data.to_json(orient="records"))
+            return cls({source_type : jsondata, '_stats' : {'total_count' : len(jsondata)}})
+        else:
+            raise ValueError('Invalid data format. Must be either a dict list, or a pandas dataframe')
+
+
 
     def __init__(self, data):
         IPython.display.JSON.__init__(self, data)

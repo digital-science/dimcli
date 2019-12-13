@@ -36,7 +36,8 @@ class TestDataframes(unittest.TestCase):
         print(" ==> res.stats: ", res.stats)
         print(" ==> res.as_dataframe(): ", res.as_dataframe())
         print(" ==> res.as_dataframe('year'): ", res.as_dataframe('year'))
-        print(" ==> res.as_dataframe('XXX'): ", res.as_dataframe('XXX'))
+        print(" ==> res.as_dataframe('XXX'): [FAILS] ", res.as_dataframe('XXX'))
+
 
     def test_002(self):
         click.secho("\nTEST 002: Authors and Affiliations Dataframes.", fg="green")
