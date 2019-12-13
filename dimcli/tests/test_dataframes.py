@@ -39,7 +39,7 @@ class TestDataframes(unittest.TestCase):
         print(" ==> res.as_dataframe('XXX'): ", res.as_dataframe('XXX'))
 
     def test_002(self):
-        click.secho("\nTEST 001: Authors and Affiliations Dataframes.", fg="green")
+        click.secho("\nTEST 002: Authors and Affiliations Dataframes.", fg="green")
         # ----
         print("Testing as_dataframe_authors with legacy `author_affiliations` field: ")
         res = dslquery("""search publications for \"CRISPR\" return publications limit 5""")
@@ -66,7 +66,7 @@ class TestDataframes(unittest.TestCase):
         print(" ==> res.as_dataframe_authors_affiliations(): [=>fails and issue a warning]", res.as_dataframe_authors_affiliations())
 
     def test_003(self):
-        click.secho("\nTEST 001: Grants: funders and investigators Dataframes.", fg="green")
+        click.secho("\nTEST 003: Grants: funders and investigators Dataframes.", fg="green")
         # ----
         print("Testing as_dataframe_funders on Grants data: ")
         res= dslquery("""search grants return grants[basics+investigator_details]""")
@@ -76,7 +76,7 @@ class TestDataframes(unittest.TestCase):
 
 
     def test_004(self):
-        click.secho("\nTEST 002: UTILS: normalize_key", fg="green")
+        click.secho("\nTEST 004: UTILS: normalize_key", fg="green")
         
         # ----
         res = dslquery("""search publications where category_for is empty and journal is empty return publications[doi+category_for+journal] limit 1000""")

@@ -31,9 +31,9 @@ class Dsl():
     >>> dimcli.login(user="mary.poppins", password="chimneysweeper")
     # instantiate the query object
     >>> dsl = dimcli.Dsl()
-    # queries always return a Result object (subclassing IPython.display.JSON)
+    # queries always return a Dataset object (subclassing IPython.display.JSON)
     >>> dsl.query("search grants for \"malaria\" return researchers")
-    >>> <dimcli.dimensions.Result object>
+    >>> <dimcli.dimensions.Dataset object>
     # use the .json method to get the JSON
     >>> dsl.query("search grants for \"malaria\" return researchers").json
     >>> {'researchers': [{'id': 'ur.01332073522.49',
@@ -115,7 +115,7 @@ class Dsl():
             except:
                 print('Unexpected error. JSON could not be parsed.')
                 return response
-            result = Result(res_json)
+            result = Dataset(res_json)
             if verbose: print_json_stats(result, q)
             print_json_errors(result) # always print errors
             if verbose: print_json_warnings(result)
@@ -192,7 +192,7 @@ class Dsl():
             # FINALLY 
             #
             # if recursion is complete (we are at top level, hence skip=0) 
-            #   build the Result obj
+            #   build the Dataset obj
             # else 
             #   just return current iteration results 
             #
@@ -203,7 +203,7 @@ class Dsl():
                         },
                     sourcetype: output
                 }
-                result = Result(response_simulation)
+                result = Dataset(response_simulation)
                 if show_results or (show_results is None and self._show_results):
                     IPython.display.display(result)
                 return result
@@ -218,7 +218,7 @@ class Dsl():
 
         
 
-class Result(IPython.display.JSON):
+class Dataset(IPython.display.JSON):
     """
     Wrapper for JSON results from DSL
 
@@ -234,8 +234,8 @@ class Result(IPython.display.JSON):
 
     """
 
-    # class methods to build Result object from raw data (obtained not from a query eg from multiple queries concatenated)
-    # these allow to then take advantage of other functionalities in Result objects eg dataframes etc...
+    # class methods to build Dataset object from raw data (obtained not from a query eg from multiple queries concatenated)
+    # these allow to then take advantage of other functionalities in Dataset objects eg dataframes etc...
     @classmethod
     def from_publications_list(cls, data):
         return cls({"publications" : data, '_stats' : {'total_count' : len(data)}})
@@ -387,13 +387,13 @@ class Result(IPython.display.JSON):
 
     def __repr__(self):
         if self.json.get("errors"):
-            return "<dimcli.Result object #%s. Errors: %d>" % (str(id(self)), len(self.json['errors']))
+            return "<dimcli.Dataset object #%s. Errors: %d>" % (str(id(self)), len(self.json['errors']))
         else:
             try:
-                return "<dimcli.Result object #%s. Records: %d/%d>" % (str(id(self)), self.count_batch, self.count_total)
+                return "<dimcli.Dataset object #%s. Records: %d/%d>" % (str(id(self)), self.count_batch, self.count_total)
             except:
                 # non-search queries
-                return "<dimcli.Result object #%s. Dict keys: %s>" % (str(id(self)), ", ".join([f"'{x}'" for x in self.json]))
+                return "<dimcli.Dataset object #%s. Dict keys: %s>" % (str(id(self)), ", ".join([f"'{x}'" for x in self.json]))
 
 
 

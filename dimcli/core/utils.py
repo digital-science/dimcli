@@ -421,7 +421,7 @@ def export_json_json(jjson, query, USER_EXPORTS_DIR):
 
 def print_json_stats(res, query=""):
     """
-    from a dimcli.Result object, print out basic stats
+    from a dimcli.Dataset object, print out basic stats
     * works primarily for 'search' types of query
     """
     # what is searched for
@@ -439,7 +439,7 @@ def print_json_stats(res, query=""):
 
 def print_json_errors(res):
     """
-    from a dimcli.Result object, print out an errors summary
+    from a dimcli.Dataset object, print out an errors summary
     """
     if "errors" in res.json.keys():
         if "query" in res.json["errors"]:
@@ -451,7 +451,7 @@ def print_json_errors(res):
 
 def print_json_warnings(res):
     """
-    from a dimcli.Result object, print out a warnings
+    from a dimcli.Dataset object, print out a warnings
     """
     if "_warnings" in res.json.keys():
         print("WARNINGS [{}]".format(len(res.json["_warnings"])))
