@@ -30,7 +30,16 @@ class TestOne(unittest.TestCase):
         click.secho("\nTEST 001: Iterative querying.", fg="green")
         # ----
         d = Dsl()
-        res = d.query_iterative("""search publications where journal.title="nature medicine" return publications""")
+        res = d.query_iterative("""search publications where journal.title="nature medicine" and year>1995 return publications""")
+        print("Query results: ")
+        print(" ==> len(res): ", len(res))
+        print(" ==> res['stats']: ", res['stats'])
+        print(" ==> len(res['publications']): ", len(res['publications']))
+        # ----
+        click.secho("\nTEST 001: Iterative querying with custom pause: 5 seconds.", fg="green")
+        # ----
+        d = Dsl()
+        res = d.query_iterative("""search publications where journal.title="nature medicine" and year>2015 return publications""", pause=5)
         print("Query results: ")
         print(" ==> len(res): ", len(res))
         print(" ==> res['stats']: ", res['stats'])

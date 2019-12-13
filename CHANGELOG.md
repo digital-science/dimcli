@@ -5,10 +5,12 @@
 
 * fixed error with `as_dataframe_investigators` 
 * fixed error with `limit` keyword wrongly found in iterative_query
+* fixed error with verbose flag lost after 403 or retry routines
+
 * new methods to build datasets from raw data (instead of from a query), so to reuse as_dataframe() methods etc..
 * `dimcli.Dataset`  is the new name of dimcli.Result  and is available at module level
 * `dimcli.login()` method now accepts an optional argument `verbose=True/False` to enable/suppress feedback 
-
+* `Dsl.query_iterative` takes an extra argument `pause` determining iteration break length (default = 1.5 seconds)
 
 ## v 0.6.1 
 

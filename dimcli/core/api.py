@@ -129,16 +129,20 @@ class Dsl():
                 return self.query(
                     q,
                     show_results,
-                    retry=retry - 1, 
+                    retry - 1, 
                     verbose)
             else:
                 response.raise_for_status()
 
 
 
-    def query_iterative(self, q, show_results=None, skip=0, limit=1000, verbose=None):
-        """
-        Runs a normal query iteratively, by automatically turning it into a loop with limit/skip operators until all the results available have been extracted. 
+    def query_iterative(self, q, show_results=None, skip=0, limit=1000, pause=1.5, verbose=None):
+        """Runs a normal query iteratively, by automatically turning it into a loop with limit/skip operators until all the results available have been extracted.
+        
+        pause: expressed in seconds
+        
+        Returns:
+            [Dataset] -- query results     
         """
         if not self.is_logged_in:
             self._print_please_login()
@@ -174,7 +178,7 @@ class Dsl():
         # print(end - start)
         if (end - start) < 2:
             # print("sleeping")
-            time.sleep(1.5)
+            time.sleep(pause)
 
         if res['errors']:
             return res
@@ -187,7 +191,7 @@ class Dsl():
             if verbose: print("%d / %d" % (batch, tot  ))
 
             if len(res[sourcetype]) == limit and not flag_last_round:
-                output = res[sourcetype] + self.query_iterative(q, show_results, skip+limit, limit, verbose)
+                output = res[sourcetype] + self.query_iterative(q, show_results, skip+limit, limit, pause, verbose)
             else:
                 output = res[sourcetype]
 
