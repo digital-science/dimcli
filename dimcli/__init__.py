@@ -28,7 +28,7 @@ except:
 
 
 
-def login(username="", password="", endpoint="https://app.dimensions.ai", instance="live"):
+def login(username="", password="", endpoint="https://app.dimensions.ai", instance="live", verbose=True):
     """
     Login into the Dimensions API and obtain a query token. 
     - If credentials are not passed, we attempt to login using the local dsl.ini credentials file. 
@@ -52,10 +52,10 @@ def login(username="", password="", endpoint="https://app.dimensions.ai", instan
 
     if CONNECTION['token']:
         if username and password:
-            print("DimCli %s - Succesfully connected to <%s> (method: manual login)" % (str(VERSION), CONNECTION['url'])) 
+            if verbose: print("DimCli %s - Succesfully connected to <%s> (method: manual login)" % (str(VERSION), CONNECTION['url'])) 
         else:
             # try to use local init file using instance parameter
-            print("DimCli %s - Succesfully connected to <%s> (method: dsl.ini file)" % (str(VERSION), CONNECTION['url']))
+            if verbose: print("DimCli %s - Succesfully connected to <%s> (method: dsl.ini file)" % (str(VERSION), CONNECTION['url']))
 
 
 def logout():
