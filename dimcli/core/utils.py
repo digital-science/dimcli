@@ -474,9 +474,11 @@ def preview_results(jsondata, maxitems=10):
                 if counter <= maxitems:
                     try:  # title and url/id if object has them
                         url = dimensions_url(row['id'], key, verbose=False) or row['id']
-                        if 'title' in row.keys():
+                        if 'title' in row.keys(): # for docs
                             name_or_title = row['title'].strip()
-                        else:
+                        elif 'name' in row.keys():  # for orgs
+                            name_or_title = row['name'].strip()
+                        else: # for researchers
                             name_or_title = row['first_name'] + " " + row['last_name']
                         click.echo(
                             click.style("[" + str(counter) + "] ", dim=True) +
