@@ -2,18 +2,21 @@
 
 
 ## v 0.6.2 
+### TODO update public notebooks using old 'Result' object right after releasing
+
+* `dimcli.Dataset`  is the new name of dimcli.Result  and is available at module level
+* methods to build `Dataset` from raw data (instead of from a query) so to reuse as_dataframe() methods etc:  `Dataset.from_publications_list(data)` 
+  * data can be from list of dictionaries
+  * or data can be a dataframe (eg obtained from previous query operations)
+* experimental feature `Dataset.as_dimensions_url()` 
+* `dimcli.login()` method now accepts an optional argument `verbose=True/False` to enable/suppress feedback 
+* `Dsl.query_iterative` takes an extra argument `pause` determining iteration break length (default = 1.5 seconds)
 
 * fixed error with `as_dataframe_investigators` 
 * fixed error with `limit` keyword wrongly found in iterative_query
-* fixed error with verbose flag lost after 403 or retry routines
+* fixed error with verbose flag lost after queries with 403s or automatic retries
+* deprecated `dsl_escape` method in favor or [raw strings](https://stackoverflow.com/questions/17327202/python-replace-single-backslash-with-double-backslash/39847354) when a query with quotes needs to be escaped
 
-* `dimcli.Dataset`  is the new name of dimcli.Result  and is available at module level
-* methods to build `Dataset` from raw data (instead of from a query) so to reuse as_dataframe() methods etc..
-  * `Dataset.from_publications_list(data)` 
-  * data can be from list of dictionaries
-  * or data can be a dataframe (eg obtained from previous query operations)
-* `dimcli.login()` method now accepts an optional argument `verbose=True/False` to enable/suppress feedback 
-* `Dsl.query_iterative` takes an extra argument `pause` determining iteration break length (default = 1.5 seconds)
 
 ## v 0.6.1 
 

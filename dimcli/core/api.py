@@ -7,6 +7,7 @@ import json
 import click
 import IPython.display
 from itertools import islice
+import urllib.parse
 
 import pandas as pd
 from pandas.io.json import json_normalize
@@ -402,6 +403,47 @@ class Dataset(IPython.display.JSON):
         """
         if not self.json.get("errors"):
             return self.df_factory.df_grant_investigators(self.json)
+
+    def as_dimensions_url(self, max=500, verbose=True):
+        """Generates a valid Dimensions search URL using all the object IDs as filters.
+        NOTE: this is EXPERIMENTAL and may break or be removed in future versions. 
+        Also, doesn't work with all sources. 
+
+        <max> 500 cause to prevent error 414 Request-URI Too Large 
+        <verbose> to print out the warning
+
+        General query structure for IDs: 
+           
+        `id: (pub.1120715293 OR pub.1120975084 OR pub.1122068834 OR pub.1120602308)`
+
+        Final URL looks like this https://app.dimensions.ai/discover/publication?search_text=id%3A+%28pub.1120715293+OR+pub.1120975084+OR+pub.1122068834+OR+pub.1120602308%29
+
+        """
+        
+        if verbose: print("Warning: this is an experimental and unsupported feature.")
+
+        # hardcoded
+        supported_url_templates = {
+            'publications' : "https://app.dimensions.ai/discover/publication?search_text=",
+            'patents' : "https://app.dimensions.ai/discover/patent?search_text=",
+            'clinical_trials' : "https://app.dimensions.ai/discover/clinical_trial?search_text=",
+            'policy_documents' : "https://app.dimensions.ai/discover/policy_document?search_text=",
+        }
+
+        # just return first valid source found in results
+        ids = []
+        for sourcetype in supported_url_templates:
+            if sourcetype in self.good_data_keys():
+                try:
+                    ids = [x['id'] for x in self.json[sourcetype]]
+                    q = " OR ".join(ids)
+                    q =  "id: (" + q + ")"
+                    q =  urllib.parse.quote_plus(q)
+                    return supported_url_templates[sourcetype] + q
+                except:
+                    raise Exception("Dataset records do not contain a valid ID field.")
+        return None
+
 
     def __repr__(self):
         if self.json.get("errors"):

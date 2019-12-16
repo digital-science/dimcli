@@ -551,14 +551,9 @@ def google_url(stringa):
 
 def dsl_escape(stringa):
     """
-    Util to escape quotes in full-text query strings so that they work nicely with Python.
-    From '"' to '\\"'  
-    See also https://docs.dimensions.ai/dsl/language.html#full-text-searching
-
-    EG
-    from dimcli.core.utils import dsl_escape
-    a = dsl_escape(\""" "phrase 1" AND "phrase 2" \""")
-    dsl.query(f\"""search publications for "{a}" return publications\""")
+    DEPRECATED: more effective to use raw strings instead eg
+    See https://stackoverflow.com/questions/17327202/python-replace-single-backslash-with-double-backslash/39847354
 
     """
+    print("WARNING: deprecated - use raw strings instead https://stackoverflow.com/questions/17327202/python-replace-single-backslash-with-double-backslash/39847354")
     return stringa.replace('"', '\\"')
