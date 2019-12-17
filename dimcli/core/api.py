@@ -425,6 +425,7 @@ class Dataset(IPython.display.JSON):
         # hardcoded
         supported_url_templates = {
             'publications' : "https://app.dimensions.ai/discover/publication?search_text=",
+            'grants' : "https://app.dimensions.ai/discover/grant?search_text=",
             'patents' : "https://app.dimensions.ai/discover/patent?search_text=",
             'clinical_trials' : "https://app.dimensions.ai/discover/clinical_trial?search_text=",
             'policy_documents' : "https://app.dimensions.ai/discover/policy_document?search_text=",
@@ -437,7 +438,10 @@ class Dataset(IPython.display.JSON):
                 try:
                     ids = [x['id'] for x in self.json[sourcetype]]
                     q = " OR ".join(ids)
-                    q =  "id: (" + q + ")"
+                    if sourcetype == "grants":
+                        q =  "grant_id: (" + q + ")"
+                    else:
+                        q =  "id: (" + q + ")"
                     q =  urllib.parse.quote_plus(q)
                     return supported_url_templates[sourcetype] + q
                 except:
@@ -459,3 +463,6 @@ class Dataset(IPython.display.JSON):
 
 
 
+# 2019-12-17: for backward compatibility
+# remove once all notebooks code has been updated 
+Result = Dataset

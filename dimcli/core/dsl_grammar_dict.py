@@ -38,6 +38,15 @@ SYNTAX_DICT = {
         'researchers' : 'https://app.dimensions.ai/discover/publication?and_facet_researcher=',
         'organizations' : 'https://app.dimensions.ai/discover/publication?and_facet_research_org=',
     },
+    'dimensions_object_id_patterns' : {
+        'publications' : 'pub.',
+        'grants' : 'grant.',
+        # 'patents' : 'not available',
+        'policy_documents' : 'policy.',
+        # 'clinical_trials' : 'not available',
+        'researchers' : 'ur.',
+        'organizations' : 'grid.',
+    },
     'lang_all': [
         'search',
         'return',

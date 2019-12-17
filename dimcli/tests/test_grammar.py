@@ -48,10 +48,43 @@ class TestOne(unittest.TestCase):
             for y in g.categories(x):
                 print("...",  y)
 
-        print("....Testing dimensions_url....\n", dimensions_url("01", "stff",))
+
+    def test_002(self):
+        click.secho("\nTEST 002: dimensions URL generation.", fg="green")
+        # ----
+        print("""....Testing dimensions_url.... dimensions_url("01", "stff")""")
+        try:
+            print(dimensions_url("01", "stff"))
+        except Exception as e:
+            print("ERROR:",  e)
+        print("""....Testing dimensions_url.... dimensions_url("01", "publications")""")
         print(dimensions_url("01", "publications"))
+        print("""....Testing dimensions_url....   dimensions_url("pub.1122527319")""")
+        print(dimensions_url("pub.1122527319"))
+        # grants https://app.dimensions.ai/details/grant/grant.8587603
+        print("""....Testing dimensions_url....   dimensions_url("01", "grants")""")
+        print(dimensions_url("01", "grants"))
+        print("""....Testing dimensions_url....   dimensions_url("grant.8587603")""")
+        print(dimensions_url("grant.8587603"))
+        # patents https://app.dimensions.ai/details/patent/IN-293637-B
+        print("""....Testing dimensions_url....   dimensions_url("IN-293637-B", "patents")""")
+        print(dimensions_url("IN-293637-B", "patents"))
+        print("""....Testing dimensions_url....   dimensions_url("IN-293637-B") [FAILS!]""")
+        print(dimensions_url("IN-293637-B"))
+        # researchers https://app.dimensions.ai/discover/patent?and_facet_researcher=ur.01117537642.02
+        print("""....Testing dimensions_url....   dimensions_url("ur.01117537642.02")""")
+        print(dimensions_url("ur.01117537642.02"))
+        print("""....Testing dimensions_url....   dimensions_url("ur.01117537642.02", "researchers")""")
+        print(dimensions_url("ur.01117537642.02", "researchers"))
+        # organizations https://app.dimensions.ai/discover/patent?and_facet_research_org=grid.2515.3
+        print("""....Testing dimensions_url....   dimensions_url("grid.2515.3", "organizations")""")
+        print(dimensions_url("grid.2515.3", "organizations"))
+        print("""....Testing dimensions_url....   dimensions_url("grid.2515.3")""")
+        print(dimensions_url("grid.2515.3"))
         # ----
         click.secho("Completed test succesfully", fg="green")
+
+
 
 if __name__ == "__main__":
     unittest.main()

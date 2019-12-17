@@ -103,6 +103,18 @@ class DslGrammar():
         except:
             return []
 
+    def url_for_source(self, source):
+        "Get a the Dimensions URL for a specific source"
+        try:
+            return self.syntax['dimensions_urls'][source]
+        except:
+            return []
+
+    def object_id_patterns(self):
+        """Return a dictionary representing known string-prefixes for object IDs
+        Note: in some cases eg patents this is missing.
+        """
+        return self.syntax['dimensions_object_id_patterns']           
     # 
     # GRAMMAR METHODS IE the dsl sources / fields
     # 

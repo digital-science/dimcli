@@ -116,6 +116,25 @@ class DfFactory(object):
         return affiliations
 
 
+    # def df_concepts(self, data, key):
+    #     "from a list of publications including concepts, return a DF with one line per concept"
+
+    #     output = pd.DataFrame()
+        
+    #     if key and (key in self.gdk):
+    #         output = json_normalize(data[key])
+    #     elif key and (key not in self.gdk):
+    #         print(f"[Warning] Dataframe cannot be created: invalid key. Should be one of {self.gdk}")
+    #     elif not key and self.gdk:
+    #         if len(self.gdk) > 1:
+    #             print(f"[Warning] Dataframe created from first available key, but more than one JSON key found: {self.gdk}")
+    #         output = json_normalize(data[self.gdk[0]])
+    #     else:
+    #         pass 
+
+    #     return output
+
+
     def df_grant_funders(self, data):
         """Utility method: return inner json as a pandas dataframe, for grants funders
         """

@@ -1,7 +1,14 @@
+"""
+NOTE this module is deprecated and will be removed in future versions.
+
+Use instead dimcli.utils 
+"""
+
 
 from . import *
-from .core.utils import print_json_stats, chunks_of, normalize_key
-# chunks_of/normalize_key imported so that it's in the shortcuts namespace and easier to import
+from .core.utils import chunks_of, normalize_key, dimensions_url, google_url, save2File, exists_key_in_dicts_list
+
+
 
 def dslquery(query_string):
     """shortcut for running a query - meant to be used only within interactive computing environments

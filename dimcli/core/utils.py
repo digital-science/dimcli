@@ -231,6 +231,18 @@ def line_add_lazy_describe(line):
 
 
 def save2File(contents, filename, path):
+    """Save string contents to a file.
+
+    Not generalized much, so use at your own risk.
+
+    Args:
+        contents: string
+        filename: string
+        path: full valid path
+
+    Returns:
+        File location in URL format eg "file://..."
+    """
     if not os.path.exists(path):
         os.makedirs(path)
     filename = os.path.join(path, filename)
@@ -319,6 +331,15 @@ def init_exports_folder(export_dir):
 
 
 def chunks_of(data, size):
+    """Splits up a list or sequence in to chunks of selected size. 
+
+    Args:
+        data: A sequence eg a list
+        size: A number
+
+    Returns:
+        An iterable
+    """
     it = iter(data)
     chunk = list(islice(it, size))
     while chunk:
@@ -328,10 +349,16 @@ def chunks_of(data, size):
 
 
 def exists_key_in_dicts_list(dict_list, key):
-    """
-    From a list of dicts,  indicate if a certain key is in one of the dicts in the list.
-    https://stackoverflow.com/questions/14790980/how-can-i-check-if-key-exists-in-list-of-dicts-in-python
-    pass next a default value like None to avoid StopIteration 
+    """From a list of dicts, checks if a certain key is in one of the dicts in the list.
+
+    See also https://stackoverflow.com/questions/14790980/how-can-i-check-if-key-exists-in-list-of-dicts-in-python
+
+    Args:
+        dict_list: A list of dictionaries
+        key: a string to be found in dict keys
+
+    Returns:
+        Dictionary or None
     """
     # return next((i for i,d in enumerate(dict_list) if key in d), None)
     return next((d for i,d in enumerate(dict_list) if key in d), None)
@@ -339,8 +366,8 @@ def exists_key_in_dicts_list(dict_list, key):
 
 
 def normalize_key(key_name, dict_list, new_val=None):
-    """
-    Ensures the key always appear in a JSON dict/objects list, by adding it when missing 
+    """Ensures the key always appear in a JSON dict/objects list, by adding it when missing 
+    
     EG
     ```
     for x in pubs_details.publications:
@@ -527,17 +554,23 @@ def print_json_full(jsondata):
 
 
 
-def dimensions_url(obj_id, obj_type, verbose=True):
+def dimensions_url(obj_id, obj_type="", verbose=True):
     """
     Generate a valid Dimensions URL for one of the available sources.
     obj_id: the dimensions ID of the object
     obj_type: one of 'publications', 'grants', 'patents', 'policy_documents', 'clinical_trials', 'researchers'
     """
-    if obj_type not in G.sources():
-        if verbose: print("Valid sources are: ", " ".join([x for x in G.sources()]))
-    url = G.url_for_source(obj_type)
-    if url:
-        return url + obj_id
+    
+    if obj_type and obj_type not in G.sources():
+        raise ValueError("ERROR: valid sources are: " + " ".join([x for x in G.sources()]))
+    if not obj_type:
+        for source, prefix in G.object_id_patterns().items():
+            if obj_id.startswith(prefix):
+                obj_type = source
+    if obj_type:
+        url = G.url_for_source(obj_type)
+        if url:
+            return url + obj_id
 
 
 def google_url(stringa):

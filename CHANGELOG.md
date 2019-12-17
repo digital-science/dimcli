@@ -11,6 +11,7 @@
 * experimental feature `Dataset.as_dimensions_url()` 
 * `dimcli.login()` method now accepts an optional argument `verbose=True/False` to enable/suppress feedback 
 * `Dsl.query_iterative` takes an extra argument `pause` determining iteration break length (default = 1.5 seconds)
+* added more utility functions to `dimcli.shortcuts` module 
 
 * fixed error with `as_dataframe_investigators` 
 * fixed error with `limit` keyword wrongly found in iterative_query
