@@ -2,7 +2,6 @@
 
 
 ## v 0.6.2 
-### TODO update public notebooks using old 'Result' object right after releasing
 
 * `dimcli.Dataset`  is the new name of dimcli.Result  and is available at module level
 * methods to build `Dataset` from raw data (instead of from a query) so to reuse as_dataframe() methods etc:  `Dataset.from_publications_list(data)` 
@@ -12,6 +11,7 @@
 * `dimcli.login()` method now accepts an optional argument `verbose=True/False` to enable/suppress feedback 
 * `Dsl.query_iterative` takes an extra argument `pause` determining iteration break length (default = 1.5 seconds)
 * added more utility functions to `dimcli.shortcuts` module 
+* new method `Dataset.as_dataframe_concepts()` for publications. Returns a full list of all concepts, including position, score (in the context of a publication) and frequency (across publications).
 
 * fixed error with `as_dataframe_investigators` 
 * fixed error with `limit` keyword wrongly found in iterative_query

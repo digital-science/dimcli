@@ -12,7 +12,7 @@ class DfFactory(object):
     """
 
     def __init__(self, good_data_keys=[]):
-        self.gdk = good_data_keys
+        self.data_keys = good_data_keys
 
 
     def df_simple(self, data, key):
@@ -20,14 +20,14 @@ class DfFactory(object):
 
         output = pd.DataFrame()
         
-        if key and (key in self.gdk):
+        if key and (key in self.data_keys):
             output = json_normalize(data[key])
-        elif key and (key not in self.gdk):
-            print(f"[Warning] Dataframe cannot be created: invalid key. Should be one of {self.gdk}")
-        elif not key and self.gdk:
-            if len(self.gdk) > 1:
-                print(f"[Warning] Dataframe created from first available key, but more than one JSON key found: {self.gdk}")
-            output = json_normalize(data[self.gdk[0]])
+        elif key and (key not in self.data_keys):
+            print(f"[Warning] Dataframe cannot be created: invalid key. Should be one of {self.data_keys}")
+        elif not key and self.data_keys:
+            if len(self.data_keys) > 1:
+                print(f"[Warning] Dataframe created from first available key, but more than one JSON key found: {self.data_keys}")
+            output = json_normalize(data[self.data_keys[0]])
         else:
             pass 
 
@@ -67,7 +67,7 @@ class DfFactory(object):
         """
         output = pd.DataFrame()
 
-        if 'publications' in self.gdk:
+        if 'publications' in self.data_keys:
 
             if exists_key_in_dicts_list(data['publications'], "author_affiliations"):
                 FIELD = "author_affiliations"
@@ -93,7 +93,7 @@ class DfFactory(object):
                 output = json_normalize(data['publications'], record_path=[FIELD], meta=['id'], errors='ignore')
                 output.rename(columns={"id": "pub_id"}, inplace=True)
         else:
-            print(f"[Warning] Dataframe cannot be created as 'publications' were not found in data. Available: {self.gdk}")
+            print(f"[Warning] Dataframe cannot be created as 'publications' were not found in data. Available: {self.data_keys}")
         return output
 
 
@@ -116,23 +116,34 @@ class DfFactory(object):
         return affiliations
 
 
-    # def df_concepts(self, data, key):
-    #     "from a list of publications including concepts, return a DF with one line per concept"
+    def df_concepts(self, data, max_per_pub=100):
+        "from a list of publications including concepts, return a DF with one line per concept"
 
-    #     output = pd.DataFrame()
+        output = pd.DataFrame(columns=['name', 'position', 'score', 'pubid', 'year', 'title']) 
+        FIELD = "concepts"
+
+        if 'publications' in self.data_keys:    
+            for pub in data['publications']:
+                if 'concepts' in pub and pub['concepts']:
+                    concepts = pub['concepts'][:max_per_pub]
+                    llen = len(concepts)
+                    positions = list(range(1, llen+1))
+                    scores = list(range(1, llen+1))[::-1] # highest score first, reverse list
+                    pubids = [pub.get("id", None)] * llen
+                    years = [pub.get("year", None)] * llen
+                    titles = [pub.get("title", None)] * llen
+                    z = list(zip(concepts, positions, scores, pubids, years, titles))
+                    d = [{'name': a, 'position': b, 'score': c, 'pubid': d, 'year': e, 'title': f} for a,b,c,d,e,f in z]
+                    output = output.append(d, sort=True)    
+            # add correct data types
+            output['position'] = pd.to_numeric(output['position'])
+            output['score'] = pd.to_numeric(output['score'])
+            # finally add another colum counting occurrences   
+            output['frequency'] = output.groupby('name')['name'].transform('count')         
+        else:
+            print(f"[Warning] Dataframe cannot be created as 'publications' were not found in data. Available: {self.data_keys}")
         
-    #     if key and (key in self.gdk):
-    #         output = json_normalize(data[key])
-    #     elif key and (key not in self.gdk):
-    #         print(f"[Warning] Dataframe cannot be created: invalid key. Should be one of {self.gdk}")
-    #     elif not key and self.gdk:
-    #         if len(self.gdk) > 1:
-    #             print(f"[Warning] Dataframe created from first available key, but more than one JSON key found: {self.gdk}")
-    #         output = json_normalize(data[self.gdk[0]])
-    #     else:
-    #         pass 
-
-    #     return output
+        return output
 
 
     def df_grant_funders(self, data):
@@ -141,11 +152,11 @@ class DfFactory(object):
         output = pd.DataFrame()
         FIELD = "funders"
 
-        if 'grants' in self.gdk:    
+        if 'grants' in self.data_keys:    
             normalize_key(FIELD, data['grants'], [])   
             output = json_normalize(data['grants'], record_path=[FIELD], meta=['id', 'title', 'start_date', 'end_date'], meta_prefix="grant_", errors='ignore')
         else:
-            print(f"[Warning] Dataframe cannot be created as 'grants' were not found in data. Available: {self.gdk}")
+            print(f"[Warning] Dataframe cannot be created as 'grants' were not found in data. Available: {self.data_keys}")
 
         return output
 
@@ -155,11 +166,11 @@ class DfFactory(object):
         output = pd.DataFrame()
         FIELD = "investigator_details"
 
-        if 'grants' in self.gdk:    
+        if 'grants' in self.data_keys:    
             normalize_key(FIELD, data['grants'], [])
             output = json_normalize(data['grants'], record_path=[FIELD], meta=['id', 'title', 'start_date', 'end_date'], meta_prefix="grant_", errors='ignore')
         else:
-            print(f"[Warning] Dataframe cannot be created as 'grants' were not found in data. Available: {self.gdk}")
+            print(f"[Warning] Dataframe cannot be created as 'grants' were not found in data. Available: {self.data_keys}")
 
         return output
 

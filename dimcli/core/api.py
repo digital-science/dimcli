@@ -391,6 +391,14 @@ class Dataset(IPython.display.JSON):
         if not self.json.get("errors"):
             return self.df_factory.df_authors_affiliations(self.json)
 
+    def as_dataframe_concepts(self, max_per_pub=100):
+        """Utility method: return inner concepts list as a pandas dataframe, exposing pubId, year, title and position plus score of the concept.
+
+        Note: position is simply the index of a concept in the list (eg 1 or greater). Score is the result of the formula `len(concepts) - index(concept)`, increased by 1 so to avoid 0 score concepts (eg the first concept in a list of 20 gets a score of 20.)
+        """
+        if not self.json.get("errors"):
+            return self.df_factory.df_concepts(self.json, max_per_pub)
+
 
     def as_dataframe_funders(self):
         """Utility method: return inner json as a pandas dataframe, for grants funders
