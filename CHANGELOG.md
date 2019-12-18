@@ -17,6 +17,8 @@
 * fixed error with `limit` keyword wrongly found in iterative_query
 * fixed error with verbose flag lost after queries with 403s or automatic retries
 * deprecated `dsl_escape` method in favor or [raw strings](https://stackoverflow.com/questions/17327202/python-replace-single-backslash-with-double-backslash/39847354) when a query with quotes needs to be escaped
+* improved autocomplete after magic command %dsl 
+
 
 
 ## v 0.6.1 
