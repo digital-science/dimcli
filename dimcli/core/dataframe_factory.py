@@ -129,6 +129,7 @@ class DfFactory(object):
                     llen = len(concepts)
                     positions = list(range(1, llen+1))
                     scores = list(range(1, llen+1))[::-1] # highest score first, reverse list
+                    scores = [x / llen for x in scores] # normalize by items in list
                     pubids = [pub.get("id", None)] * llen
                     years = [pub.get("year", None)] * llen
                     titles = [pub.get("title", None)] * llen
@@ -139,11 +140,12 @@ class DfFactory(object):
             output['position'] = pd.to_numeric(output['position'])
             output['score'] = pd.to_numeric(output['score'])
             # finally add another colum counting occurrences   
-            output['frequency'] = output.groupby('name')['name'].transform('count')         
+            output['frequency'] = output.groupby('name')['name'].transform('count')        
         else:
             print(f"[Warning] Dataframe cannot be created as 'publications' were not found in data. Available: {self.data_keys}")
         
-        return output
+        return output[['name', 'position', 'score', 'frequency', 'pubid', 'title', 'year']]
+
 
 
     def df_grant_funders(self, data):
