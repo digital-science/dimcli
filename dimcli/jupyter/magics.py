@@ -157,6 +157,9 @@ class DslMagics(Magics):
 ip = get_ipython()
 ip.register_magics(DslMagics)
 
+# https://github.com/ipython/ipython/issues/11878#issuecomment-554790961
+ip.Completer.use_jedi = False
+
 from ..repl.autocompletion import CleverCompleter
 from prompt_toolkit.document import Document
 
