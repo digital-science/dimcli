@@ -68,6 +68,7 @@ class NetworkViz(PyvisNetwork):
                 # return IFrame(name, width=self.width, height=self.height)
                 return self.write_html(name, notebook=True)
             else:
+                self.write_html(name, notebook=True)
                 return IPython.display.HTML(filename=name)
         else:
             self.write_html(name)
