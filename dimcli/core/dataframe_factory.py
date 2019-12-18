@@ -129,7 +129,7 @@ class DfFactory(object):
                     llen = len(concepts)
                     positions = list(range(1, llen+1))
                     scores = list(range(1, llen+1))[::-1] # highest score first, reverse list
-                    scores = [x / llen for x in scores] # normalize by items in list
+                    scores = [float('%.2f'%(x / llen)) for x in scores] # normalize by items in list
                     pubids = [pub.get("id", None)] * llen
                     years = [pub.get("year", None)] * llen
                     titles = [pub.get("title", None)] * llen
