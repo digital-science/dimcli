@@ -43,6 +43,10 @@ setup(
     url="https://github.com/digital-science/dimcli",
     packages=find_packages(),
     include_package_data=True,
+    package_data = {
+        'static': ['*'],
+        'dimcli': ['templates/*.*'],
+    },
     install_requires=REQUIREMENTS_DATA,
     entry_points="""
         [console_scripts]

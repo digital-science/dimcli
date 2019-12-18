@@ -11,6 +11,7 @@ $ dimcli_quicktest 1
 """
 
 import click 
+import os
 from .. import *
 from ..shortcuts import *
 
@@ -32,19 +33,7 @@ def main(test_number=1):
 
     if test_number == 2:
         # ----
-        res = dslquery("""search publications where category_for is empty and journal is empty return publications[doi+category_for+journal] limit 1000""")
-        print("Query results for standard query: ")
-        print(" ==> res['stats']: ", res['stats'])
-        print(" ==> len(res['publications']): ", len(res['publications']))
-        # check predicates
-        print(" ==> len([x for x in res.publications if x['category_for'] == None]): ", len([x for x in res.publications if x['category_for'] == None]))
-        print(" ==> len([x for x in res.publications if x['journal'] == None]): ", len([x for x in res.publications if x['journal'] == None]))
-        print("Now Normalizing the category_for key...")
-        normalize_key("category_for", res.publications, {})
-        print("Now Normalizing the JOURNAL key...")
-        normalize_key("journal", res.publications, [])
-        print(" ==> len([x for x in res.publications if x['category_for'] == None]): ", len([x for x in res.publications if x['category_for'] == None]))
-        print(" ==> len([x for x in res.publications if x['journal'] == None]): ", len([x for x in res.publications if x['journal'] == None]))
+        print(os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', 'templates')))
 
         # ----
         click.secho("Completed test succesfully", fg="green")

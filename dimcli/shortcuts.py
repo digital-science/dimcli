@@ -40,3 +40,4 @@ def dslqueryall(query_string):
     if is_logged_in():
         dsl = Dsl()
         return dsl.query_iterative(query_string)
+
