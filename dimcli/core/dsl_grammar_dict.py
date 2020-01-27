@@ -2615,7 +2615,7 @@ GRAMMAR_DICT = {
                     'description': 'Total count'
                 }
             },
-            'search_fields': ['_email', 'researcher']
+            'search_fields': ['researcher']
         },
         'organizations': {
             'fields': {
