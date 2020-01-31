@@ -101,13 +101,13 @@ class TestDataframes(unittest.TestCase):
         click.secho("\nTEST 005: Concepts extraction.", fg="green")
         # ----
         print("Testing as_dataframe_concepts on Publications data: ")
-        res= dsl.query("""search publications for "graphene" where year=2019 return publications[id+concepts+year+title] limit 100""")
+        res= dslquery("""search publications for "graphene" where year=2019 return publications[id+concepts+year+title] limit 100""")
         concepts = res.as_dataframe_concepts()
         print(" ==> res.as_dataframe_concepts(): ", concepts)
         concepts.info()
         # ----
         print("Testing as_dataframe_concepts on Grants data: ")
-        res= dsl.query("""search grants for "graphene" where active_year = 2019 return grants[basics+concepts] limit 100""")
+        res= dslquery("""search grants for "graphene" where active_year = 2019 return grants[basics+concepts] limit 100""")
         concepts = res.as_dataframe_concepts()
         print(" ==> res.as_dataframe_concepts(): ", concepts)
         concepts.info()
