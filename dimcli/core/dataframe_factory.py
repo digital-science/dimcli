@@ -119,13 +119,13 @@ class DfFactory(object):
     def df_concepts(self, data, max_per_pub=100):
         "from a list of publications including concepts, return a DF with one line per concept"
 
-        output = pd.DataFrame(columns=['name', 'position', 'score', 'pubid', 'year', 'title']) 
         FIELD = "concepts"
 
         if 'publications' in self.data_keys:    
+            output = pd.DataFrame(columns=['name', 'position', 'score', 'pubid', 'year', 'title']) 
             for pub in data['publications']:
-                if 'concepts' in pub and pub['concepts']:
-                    concepts = pub['concepts'][:max_per_pub]
+                if FIELD in pub and pub[FIELD]:
+                    concepts = pub[FIELD][:max_per_pub]
                     llen = len(concepts)
                     positions = list(range(1, llen+1))
                     scores = list(range(1, llen+1))[::-1] # highest score first, reverse list
@@ -140,12 +140,36 @@ class DfFactory(object):
             output['position'] = pd.to_numeric(output['position'])
             output['score'] = pd.to_numeric(output['score'])
             # finally add another colum counting occurrences   
-            output['frequency'] = output.groupby('name')['name'].transform('count')        
-        else:
-            print(f"[Warning] Dataframe cannot be created as 'publications' were not found in data. Available: {self.data_keys}")
+            output['frequency'] = output.groupby('name')['name'].transform('count')   
+            return output[['name', 'position', 'score', 'frequency', 'pubid', 'title', 'year']]
         
-        return output[['name', 'position', 'score', 'frequency', 'pubid', 'title', 'year']]
+        elif 'grants' in self.data_keys:   
+            output = pd.DataFrame(columns=['name', 'position', 'score', 'grantid', 'active_year', 'title']) 
+            for row in data['grants']:
+                if FIELD in row and row[FIELD]:
+                    concepts = row[FIELD][:max_per_pub]
+                    llen = len(concepts)
+                    positions = list(range(1, llen+1))
+                    scores = list(range(1, llen+1))[::-1] # highest score first, reverse list
+                    scores = [float('%.2f'%(x / llen)) for x in scores] # normalize by items in list
+                    grantids = [row.get("id", None)] * llen
+                    years = [row.get("active_year", None)] * llen
+                    titles = [row.get("title", None)] * llen
+                    z = list(zip(concepts, positions, scores, grantids, years, titles))
+                    d = [{'name': a, 'position': b, 'score': c, 'grantid': d, 'active_year': e, 'title': f} for a,b,c,d,e,f in z]
+                    output = output.append(d, sort=True)    
+            # add correct data types
+            output['position'] = pd.to_numeric(output['position'])
+            output['score'] = pd.to_numeric(output['score'])
+            # finally add another colum counting occurrences   
+            output['frequency'] = output.groupby('name')['name'].transform('count')  
+            return output[['name', 'position', 'score', 'frequency', 'grantid', 'title', 'active_year']]
 
+        else:
+            print(f"[Error] Dataframe can be created only for 'publications' or 'grants' searches. Available: {self.data_keys}")
+        
+        return None
+        
 
 
     def df_grant_funders(self, data):

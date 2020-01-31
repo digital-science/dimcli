@@ -97,13 +97,20 @@ class TestDataframes(unittest.TestCase):
         click.secho("Completed test succesfully", fg="green")
 
     def test_005(self):
+        # ----
         click.secho("\nTEST 005: Concepts extraction.", fg="green")
         # ----
-        print("Testing as_dataframe_funders on Grants data: ")
-        res= dslquery("""search publications for "graphene" where year=2019 return publications[id+concepts+year+title] limit 100""")
+        print("Testing as_dataframe_concepts on Publications data: ")
+        res= dsl.query("""search publications for "graphene" where year=2019 return publications[id+concepts+year+title] limit 100""")
         concepts = res.as_dataframe_concepts()
-        print(" ==> res.as_dataframe_concepts(): ", res.as_dataframe_concepts())
-        print(concepts.info())
+        print(" ==> res.as_dataframe_concepts(): ", concepts)
+        concepts.info()
+        # ----
+        print("Testing as_dataframe_concepts on Grants data: ")
+        res= dsl.query("""search grants for "graphene" where active_year = 2019 return grants[basics+concepts] limit 100""")
+        concepts = res.as_dataframe_concepts()
+        print(" ==> res.as_dataframe_concepts(): ", concepts)
+        concepts.info()
         click.secho("Completed test succesfully", fg="green")
 
 if __name__ == "__main__":

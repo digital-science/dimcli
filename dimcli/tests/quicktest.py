@@ -33,11 +33,20 @@ def main(test_number=1):
 
     if test_number == 2:
         # ----
-        print(os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', 'templates')))
-
+        click.secho("\nTEST 005: Concepts extraction.", fg="green")
         # ----
+        print("Testing as_dataframe_concepts on Publications data: ")
+        res= dsl.query("""search publications for "graphene" where year=2019 return publications[id+concepts+year+title] limit 100""")
+        concepts = res.as_dataframe_concepts()
+        print(" ==> res.as_dataframe_concepts(): ", concepts)
+        concepts.info()
+        # ----
+        print("Testing as_dataframe_concepts on Grants data: ")
+        res= dsl.query("""search grants for "graphene" where active_year = 2019 return grants[basics+concepts] limit 100""")
+        concepts = res.as_dataframe_concepts()
+        print(" ==> res.as_dataframe_concepts(): ", concepts)
+        concepts.info()
         click.secho("Completed test succesfully", fg="green")
-
 
 
 if __name__ == '__main__':

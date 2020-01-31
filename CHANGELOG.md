@@ -11,7 +11,7 @@
 * `dimcli.login()` method now accepts an optional argument `verbose=True/False` to enable/suppress feedback 
 * `Dsl.query_iterative` takes an extra argument `pause` determining iteration break length (default = 1.5 seconds)
 * added more utility functions to `dimcli.shortcuts` module 
-* new method `Dataset.as_dataframe_concepts()` for publications. Returns a full list of all concepts, including position, score (in the context of a publication) and frequency (across publications).
+* new method `Dataset.as_dataframe_concepts()` for publications and grants. Returns a full list of all concepts, including position, score (in the context of a publication/grant) and frequency (across records).
 
 * fixed error with `as_dataframe_investigators` 
 * fixed error with `limit` keyword wrongly found in iterative_query
