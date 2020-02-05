@@ -6,7 +6,7 @@
 * New command for resolving Dimensions IDs into URLs `dimcli -id [value]`
 * Grammar for DSL V 1.22
 * Refactor login: invalid credentials raise an error (previously just a message)
-
+* Refactor query_iterative: error while looping provides better infos
 
 ## v 0.6.2 
 
