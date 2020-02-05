@@ -45,8 +45,8 @@ def login(username="", password="", endpoint="https://app.dimensions.ai", instan
     try:
         do_global_login(instance, username, password, endpoint)
     except Exception as e:
-        print(str(e))
         print("Login failed: please ensure your credentials are correct.")
+        raise(e)
 
     CONNECTION = get_connection()
 

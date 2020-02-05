@@ -5,7 +5,7 @@
 * Refactor command line options. Try it with `dimcli -h`
 * New command for resolving Dimensions IDs into URLs `dimcli -id [value]`
 * Grammar for DSL V 1.22
-
+* Refactor login: invalid credentials raise an error (previously just a message)
 
 
 ## v 0.6.2 
