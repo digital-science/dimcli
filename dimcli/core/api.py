@@ -137,13 +137,20 @@ class Dsl():
 
 
 
-    def query_iterative(self, q, show_results=None, skip=0, limit=1000, pause=1.5, verbose=None):
+    def query_iterative(self, q, show_results=None, limit=1000, skip=0, pause=1.5, verbose=None):
         """Runs a normal query iteratively, by automatically turning it into a loop with limit/skip operators until all the results available have been extracted.
         
-        pause: expressed in seconds
+        Args:
+            q (str): The DSL query.
+            show_results (bool): Determines whether the final results are rendered via the iPython display widget (for Jupyter notebooks).
+            limit (int): How many records to extract per iteration. Defaults to 1000.
+            skip (int): Offset for first iteration. Defaults to 0. After the first iteration, this value is calculated dynamically.
+            pause (float): How much time to pause after each iterarion, expressed in seconds. Defaults to 1.5. Note: each iteration gets timed, so the pause time is used only when the query time is more than 2s. 
+            verbose (bool): Verbose mode.
+
         
         Returns:
-            [Dataset] -- query results     
+            Dataset -- query results collated within a single object 
         """
         if not self.is_logged_in:
             self._print_please_login()
@@ -182,6 +189,7 @@ class Dsl():
             time.sleep(pause)
 
         if res['errors']:
+            print("** [Dimcli] An error occurred during one of the iterations. Consider using the 'limit' argument to retrieve less records per iteration.")
             return res
         elif res['stats']:
 
@@ -192,7 +200,7 @@ class Dsl():
             if verbose: print("%d / %d" % (batch, tot  ))
 
             if len(res[sourcetype]) == limit and not flag_last_round:
-                output = res[sourcetype] + self.query_iterative(q, show_results, skip+limit, limit, pause, verbose)
+                output = res[sourcetype] + self.query_iterative(q, show_results, limit, skip+limit, pause, verbose)
             else:
                 output = res[sourcetype]
 

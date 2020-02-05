@@ -587,6 +587,14 @@ def print_dimensions_url(obj_id):
 
 
 
+def dimensions_url_search(keywords_list_as_string):
+    "Returns a valid keyword search URL for Dimensions"
+    q = """https://app.dimensions.ai/discover/publication?search_text={}&search_type=kws&search_field=full_search"""
+    from urllib.parse import quote   
+    s = quote(keywords_list_as_string)  
+    return q.format(s)
+
+
 def google_url(stringa):
     """
     Generate a valid google search URL from a string (URL quoting is applied)

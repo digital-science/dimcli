@@ -4,6 +4,7 @@
 import sys
 import click
 from pprint import pprint
+import webbrowser
 
 from .VERSION import *
 
@@ -43,8 +44,10 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
     "--history", is_flag=True, help="Open history file with default editor.")
 @click.option(
     "--id", "-id", help="Resolve a Dimensions ID to its public URL.")
+@click.option(
+    "--websearch", "-w", help="Search a quoted string in Dimensions web.")
 @click.pass_context
-def main_cli(ctx, instance_name=None, init=False, show=False, vcheck=False, history=False, id=None):
+def main_cli(ctx, instance_name=None, init=False, show=False, vcheck=False, history=False, id=None, websearch=None):
     """
     Python client for the Dimensions Analytics API.
     More info: https://github.com/digital-science/dimcli
@@ -61,6 +64,11 @@ def main_cli(ctx, instance_name=None, init=False, show=False, vcheck=False, hist
 
     if id:
         print_dimensions_url(id)
+        return 
+
+    if websearch:
+        url = dimensions_url_search(websearch)
+        webbrowser.open(url)
         return 
 
     if not os.path.exists(USER_CONFIG_FILE_PATH):

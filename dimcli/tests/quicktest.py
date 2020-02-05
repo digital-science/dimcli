@@ -33,20 +33,11 @@ def main(test_number=1):
 
     if test_number == 2:
         # ----
-        click.secho("\nTEST 005: Concepts extraction.", fg="green")
-        # ----
-        print("Testing as_dataframe_concepts on Publications data: ")
-        res= dsl.query("""search publications for "graphene" where year=2019 return publications[id+concepts+year+title] limit 100""")
-        concepts = res.as_dataframe_concepts()
-        print(" ==> res.as_dataframe_concepts(): ", concepts)
-        concepts.info()
-        # ----
-        print("Testing as_dataframe_concepts on Grants data: ")
-        res= dsl.query("""search grants for "graphene" where active_year = 2019 return grants[basics+concepts] limit 100""")
-        concepts = res.as_dataframe_concepts()
-        print(" ==> res.as_dataframe_concepts(): ", concepts)
-        concepts.info()
-        click.secho("Completed test succesfully", fg="green")
+        q = """search publications
+    where research_orgs.id = "grid.170205.1"
+    and year in [2011:2012]
+    return publications[id+doi+title+times_cited+recent_citations+field_citation_ratio+category_for+authors]"""
+        dsl.query_iterative(q)
 
 
 if __name__ == '__main__':
