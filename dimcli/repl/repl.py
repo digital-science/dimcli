@@ -56,6 +56,7 @@ All special commands start with '.'
 >>> .show [optional: N]: print N results from last query, trying to build URLs for objects. Default N=10.
 >>> .json_compact: print results of last query as single-line JSON. 
 >>> .json_full: print results of last query as formatted JSON.
+>>> .url: resolve a Dimensions ID into a public URL.
 ----
 >>> <Ctrl-o>: search docs online. 
 >>> <Ctrl-c>: abort query.
@@ -108,8 +109,20 @@ class CommandsManager(object):
         elif text.replace("\n", "").strip().startswith(".docs"):
             self.docs_full(text.replace("\n", "").strip())
 
+        elif text.replace("\n", "").strip().startswith(".url"):
+            self.url_resolver(text.replace("\n", "").strip())
+
         else:
             return self.query(text)
+
+
+    def url_resolver(self, text):
+        """
+        turn an ID into a Dimensions URL - print out results
+        """
+        text = text.replace(".url", "").strip()
+        if len(text) > 0:
+            print_dimensions_url(text)
 
     def query(self, text):
         """main procedure after user query dsl"""

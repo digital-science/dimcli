@@ -9,7 +9,7 @@ from .VERSION import *
 
 from .core.auth import USER_DIR, USER_CONFIG_FILE_PATH, USER_HISTORY_FILE
 from .core.api import *
-from .core.utils import open_multi_platform, init_config_folder, print_warning_prompt_version, preview_contents, dimensions_url
+from .core.utils import open_multi_platform, init_config_folder, print_warning_prompt_version, preview_contents, print_dimensions_url
 from .core.version_utils import print_dimcli_report, is_dimcli_outdated
 
 try:
@@ -60,15 +60,7 @@ def main_cli(ctx, instance_name=None, init=False, show=False, vcheck=False, hist
         return
 
     if id:
-        url = dimensions_url(id)
-        if url:
-            print("Got a match:")
-            print(url)
-        else:
-            # it's a cl trial or patent?
-            print("Cannot resolve automatically. Maybe:")
-            print(dimensions_url(id, "patents"))
-            print(dimensions_url(id, "clinical_trials"))
+        print_dimensions_url(id)
         return 
 
     if not os.path.exists(USER_CONFIG_FILE_PATH):

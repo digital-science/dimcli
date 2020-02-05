@@ -19,6 +19,7 @@ SYNTAX_DICT = {
         '.export_as_html' : [],
         '.export_as_csv' : [],
         '.export_as_json' : [],
+        '.url' : [],
     },
     'allowed_starts_dsl_query': {
         'search': [],

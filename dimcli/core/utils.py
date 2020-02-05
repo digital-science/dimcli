@@ -573,6 +573,20 @@ def dimensions_url(obj_id, obj_type="", verbose=True):
             return url + obj_id
 
 
+def print_dimensions_url(obj_id):
+    "wrapper dimensions_url() - for use within the cli"
+    url = dimensions_url(obj_id)
+    if url:
+        print("Got a match:")
+        print(url)
+    else:
+        # in this case, it's a cltrial or patent
+        print("Cannot resolve automatically. Maybe:")
+        print(dimensions_url(obj_id, "patents"))
+        print(dimensions_url(obj_id, "clinical_trials"))
+
+
+
 def google_url(stringa):
     """
     Generate a valid google search URL from a string (URL quoting is applied)
