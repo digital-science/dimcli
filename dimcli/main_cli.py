@@ -9,7 +9,7 @@ from .VERSION import *
 
 from .core.auth import USER_DIR, USER_CONFIG_FILE_PATH, USER_HISTORY_FILE
 from .core.api import *
-from .core.utils import open_multi_platform, init_config_folder, print_warning_prompt_version, preview_contents
+from .core.utils import open_multi_platform, init_config_folder, print_warning_prompt_version, preview_contents, dimensions_url
 from .core.version_utils import print_dimcli_report, is_dimcli_outdated
 
 try:
@@ -22,37 +22,54 @@ except:
     PROMPT_TOOLKIT_VERSION_OK = False # => repl disabled
 
 
-@click.command()
+CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
+
+
+@click.command(context_settings=CONTEXT_SETTINGS)
 @click.argument("instance_name", nargs=1, default="live")
 @click.option(
-    "--init", "-i",
+    "--init",
     is_flag=True,
-    help="Initialize the configuration file with your Dimensions account details.")
+    help="Create a configuration file with your API credentials.")
 @click.option(
-    "--config", "-c",
+    "--show",
     is_flag=True,
-    help="Show configuration file.")
+    help="Show the local configuration file.")
 @click.option(
-    "--versioncheck", "-v",
+    "--vcheck",
     is_flag=True,
     help="Check online if your dimcli version is the latest.")
 @click.option(
-    "--history", "-h", is_flag=True, help="Open history file with default editor.")
+    "--history", is_flag=True, help="Open history file with default editor.")
+@click.option(
+    "--id", "-id", help="Resolve a Dimensions ID to its public URL.")
 @click.pass_context
-def main_cli(ctx, instance_name=None, init=False, config=False, versioncheck=False, history=False):
+def main_cli(ctx, instance_name=None, init=False, show=False, vcheck=False, history=False, id=None):
     """
-    Python client for the Dimensions DSL.
+    Python client for the Dimensions Analytics API.
     More info: https://github.com/digital-science/dimcli
     """
-    click.secho("Dimcli - Dimensions API Console (" + VERSION + ")", dim=True)
+    click.secho("Dimcli - Dimensions API Client (" + VERSION + ")", dim=True)
 
     if init:
         init_config_folder(USER_DIR, USER_CONFIG_FILE_PATH)
         return
 
-    if versioncheck:
+    if vcheck:
         print_dimcli_report()
         return
+
+    if id:
+        url = dimensions_url(id)
+        if url:
+            print("Got a match:")
+            print(url)
+        else:
+            # it's a cl trial or patent?
+            print("Cannot resolve automatically. Maybe:")
+            print(dimensions_url(id, "patents"))
+            print(dimensions_url(id, "clinical_trials"))
+        return 
 
     if not os.path.exists(USER_CONFIG_FILE_PATH):
         click.secho(
@@ -65,7 +82,7 @@ def main_cli(ctx, instance_name=None, init=False, config=False, versioncheck=Fal
         )
         return
 
-    if config:
+    if show:
         preview_contents(USER_CONFIG_FILE_PATH)
         return
 

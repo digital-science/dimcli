@@ -118,7 +118,7 @@ class Dsl():
                 return response
             result = Dataset(res_json)
             if verbose: print_json_stats(result, q)
-            print_json_errors(result) # always print errors
+            print_json_errors(result) # ALWAYS print errors
             if verbose: print_json_warnings(result)
             if show_results or (show_results is None and self._show_results):
                 IPython.display.display(result)
