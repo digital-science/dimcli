@@ -119,20 +119,27 @@ class DslMagics(Magics):
         if obj and obj not in G.entities() and obj not in G.sources():
             sou = " - ".join([x for x in G.sources()])
             ent = " - ".join([x for x in G.entities()])
-            print(f"Sorry can't recognize this object. Use one of the following: Sources=[{sou}] Entities=[{ent}] ")
-            return
+            print(f"Can't recognize this object. Dimcli knows about:\n Sources=[{sou}] Entities=[{ent}] ")
+            # continue anyways
         
         res = self._handle_query(f"describe schema") # same query for all requests (filtering done here)
 
         if not obj:
+            # show data for all sources
             docs_for = G.sources()
             header = "sources"
         elif obj in G.entities():
+            # match single entity
             docs_for = [obj]
             header = "entities"
         elif obj in G.sources():
+            # match single source
             docs_for = [obj]
             header = "sources"
+        else:
+            # unknown key: try to match a source (eg for newly published sources)
+            docs_for = [obj]
+            header = "sources"            
 
         d = {header: [], 'field': [], 'type': [], 'description':[], 'is_filter':[], 'is_entity': [],  'is_facet':[],}
         for S in docs_for:

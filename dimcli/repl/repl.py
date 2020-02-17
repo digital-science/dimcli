@@ -166,6 +166,7 @@ class CommandsManager(object):
                 res = self.dsl.query(f"describe source {text[0]}")
             if "errors" in res.json.keys():
                 print(res.json["errors"])
+                return 
             # show all fields 
             click.secho("=====\nFIELDS")
             for x in sorted(res.json['fields']):
