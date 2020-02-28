@@ -152,7 +152,9 @@ class DslMagics(Magics):
                 d['is_facet'] += [res.json[header][S]['fields'][x].get('is_facet', False)]
                 d['is_entity'] += [res.json[header][S]['fields'][x].get('is_entity', False)]
 
-        return df.from_dict(d)
+        data = df.from_dict(d)
+        self.shell.user_ns[self.results_var] = data
+        return data
 
 
 
