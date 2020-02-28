@@ -6,7 +6,7 @@ Use instead dimcli.utils
 
 
 from . import *
-from .core.utils import chunks_of, normalize_key, dimensions_url, google_url, save2File, exists_key_in_dicts_list
+from .core.utils import chunks_of, normalize_key, dimensions_url, google_url, save2File, exists_key_in_dicts_list, dsl_escape
 
 
 
