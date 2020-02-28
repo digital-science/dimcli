@@ -601,14 +601,22 @@ def google_url(stringa):
     """
     from urllib.parse import quote   
     s = quote(stringa)    
-    return f"https://www.google.com/search?q={s}"                                                                                                           
+    return f"https://www.google.com/search?q={s}"                                                                                                          
 
+    # EG
+    # dsl.query(f"""search clinical_trials in full_data for "{dsl_escape(q)}" return clinical_trials""")
 
 def dsl_escape(stringa):
     """
-    DEPRECATED: more effective to use raw strings instead eg
-    See https://stackoverflow.com/questions/17327202/python-replace-single-backslash-with-double-backslash/39847354
+    Helper for escaping the full-text inner query string, when it includes quotes. Usage:
 
+    `search publications for "{dsl_escape(complex_q)}" return publications`
+
+    EG imagine the query string:
+    '"2019-nCoV" OR "COVID-19" OR "SARS-CoV-2" OR (("coronavirus"  OR "corona virus") AND (Wuhan OR China))'
+    In Python, if you want to embed it into a DSL query, it has to become:
+    '\\"2019-nCoV\\" OR \\"COVID-19\\" OR \\"SARS-CoV-2\\" OR ((\\"coronavirus\\"  OR \\"corona virus\\") AND (Wuhan OR China))'
+
+    See also: https://docs.dimensions.ai/dsl/language.html#for-search-term
     """
-    print("WARNING: deprecated - use raw strings instead https://stackoverflow.com/questions/17327202/python-replace-single-backslash-with-double-backslash/39847354")
     return stringa.replace('"', '\\"')
