@@ -1,6 +1,9 @@
 import json
 import pandas as pd
-from pandas.io.json import json_normalize
+try:
+    from pandas import json_normalize
+except:
+    from pandas.io.json import json_normalize
 from .utils import normalize_key, exists_key_in_dicts_list
 
 

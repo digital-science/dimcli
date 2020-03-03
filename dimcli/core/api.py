@@ -10,7 +10,6 @@ from itertools import islice
 import urllib.parse
 
 import pandas as pd
-from pandas.io.json import json_normalize
 
 from .auth import do_global_login, get_connection, refresh_login
 from .utils import *

@@ -405,7 +405,7 @@ def export_json_csv(jjson, query, USER_EXPORTS_DIR):
 
     """
     try:
-        from pandas.io.json import json_normalize
+        from pandas import json_normalize
     except:
         click.secho("This feature requires the pandas library (`pip install pandas` from the terminal)", fg="red")
         return
