@@ -19,7 +19,10 @@ class DfFactory(object):
 
 
     def df_simple(self, data, key):
-        "utility method: return inner json as a pandas dataframe"
+        """Return inner json as a pandas dataframe
+        If key is empty, the first available JSON key (eg 'publications') is used to determine
+        what data should be turned into a dataframe. 
+        """
 
         output = pd.DataFrame()
         
