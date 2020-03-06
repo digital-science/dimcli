@@ -107,4 +107,4 @@ ENV/
 .vscode
 
 /tools/apitest*
-/tests/apitest*
+/dimcli/tests/apitest*
