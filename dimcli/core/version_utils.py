@@ -51,6 +51,3 @@ def is_dimcli_outdated(this_version=VERSION):
     except:
         return None
 
-
-if __name__ == '__main__':
-    print("Django==%s" % get_version('Django'))
