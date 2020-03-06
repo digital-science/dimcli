@@ -12,10 +12,12 @@ $ dimcli_quicktest 1
 
 import click 
 import os
+import requests
+
 from .. import *
 from ..shortcuts import *
+from ..core.converters import *
 
-import requests
 
 @click.command()
 @click.argument('test_number', nargs=1)
@@ -26,18 +28,22 @@ def main(test_number=1):
     test_number = int(test_number)
 
     if test_number == 1:
-        res= dsl.query("""extract_grants(grant_number="185247", funder_name="Swiss National Science Foundation")""")
-        print("Query results: ")
-        print(" ==> res: ", res)
-        print(" ==> res.json: ", res.json)
 
-    if test_number == 2:
-        # ----
-        q = """search publications
-    where research_orgs.id = "grid.170205.1"
-    and year in [2011:2012]
-    return publications[id+doi+title+times_cited+recent_citations+field_citation_ratio+category_for+authors]"""
-        dsl.query_iterative(q)
+        covid_q = '"2019-nCoV" OR "COVID-19" OR "SARS-CoV-2" OR (("coronavirus"  OR "corona virus") AND (Wuhan OR China))'
+        q = f"""search publications 
+                in full_data for "{dsl_escape(covid_q)}" 
+                where year=2020 
+            return publications[id+doi+pmid+pmcid+title+journal+publisher+mesh_terms+date+year+volume+issue+pages+open_access_categories+type+authors+category_for+research_orgs] limit 1000"""
+
+        q1 = """search publications for "malaria" return publications[id+authors]"""
+
+        click.secho(q, fg="green")
+
+        df = dslquery(q).as_dataframe()
+
+        r = DfConverter(df, "publications")
+        res = r.simplify_nested_objects()
+        res.to_csv("test.csv", index=False)
 
 
 if __name__ == '__main__':
