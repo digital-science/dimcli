@@ -43,7 +43,7 @@ class Dsl():
         "... JSON data continues ... "
 
     """
-    def __init__(self, instance="live", user="", password="", endpoint="https://app.dimensions.ai", show_results=False, verbose=True):
+    def __init__(self, show_results=False, verbose=True):
         # print(os.getcwd())
         self._show_results = show_results
         self._verbose = verbose
@@ -55,18 +55,8 @@ class Dsl():
             # if already logged in, reuse connection          
             self._url = self._CONNECTION['url']
             self._headers = {'Authorization': "JWT " + self._CONNECTION['token']}
-        elif user and password:
-            print("Warning: this log in method is DEPRECATED - please use `dimcli.login(username, password)` instead. ")
-            self.login(instance, user, password, endpoint)
         else:
             self._print_please_login()
-
-    def login(self, instance="live", username="", password="", url="https://app.dimensions.ai"):
-        """DEPRECATED METHOD - please use `dimcli.login()` instead """
-        do_global_login(instance, username, password, url)
-        self._CONNECTION = get_connection()
-        self._url = self._CONNECTION['url']
-        self._headers = {'Authorization': "JWT " + self._CONNECTION['token']}
 
     @property
     def is_logged_in(self):

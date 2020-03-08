@@ -1,5 +1,16 @@
 # Changelog
 
+```
+TODO check fix missing fields in autocompletion
+```
+
+## v 0.6.5
+
+* remove legacy `Dsl.login()` method (should use `dimcli.login` instead) 
+* fixed BUG in repl that prevented autocompletion of non-filter fields
+* remove Warning by updating `pandas.json_normalize` import
+* project docs via sphinx 
+
 ## v 0.6.4
 
 * grammar for new source `Datasets`
