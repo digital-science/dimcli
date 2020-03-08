@@ -86,6 +86,7 @@ class DslResultsBuffer(object):
     def save(self, json_data, query):
         self.current_json = json_data
         self.current_query = query
+        self.is_recording = False
 
     def retrieve(self):
         return (self.current_json, self.current_query)
@@ -111,6 +112,9 @@ class CommandsManager(object):
 
         elif text.replace("\n", "").strip().startswith(".url"):
             self.url_resolver(text.replace("\n", "").strip())
+
+        elif text.replace("\n", "").strip().startswith(".record"):
+            self.record_notebook(text.replace("\n", "").strip())
 
         else:
             return self.query(text)
@@ -199,6 +203,42 @@ class CommandsManager(object):
 
         else:
             print("Please specify a source or entity.")
+
+    def record_notebook(self, text, rows=20):
+        """
+        Take the last 20 (default) rows from the history, and create a new python notebook with them. 
+        Saves in usual location.
+
+        @TODO handle is history rows are not enough! 
+        @ TODO Move imports
+        """
+        from itertools import islice
+        import nbformat as nbf
+        init_exports_folder(USER_EXPORTS_DIR)
+        history=SelectiveFileHistory(USER_HISTORY_FILE)
+
+        rows_data = []
+        for item in islice(history.load_history_strings(), rows):
+            rows_data += [item]
+
+        nb = nbf.v4.new_notebook()
+        this_time = time.strftime("%Y.%m.%d h%H:%M:%S")
+
+        text = f"""# Dimcli Export \n### {this_time} \nThis is an auto-generated notebook with [Dimcli](https://github.com/digital-science/dimcli/) - the Dimensions API CLI."""
+    
+        nb['cells'] = [nbf.v4.new_markdown_cell(text)]
+
+        setup = """import dimcli\ndimcli.login()"""
+        nb['cells'] += [nbf.v4.new_code_cell(setup)]
+
+        for code in rows_data:
+            nb['cells'] += [nbf.v4.new_code_cell("%dsldf " + code)]
+
+        filename = time.strftime(f"dsl_export_%Y-%m-%d_%H-%M-%S.ipynb")
+        nbf.write(nb, USER_EXPORTS_DIR + filename)
+        import subprocess
+        subprocess.run(['open', USER_EXPORTS_DIR + filename], check=True)
+        print("Exported: ", "%s%s" % (USER_EXPORTS_DIR, filename))
 
 
     def export(self, text):

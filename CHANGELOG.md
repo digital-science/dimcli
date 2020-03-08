@@ -10,6 +10,7 @@ TODO check fix missing fields in autocompletion
 * fixed BUG in repl that prevented autocompletion of non-filter fields
 * remove Warning by updating `pandas.json_normalize` import
 * project docs via sphinx 
+* REPL command `record_notebook` turns latest queries into jupyter notebook
 
 ## v 0.6.4
 
