@@ -67,7 +67,7 @@ class CleverCompleter(Completer):
             test_return_obj = line_last_return_subject(line)
             if test_return_obj == source:
                 # print("*" + test_return_obj + "*")
-                candidates = G.filters_for_source(test_return_obj)
+                candidates = G.fields_for_source(test_return_obj)
             elif test_return_obj in G.facets_for_source(source):
                 entity = G.entity_type_for_source_facet(source, test_return_obj)
                 candidates = G.fields_for_entity_from_source_facet(source, test_return_obj)
