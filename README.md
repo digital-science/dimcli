@@ -24,7 +24,7 @@ Dimcli includes also a command line interface (CLI) that aims at simplifying the
 
 ![dimcli_animation](https://raw.githubusercontent.com/digital-science/dimcli/master/static/dimcli_animated.gif)
 
-Current version: see [pypi homepage](https://pypi.org/project/dimcli/). Source code hosted on [github](https://github.com/digital-science/dimcli). Short video on [asciicinema](https://asciinema.org/a/jSzISIsaXN2VbpOApSSOSwGcj)
+Current version: see [pypi homepage](https://pypi.org/project/dimcli/). Source code hosted on [github](https://github.com/digital-science/dimcli). An older animated video on [asciicinema](https://asciinema.org/a/jSzISIsaXN2VbpOApSSOSwGcj).
 
 
 
