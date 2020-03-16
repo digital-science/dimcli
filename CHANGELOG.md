@@ -4,6 +4,12 @@
 TODO check fix missing fields in autocompletion
 ```
 
+
+## v 0.6.5.1
+
+* html export includes API endpoint infos
+
+
 ## v 0.6.5
 
 * remove legacy `Dsl.login()` method (should use `dimcli.login` instead) 
