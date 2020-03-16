@@ -22,7 +22,7 @@ Dimcli is a Python client for accessing the [Dimensions Analytics API](https://w
 
 Dimcli includes also a command line interface (CLI) that aims at simplifying the process of learning the grammar of the Dimensions Search Language ([DSL](https://app.dimensions.ai/dsl)). Calling `dimcli` from the terminal opens an interactive query console with syntax autocomplete, persistent history across sessions, pretty-printing and preview of JSON results, export to HTML and CSV, and more.  
 
-![dimcli_animation](https://raw.githubusercontent.com/digital-science/dimcli/blob/master/static/dimcli_animated.gif)
+![dimcli_animation](https://raw.githubusercontent.com/digital-science/dimcli/master/static/dimcli_animated.gif)
 
 Current version: see [pypi homepage](https://pypi.org/project/dimcli/). Source code hosted on [github](https://github.com/digital-science/dimcli). Short video on [asciicinema](https://asciinema.org/a/jSzISIsaXN2VbpOApSSOSwGcj)
 
