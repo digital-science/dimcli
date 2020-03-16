@@ -422,10 +422,10 @@ def export_json_csv(jjson, query, USER_EXPORTS_DIR):
 
 
 
-def export_json_html(jjson, query, USER_EXPORTS_DIR):
+def export_json_html(jjson, query, api_endpoint, USER_EXPORTS_DIR):
     "print out full json either as pretty_json or within an html template"
     formatted_json = json.dumps(jjson, indent=4, sort_keys=True)
-    contents = html_template_interactive(query, formatted_json)
+    contents = html_template_interactive(query, formatted_json, api_endpoint)
     filename = time.strftime("%Y%m%d-%H%M%S.html")
     url = save2File(contents, filename, USER_EXPORTS_DIR)
     webbrowser.open(url)

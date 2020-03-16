@@ -2,20 +2,21 @@
 # -*- coding: utf-8 -*-
 
 from ..VERSION import VERSION
+import time
 # from json2html import *
 
 
-def html_template_interactive(query, formatted_json):
+def html_template_interactive(query, formatted_json, api_endpoint):
     """
     This version just uses https://highlightjs.org/ to colorize the json code
     """
 
-    # table = json2html.convert(json = formatted_json)
+    this_time = time.strftime("%Y-%m-%d  at %H:%M:%S")
 
     s = """
     <html>
     <head>
-        <title>DSL Query Output</title>
+        <title>Dimensions API Query Output</title>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
         <style>
             .query {
@@ -26,28 +27,46 @@ def html_template_interactive(query, formatted_json):
                 background: #2a6683;
                 font-family: monospace;
             }
+
+            .text-created {
+                color: darkred;
+            }
+            .text-endpoint {
+                color: crimson;
+            }
+
         </style>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/styles/default.min.css" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script>
         <script>hljs.initHighlightingOnLoad();</script>
     </head>
     <div>
-        <div id="header"><h1>Dimensions DSL Results for Query:&nbsp;</h1></div>
+        <div id="title">
+            <h1>Dimensions API Export</h1>
+            <hr>
+            <p>Created on: <span class="text-created">%s</span> <br />
+            API Endpoint: <span class="text-endpoint">%s</span></p>
+            <hr>
+        </div>      
         <div id="query">
-            <p class="query">%s</p></p>
+            <h2>DSL Query:</h2>
+            <p class="query">%s</p></API>
         </div>
-        <h3>Results: JSON</h3>
+        <h3>JSON Results:</h3>
         <a name="json">
         <div id="code"></a><pre><code>%s</code></pre>
         </div> 
         <div id="footer">
             <hr>
-            <p>Generated with <a href="https://github.com/digital-science/dimcli">DimCli</a> %s</p>
+            <p>Generated with <a href="https://github.com/digital-science/dimcli">DimCli</a> %s | See also: <a href="https://docs.dimensions.ai/dsl/">https://docs.dimensions.ai/dsl/</a></p>
         </div>
     </body>
     </html>
     
-    """ % (query.replace("search", "<b><i>search</i></b>").replace("return", "<b><i>return</i></b>"), formatted_json , VERSION)
+    """ % ( this_time, api_endpoint,
+            query.replace("search", "<b><i>search</i></b>").replace("return", "<b><i>return</i></b>"), 
+            formatted_json , 
+            VERSION)
     return s
 
 

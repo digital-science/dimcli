@@ -33,7 +33,7 @@ import time
 import requests
 
 from ..core.api import Dsl
-from ..core.auth import USER_HISTORY_FILE, USER_EXPORTS_DIR, do_global_login
+from ..core.auth import USER_HISTORY_FILE, USER_EXPORTS_DIR, do_global_login, get_connection
 from ..core.dsl_grammar import *
 from ..core.utils import *
 
@@ -255,9 +255,11 @@ class CommandsManager(object):
         if not jsondata:
             print("Nothing to export - please run a search first.")
             return
+        CONNECTION = get_connection()
+        api_endpoint = CONNECTION['url']
         # cases
         if text == ".export_as_html":
-            export_json_html(jsondata, query, USER_EXPORTS_DIR)
+            export_json_html(jsondata, query, api_endpoint, USER_EXPORTS_DIR)
 
         elif text == ".export_as_csv":
             export_json_csv(jsondata, query, USER_EXPORTS_DIR)
