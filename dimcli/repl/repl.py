@@ -209,6 +209,8 @@ class CommandsManager(object):
         Take the last 20 (default) rows from the history, and create a new python notebook with them. 
         Saves in usual location.
 
+        Based on https://gist.github.com/fperez/9716279
+
         @TODO handle is history rows are not enough! 
         @ TODO Move imports
         """
