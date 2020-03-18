@@ -122,8 +122,52 @@ class DfFactory(object):
         return affiliations
 
 
-    def df_concepts(self, data, max_per_pub=100):
-        "from a list of publications including concepts, return a DF with one line per concept"
+
+    def df_concepts(self, data, max_per_pub=100, fields=['id']):
+        "from a list of publications or grants including concepts, return a DF with one line per concept"
+
+        FIELD = "concepts"
+
+        df_columns = ['name', 'position', 'score'] + fields
+
+        if 'publications' in self.data_keys:    
+            source_data = data['publications']
+        elif 'grants' in self.data_keys: 
+            source_data = data['grants']
+        else:
+            print(f"[Error] Dataframe can be created only for 'publications' or 'grants' searches. Available: {self.data_keys}")
+            return pd.DataFrame()
+        
+        output = pd.DataFrame(columns=df_columns) 
+        for record in source_data: # eg pub in publications
+            if FIELD in record and record[FIELD]:
+                concepts = record[FIELD][:max_per_pub]
+                conctot = len(concepts)
+                positions = list(range(1, conctot+1))
+                scores_not_norm = list(range(1, conctot+1))[::-1] # highest score first, reverse list
+                scores = [float('%.2f'%(x / conctot)) for x in scores_not_norm] # normalize by items in list
+                # For each field, replicate same data across all concepts for this document
+                dicts_list = []
+                for n in range(conctot):
+                    d = {'name': concepts[n], 'position': positions[n], 'score': scores[n] }
+                    for field_name in fields:
+                        d[field_name] = record.get(field_name, None)
+                    dicts_list.append(d)
+                output = output.append(dicts_list, sort=True)
+
+        # add correct data types
+        output['position'] = pd.to_numeric(output['position'])
+        output['score'] = pd.to_numeric(output['score'])
+        # add columns calculating metrics across full dataset (=for all documents)   
+        output['frequency'] = output.groupby('name')['name'].transform('count')   
+        output['position_avg'] = output.groupby('name')['position'].transform('mean')   
+        output['score_sum'] = output.groupby('name')['score'].transform('sum')   
+        return output[['name', 'position', 'score', 'frequency', 'position_avg', 'score_sum'] + fields]
+    
+
+
+    def PREVdf_concepts(self, data, max_per_pub=100, fields=['id']):
+        "from a list of publications or grants including concepts, return a DF with one line per concept"
 
         FIELD = "concepts"
 
@@ -132,13 +176,13 @@ class DfFactory(object):
             for pub in data['publications']:
                 if FIELD in pub and pub[FIELD]:
                     concepts = pub[FIELD][:max_per_pub]
-                    llen = len(concepts)
-                    positions = list(range(1, llen+1))
-                    scores = list(range(1, llen+1))[::-1] # highest score first, reverse list
-                    scores = [float('%.2f'%(x / llen)) for x in scores] # normalize by items in list
-                    pubids = [pub.get("id", None)] * llen
-                    years = [pub.get("year", None)] * llen
-                    titles = [pub.get("title", None)] * llen
+                    conctot = len(concepts)
+                    positions = list(range(1, conctot+1))
+                    scores_not_norm = list(range(1, conctot+1))[::-1] # highest score first, reverse list
+                    scores = [float('%.2f'%(x / conctot)) for x in scores_not_norm] # normalize by items in list
+                    pubids = [pub.get("id", None)] * conctot
+                    years = [pub.get("year", None)] * conctot
+                    titles = [pub.get("title", None)] * conctot
                     z = list(zip(concepts, positions, scores, pubids, years, titles))
                     d = [{'name': a, 'position': b, 'score': c, 'pubid': d, 'year': e, 'title': f} for a,b,c,d,e,f in z]
                     output = output.append(d, sort=True)    
@@ -147,20 +191,22 @@ class DfFactory(object):
             output['score'] = pd.to_numeric(output['score'])
             # finally add another colum counting occurrences   
             output['frequency'] = output.groupby('name')['name'].transform('count')   
-            return output[['name', 'position', 'score', 'frequency', 'pubid', 'title', 'year']]
+            output['position_avg'] = output.groupby('name')['position'].transform('mean')   
+            output['score_sum'] = output.groupby('name')['score'].transform('sum')   
+            return output[['name', 'position', 'score', 'frequency', 'position_avg', 'score_sum', 'pubid', 'title', 'year']]
         
         elif 'grants' in self.data_keys:   
             output = pd.DataFrame(columns=['name', 'position', 'score', 'grantid', 'active_year', 'title']) 
             for row in data['grants']:
                 if FIELD in row and row[FIELD]:
                     concepts = row[FIELD][:max_per_pub]
-                    llen = len(concepts)
-                    positions = list(range(1, llen+1))
-                    scores = list(range(1, llen+1))[::-1] # highest score first, reverse list
-                    scores = [float('%.2f'%(x / llen)) for x in scores] # normalize by items in list
-                    grantids = [row.get("id", None)] * llen
-                    years = [row.get("active_year", None)] * llen
-                    titles = [row.get("title", None)] * llen
+                    conctot = len(concepts)
+                    positions = list(range(1, conctot+1))
+                    scores = list(range(1, conctot+1))[::-1] # highest score first, reverse list
+                    scores = [float('%.2f'%(x / conctot)) for x in scores] # normalize by items in list
+                    grantids = [row.get("id", None)] * conctot
+                    years = [row.get("active_year", None)] * conctot
+                    titles = [row.get("title", None)] * conctot
                     z = list(zip(concepts, positions, scores, grantids, years, titles))
                     d = [{'name': a, 'position': b, 'score': c, 'grantid': d, 'active_year': e, 'title': f} for a,b,c,d,e,f in z]
                     output = output.append(d, sort=True)    
@@ -169,7 +215,9 @@ class DfFactory(object):
             output['score'] = pd.to_numeric(output['score'])
             # finally add another colum counting occurrences   
             output['frequency'] = output.groupby('name')['name'].transform('count')  
-            return output[['name', 'position', 'score', 'frequency', 'grantid', 'title', 'active_year']]
+            output['position_avg'] = output.groupby('name')['position'].transform('mean')   
+            output['score_sum'] = output.groupby('name')['score'].transform('sum')   
+            return output[['name', 'position', 'score', 'frequency', 'position_avg', 'score_sum', 'grantid', 'title', 'active_year']]
 
         else:
             print(f"[Error] Dataframe can be created only for 'publications' or 'grants' searches. Available: {self.data_keys}")

@@ -388,13 +388,21 @@ class Dataset(IPython.display.JSON):
         if not self.json.get("errors"):
             return self.df_factory.df_authors_affiliations(self.json)
 
-    def as_dataframe_concepts(self, max_per_pub=100):
+    def as_dataframe_concepts(self, max_per_pub=100, fields=['id']):
         """Utility method: return inner concepts list as a pandas dataframe, exposing pubId, year, title and position plus score of the concept.
 
-        Note: position is simply the index of a concept in the list (eg 1 or greater). Score is the result of the formula `len(concepts) - index(concept)`, increased by 1 so to avoid 0 score concepts (eg the first concept in a list of 20 gets a score of 20.)
+        :param max_per_pub: maximum number of concepts to keep for each single document, defaults to 100
+        :param fields: list of top level json fields name to keep from publications data, in the resulting new concepts dataframe. Defaults to document 'id'. 
+
+        The resulting dataframe has extra columns for ranking concepts:
+        1) position: an integer representing the ordinal position of the concept within the list of concepts for a single document. E.g., the first concept has position=1, while the fifth has position=5.
+        2) score: an integer representing the relevance of the concept, obtained by normalizing its position against the total number of concepts for a single document (eg publication or gant). So if a document has 10 concepts in total, the first concept gets a score=1, the second score=0.9, etc..
+        3) frequency: an integer representing how often that concept occurs within the full set of documents returned by your query, i.e. how many documents have that concept name. So if a concept appears in 5 documents, frequency=5.
+        4) position_avg: the average value of all positions for a single concept, across the full set of documents returned by a query
+        5) score_sum: the sum of all scores for a single concept, across the full set of documents returned by a query.  
         """
         if not self.json.get("errors"):
-            return self.df_factory.df_concepts(self.json, max_per_pub)
+            return self.df_factory.df_concepts(self.json, max_per_pub, fields)
 
 
     def as_dataframe_funders(self):
