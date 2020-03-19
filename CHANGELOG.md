@@ -2,10 +2,10 @@
 
 
 
-## v 0.6.5.1
+## v 0.6.6
 
 * `Dataset.as_dataframe_concepts()` methods includes more metrics and allow to copy arbitrary fields/columns from source data
-* html export includes API endpoint infos
+* html export includes API endpoint information, for better traceability
 
 
 ## v 0.6.5
