@@ -128,7 +128,7 @@ class DfFactory(object):
 
         FIELD = "concepts"
 
-        df_columns = ['name', 'position', 'score'] + fields
+        df_columns = ['concept', 'position', 'score'] + fields
 
         if 'publications' in self.data_keys:    
             source_data = data['publications']
@@ -149,7 +149,7 @@ class DfFactory(object):
                 # For each field, replicate same data across all concepts for this document
                 dicts_list = []
                 for n in range(conctot):
-                    d = {'name': concepts[n], 'position': positions[n], 'score': scores[n] }
+                    d = {'concept': concepts[n], 'position': positions[n], 'score': scores[n] }
                     for field_name in fields:
                         d[field_name] = record.get(field_name, None)
                     dicts_list.append(d)
@@ -159,10 +159,10 @@ class DfFactory(object):
         output['position'] = pd.to_numeric(output['position'])
         output['score'] = pd.to_numeric(output['score'])
         # add columns calculating metrics across full dataset (=for all documents)   
-        output['frequency'] = output.groupby('name')['name'].transform('count')   
-        output['position_avg'] = output.groupby('name')['position'].transform('mean')   
-        output['score_sum'] = output.groupby('name')['score'].transform('sum')   
-        return output[['name', 'position', 'score', 'frequency', 'position_avg', 'score_sum'] + fields]
+        output['frequency'] = output.groupby('concept')['concept'].transform('count')   
+        output['position_avg'] = output.groupby('concept')['position'].transform('mean')   
+        output['score_sum'] = output.groupby('concept')['score'].transform('sum')   
+        return output[['concept', 'position', 'score', 'frequency', 'position_avg', 'score_sum'] + fields]
     
 
 

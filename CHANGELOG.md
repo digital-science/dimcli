@@ -1,12 +1,10 @@
 # Changelog
 
-```
-TODO check fix missing fields in autocompletion
-```
 
 
 ## v 0.6.5.1
 
+* `Dataset.as_dataframe_concepts()` methods includes more metrics and allow to copy arbitrary fields/columns from source data
 * html export includes API endpoint infos
 
 
