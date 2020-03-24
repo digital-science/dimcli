@@ -134,25 +134,24 @@ class DfFactory(object):
             return pd.DataFrame()
         
         concepts = self.df_simple(data, key)
+
         df = concepts.explode(FIELD_NAME)
         original_cols = [x for x in df.columns.to_list() if x != FIELD_NAME]
 
         df.rename(columns={FIELD_NAME: "concept"}, inplace=True)
         df.dropna(inplace=True) # remove rows if there is no concept
         df['frequency'] = df.groupby('concept')['concept'].transform('count')
-        df['tot_doc'] = df.groupby('id')['concept'].transform('size')
-        df['rank_doc'] = df.groupby('id').cumcount()+1
-
+        df['concepts_count'] = df.groupby('id')['concept'].transform('size')
+        df['rank'] = df.groupby('id').cumcount()+1
         # scores = normalized rank from 0 to 1, where 1 is the highest rank
-        def f(x):
-            score_id = (x['tot_doc'] + 1) - x['rank_doc']
-            return float('%.2f'%(score_id / x['tot_doc']))  
-        df['score_doc'] = df.apply(f, axis=1)
+        df['score'] = ((df['concepts_count']+1) - df['rank']) / df['concepts_count']
+        df['score'] = df['score'].round(2)
 
-        df['score'] = df.groupby('concept')['score_doc'].transform('sum')
-        df['rank'] = df.groupby('concept')['rank_doc'].transform('mean').round(2)
-        
-        out_cols = original_cols + ['concept', 'tot_doc', 'rank_doc', 'score_doc', 'frequency', 'rank', 'score']
+        df['score_sum'] = df.groupby('concept')['score'].transform('sum')
+        df['rank_avg'] = df.groupby('concept')['rank'].transform('mean').round(2)
+        df.reset_index(drop=True, inplace=True)
+
+        out_cols = original_cols + ['concept', 'concepts_count', 'rank', 'score', 'frequency', 'rank_avg', 'score_sum', ]
         return df[out_cols]
 
 
