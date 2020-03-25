@@ -148,10 +148,11 @@ class DfFactory(object):
         df['score'] = df['score'].round(2)
 
         df['score_sum'] = df.groupby('concept')['score'].transform('sum')
+        df['score_avg'] = df.groupby('concept')['score'].transform('mean').round(2)
         df['rank_avg'] = df.groupby('concept')['rank'].transform('mean').round(2)
         df.reset_index(drop=True, inplace=True)
 
-        out_cols = original_cols + ['concept', 'concepts_count', 'rank', 'score', 'frequency', 'rank_avg', 'score_sum', ]
+        out_cols = original_cols + ['concept', 'concepts_count', 'rank', 'score', 'frequency', 'rank_avg', 'score_avg', 'score_sum', ]
         return df[out_cols]
 
 
