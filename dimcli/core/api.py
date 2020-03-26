@@ -394,12 +394,13 @@ class Dataset(IPython.display.JSON):
         :param key: the JSON data key including concept information. If key is empty, the first available JSON key (eg 'publications') is used to build the dataframe
 
         The resulting dataframe has extra columns for ranking concepts:
-        1) `tot_doc`: an integer representing the total number of concepts per document.
-        2) `rank_doc`: an integer representing the ranking of the concept within the list of concepts for a single document. E.g., the first concept has rank_doc=1, while the fifth has rank_doc=5.
-        3) `score_doc`: a float representing the importance of the concept in within a document. This is obtained by  normalizing its ranking against the total number of concepts for a single document (eg publication or grant). So if a document has 10 concepts in total, the first concept gets a score_doc=1, the second score_doc=0.9, etc..
+        1) `concepts_count`: an integer representing the total number of concepts per document.
+        2) `rank`: an integer representing the ranking of the concept within the list of concepts for a single document. E.g., the first concept has rank_doc=1, while the fifth has rank_doc=5.
+        3) `score`: a float representing the importance of the concept in within a document. This is obtained by  normalizing its ranking against the total number of concepts for a single document (eg publication or grant). So if a document has 10 concepts in total, the first concept gets a score_doc=1, the second score_doc=0.9, etc..
         4) `frequency`: an integer representing how often that concept occurs within the full results-set returned by a query, i.e. how many documents have that concept name. So if a concept appears in 5 documents, frequency=5.
-        5) `rank`: the average (mean) value of all ranks for a single concept, across the full set of documents returned by the query. 
-        6) `score`: the sum of all scores for a single concept, across the full set of documents returned by a query.  
+        5) `rank_avg`: the average (mean) value of all ranks for a single concept, across the full set of documents returned by the query. 
+        6) `score_avg`: the average (mean) value of all scores for a single concept, across the full set of documents returned by a query.  
+        7) `score_sum`: the sum of all scores for a single concept, across the full set of documents returned by a query.  
         """
         if not self.json.get("errors"):
             return self.df_factory.df_concepts(self.json, key)
