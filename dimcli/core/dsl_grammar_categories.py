@@ -17,6 +17,265 @@
 #
 
 CATEGORIES_DICT = {
+    "category_sdg": [
+        {
+            "count": 1348219,
+            "id": "40007",
+            "name": "7 Affordable and Clean Energy"
+        },
+        {
+            "count": 1265880,
+            "id": "40003",
+            "name": "3 Good Health and Well Being"
+        },
+        {
+            "count": 641929,
+            "id": "40016",
+            "name": "16 Peace, Justice and Strong Institutions"
+        },
+        {
+            "count": 515160,
+            "id": "40004",
+            "name": "4 Quality Education"
+        },
+        {
+            "count": 429531,
+            "id": "40013",
+            "name": "13 Climate Action"
+        },
+        {
+            "count": 227782,
+            "id": "40008",
+            "name": "8 Decent Work and Economic Growth"
+        },
+        {
+            "count": 195027,
+            "id": "40011",
+            "name": "11 Sustainable Cities and Communities"
+        },
+        {
+            "count": 164207,
+            "id": "40010",
+            "name": "10 Reduced Inequalities"
+        },
+        {
+            "count": 119014,
+            "id": "40002",
+            "name": "2 Zero Hunger"
+        },
+        {
+            "count": 70387,
+            "id": "40006",
+            "name": "6 Clean Water and Sanitation"
+        },
+        {
+            "count": 61860,
+            "id": "40014",
+            "name": "14 Life Below Water"
+        },
+        {
+            "count": 61217,
+            "id": "40015",
+            "name": "15 Life on Land"
+        },
+        {
+            "count": 57750,
+            "id": "40012",
+            "name": "12 Responsible Consumption and Production"
+        },
+        {
+            "count": 43545,
+            "id": "40001",
+            "name": "1 No Poverty"
+        },
+        {
+            "count": 21476,
+            "id": "40005",
+            "name": "5 Gender Equality"
+        },
+        {
+            "count": 19311,
+            "id": "40009",
+            "name": "9 Industry, Innovation and Infrastructure"
+        },
+        {
+            "count": 10346,
+            "id": "40017",
+            "name": "17 Partnerships for the Goals"
+        }
+    ],
+    "category_uoa": [
+        {
+            "count": 12965896,
+            "id": "30012",
+            "name": "B12 Engineering"
+        },
+        {
+            "count": 7664934,
+            "id": "30001",
+            "name": "A01 Clinical Medicine"
+        },
+        {
+            "count": 5441205,
+            "id": "30003",
+            "name": "A03 Allied Health Professions, Dentistry, Nursing and Pharmacy"
+        },
+        {
+            "count": 3476541,
+            "id": "30011",
+            "name": "B11 Computer Science and Informatics"
+        },
+        {
+            "count": 2674165,
+            "id": "30008",
+            "name": "B08 Chemistry"
+        },
+        {
+            "count": 2589803,
+            "id": "30005",
+            "name": "A05 Biological Sciences"
+        },
+        {
+            "count": 2504503,
+            "id": "30009",
+            "name": "B09 Physics"
+        },
+        {
+            "count": 2361360,
+            "id": "30004",
+            "name": "A04 Psychology, Psychiatry and Neuroscience"
+        },
+        {
+            "count": 2348396,
+            "id": "30010",
+            "name": "B10 Mathematical Sciences"
+        },
+        {
+            "count": 2260339,
+            "id": "30006",
+            "name": "A06 Agriculture, Veterinary and Food Science"
+        },
+        {
+            "count": 2023701,
+            "id": "30017",
+            "name": "C17 Business and Management Studies"
+        },
+        {
+            "count": 1618104,
+            "id": "30007",
+            "name": "B07 Earth Systems and Environmental Sciences"
+        },
+        {
+            "count": 960452,
+            "id": "30023",
+            "name": "C23 Education"
+        },
+        {
+            "count": 840151,
+            "id": "30002",
+            "name": "A02 Public Health, Health Services and Primary Care"
+        },
+        {
+            "count": 662202,
+            "id": "30014",
+            "name": "C14 Geography and Environmental Studies"
+        },
+        {
+            "count": 467677,
+            "id": "30028",
+            "name": "D28 History"
+        },
+        {
+            "count": 447784,
+            "id": "30024",
+            "name": "C24 Sport and Exercise Sciences, Leisure and Tourism"
+        },
+        {
+            "count": 398831,
+            "id": "30013",
+            "name": "C13 Architecture, Built Environment and Planning"
+        },
+        {
+            "count": 389544,
+            "id": "30020",
+            "name": "C20 Social Work and Social Policy"
+        },
+        {
+            "count": 380338,
+            "id": "30018",
+            "name": "C18 Law"
+        },
+        {
+            "count": 355463,
+            "id": "30019",
+            "name": "C19 Politics and International Studies"
+        },
+        {
+            "count": 311640,
+            "id": "30026",
+            "name": "D26 Modern Languages and Linguistics"
+        },
+        {
+            "count": 275604,
+            "id": "30016",
+            "name": "C16 Economics and Econometrics"
+        },
+        {
+            "count": 251384,
+            "id": "30027",
+            "name": "D27 English Language and Literature"
+        },
+        {
+            "count": 200627,
+            "id": "30030",
+            "name": "D30 Philosophy"
+        },
+        {
+            "count": 195652,
+            "id": "30034",
+            "name": "D34 Communication, Cultural and Media Studies, Library and Information Management"
+        },
+        {
+            "count": 133441,
+            "id": "30032",
+            "name": "D32 Art and Design: History, Practice and Theory"
+        },
+        {
+            "count": 130495,
+            "id": "30022",
+            "name": "C22 Anthropology and Development Studies"
+        },
+        {
+            "count": 125591,
+            "id": "30021",
+            "name": "C21 Sociology"
+        },
+        {
+            "count": 92204,
+            "id": "30033",
+            "name": "D33 Music, Drama, Dance, Performing Arts, Film and Screen Studies"
+        },
+        {
+            "count": 87084,
+            "id": "30015",
+            "name": "C15 Archaeology"
+        },
+        {
+            "count": 76316,
+            "id": "30031",
+            "name": "D31 Theology and Religious Studies"
+        },
+        {
+            "count": 71109,
+            "id": "30025",
+            "name": "D25 Area Studies"
+        },
+        {
+            "count": 24820,
+            "id": "30029",
+            "name": "D29 Classics"
+        }
+    ],
     "category_rcdc": [
         {
             "count": 6974252,

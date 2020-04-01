@@ -4,7 +4,8 @@
 
 ## v 0.6.6
 
-* `Dataset.as_dataframe_concepts()` methods includes more metrics and more perfomant
+* REPL: added new categories autocomplete, for Units of Assesment and Sustainable Development Goals
+* `Dataset.as_dataframe_concepts()` method: improved metrics and performance
 * html export includes API endpoint information, for better traceability
 
 

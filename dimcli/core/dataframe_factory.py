@@ -128,34 +128,39 @@ class DfFactory(object):
         """
 
         FIELD_NAME = "concepts"
+        ROUNDING = 3
 
         if not ('publications' in self.data_keys) and not ('grants' in self.data_keys): 
-            print(f"[Error] Dataframe can be created only for 'publications' or 'grants' searches. Available: {self.data_keys}")
-            return pd.DataFrame()
-        
+            s = f"Dataframe can be created only with searches returning 'publications' or 'grants' . Available: {self.data_keys}"
+            raise Exception(s)
+
         concepts = self.df_simple(data, key)
+
+        if not 'concepts' in concepts.columns:
+            s = f"Dataframe requires raw concepts data, but a 'concepts' column was not found in: {concepts.columns.to_list()}"
+            raise Exception(s)             
+
+        if not 'id' in concepts.columns:
+            s = f"Dataframe requires an 'id' column for counting concepts, which was not found in: {concepts.columns.to_list()}"
+            raise Exception(s)   
 
         df = concepts.explode(FIELD_NAME)
         original_cols = [x for x in df.columns.to_list() if x != FIELD_NAME]
-
         df.rename(columns={FIELD_NAME: "concept"}, inplace=True)
         df.dropna(inplace=True) # remove rows if there is no concept
         df['frequency'] = df.groupby('concept')['concept'].transform('count')
-        df['concepts_count'] = df.groupby('id')['concept'].transform('size')
-        df['rank'] = df.groupby('id').cumcount()+1
+        df['concepts_count'] = df.groupby("id")['concept'].transform('size')
+        ranks = df.groupby('id').cumcount()+1
         # scores = normalized rank from 0 to 1, where 1 is the highest rank
-        df['score'] = ((df['concepts_count']+1) - df['rank']) / df['concepts_count']
-        df['score'] = df['score'].round(2)
+        df['score'] = ((df['concepts_count']+1) - ranks) / df['concepts_count']
+        df['score'] = df['score'].round(ROUNDING)
 
-        df['score_sum'] = df.groupby('concept')['score'].transform('sum')
-        df['score_avg'] = df.groupby('concept')['score'].transform('mean').round(2)
-        df['rank_avg'] = df.groupby('concept')['rank'].transform('mean').round(2)
+        df['score_avg'] = df.groupby('concept')['score'].transform('mean').round(ROUNDING)
+
         df.reset_index(drop=True, inplace=True)
 
-        out_cols = original_cols + ['concept', 'concepts_count', 'rank', 'score', 'frequency', 'rank_avg', 'score_avg', 'score_sum', ]
+        out_cols = original_cols + ['concept', 'concepts_count', 'score', 'frequency', 'score_avg' ]
         return df[out_cols]
-
-
 
 
     def df_grant_funders(self, data):
