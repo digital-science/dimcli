@@ -1,16 +1,12 @@
 # Changelog
 
 
-## X
-
-* REPL: barchart export `export_as_bar_chart`
-
-
 ## v 0.6.6
 
-* REPL: added new categories autocomplete, for Units of Assesment and Sustainable Development Goals
+* CLI: new categories autocomplete, for Units of Assesment and Sustainable Development Goals
+* CLI: barchart export `export_as_bar_chart`
+* CLI: html export includes API endpoint information, for better traceability
 * `Dataset.as_dataframe_concepts()` method: improved metrics and performance
-* html export includes API endpoint information, for better traceability
 
 
 ## v 0.6.5
@@ -19,7 +15,7 @@
 * fixed BUG in repl that prevented autocompletion of non-filter fields
 * remove Warning by updating `pandas.json_normalize` import
 * project docs via sphinx 
-* REPL command `record_notebook` turns latest queries into jupyter notebook
+* CLI command `record_notebook` turns latest queries into jupyter notebook
 
 ## v 0.6.4
 
@@ -55,7 +51,7 @@
 
 ## v 0.6.1 
 
-* fix for double-printed error messages in REPL
+* fix for double-printed error messages in CLI
 * removed deprecated magic commands 
 * improved printouts on magic methods 
 * ensuring magic methods with dataframe work only with `search` queries 
@@ -68,7 +64,7 @@
   * `dsl = dimcli.Dls(verbose=False)`: global 
   * `dsl.query(q, verbose=False)`: local for a specific query
 * Improved `query_iterative` to handle max 50k results and timeouts (from too many queries)
-* Refactored REPL module and imports 
+* Refactored CLI module and imports 
 
 
 ## v 0.5.9
