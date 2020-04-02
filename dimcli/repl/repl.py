@@ -53,6 +53,7 @@ All special commands start with '.'
 >>> .export_as_json: save results from last query as JSON file.  
 >>> .export_as_csv: save results from last query as CSV file.  
 >>> .export_as_html: save results from last query as HTML file. 
+>>> .export_as_bar_chart: save results from last query as Plotly bar chart. 
 >>> .show [optional: N]: print N results from last query, trying to build URLs for objects. Default N=10.
 >>> .json_compact: print results of last query as single-line JSON. 
 >>> .json_full: print results of last query as formatted JSON.
@@ -266,6 +267,10 @@ class CommandsManager(object):
 
         elif text == ".export_as_json":
             export_json_json(jsondata, query, USER_EXPORTS_DIR)
+
+        elif text == ".export_as_bar_chart":
+            export_as_bar_chart(jsondata, query, USER_EXPORTS_DIR)
+
 
     def show(self, text):
         """

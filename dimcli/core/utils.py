@@ -446,6 +446,59 @@ def export_json_json(jjson, query, USER_EXPORTS_DIR):
 
 
 
+def export_as_bar_chart(jjson, query, USER_EXPORTS_DIR):
+    """
+    requires the pandas and plotly libraries, which are not installed by default
+
+    """
+
+    try:
+        from pandas import json_normalize
+        import plotly.express as px
+        from plotly.offline import plot
+    except:
+        click.secho("This feature requires the pandas and plotly library (`pip install pandas plotly` from the terminal)", fg="red")
+        return
+
+    return_object = line_search_return(query)
+    
+    try:
+        df =  json_normalize(jjson[return_object])
+    except:
+        df =  json_normalize(jjson)
+
+    REQUIRED = ["id", "count"]
+    for x in REQUIRED:
+        if x not in df.columns:
+            raise Exception(f"This method requires records to have the keys: {REQUIRED}. It is normally used with facets. Key [{x}] not found.")
+
+    if "title" in df.columns:
+        df["value"] = df["id"].astype(str) + df["title"]
+    elif "name" in df.columns:
+        df["value"] = df["id"].astype(str) + df["name"]
+    elif "first_name" in df.columns and "last_name" in df.columns:
+        df["value"] = df["id"].astype(str) + df["first_name"] + df["last_name"]
+    else: 
+        df["value"] = df["id"].astype(str)
+
+    if "country_name" in df.columns:
+        color_field = "country_name"
+    # if "current_research_org" in df.columns:
+    #     color_field = "current_research_org" 
+    else:
+        color_field = "count"
+    
+    newplot = px.bar(df, x="value", y="count", title=query, color=color_field)
+
+    filename = time.strftime("dsl_plot_export_%Y%m%d-%H%M%S.html")
+    plot(newplot, filename = USER_EXPORTS_DIR+filename, auto_open=True)
+
+    print("Exported: ", "%s%s" % (USER_EXPORTS_DIR, filename))
+
+
+
+
+
 def print_json_stats(res, query=""):
     """
     from a dimcli.Dataset object, print out basic stats

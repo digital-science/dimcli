@@ -1,6 +1,10 @@
 # Changelog
 
 
+## X
+
+* REPL: barchart export `export_as_bar_chart`
+
 
 ## v 0.6.6
 
