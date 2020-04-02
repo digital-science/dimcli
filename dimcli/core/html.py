@@ -28,12 +28,12 @@ def html_template_interactive(query, formatted_json, api_endpoint):
                 font-family: monospace;
             }
 
-            .text-created {
-                color: darkred;
+            .export-created {
+                font-size: 14px;
+                font-weight: normal;
+                color: gray;
             }
-            .text-endpoint {
-                color: crimson;
-            }
+
 
         </style>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/styles/default.min.css" />
@@ -42,16 +42,17 @@ def html_template_interactive(query, formatted_json, api_endpoint):
     </head>
     <div>
         <div id="title">
-            <h1>Dimensions API Export</h1>
-            <hr>
-            <p>Created on: <span class="text-created">%s</span> <br />
-            API Endpoint: <span class="text-endpoint">%s</span></p>
+            <h1>Dimensions API Export
+                <span class="export-created">Created on: %s using the API endpoint: <a href="%s" target="_blank">%s</a></span>
+            </h1>
             <hr>
         </div>      
         <div id="query">
             <h2>DSL Query:</h2>
             <p class="query">%s</p></API>
+            
         </div>
+        <hr>
         <h3>JSON Results:</h3>
         <a name="json">
         <div id="code"></a><pre><code>%s</code></pre>
@@ -63,7 +64,7 @@ def html_template_interactive(query, formatted_json, api_endpoint):
     </body>
     </html>
     
-    """ % ( this_time, api_endpoint,
+    """ % ( this_time, api_endpoint, api_endpoint,
             query.replace("search", "<b><i>search</i></b>").replace("return", "<b><i>return</i></b>"), 
             formatted_json , 
             VERSION)
