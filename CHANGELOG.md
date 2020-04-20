@@ -1,6 +1,11 @@
 # Changelog
 
 
+## v 0.6.7
+
+* support for `_version` info in payload
+
+
 ## v 0.6.6
 
 * CLI: new categories autocomplete, for Units of Assesment and Sustainable Development Goals

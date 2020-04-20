@@ -159,7 +159,7 @@ class DfFactory(object):
 
         df.reset_index(drop=True, inplace=True)
 
-        out_cols = original_cols + ['concept', 'concepts_count', 'score', 'frequency', 'score_avg' ]
+        out_cols = original_cols + ['concepts_count', 'concept', 'score', 'frequency', 'score_avg' ]
         return df[out_cols]
 
 
