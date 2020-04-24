@@ -580,6 +580,10 @@ def print_json_compact(jsondata):
     Show json in one line
     NOTE: the logic is the same as the except clause in print_json_preview. Maybe some refactoring could be beneficial here..
     """
+    from pygments import highlight, lexers, formatters
+    lexer = lexers.JsonLexer()
+    formatter = formatters.TerminalFormatter()
+    
     counter = 0
     for key in jsondata.keys():
         if key == "_stats":
@@ -590,7 +594,7 @@ def print_json_compact(jsondata):
                 # full row
                 click.echo(
                     click.style("[" + str(counter) + "] ", dim=True) +
-                    click.style(str(row)))
+                    click.style(highlight(json.dumps(row, sort_keys=True).strip(), lexer, formatter).strip()))
 
 
 
