@@ -4,6 +4,8 @@
 ## v 0.6.7
 
 * support for `_version` info in payload
+[unreleased] ** df_grant_investigators_affiliations 
+[unreleased] ** pretty printing for repl `.json_compact` command
 
 
 ## v 0.6.6

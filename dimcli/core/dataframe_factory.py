@@ -191,6 +191,22 @@ class DfFactory(object):
 
         return output
 
+    def df_grant_investigators_affiliations(self, data):
+        """Utility method
+        return inner json as a pandas dataframe, exposing investigators + affiliations + pubId
+        affiliations ARE broken down and are returned as JSON 
+        So one gets one row per affiliation (+1 row per investigators if having more than one affiliation)
 
+        NOTE this method builds on self.df_grant_investigators()
+        """
+        
+        investigators = self.df_grant_investigators(data)
+        if len(investigators):
+            affiliations = json_normalize(json.loads(investigators.to_json(orient='records')), record_path=['affiliations'], 
+               meta=['id', 'first_name', 'last_name',  'role', 'grant_id', 'grant_title', 'grant_start_date', 'grant_end_date' ], record_prefix='aff_')
+        else:
+            affiliations = authors # empty df
+        affiliations.fillna('', inplace=True) # 2019-09-30: simplifies subsequent operations
+        return affiliations
 
 
