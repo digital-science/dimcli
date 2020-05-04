@@ -178,7 +178,7 @@ class Dsl():
             time.sleep(pause)
 
         if res['errors']:
-            print("** [Dimcli] An error occurred during one of the iterations. Consider using the 'limit' argument to retrieve less records per iteration.")
+            print("** [Dimcli] An error occurred during one of the iterations. Consider using the 'limit' argument to retrieve fewer records per iteration.")
             return res
         elif res['stats']:
 
