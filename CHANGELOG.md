@@ -4,9 +4,9 @@
 ## v 0.6.7
 
 * support for `_version` info in payload
-[unreleased] ** df_grant_investigators_affiliations 
-[unreleased] ** pretty printing for repl `.json_compact` command
-[unreleased] ** `dsl_escape` accepts boolean arg for escaping any special character
+* shortcut for grants results: `df_grant_investigators_affiliations` 
+* pretty printing for repl `.json_compact` command
+* `dsl_escape` accepts boolean arg for escaping any special character (by default it escapes only `"`)
 
 
 ## v 0.6.6
