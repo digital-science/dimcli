@@ -658,12 +658,11 @@ def google_url(stringa):
     """
     from urllib.parse import quote   
     s = quote(stringa)    
-    return f"https://www.google.com/search?q={s}"                                                                                                          
+    return f"https://www.google.com/search?q={s}"
+ 
 
-    # EG
-    # dsl.query(f"""search clinical_trials in full_data for "{dsl_escape(q)}" return clinical_trials""")
 
-def dsl_escape(stringa):
+def dsl_escape(stringa, all=False):   
     """
     Helper for escaping the full-text inner query string, when it includes quotes. Usage:
 
@@ -671,9 +670,35 @@ def dsl_escape(stringa):
 
     EG imagine the query string:
     '"2019-nCoV" OR "COVID-19" OR "SARS-CoV-2" OR (("coronavirus"  OR "corona virus") AND (Wuhan OR China))'
+    
     In Python, if you want to embed it into a DSL query, it has to become:
     '\\"2019-nCoV\\" OR \\"COVID-19\\" OR \\"SARS-CoV-2\\" OR ((\\"coronavirus\\"  OR \\"corona virus\\") AND (Wuhan OR China))'
 
+    NOTE by default only quotes as escaped. If you want to escape all special chars, pass all=True, eg
+
+    > dsl_escape('Solar cells: a new technology?', True)
+    > 'Solar cells\\: a new technology?'
+
     See also: https://docs.dimensions.ai/dsl/language.html#for-search-term
     """
-    return stringa.replace('"', '\\"')
+    
+    if all:
+        escaped = stringa.translate(str.maketrans({"^":  r"\^",
+                                                    '"':  r'\"',
+                                                    "\\": r"\\",
+                                                    ":":  r"\:",
+                                                    "~":  r"\~",
+                                                    "[":  r"\[",
+                                                    "]":  r"\]",
+                                                    "{":  r"\{",
+                                                    "}":  r"\}",
+                                                    "(":  r"\(",
+                                                    ")":  r"\)",
+                                                    "!":  r"\!",
+                                                    "|":  r"\|",
+                                                    "&":  r"\&",
+                                                    "+":  r"\+",
+                                                    }))
+    else:
+        escaped = stringa.translate(str.maketrans({'"':  r'\"'}))        
+    return escaped

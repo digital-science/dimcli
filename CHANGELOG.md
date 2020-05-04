@@ -6,6 +6,7 @@
 * support for `_version` info in payload
 [unreleased] ** df_grant_investigators_affiliations 
 [unreleased] ** pretty printing for repl `.json_compact` command
+[unreleased] ** `dsl_escape` accepts boolean arg for escaping any special character
 
 
 ## v 0.6.6

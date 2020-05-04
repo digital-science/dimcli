@@ -85,6 +85,27 @@ class TestOne(unittest.TestCase):
         click.secho("Completed test succesfully", fg="green")
 
 
+    def test_003(self):
+        click.secho("\nTEST 003: Language utils: DSL escape.", fg="green")
+        login()
+        d = Dsl()
+        # ----
+        covid_q = '"2019-nCoV" OR "COVID-19" OR "SARS-CoV-2" OR (("coronavirus"  OR "corona virus") AND (Wuhan OR China))'
+        q = f"""search publications 
+                in full_data for "{dsl_escape(covid_q)}"  
+            return publications[id+doi+pmid+pmcid+title+journal+publisher+mesh_terms+date+year+volume+issue+pages+open_access_categories+type+authors+research_orgs+funders+supporting_grant_ids+times_cited+altmetric+linkout] limit 1"""
+        click.secho(q, fg="green")
+        print("Success: ", bool(dslquery(q).count_total))
+        # ----
+        specialchar_q = 'Solar cells: a new technology? (some examples)'
+        q = f"""search publications 
+                in full_data for "{dsl_escape(specialchar_q, all=True)}"  
+            return publications[id+doi+title] limit 1"""
+        click.secho(q, fg="green")
+        print("Success: ", bool(dslquery(q).count_total))
+        # ----
+        click.secho("Completed test succesfully", fg="green")
+
 
 if __name__ == "__main__":
     unittest.main()
