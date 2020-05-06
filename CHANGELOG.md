@@ -7,7 +7,7 @@
 * shortcut for grants results: `df_grant_investigators_affiliations` 
 * pretty printing for repl `.json_compact` command
 * `dsl_escape` accepts boolean arg for escaping any special character (by default it escapes only `"`)
-
+* `dsl.query_iterative` new argument: `force`: if any error if encountered during the extraction of a batch, it forces the iteration to continue
 
 ## v 0.6.6
 
