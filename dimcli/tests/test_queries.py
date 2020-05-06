@@ -45,6 +45,20 @@ class TestOne(unittest.TestCase):
         print(" ==> res['stats']: ", res['stats'])
         print(" ==> len(res['publications']): ", len(res['publications']))
         # ----
+        click.secho("\nTEST 001: Iterative querying with force=True", fg="green")
+        # ----
+        d = Dsl()
+        q = """search publications 
+        where research_orgs.id="grid.5522.0" 
+        and year in [2010:2012]
+        return publications[basics+category_for+times_cited]
+        """
+        res = d.query_iterative(q, limit=1000, force=True)
+        print("Query results: ")
+        print(" ==> len(res): ", len(res))
+        print(" ==> res['stats']: ", res['stats'])
+        print(" ==> len(res['publications']): ", len(res['publications']))
+        # ----
         click.secho("Completed test succesfully", fg="green")
 
 

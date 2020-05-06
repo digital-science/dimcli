@@ -126,8 +126,8 @@ class Dsl():
 
 
 
-    def query_iterative(self, q, show_results=None, limit=1000, skip=0, pause=1.5, verbose=None):
-        """Runs a normal query iteratively, by automatically turning it into a loop with limit/skip operators until all the results available have been extracted.
+    def query_iterative(self, q, show_results=None, limit=1000, skip=0, pause=1.5, force=False, verbose=None, tot_count_prev_query=0):       
+        """Runs a DSL query iteratively, by automatically turning it into a loop with limit/skip operators until all the results available have been extracted.
         
         Args:
             q (str): The DSL query.
@@ -149,12 +149,12 @@ class Dsl():
             verbose = self._verbose
 
         if q.split().count('return') != 1:
-            raise Exception("Loop queries support only 1 return statement")
+            raise Exception("Iterative queries support only 1 return statement")
         if line_has_limit_or_skip(q):
-            raise Exception("Loop queries should not contain the keywords `limit` or `skip`")
+            raise Exception("Iterative queries should not contain the keywords `limit` or `skip`")
         sourcetype = line_search_return(q)  
         if not (sourcetype in G.sources()):
-            raise Exception("Loop queries can return only one of the Dimensions sources: %s" % ", ".join([s for s in G.sources()])) 
+            raise Exception("Iterative queries can return only one of the Dimensions sources: %s" % ", ".join([s for s in G.sources()])) 
         #
         # ensure we stop the loop at 50k **
         #
@@ -166,7 +166,11 @@ class Dsl():
                 limit = MAXLIMIT - skip
 
 
-        output = []
+        if not tot_count_prev_query:
+            # first iteration
+            if verbose: print(f"{limit+skip} / ...")
+            
+        output, flag_force = [], False
         q2 = q + " limit %d skip %d" % (limit, skip)
         
         start = time.time()
@@ -177,42 +181,56 @@ class Dsl():
             # print("sleeping")
             time.sleep(pause)
 
-        if res['errors']:
-            print("** [Dimcli] An error occurred during one of the iterations. Consider using the 'limit' argument to retrieve fewer records per iteration.")
+        if res['errors'] and not force:
+            print(f"\n>>>[Dimcli tip] An error occurred with the batch '{skip}-{limit+skip}'. Consider using the 'limit' argument to retrieve fewer records per iteration, or use 'force=True' to ignore errors and continue the extraction.")
             return res
-        elif res['stats']:
+        elif res['errors'] and force:
+            print(f"\n>>>[Dimcli log] An error occurred with the batch '{skip}-{limit+skip}'. Skipping this batch and continuing iteration.. ")
+            flag_force = True
 
+        # RECURSION 
+
+        try:
             tot = int(res['stats']['total_count'])
-            batch = skip+limit
-            if batch > tot:
-                batch = tot
-            if verbose: print("%d / %d" % (batch, tot  ))
+        except:
+            tot =  tot_count_prev_query # when force=True, we have no current query stats
 
-            if len(res[sourcetype]) == limit and not flag_last_round:
-                output = res[sourcetype] + self.query_iterative(q, show_results, limit, skip+limit, pause, verbose)
-            else:
-                output = res[sourcetype]
+        new_skip = skip+limit
+        if tot > 0 and new_skip > tot:
+            new_skip = tot
+        if verbose and tot:  # if not first iteration
+            print(f"{new_skip} / {tot}")
 
-            # FINALLY 
-            #
-            # if recursion is complete (we are at top level, hence skip=0) 
-            #   build the Dataset obj
-            # else 
-            #   just return current iteration results 
-            #
-            if skip == 0: 
-                response_simulation = {
-                    "_stats": {
-                        "total_count": tot
-                        },
-                    sourcetype: output
-                }
-                result = Dataset(response_simulation)
-                if show_results or (show_results is None and self._show_results):
-                    IPython.display.display(result)
-                return result
-            else:
-                return output
+        if flag_force:
+            output = self.query_iterative(q, show_results, limit, new_skip, pause, force, verbose, tot_count_prev_query)                    
+
+        elif len(res[sourcetype]) == limit and not flag_last_round:
+            output = res[sourcetype] + self.query_iterative(q, show_results, limit, new_skip, pause, force, verbose, tot)
+
+        else:
+            output = res[sourcetype]
+
+        # FINALLY 
+        #
+        # if recursion is complete (we are at top level, hence skip=0) 
+        #   build the Dataset obj
+        # else 
+        #   just return current iteration results 
+        #
+        if skip == 0: 
+            response_simulation = {
+                "_stats": {
+                    "total_count": tot or len(output)  # fallback..
+                    },
+                sourcetype: output
+            }
+            result = Dataset(response_simulation)
+            if show_results or (show_results is None and self._show_results):
+                IPython.display.display(result)
+            if verbose: print(f"===\nRecords extracted: {len(output)}")
+            return result
+        else:
+            return output
 
 
     def __repr__(self):

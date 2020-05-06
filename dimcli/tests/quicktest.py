@@ -81,21 +81,14 @@ def main(test_number=1):
 
     if test_number == 2:
                 # ----
-        click.secho("\nTEST 005: Concepts extraction.", fg="green")
+        click.secho("\nTEST XXX Iterations test", fg="green")
         # ----
-        print("Testing as_dataframe_concepts on Publications data: ")
-        res= dslquery("""search publications for "graphene" where year=2019 return publications[id+concepts+year+title+category_for] limit 1000""")
-        concepts = res.as_dataframe_concepts()
-        print(" ==> res.as_dataframe_concepts(): ", concepts)
-        concepts.info()
-        # ----
-        print("Testing as_dataframe_concepts on Grants data: ")
-        res= dslquery("""search grants for "graphene" where active_year = 2019 return grants[basics+concepts] limit 500""")
-        concepts = res.as_dataframe_concepts()
-        print(" ==> res.as_dataframe_concepts(): ", concepts)
-        concepts.info()
-        click.secho("Completed test succesfully", fg="green")
-
+        q = """search publications 
+        where research_orgs.id="grid.5522.0" 
+        and year in [2010:2011]
+        return publications[basics+category_for+times_cited]
+        """
+        res = dsl.query_iterative(q, limit=1000, force=True)
 
 if __name__ == '__main__':
     main()
