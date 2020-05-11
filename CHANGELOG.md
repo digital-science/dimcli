@@ -8,6 +8,7 @@
 * pretty printing for repl `.json_compact` command
 * `dsl_escape` accepts boolean arg for escaping any special character (by default it escapes only `"`)
 * `dsl.query_iterative` new argument: `force`: if any error if encountered during the extraction of a batch, it forces the iteration to continue
+* DSL grammar updated for version 1.24
 
 ## v 0.6.6
 
