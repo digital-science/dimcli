@@ -1,14 +1,18 @@
 # Changelog
 
+## v 0.6.8
+
+* DSL grammar updated for version 1.24 (2020-05-11 release)
+* fix bug caused by new `_version` key in JSON response 
+
 
 ## v 0.6.7
 
-* support for `_version` info in payload
-* shortcut for grants results: `df_grant_investigators_affiliations` 
-* pretty printing for repl `.json_compact` command
+* `df_grant_investigators_affiliations` new dataframe shortcut for grants results
 * `dsl_escape` accepts boolean arg for escaping any special character (by default it escapes only `"`)
 * `dsl.query_iterative` new argument: `force`: if any error if encountered during the extraction of a batch, it forces the iteration to continue
-* DSL grammar updated for version 1.24
+* CLI: pretty printing for `.json_compact` command
+
 
 ## v 0.6.6
 
