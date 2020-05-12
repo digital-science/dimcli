@@ -28,7 +28,7 @@ except:
 
 
 
-def login(username="", password="", endpoint="https://app.dimensions.ai", instance="live", verbose=True):
+def login(username="", password="", endpoint="https://app.dimensions.ai", instance="live", key="", verbose=True):
     """
     Login into the Dimensions API and obtain a query token. 
     - If credentials are not passed, we attempt to login using the local dsl.ini credentials file. 
@@ -39,11 +39,12 @@ def login(username="", password="", endpoint="https://app.dimensions.ai", instan
     * password
     * endpoint (defaults to "https://app.dimensions.ai")
     * instance (defaults to "live")
+    * key (for newest login mechanism)
     """
     from .core.auth import do_global_login, get_connection
 
     try:
-        do_global_login(instance, username, password, endpoint)
+        do_global_login(instance, username, password, key, endpoint)
     except Exception as e:
         print("Login failed: please ensure your credentials are correct.")
         raise(e)
@@ -51,7 +52,7 @@ def login(username="", password="", endpoint="https://app.dimensions.ai", instan
     CONNECTION = get_connection()
 
     if CONNECTION['token']:
-        if username and password:
+        if (username and password) or key:
             if verbose: print("DimCli %s - Succesfully connected to <%s> (method: manual login)" % (str(VERSION), CONNECTION['url'])) 
         else:
             # try to use local init file using instance parameter

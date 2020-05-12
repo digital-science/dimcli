@@ -33,7 +33,7 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
     is_flag=True,
     help="Create a configuration file with your API credentials.")
 @click.option(
-    "--show",
+    "--settings",
     is_flag=True,
     help="Show the local configuration file.")
 @click.option(
@@ -47,7 +47,7 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 @click.option(
     "--websearch", "-w", help="Search a quoted string in Dimensions web.")
 @click.pass_context
-def main_cli(ctx, instance_name=None, init=False, show=False, vcheck=False, history=False, id=None, websearch=None):
+def main_cli(ctx, instance_name=None, init=False, settings=False, vcheck=False, history=False, id=None, websearch=None):
     """
     Python client for the Dimensions Analytics API.
     More info: https://github.com/digital-science/dimcli
@@ -82,7 +82,7 @@ def main_cli(ctx, instance_name=None, init=False, show=False, vcheck=False, hist
         )
         return
 
-    if show:
+    if settings:
         preview_contents(USER_CONFIG_FILE_PATH)
         return
 

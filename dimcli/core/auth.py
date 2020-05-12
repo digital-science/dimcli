@@ -21,26 +21,33 @@ USER_EXPORTS_DIR = os.path.expanduser("~/dimcli-exports/")
 
 
 
-CONNECTION = {'instance': None, 'url': None, 'username': None, 'password': None,  'token' : None}
+CONNECTION = {'instance': None, 'url': None, 'username': None, 'password': None, 'key': None,  'token' : None}
 
 
 
 
-def do_global_login(instance="live", username="", password="", url="https://app.dimensions.ai"):
+def do_global_login(instance="live", username="", password="", key="", url="https://app.dimensions.ai"):
     "Login into DSL and set the connection object with token"
     
     global CONNECTION
 
-    if not (username and password):
+    if not (username and password) and not key:
         # then use 'instance' shortcut to get local credentials
         fpath = get_init_file()
         config_section = read_init_file(fpath, instance)
         url = config_section['url']
-        username = config_section['login']
-        password = config_section['password']
+        try:
+            username = config_section['login']
+            password = config_section['password']
+        except:
+            username, password = "", ""
+        try:
+            key = config_section['key']
+        except:
+            key = ""
 
 
-    login_data = {'username': username, 'password': password}
+    login_data = {'username': username, 'password': password, 'key': key}
     response = requests.post(
         '{}/api/auth.json'.format(url), json=login_data)
     response.raise_for_status()
@@ -51,6 +58,7 @@ def do_global_login(instance="live", username="", password="", url="https://app.
     CONNECTION['url'] = url
     CONNECTION['username'] = username
     CONNECTION['password'] = password
+    CONNECTION['key'] = key
     CONNECTION['token'] = token
 
 
@@ -59,13 +67,13 @@ def refresh_login():
     """
     Method used to login again if the TOKEN has expired - using previously entered credentials
     """
-    do_global_login(CONNECTION['instance'], CONNECTION['username'], CONNECTION['password'], CONNECTION['url'])
+    do_global_login(CONNECTION['instance'], CONNECTION['username'], CONNECTION['password'], CONNECTION['key'], CONNECTION['url'])
 
 
 def reset_login():
     ""
     global CONNECTION
-    CONNECTION = {'instance': None, 'url': None, 'username': None, 'password': None,  'token' : None}
+    CONNECTION = {'instance': None, 'url': None, 'username': None, 'password': None,  'key': None,  'token' : None}
 
 
 def get_connection():
@@ -102,6 +110,7 @@ def get_init_file():
     url=https://app.dimensions.ai
     login=your_username
     password=your_password
+    key=your_key
 
     The section name has to start with "instance."
     Keyword "live" is the default name for most installations.
@@ -134,7 +143,7 @@ def read_init_file(fpath, instance_name):
     try:
         section = config['instance.' + instance_name]
     except:
-        click.secho(f"ERROR: Credentials file `{fpath}` does contain settings for instance: '{instance_name}''", fg="red")
+        click.secho(f"ERROR: Credentials file `{fpath}` does not contain settings for instance: '{instance_name}''", fg="red")
         click.secho(f"Available instances are:")
         for x in config.sections():
             click.secho("'%s'" % x)

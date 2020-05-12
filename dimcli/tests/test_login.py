@@ -79,5 +79,20 @@ class TestOne(unittest.TestCase):
         # ----
         click.secho("\n--------\nCompleted test succesfully", fg="green")
 
+
+    def test_003(self):
+        click.secho("\nTEST 003: Login using key-based authentication.", fg="green")
+        # ----
+        logout()
+        login(instance="key-test")
+        d = Dsl()
+        print(""" Dsl(instance="key-test"): ==> url=""", d._url)
+        res = d.query("""search publications where authors="Pasin" return publications""")
+        print(" ==> res.json.keys(): ", res.json.keys())
+        logout()
+        # ----
+        click.secho("\n--------\nCompleted test succesfully", fg="green")
+
+
 if __name__ == "__main__":
     unittest.main()
