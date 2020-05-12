@@ -4,6 +4,7 @@
 
 * DSL grammar updated for version 1.24 (2020-05-11 release)
 * fix bug caused by new `_version` key in JSON response 
+* support for key-based authentication methods
 
 
 ## v 0.6.7
