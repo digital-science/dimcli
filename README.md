@@ -6,6 +6,7 @@
   - [Authentication](#authentication)
     - [Creating a credentials file using the helper script (recommended)](#creating-a-credentials-file-using-the-helper-script-recommended)
     - [Creating a credentials file manually](#creating-a-credentials-file-manually)
+      - [Important](#important)
     - [Overriding credentials at runtime (e.g. with Jupyter Notebooks)](#overriding-credentials-at-runtime-eg-with-jupyter-notebooks)
     - [Using multiple API endpoints (for advanced users)](#using-multiple-api-endpoints-for-advanced-users)
   - [Dimcli as a Command Line Interface](#dimcli-as-a-command-line-interface)
@@ -72,6 +73,16 @@ If you can't create a configuration file you can explicitly provide log in crede
 
 ```
 
+Or if you are using the new **key-based** authentication: 
+
+```
+>>> import dimcli
+
+>>> dimcli.login(key="123456789qwertyuiop",  
+                 endpoint="https://https://my.instance.of.dimensions.ai")
+
+```
+
 
 ### Creating a credentials file using the helper script (recommended)
 
@@ -102,11 +113,25 @@ Then open `dsl.ini` with a text editor. Its contents should look like this:
 url=https://app.dimensions.ai
 login=user@mail.com
 password=yourpasswordhere
+key=yourkeyhere
 ```
 
-In most situations you can simply copy/paste the text above and change the login and password as needed.
+In most situations you can simply copy/paste the text above and update its contents as needed. 
 
-> Note: you must always have an entry in the configuration called `[instance.live]`
+#### Important
+
+* you must always have an entry in the configuration called `[instance.live]`
+* you'll have either a key or a username/password, so leave the other stuff blank. Eg this is a valid config snippet if you authenticate using a key:
+
+```
+[instance.live]
+url=https://app.dimensions.ai
+login=
+password=
+key=yourkeyhere
+```
+
+
 
 
 ### Overriding credentials at runtime (e.g. with Jupyter Notebooks)
@@ -120,6 +145,7 @@ The file should look like this:
 url=https://app.dimensions.ai
 login=user@mail.com
 password=yourpasswordhere
+key=yourkeyhere
 ```
 
 > Note: the same-directory credentials will take precedence over any system-level credentials previously defined.
@@ -136,6 +162,7 @@ You can add details for more than one instance but make sure you give them uniqu
 url=https://private-instance.dimensions.ai
 login=user@mail.com
 password=yourpasswordhere
+key=yourkeyhere
 ```
 
 Then when running the CLI you can select which instance to use just by passing its name as argument eg
