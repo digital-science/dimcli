@@ -556,7 +556,7 @@ def preview_results(jsondata, maxitems=10):
     # click.secho("")
     counter = 0
     for key in jsondata.keys():
-        if key not in ["_stats", "_warnings",  "_version"]:
+        if key not in ["_stats", "_warnings", "_notes",  "_version"]:
             for row in jsondata[key]:
                 counter += 1
                 if counter <= maxitems:

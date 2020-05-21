@@ -324,7 +324,7 @@ class Dataset(IPython.display.JSON):
 
     def good_data_keys(self,):
         "return the results keys other than stats"
-        skips = ["_warnings", "_stats", "_version"]
+        skips = ["_warnings", "_notes", "_stats", "_version"]
         return [x for x in self.json.keys() if x not in skips]
 
     def keys_and_count(self,):
