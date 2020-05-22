@@ -2,7 +2,9 @@ from .VERSION import __version__, VERSION
 
 from .core.api import Dsl, Dataset
 from .core.dsl_grammar import G 
+from .core.version_utils import print_dimcli_report_if_outdated
 
+import click
 
 try:
     # if run outside iPython, the magic fails so we use this as a test
@@ -51,12 +53,29 @@ def login(username="", password="", endpoint="https://app.dimensions.ai", instan
 
     CONNECTION = get_connection()
 
-    if CONNECTION['token']:
-        if (username and password) or key:
-            if verbose: print("DimCli %s - Succesfully connected to <%s> (method: manual login)" % (str(VERSION), CONNECTION['url'])) 
-        else:
-            # try to use local init file using instance parameter
-            if verbose: print("DimCli %s - Succesfully connected to <%s> (method: dsl.ini file)" % (str(VERSION), CONNECTION['url']))
+    if CONNECTION['token'] and verbose:
+        _print_login_success(CONNECTION, username, password, key)
+        print_dimcli_report_if_outdated()
+
+
+
+def _print_login_success(CONNECTION, username, password, key):
+    click.secho("Dimcli - Dimensions API Client (" + VERSION + ")", dim=True)
+    CLIENT = Dsl(verbose=False)
+    # dynamically retrieve dsl version 
+    try:
+        _info = CLIENT.query("describe version")['release']
+    except:
+        _info = "not available"
+
+    if (username and password) or key:
+        _method = "manual login"
+    else:
+        _method = "dsl.ini file"
+    click.secho(f"Connected to endpoint: {CLIENT._url} - DSL version: {_info}", dim=True)
+    click.secho(f"Method: {_method}", dim=True)
+
+
 
 
 def logout():
@@ -78,7 +97,7 @@ def login_status():
     from .core.auth import get_connection
     CONNECTION = get_connection()
     if CONNECTION['token']:
-        print("DimCli %s - Succesfully connected to <%s>" % (str(VERSION), CONNECTION['url'])) 
+        print("Dimcli %s - Succesfully connected to <%s>" % (str(VERSION), CONNECTION['url'])) 
         return True
     else:
         print("Status: not logged in") 

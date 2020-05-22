@@ -52,7 +52,7 @@ class DslGrammar():
     # 
 
     def allowed_starts(self, word=""):
-        "Get a the allowed starts dict for DimCli"
+        "Get a the allowed starts dict for Dimcli"
         allowed_starts = merge_two_dicts(self.allowed_starts_dsl_query(), self.allowed_starts_special_commands())
         if not word:
             return allowed_starts

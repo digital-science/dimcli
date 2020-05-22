@@ -54,7 +54,7 @@ There's been [reports](https://github.com/digital-science/dimcli/issues/21) of D
 ## Authentication 
 
 
-After installation it's **strongly advised to create a configuration file** with your Dimensions account credentials. This can be done only once, and it'll save you from having to type in credentials each time you use DimCli. E.g. 
+After installation it's **strongly advised to create a configuration file** with your Dimensions account credentials. This can be done only once, and it'll save you from having to type in credentials each time you use Dimcli. E.g. 
 
 ```
 >>> import dimcli
@@ -97,7 +97,7 @@ The helper will guide you through the process of creating this file, which will 
 
 ### Creating a credentials file manually
 
-This section provides more details about where DimCli expects credentials data to be found, in case you want to set this up manually. 
+This section provides more details about where Dimcli expects credentials data to be found, in case you want to set this up manually. 
 
 The credentials file must be called `dsl.ini` and located in your user directory in the `.dimensions` folder. If you want to set this up manually, this is what you'd do on unix systems:
 
@@ -136,7 +136,7 @@ key=yourkeyhere
 
 ### Overriding credentials at runtime (e.g. with Jupyter Notebooks)
 
-If you are using DimCli within a Jupyter notebook and you do not want (or can) set up credentials at the user level, you can simply put a `dsl.ini` file in the current working directory (= where the notebook is located).  
+If you are using Dimcli within a Jupyter notebook and you do not want (or can) set up credentials at the user level, you can simply put a `dsl.ini` file in the current working directory (= where the notebook is located).  
 
 The file should look like this:
 
@@ -175,7 +175,7 @@ $ dimcli private
 
 ## Dimcli as a Command Line Interface
 
-DimCli includes a handy Command Line Interface (CLI) which lets you query the Dimensions API interactively. The CLI has several features but, most importantly, it allows to use the TAB key to autocomplete your queries (based on the latest API syntax and fields), which makes it an ideal tool for both newbies and expert users.  
+Dimcli includes a handy Command Line Interface (CLI) which lets you query the Dimensions API interactively. The CLI has several features but, most importantly, it allows to use the TAB key to autocomplete your queries (based on the latest API syntax and fields), which makes it an ideal tool for both newbies and expert users.  
 
 Run the command line application by typing
 
@@ -183,14 +183,14 @@ Run the command line application by typing
 $ dimcli
 ```
 
-That'll launch the DimCli console, where you can hit `help` in case you need more support :-)
+That'll launch the Dimcli console, where you can hit `help` in case you need more support :-)
 
 ![screenshot1](static/screenshot1.jpg)
 
 
 ## Dimcli with Jupyter Notebooks
 
-DimCli includes a number of features that simplify working with the Dimensions API within a Jupyter notebook. 
+Dimcli includes a number of features that simplify working with the Dimensions API within a Jupyter notebook. 
 
 For example, it contains a couple of [magic commands](https://github.com/digital-science/dimcli/blob/master/dimcli/jupyter/magics.py) that make it super easy to hit the API from a notebook, or to explore the documentation. 
 

@@ -59,7 +59,7 @@ def html_template_interactive(query, formatted_json, api_endpoint):
         </div> 
         <div id="footer">
             <hr>
-            <p>Generated with <a href="https://github.com/digital-science/dimcli">DimCli</a> %s | See also: <a href="https://docs.dimensions.ai/dsl/">https://docs.dimensions.ai/dsl/</a></p>
+            <p>Generated with <a href="https://github.com/digital-science/dimcli">Dimcli</a> %s | See also: <a href="https://docs.dimensions.ai/dsl/">https://docs.dimensions.ai/dsl/</a></p>
         </div>
     </body>
     </html>

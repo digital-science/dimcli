@@ -48,7 +48,7 @@ class DslMagics(Magics):
     @line_cell_magic
     def dsl(self, line, cell=None):
         """
-        DimCli Magic Method: enter a DSL query string and send it directly to Dimensions API. 
+        Dimcli Magic Method: enter a DSL query string and send it directly to Dimensions API. 
         """
         if self._handle_login():
             if cell:
@@ -60,7 +60,7 @@ class DslMagics(Magics):
 
     @line_cell_magic
     def dsldf(self, line, cell=None):
-        """DimCli Magic method: query the Dimensions DSL API with the text passed - return a pandas dataframe.
+        """Dimcli Magic method: query the Dimensions DSL API with the text passed - return a pandas dataframe.
         """
         if self._handle_login():
             if cell:
@@ -75,7 +75,7 @@ class DslMagics(Magics):
 
     @line_cell_magic
     def dslloop(self, line, cell=None):
-        """DimCli Magic Method: transforms a simple query into a loop, by adding limit/skip parameters automatically. The final object returns contains all results into a single JSON object.  
+        """Dimcli Magic Method: transforms a simple query into a loop, by adding limit/skip parameters automatically. The final object returns contains all results into a single JSON object.  
         """
         if self._handle_login():
             if cell:
@@ -87,7 +87,7 @@ class DslMagics(Magics):
 
     @line_cell_magic
     def dslloopdf(self, line, cell=None):
-        """DimCli Magic method: query the Dimensions DSL API with the text passed, looping over all results pages - return a pandas dataframe.
+        """Dimcli Magic method: query the Dimensions DSL API with the text passed, looping over all results pages - return a pandas dataframe.
         """
         if self._handle_login():
             if cell:
@@ -103,7 +103,7 @@ class DslMagics(Magics):
     @line_magic
     def dsldocs(self, line):
         """
-        DimCli Magic method: wrapper around the dsl `describe` function - outputs documentation for a DSL Source or Entity as a pandas dataframe.
+        Dimcli Magic method: wrapper around the dsl `describe` function - outputs documentation for a DSL Source or Entity as a pandas dataframe.
         """
         if not self._handle_login():
             return
