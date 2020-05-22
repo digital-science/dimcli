@@ -123,7 +123,7 @@ class CleverCompleter(Completer):
                 # if source, can sort by fields FIXME
                 candidates = G.fields_for_source(source) + ['relevance']
             elif return_object in G.facets_for_source(source):
-                # if facet, can sort by aggregrates metrics if available, otherwise count
+                # if facet, can sort by aggregates metrics if available, otherwise count
                 aggreg_object = line_search_aggregates(line)
                 if aggreg_object:
                     candidates = [aggreg_object]   

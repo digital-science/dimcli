@@ -31,9 +31,9 @@ class Dsl():
     >>> dimcli.login(user="mary.poppins", password="chimneysweeper")
     # instantiate the query object
     >>> dsl = dimcli.Dsl()
-    # queries always return a Dataset object (subclassing IPython.display.JSON)
+    # queries always return a DslDataset object (subclassing IPython.display.JSON)
     >>> dsl.query("search grants for \"malaria\" return researchers")
-    >>> <dimcli.dimensions.Dataset object>
+    >>> <dimcli.dimensions.DslDataset object>
     # use the .json method to get the JSON
     >>> dsl.query("search grants for \"malaria\" return researchers").json
     >>> {'researchers': [{'id': 'ur.01332073522.49',
@@ -105,7 +105,7 @@ class Dsl():
             except:
                 print('Unexpected error. JSON could not be parsed.')
                 return response
-            result = Dataset(res_json)
+            result = DslDataset(res_json)
             if verbose: print_json_stats(result, q)
             print_json_errors(result) # ALWAYS print errors
             if verbose: print_json_warnings(result)
@@ -139,7 +139,7 @@ class Dsl():
 
         
         Returns:
-            Dataset -- query results collated within a single object 
+            DslDataset -- query results collated within a single object 
         """
         if not self.is_logged_in:
             self._print_please_login()
@@ -213,7 +213,7 @@ class Dsl():
         # FINALLY 
         #
         # if recursion is complete (we are at top level, hence skip=0) 
-        #   build the Dataset obj
+        #   build the DslDataset obj
         # else 
         #   just return current iteration results 
         #
@@ -224,7 +224,7 @@ class Dsl():
                     },
                 sourcetype: output
             }
-            result = Dataset(response_simulation)
+            result = DslDataset(response_simulation)
             if show_results or (show_results is None and self._show_results):
                 IPython.display.display(result)
             if verbose: print(f"===\nRecords extracted: {len(output)}")
@@ -240,7 +240,7 @@ class Dsl():
 
         
 
-class Dataset(IPython.display.JSON):
+class DslDataset(IPython.display.JSON):
     """
     Wrapper for JSON results from DSL
 
@@ -256,8 +256,8 @@ class Dataset(IPython.display.JSON):
 
     """
 
-    # class methods to build Dataset object from raw data (obtained not from a query eg from multiple queries concatenated)
-    # these allow to then take advantage of other functionalities in Dataset objects eg dataframes etc...
+    # class methods to build DslDataset object from raw data (obtained not from a query eg from multiple queries concatenated)
+    # these allow to then take advantage of other functionalities in DslDataset objects eg dataframes etc...
     @classmethod
     def from_publications_list(cls, data):
         return cls.from_any_list(data, "publications")
@@ -477,19 +477,19 @@ class Dataset(IPython.display.JSON):
                     q =  urllib.parse.quote_plus(q)
                     return supported_url_templates[sourcetype] + q
                 except:
-                    raise Exception("Dataset records do not contain a valid ID field.")
+                    raise Exception("DslDataset records do not contain a valid ID field.")
         return None
 
 
     def __repr__(self):
         if self.json.get("errors"):
-            return "<dimcli.Dataset object #%s. Errors: %d>" % (str(id(self)), len(self.json['errors']))
+            return "<dimcli.DslDataset object #%s. Errors: %d>" % (str(id(self)), len(self.json['errors']))
         else:
             try:
-                return "<dimcli.Dataset object #%s. Records: %d/%d>" % (str(id(self)), self.count_batch, self.count_total)
+                return "<dimcli.DslDataset object #%s. Records: %d/%d>" % (str(id(self)), self.count_batch, self.count_total)
             except:
                 # non-search queries
-                return "<dimcli.Dataset object #%s. Dict keys: %s>" % (str(id(self)), ", ".join([f"'{x}'" for x in self.json]))
+                return "<dimcli.DslDataset object #%s. Dict keys: %s>" % (str(id(self)), ", ".join([f"'{x}'" for x in self.json]))
 
 
 
@@ -497,4 +497,5 @@ class Dataset(IPython.display.JSON):
 
 # 2019-12-17: for backward compatibility
 # remove once all notebooks code has been updated 
-Result = Dataset
+Result = DslDataset
+Dataset = DslDataset

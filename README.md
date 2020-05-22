@@ -221,9 +221,9 @@ Once logged in, you can get a query object and try some queries:
 
 >>> dsl = dimcli.Dsl()
 
-# queries always return a Dataset object (subclassing IPython.display.JSON)
+# queries always return a DslDataset object (subclassing IPython.display.JSON)
 >>> dsl.query("search grants for \"malaria\" return publications")
-<dimcli.dimensions.Dataset object>
+<dimcli.dimensions.DslDataset object>
 
 # use the .data method to get the JSON
 >>> dsl.query("search grants for \"malaria\" return publications").data

@@ -12,7 +12,7 @@ import configparser
 from .. import *
 from ..core.auth import USER_CONFIG_FILE_PATH
 from ..core.utils import dimensions_url
-from ..core.api import Dataset
+from ..core.api import DslDataset
 from ..shortcuts import *
 
 
@@ -93,7 +93,7 @@ class TestOne(unittest.TestCase):
 
 
     def test_004(self):
-        click.secho("\nTEST 004: Try magic methods on Dataset object.", fg="green")
+        click.secho("\nTEST 004: Try magic methods on DslDataset object.", fg="green")
         # ----
         login(instance="live")
         d = Dsl()
@@ -140,25 +140,25 @@ class TestOne(unittest.TestCase):
         # ----
 
     def test_006(self):
-        click.secho("\nTEST 006: Building dimcli.Dataset objects from data.", fg="green")
+        click.secho("\nTEST 006: Building dimcli.DslDataset objects from data.", fg="green")
         # ----
         data = dslquery("""search publications for "malaria" return publications""")
-        res = Dataset.from_publications_list(data.publications)
+        res = DslDataset.from_publications_list(data.publications)
         res.as_dataframe_authors()
         res.count_total
         data = dslquery("""search patents for "graphene" return patents""")
-        res = Dataset.from_patents_list(data.patents)
+        res = DslDataset.from_patents_list(data.patents)
         res.as_dataframe()
         res.count_total
         # ----
-        click.secho("\nBuilding dimcli.Dataset objects from DATAFRAME data.", fg="green")
+        click.secho("\nBuilding dimcli.DslDataset objects from DATAFRAME data.", fg="green")
         # ----
         data = dslquery("""search publications for "malaria" return publications""").as_dataframe()
-        res = Dataset.from_publications_list(data)
+        res = DslDataset.from_publications_list(data)
         res.as_dataframe_authors()
         res.count_total
         data = dslquery("""search patents for "graphene" return patents""").as_dataframe()
-        res = Dataset.from_patents_list(data)
+        res = DslDataset.from_patents_list(data)
         res.as_dataframe()
         res.count_total
         click.secho("Completed test succesfully", fg="green")

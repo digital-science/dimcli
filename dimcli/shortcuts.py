@@ -22,7 +22,7 @@ def dslquery(query_string):
 
 def dslquery_json(query_string):
     """shortcut for backward compatibility 
-    Same as above but returns raw JSON instead of Api.Dataset object
+    Same as above but returns raw JSON instead of Api.DslDataset object
 
     Pattern: `from dimcli.shortcuts import dslquery_json as dslquery`
     """

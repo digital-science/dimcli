@@ -1,6 +1,6 @@
 from .VERSION import __version__, VERSION
 
-from .core.api import Dsl, Dataset
+from .core.api import Dsl, DslDataset
 from .core.dsl_grammar import G 
 from .core.version_utils import print_dimcli_report_if_outdated
 
