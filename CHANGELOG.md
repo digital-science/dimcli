@@ -1,12 +1,18 @@
 # Changelog
 
+
+## v 0.6.9
+
+* improved login feedback message
+* automated check for latest Dimcli version at login 
+* `dimcli.DslDataset`  is the new name of dimcli.Dataset, to avoid conflicts with Dataset documents in Dimensions
+
+
 ## v 0.6.8
 
 * DSL grammar updated for version 1.24 (2020-05-11 release)
 * fix bug caused by new `_version` and `_notes` key in JSON response 
 * support for key-based authentication methods
-* improved login feedback message
-* automated check for latest Dimcli version at login 
 
 
 ## v 0.6.7
