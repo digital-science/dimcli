@@ -6,7 +6,7 @@
 * improved login feedback message
 * automated check for latest Dimcli version at login 
 * `dimcli.DslDataset`  is the new name of dimcli.Dataset, to avoid conflicts with Dataset documents in Dimensions
-
+* DSL grammar updated for version 1.25 (2020-05-28 release) 
 
 ## v 0.6.8
 
