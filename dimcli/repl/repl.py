@@ -205,9 +205,9 @@ class CommandsManager(object):
         else:
             print("Please specify a source or entity.")
 
-    def record_notebook(self, text, rows=20):
+    def record_notebook(self, text, rows=10):
         """
-        Take the last 20 (default) rows from the history, and create a new python notebook with them. 
+        Take the last 10 (default) rows from the history, and create a new python notebook with them. 
         Saves in usual location.
 
         Based on https://gist.github.com/fperez/9716279
@@ -223,11 +223,12 @@ class CommandsManager(object):
         rows_data = []
         for item in islice(history.load_history_strings(), rows):
             rows_data += [item]
+        rows_data.reverse()
 
         nb = nbf.v4.new_notebook()
         this_time = time.strftime("%Y.%m.%d h%H:%M:%S")
 
-        text = f"""# Dimcli Export \n### {this_time} \nThis is an auto-generated notebook with [Dimcli](https://github.com/digital-science/dimcli/) - the Dimensions API CLI."""
+        text = f"""# Dimensions API Queries Export\n### {this_time} \nThis notebook was generated using [Dimcli](https://github.com/digital-science/dimcli/) - the Dimensions API CLI."""
     
         nb['cells'] = [nbf.v4.new_markdown_cell(text)]
 
