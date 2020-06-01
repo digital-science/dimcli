@@ -54,6 +54,7 @@ All special commands start with '.'
 >>> .export_as_csv: save results from last query as CSV file.  
 >>> .export_as_html: save results from last query as HTML file. 
 >>> .export_as_bar_chart: save results from last query as Plotly bar chart. 
+>>> .export_as_jupyter: save results from last query as Jupyter notebook. 
 >>> .show [optional: N]: print N results from last query, trying to build URLs for objects. Default N=10.
 >>> .json_compact: print results of last query as single-line JSON. 
 >>> .json_full: print results of last query as formatted JSON.
@@ -207,6 +208,9 @@ class CommandsManager(object):
 
     def record_notebook(self, text, rows=10):
         """
+        2020-06-01: DEPRECATED TODO remove 
+        Sustituted with .export function
+        
         Take the last 10 (default) rows from the history, and create a new python notebook with them. 
         Saves in usual location.
 
@@ -271,6 +275,9 @@ class CommandsManager(object):
 
         elif text == ".export_as_bar_chart":
             export_as_bar_chart(jsondata, query, USER_EXPORTS_DIR)
+
+        elif text == ".export_as_jupyter":
+            export_as_jupyter(jsondata, query, USER_EXPORTS_DIR)
 
 
     def show(self, text):

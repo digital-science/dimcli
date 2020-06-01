@@ -20,6 +20,7 @@ SYNTAX_DICT = {
         '.export_as_csv' : [],
         '.export_as_json' : [],
         '.export_as_bar_chart' : [],
+        '.export_as_jupyter' : [],
         '.record_notebook' : [],
         '.url' : [],
     },
