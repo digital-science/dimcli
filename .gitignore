@@ -108,3 +108,5 @@ ENV/
 
 /tools/apitest*
 /dimcli/tests/apitest*
+
+README_PRIVATE.md

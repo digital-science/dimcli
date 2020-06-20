@@ -122,13 +122,75 @@ class DfFactory(object):
         return affiliations
 
 
+
+
     def df_concepts(self, data, key):
         """from a list of publications or grants including concepts, return a DF with one line per concept
         Enrich the dataframe with scores and other metrics.
         """
 
         FIELD_NAME = "concepts"
-        ROUNDING = 3
+        FIELD_NAME_SCORES = "concepts_scores"
+        ROUNDING = 5
+
+        if not ('publications' in self.data_keys) and not ('grants' in self.data_keys): 
+            s = f"Dataframe can be created only with searches returning 'publications' or 'grants' . Available: {self.data_keys}"
+            raise Exception(s)
+
+        concepts = self.df_simple(data, key)
+
+        if (FIELD_NAME not in concepts.columns) and (FIELD_NAME_SCORES not in concepts.columns):
+            s = f"Dataframe requires raw concepts data, but no 'concepts' or 'concepts_scores' column was not found in: {concepts.columns.to_list()}"
+            raise Exception(s)             
+
+        if not 'id' in concepts.columns:
+            s = f"Dataframe requires an 'id' column for counting concepts, which was not found in: {concepts.columns.to_list()}"
+            raise Exception(s)   
+
+        if FIELD_NAME_SCORES in concepts.columns:
+            # use `concepts_scores` field preferably
+
+            concepts.dropna(subset=[FIELD_NAME_SCORES], inplace=True)  # remove rows if there is no concept
+            df = concepts.explode(FIELD_NAME_SCORES)
+            original_cols = [x for x in df.columns.to_list() if x != FIELD_NAME_SCORES]
+            df = df.drop(FIELD_NAME_SCORES, 1).assign(**pd.json_normalize(df[FIELD_NAME_SCORES]))  # unpack dict with new columns
+            df = df[df.relevance != 0]  # remove 0-relevance scores
+            df['relevance'] = df['relevance'].round(ROUNDING)
+            df.rename(columns={"relevance": "score"}, inplace=True) 
+            df['frequency'] = df.groupby('concept')['concept'].transform('count')
+            df['concepts_count'] = df.groupby("id")['concept'].transform('size')
+  
+        else: 
+            # with traditional 'concepts', scores are simulated
+
+            df = concepts.explode(FIELD_NAME)
+            original_cols = [x for x in df.columns.to_list() if x != FIELD_NAME]
+            df.dropna(subset=[FIELD_NAME], inplace=True) # remove rows if there is no concept
+            df.rename(columns={FIELD_NAME: "concept"}, inplace=True)
+            df['frequency'] = df.groupby('concept')['concept'].transform('count')
+            df['concepts_count'] = df.groupby("id")['concept'].transform('size')
+            ranks = df.groupby('id').cumcount()+1
+            # scores = normalized rank from 0 to 1, where 1 is the highest rank
+            df['score'] = ((df['concepts_count']+1) - ranks) / df['concepts_count']
+            df['score'] = df['score'].round(ROUNDING)
+
+        # finally
+        df['score_avg'] = df.groupby('concept')['score'].transform('mean').round(ROUNDING)
+        df.reset_index(drop=True, inplace=True)
+
+        out_cols = original_cols + ['concepts_count', 'concept', 'score', 'frequency', 'score_avg' ]
+        return df[out_cols]
+
+
+
+
+    def _df_concepts(self, data, key):
+        """from a list of publications or grants including concepts, return a DF with one line per concept
+        Enrich the dataframe with scores and other metrics.
+        """
+
+        FIELD_NAME = "concepts"
+        ROUNDING = 5
 
         if not ('publications' in self.data_keys) and not ('grants' in self.data_keys): 
             s = f"Dataframe can be created only with searches returning 'publications' or 'grants' . Available: {self.data_keys}"
