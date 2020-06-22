@@ -19,7 +19,7 @@ from ..shortcuts import *
 class TestOne(unittest.TestCase):
 
     """
-    Tests  
+    Tests - iterative queries and other related features 
     """
 
     click.secho("**TESTS**", fg="red")
@@ -31,7 +31,7 @@ class TestOne(unittest.TestCase):
         # ----
         d = Dsl()
         res = d.query_iterative("""search publications where journal.title="nature medicine" and year>2000 return publications""")
-        print("Query results: ")
+        click.secho("Query results: ", fg="magenta")
         print(" ==> len(res): ", len(res))
         print(" ==> res['stats']: ", res['stats'])
         print(" ==> len(res['publications']): ", len(res['publications']))
@@ -40,7 +40,7 @@ class TestOne(unittest.TestCase):
         # ----
         d = Dsl()
         res = d.query_iterative("""search publications where journal.title="nature medicine" and year>2015 return publications""", pause=5)
-        print("Query results: ")
+        click.secho("Query results: ", fg="magenta")
         print(" ==> len(res): ", len(res))
         print(" ==> res['stats']: ", res['stats'])
         print(" ==> len(res['publications']): ", len(res['publications']))
@@ -54,7 +54,7 @@ class TestOne(unittest.TestCase):
         return publications[basics+category_for+times_cited]
         """
         res = d.query_iterative(q, limit=1000, force=True)
-        print("Query results: ")
+        click.secho("Query results: ", fg="magenta")
         print(" ==> len(res): ", len(res))
         print(" ==> res['stats']: ", res['stats'])
         print(" ==> len(res['publications']): ", len(res['publications']))
@@ -67,16 +67,16 @@ class TestOne(unittest.TestCase):
         
         # ----
         res = dslquery("""search publications where journal.title="nature medicine" return publications limit 10""")
-        print("Query results for `dslquery`: ")
+        click.secho("Query results for `dslquery`: ", fg="magenta")
         print(" ==> res['stats']: ", res['stats'])
         print(" ==> len(res['publications']): ", len(res['publications']))
         # ----
         res = dslquery_json("""search publications where journal.title="nature medicine" return publications limit 10""")
-        print("Query results for `dslquery_json`: ")
+        click.secho("Query results for `dslquery_json`: ", fg="magenta")
         print(" ==> type(res): ", type(res))
         # ----
         res = dslqueryall("""search publications where year="1815" return publications""")
-        print("Query results for `dslqueryall`: ")
+        click.secho("Query results for `dslqueryall`: ", fg="magenta")
         print(" ==> type(res): ", type(res))
         # ----
         click.secho("Completed test succesfully", fg="green")
@@ -85,7 +85,7 @@ class TestOne(unittest.TestCase):
         click.secho("\nTEST 003: Non-search queries.", fg="green")
         # ----
         res= dslquery("""extract_grants(grant_number="185247", funder_name="Swiss National Science Foundation")""")
-        print("Query results: ")
+        click.secho("Query results: ", fg="magenta")
         print(" ==> res: ", res)
         print(" ==> res.json: ", res.json)
         # ----
@@ -126,16 +126,16 @@ class TestOne(unittest.TestCase):
         
         # ----
         res = dslquery("""search publications where journal.title="nature medicine" return publications limit 1000""")
-        print("Query results for standard query: ")
+        click.secho("Query results for standard query: ", fg="magenta")
         print(" ==> res['stats']: ", res['stats'])
         print(" ==> len(res['publications']): ", len(res['publications']))
-        print("Now chunking with default size: ")
+        click.secho("Now chunking with default size: ", fg="magenta")
         test = [len(x) for x in res.chunks()]
         print(" ==> [len(x) for x in res.chunks()]: ", str(test)) 
-        print("Now chunking with size 50: ")
+        click.secho("Now chunking with size 50: ", fg="magenta")
         test = [len(x) for x in res.chunks(50)]
         print(" ==> [len(x) for x in res.chunks()]: ", str(test)) 
-        print("Now chunking with wrong key (should fail): ")
+        click.secho("Now chunking with wrong key (should fail): ", fg="magenta")
         test = [len(x) for x in res.chunks(key="badkey")]
         # ----
 

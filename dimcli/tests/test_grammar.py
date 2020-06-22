@@ -34,17 +34,17 @@ class TestOne(unittest.TestCase):
         print("*ENTITIES*", g.entities())
         print("*CATEGORIES*", g.categories())
         for x in g.sources():
-            print("============", x, "============")
+            click.secho("============\n" + x + "\n============",  fg="magenta")
             print(g.url_for_source(x))
             for y in g.fields_for_source(x):
                 print("...", y, " => ", str(g.desc_for_source_field(x, y)), "**facet?**", str(g.entity_type_for_source_facet(x, y)), str(g.fields_for_entity_from_source_facet(x, y)))
 
         for x in g.entities():
-            print("============", x, "============")
+            click.secho("============\n" + x + "\n============",  fg="magenta")
             for y in g.fields_for_entity(x):
                 print("...",  y, " => ", str(g.desc_for_entity_field(x, y)))
         for x in g.categories():
-            print("============", x, "============")
+            click.secho("============\n" + x + "\n============",  fg="magenta")
             for y in g.categories(x):
                 print("...",  y)
 
@@ -52,34 +52,34 @@ class TestOne(unittest.TestCase):
     def test_002(self):
         click.secho("\nTEST 002: dimensions URL generation.", fg="green")
         # ----
-        print("""....Testing dimensions_url.... dimensions_url("01", "stff")""")
+        click.secho("""....Testing dimensions_url.... dimensions_url("01", "stff")""",  fg="magenta")
         try:
             print(dimensions_url("01", "stff"))
         except Exception as e:
             print("ERROR:",  e)
-        print("""....Testing dimensions_url.... dimensions_url("01", "publications")""")
+        click.secho("""....Testing dimensions_url.... dimensions_url("01", "publications")""",  fg="magenta")
         print(dimensions_url("01", "publications"))
-        print("""....Testing dimensions_url....   dimensions_url("pub.1122527319")""")
+        click.secho("""....Testing dimensions_url....   dimensions_url("pub.1122527319")""",  fg="magenta")
         print(dimensions_url("pub.1122527319"))
         # grants https://app.dimensions.ai/details/grant/grant.8587603
-        print("""....Testing dimensions_url....   dimensions_url("01", "grants")""")
+        click.secho("""....Testing dimensions_url....   dimensions_url("01", "grants")""",  fg="magenta")
         print(dimensions_url("01", "grants"))
-        print("""....Testing dimensions_url....   dimensions_url("grant.8587603")""")
+        click.secho("""....Testing dimensions_url....   dimensions_url("grant.8587603")""",  fg="magenta")
         print(dimensions_url("grant.8587603"))
         # patents https://app.dimensions.ai/details/patent/IN-293637-B
-        print("""....Testing dimensions_url....   dimensions_url("IN-293637-B", "patents")""")
+        click.secho("""....Testing dimensions_url....   dimensions_url("IN-293637-B", "patents")""",  fg="magenta")
         print(dimensions_url("IN-293637-B", "patents"))
-        print("""....Testing dimensions_url....   dimensions_url("IN-293637-B") [FAILS!]""")
+        click.secho("""....Testing dimensions_url....   dimensions_url("IN-293637-B") [FAILS!]""",  fg="magenta")
         print(dimensions_url("IN-293637-B"))
         # researchers https://app.dimensions.ai/discover/patent?and_facet_researcher=ur.01117537642.02
-        print("""....Testing dimensions_url....   dimensions_url("ur.01117537642.02")""")
+        click.secho("""....Testing dimensions_url....   dimensions_url("ur.01117537642.02")""",  fg="magenta")
         print(dimensions_url("ur.01117537642.02"))
-        print("""....Testing dimensions_url....   dimensions_url("ur.01117537642.02", "researchers")""")
+        click.secho("""....Testing dimensions_url....   dimensions_url("ur.01117537642.02", "researchers")""",  fg="magenta")
         print(dimensions_url("ur.01117537642.02", "researchers"))
         # organizations https://app.dimensions.ai/discover/patent?and_facet_research_org=grid.2515.3
-        print("""....Testing dimensions_url....   dimensions_url("grid.2515.3", "organizations")""")
+        click.secho("""....Testing dimensions_url....   dimensions_url("grid.2515.3", "organizations")""",  fg="magenta")
         print(dimensions_url("grid.2515.3", "organizations"))
-        print("""....Testing dimensions_url....   dimensions_url("grid.2515.3")""")
+        click.secho("""....Testing dimensions_url....   dimensions_url("grid.2515.3")""",  fg="magenta")
         print(dimensions_url("grid.2515.3"))
         # ----
         click.secho("Completed test succesfully", fg="green")
