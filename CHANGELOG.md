@@ -1,6 +1,15 @@
 # Changelog
 
 
+## v 0.7
+
+* `DslDataset.as_dataframe_concepts()` method: refactoring so to handle latest concept scores
+* `shortcuts.extract_concepts` method: wrapper for DSL function
+* `shortcuts.extract_classification` method: wrapper for DSL function
+* `shortcuts.extract_grants` method: wrapper for DSL function
+
+
+
 ## v 0.6.9
 
 * improved login feedback message

@@ -15,7 +15,7 @@ class DfFactory(object):
     """
 
     def __init__(self, good_data_keys=[]):
-        self.data_keys = good_data_keys
+        self.good_keys = good_data_keys
 
 
     def df_simple(self, data, key):
@@ -25,17 +25,27 @@ class DfFactory(object):
         """
 
         output = pd.DataFrame()
-        
-        if key and (key in self.data_keys):
-            output = json_normalize(data[key])
-        elif key and (key not in self.data_keys):
-            print(f"[Warning] Dataframe cannot be created: invalid key. Should be one of {self.data_keys}")
-        elif not key and self.data_keys:
-            if len(self.data_keys) > 1:
-                print(f"[Warning] Dataframe created from first available key, but more than one JSON key found: {self.data_keys}")
-            output = json_normalize(data[self.data_keys[0]])
+        valid_key = False
+
+        if key and (key in self.good_keys):
+            valid_key = key
+        elif key and (key not in self.good_keys):
+            print(f"[Warning] Dataframe cannot be created: invalid key. Should be one of {self.good_keys}")
+        elif not key and self.good_keys:
+            if len(self.good_keys) > 1:
+                print(f"[Warning] Dataframe created from first available key, but more than one JSON key found: {self.good_keys}")
+            valid_key = self.good_keys[0]
         else:
             pass 
+
+        if valid_key:
+            if data[valid_key] and type(data[valid_key]) == list:
+                if type(data[valid_key][0]) == dict:
+                    output = json_normalize(data[valid_key])
+                else: # simple list of strings or numbers  
+                    output = pd.DataFrame.from_dict(data[valid_key]) 
+            else: # no list, then make one and try to return everything
+                output = pd.DataFrame.from_dict([data])
 
         return output
 
@@ -73,7 +83,7 @@ class DfFactory(object):
         """
         output = pd.DataFrame()
 
-        if 'publications' in self.data_keys:
+        if 'publications' in self.good_keys:
 
             if exists_key_in_dicts_list(data['publications'], "author_affiliations"):
                 FIELD = "author_affiliations"
@@ -99,7 +109,7 @@ class DfFactory(object):
                 output = json_normalize(data['publications'], record_path=[FIELD], meta=['id'], errors='ignore')
                 output.rename(columns={"id": "pub_id"}, inplace=True)
         else:
-            print(f"[Warning] Dataframe cannot be created as 'publications' were not found in data. Available: {self.data_keys}")
+            print(f"[Warning] Dataframe cannot be created as 'publications' were not found in data. Available: {self.good_keys}")
         return output
 
 
@@ -133,8 +143,8 @@ class DfFactory(object):
         FIELD_NAME_SCORES = "concepts_scores"
         ROUNDING = 5
 
-        if not ('publications' in self.data_keys) and not ('grants' in self.data_keys): 
-            s = f"Dataframe can be created only with searches returning 'publications' or 'grants' . Available: {self.data_keys}"
+        if not ('publications' in self.good_keys) and not ('grants' in self.good_keys): 
+            s = f"Dataframe can be created only with searches returning 'publications' or 'grants' . Available: {self.good_keys}"
             raise Exception(s)
 
         concepts = self.df_simple(data, key)
@@ -193,8 +203,8 @@ class DfFactory(object):
         FIELD_NAME = "concepts"
         ROUNDING = 5
 
-        if not ('publications' in self.data_keys) and not ('grants' in self.data_keys): 
-            s = f"Dataframe can be created only with searches returning 'publications' or 'grants' . Available: {self.data_keys}"
+        if not ('publications' in self.good_keys) and not ('grants' in self.good_keys): 
+            s = f"Dataframe can be created only with searches returning 'publications' or 'grants' . Available: {self.good_keys}"
             raise Exception(s)
 
         concepts = self.df_simple(data, key)
@@ -232,11 +242,11 @@ class DfFactory(object):
         output = pd.DataFrame()
         FIELD = "funders"
 
-        if 'grants' in self.data_keys:    
+        if 'grants' in self.good_keys:    
             normalize_key(FIELD, data['grants'], [])   
             output = json_normalize(data['grants'], record_path=[FIELD], meta=['id', 'title', 'start_date', 'end_date'], meta_prefix="grant_", errors='ignore')
         else:
-            print(f"[Warning] Dataframe cannot be created as 'grants' were not found in data. Available: {self.data_keys}")
+            print(f"[Warning] Dataframe cannot be created as 'grants' were not found in data. Available: {self.good_keys}")
 
         return output
 
@@ -246,11 +256,11 @@ class DfFactory(object):
         output = pd.DataFrame()
         FIELD = "investigator_details"
 
-        if 'grants' in self.data_keys:    
+        if 'grants' in self.good_keys:    
             normalize_key(FIELD, data['grants'], [])
             output = json_normalize(data['grants'], record_path=[FIELD], meta=['id', 'title', 'start_date', 'end_date'], meta_prefix="grant_", errors='ignore')
         else:
-            print(f"[Warning] Dataframe cannot be created as 'grants' were not found in data. Available: {self.data_keys}")
+            print(f"[Warning] Dataframe cannot be created as 'grants' were not found in data. Available: {self.good_keys}")
 
         return output
 
