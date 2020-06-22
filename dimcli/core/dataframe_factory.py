@@ -150,8 +150,9 @@ class DfFactory(object):
         if FIELD_NAME_SCORES in concepts.columns:
             # use `concepts_scores` field preferably
 
-            concepts.dropna(subset=[FIELD_NAME_SCORES], inplace=True)  # remove rows if there is no concept
             df = concepts.explode(FIELD_NAME_SCORES)
+            df.dropna(subset=[FIELD_NAME_SCORES], inplace=True)  # remove rows if there is no concept
+            df.reset_index(inplace=True, drop=True)
             original_cols = [x for x in df.columns.to_list() if x != FIELD_NAME_SCORES]
             df = df.drop(FIELD_NAME_SCORES, 1).assign(**pd.json_normalize(df[FIELD_NAME_SCORES]))  # unpack dict with new columns
             df = df[df.relevance != 0]  # remove 0-relevance scores

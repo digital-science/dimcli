@@ -72,7 +72,7 @@ def _print_login_success(CONNECTION, username, password, key):
         _method = "manual login"
     else:
         _method = "dsl.ini file"
-    click.secho(f"Connected to endpoint: {CLIENT._url} - DSL version: {_info}", dim=True)
+    click.secho(f"Connected to: {CLIENT._url} - DSL v{_info}", dim=True)
     click.secho(f"Method: {_method}", dim=True)
 
 
