@@ -1,6 +1,11 @@
 # Changelog
 
 
+## v 0.7.2
+
+* DSL grammar updated for version 1.26 (2020-07 release) 
+
+
 ## v 0.7.1
 
 * refactored functions wrappers location `dimcli.core.functions.*` but can be imported using `dimcli.shortcurts` 

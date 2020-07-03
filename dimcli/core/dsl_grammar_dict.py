@@ -32,6 +32,7 @@ SYNTAX_DICT = {
         'extract_grants': [],
         'extract_concepts': [],
         'extract_affiliations': [],
+        'identify': [],
     },
     'dimensions_urls' : {
         'publications' : 'https://app.dimensions.ai/details/publication/',
@@ -62,6 +63,7 @@ SYNTAX_DICT = {
         'limit',
         'skip',
         'aggregate',
+        'unnest',
         '=',  # filter operators https://docs.dimensions.ai/dsl/language.html#simple-filters
         '!=',
         '>',
@@ -87,7 +89,8 @@ SYNTAX_DICT = {
     'lang_after_search' : ['in', 'where', 'for', 'return'],
     'lang_after_filter' : ['and', 'or', 'not', 'return', ],
     'lang_after_for_text' : ['and', 'or', 'not', 'return', 'where' ],
-    'lang_after_return' : ['sort by', 'aggregate', 'limit',],
+    'lang_after_return' : ['sort by', 'aggregate', 'limit'],
+    'lang_after_return_functions' : ['citations_per_year', 'funding_per_year'],  # unused in rules yet
     'lang_after_sort_by' : ['asc', 'desc', 'limit', ],
     'lang_after_limit' : ['skip' ],
     'lang_filter_operators' : ['=', '!=', '>', '<', '>=', '<=', '~', 'is empty', 'is not empty'],
