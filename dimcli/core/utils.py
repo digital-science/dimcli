@@ -181,6 +181,12 @@ def line_search_subject(line):
     else:
         return ""
 
+
+def line_search_unnest(line):
+    "verify if query contains an unnest statement"
+    if "unnest" in line:
+        return True
+
 def line_search_return(line):
     """
     get the source/facet in the return statement
@@ -555,12 +561,16 @@ def print_json_stats(res, query=""):
     """
     # what is searched for
     source, tot = line_search_subject(query), None
+    unnest_query = line_search_unnest(query)
     if source:
         if res['stats']:
             tot = res['stats']["total_count"]
         for k in res.good_data_keys():
             if tot and source == k:
-                print(f"Returned {source.capitalize()}: {len(res[source])} (total = {tot})")
+                if not unnest_query:
+                    print(f"Returned {source.capitalize()}: {len(res[source])} (total = {tot})")
+                else:
+                    print(f"Returned records after unnesting: {len(res[source])} (total {source}= {tot})")
             else:
                 print(f"Returned {k.capitalize()}: {len(res[k])}")
 

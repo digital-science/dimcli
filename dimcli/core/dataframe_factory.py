@@ -44,6 +44,8 @@ class DfFactory(object):
                     output = json_normalize(data[valid_key])
                 else: # return empty list, or list of strings/numbers  
                     output = pd.DataFrame.from_dict(data[valid_key]) 
+            elif type(data[valid_key]) == dict: # top level dict, use keys as index
+                output = pd.DataFrame.from_dict(data[valid_key], orient="index", columns=[valid_key]) 
             else: # no list, then make one and try to return everything
                 output = pd.DataFrame.from_dict([data])
 
