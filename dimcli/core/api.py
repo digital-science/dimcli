@@ -1,3 +1,10 @@
+"""
+api.py
+====================================
+The core module of DimCli
+"""
+
+
 import configparser
 import requests
 import os.path
@@ -19,32 +26,42 @@ from .dataframe_factory import DfFactory
 
 
 
+
 class Dsl():
-    """
-    Object for abstracting common interaction steps with the Dimensions API. 
-    Most often you just want to instantiate and query() - yeah!
 
-    >>> import dimcli
-    # if you have already set up the credentials file (see above), no need to pass log in details
-    >>> dimcli.login()
-    # otherwise you can authenticate by passing your login details as arguments
-    >>> dimcli.login(user="mary.poppins", password="chimneysweeper")
-    # instantiate the query object
-    >>> dsl = dimcli.Dsl()
-    # queries always return a DslDataset object (subclassing IPython.display.JSON)
-    >>> dsl.query("search grants for \"malaria\" return researchers")
-    >>> <dimcli.dimensions.DslDataset object>
-    # use the .json method to get the JSON
-    >>> dsl.query("search grants for \"malaria\" return researchers").json
-    >>> {'researchers': [{'id': 'ur.01332073522.49',
-            'count': 75,
-            'last_name': 'White',
-            'first_name': 'Nicholas J'},
-        "... JSON data continues ... "
+    """The Dsl object is the main interface for interacting with the Dimensions API.
+ 
+    Example
+    -------
+    After logging in, the usual workflow is to instantiate this object and use it to query. 
+
+        >>> import dimcli
+        >>> dimcli.login()
+        >>> dsl = dimcli.Dsl()
+        >>> dsl.query("search grants for \"malaria\" return researchers")
+        >>> <dimcli.dimensions.DslDataset object>
+        # queries always return a DslDataset object (subclassing IPython.display.JSON)
+        # use the .json method to get the JSON
+        >>> _.json
+        >>> {'researchers': [{'id': 'ur.01332073522.49',
+                'count': 75,
+                'last_name': 'White',
+                'first_name': 'Nicholas J'},
+            "... JSON data continues ... "
+
 
     """
+
     def __init__(self, show_results=False, verbose=True):
-        # print(os.getcwd())
+        """Initialises a Dsl object.
+
+        Parameters
+        ----------
+        show_results : bool
+            Set a global setting that determined whether query JSON results get printed out. Note that in Jupyter environments this is not needed, because the iPython rich widgets is used by default.
+        verbose : bool
+            Verbose mode.
+        """
         self._show_results = show_results
         self._verbose = verbose
         self._url = None
@@ -67,9 +84,25 @@ class Dsl():
         print("Warning: you are not logged in. Please use `dimcli.login(username, password)` before querying.")
 
     def query(self, q, show_results=None, retry=0, verbose=None):
-        """
-        Execute a DSL query.
+        """Execute a single DSL query.
+
         By default it doesn't show results, but it uses the iPython rich widgets for it, optimized for Jupyter Notebooks.
+
+        Parameters
+        ----------
+        show_results : bool
+            Show JSON results.
+        retry : int
+            Number of times to retry the query if it fails.
+        verbose : bool
+            Verbose mode.
+
+
+        Returns
+        -------
+        DslDataset
+            A Dimcli wrapper object containing JSON data. 
+
         """
         if not self.is_logged_in:
             self._print_please_login()
@@ -127,19 +160,31 @@ class Dsl():
 
 
     def query_iterative(self, q, show_results=None, limit=1000, skip=0, pause=1.5, force=False, verbose=None, tot_count_prev_query=0):       
-        """Runs a DSL query iteratively, by automatically turning it into a loop with limit/skip operators until all the results available have been extracted.
+        """Runs a DSL query and then keep querying until all available records are extracted. 
         
-        Args:
-            q (str): The DSL query.
-            show_results (bool): Determines whether the final results are rendered via the iPython display widget (for Jupyter notebooks).
-            limit (int): How many records to extract per iteration. Defaults to 1000.
-            skip (int): Offset for first iteration. Defaults to 0. After the first iteration, this value is calculated dynamically.
-            pause (float): How much time to pause after each iterarion, expressed in seconds. Defaults to 1.5. Note: each iteration gets timed, so the pause time is used only when the query time is more than 2s. 
-            verbose (bool): Verbose mode.
+        Iterative DSL queries work by automatically paginating through all records available for a result set. The original query gets turned into a loop that uses the `limit` / `skip` operators until all the results available have been extracted. 
+        
+        Parameters
+        ----------
+        q: str 
+            The DSL query. Important: pagination keywords eg `limit` / `skip` should be omitted.
+        show_results : bool
+            Determines whether the final results are rendered via the iPython display widget (for Jupyter notebooks).
+        limit : int
+            How many records to extract per iteration. Defaults to 1000.
+        skip : int
+            Offset for first iteration. Defaults to 0. After the first iteration, this value is calculated dynamically.
+        pause : float
+            How much time to pause after each iterarion, expressed in seconds. Defaults to 1.5. Note: each iteration gets timed, so the pause time is used only when the query time is more than 2s. 
+        verbose : bool
+            Verbose mode.
 
-        
-        Returns:
-            DslDataset -- query results collated within a single object 
+
+        Returns
+        -------
+        DslDataset
+            A Dimcli wrapper object containing JSON data. 
+
         """
         if not self.is_logged_in:
             self._print_please_login()
@@ -241,18 +286,20 @@ class Dsl():
         
 
 class DslDataset(IPython.display.JSON):
-    """
-    Wrapper for JSON results from DSL
+    """Wrapper for JSON results from DSL.
 
-    >>> res = dsl.query("search publications return publications")
-    >>> res.data # => shows the underlying JSON data
-    >>> res.json # => same 
+    Example
+    ----------
 
-    # Magic methods: 
+        >>> res = dsl.query("search publications return publications")
+        >>> res.data # => shows the underlying JSON data
+        >>> res.json # => same 
 
-    >>> res['publications'] # => the dict section
-    >>> res['xxx'] # => false, not found
-    >>> res['stats'] # => the _stats dict
+        # Shortcuts methods: 
+
+        >>> res['publications'] # => the dict section
+        >>> res['xxx'] # => false, not found
+        >>> res['stats'] # => the _stats dict
 
     """
 
