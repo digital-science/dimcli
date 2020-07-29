@@ -1,43 +1,31 @@
 
+- [Dimcli](#dimcli)
+    - [In a nutshell](#in-a-nutshell)
+  - [Installation](#installation)
+      - [Anaconda users](#anaconda-users)
+  - [Authentication](#authentication)
+    - [Creating a credentials file using the helper script (recommended)](#creating-a-credentials-file-using-the-helper-script-recommended)
+    - [Creating a credentials file manually](#creating-a-credentials-file-manually)
+      - [Important](#important)
+    - [Overriding credentials at runtime (e.g. with Jupyter Notebooks)](#overriding-credentials-at-runtime-eg-with-jupyter-notebooks)
+    - [Using multiple API endpoints (for advanced users)](#using-multiple-api-endpoints-for-advanced-users)
+  - [Dimcli as a Command Line Interface](#dimcli-as-a-command-line-interface)
+  - [Dimcli with Jupyter Notebooks](#dimcli-with-jupyter-notebooks)
+  - [Dimcli as a Python module](#dimcli-as-a-python-module)
+  - [Comments, bug reports](#comments-bug-reports)
+
+
 # Dimcli
 
 ### In a nutshell
 
-Dimcli is a Python client for accessing the [Dimensions Analytics API](https://www.dimensions.ai/). It makes it easier to authenticate against the API, send queries to it and process the JSON data being returned. E.g.:
+Dimcli is a Python client for accessing the [Dimensions Analytics API](https://www.dimensions.ai/). It makes it easier to authenticate against the API, send queries to it and process the JSON data being returned.  
 
-
-```
->>> import dimcli
-
->>> dimcli.login(user="mary.poppins", password="chimneysweeper")
-
->>> dsl = dimcli.Dsl()
-
->>> res = dsl.query("""search grants for "malaria" return researchers""")
-
->>> print(res.json)
-{'researchers': [{'id': 'ur.01332073522.49',
-   'count': 75,
-   'last_name': 'White',
-   'first_name': 'Nicholas J'},
-  {'id': 'ur.01343654360.43',
-   'count': 59,
-   'last_name': 'Marsh',
-   'first_name': 'Kevin'},
-  .............
-  ],
- '_stats': {'total_count': 8735}}
-
-
-```
-
-Dimcli includes also a **command line interface** (CLI) that aims at simplifying the process of learning the grammar of the Dimensions Search Language ([DSL](https://app.dimensions.ai/dsl)). Calling `dimcli` from the terminal opens an interactive query console with syntax autocomplete, persistent history across sessions, pretty-printing and preview of JSON results, export to HTML and CSV, and more.  
+Dimcli includes also a command line interface (CLI) that aims at simplifying the process of learning the grammar of the Dimensions Search Language ([DSL](https://app.dimensions.ai/dsl)). Calling `dimcli` from the terminal opens an interactive query console with syntax autocomplete, persistent history across sessions, pretty-printing and preview of JSON results, export to HTML and CSV, and more.  
 
 ![dimcli_animation](https://raw.githubusercontent.com/digital-science/dimcli/master/static/dimcli_animated.gif)
 
-Current version: see [pypi homepage](https://pypi.org/project/dimcli/). 
-Source code hosted on [github](https://github.com/digital-science/dimcli). 
-See also an older animated video on [asciicinema](https://asciinema.org/a/jSzISIsaXN2VbpOApSSOSwGcj).
+Current version: see [pypi homepage](https://pypi.org/project/dimcli/). Source code hosted on [github](https://github.com/digital-science/dimcli). An older animated video on [asciicinema](https://asciinema.org/a/jSzISIsaXN2VbpOApSSOSwGcj).
 
 
 
@@ -66,14 +54,14 @@ There's been [reports](https://github.com/digital-science/dimcli/issues/21) of D
 ## Authentication 
 
 
-After installation it's **strongly advised to create a configuration file** containing your Dimensions account credentials. This can be done only once and it'll save you from having to type in credentials each time you use Dimcli. E.g. 
+After installation it's **strongly advised to create a configuration file** with your Dimensions account credentials. This can be done only once, and it'll save you from having to type in credentials each time you use Dimcli. E.g. 
 
 ```
 >>> import dimcli
 >>> dimcli.login() # config file is picked up automatically 
 ```
 
-If you can't create a configuration file you can explicitly provide log in credentials as follows (see also the [Dimcli as a Python module](#dimcli-as-a-python-module) section for more options).
+If you can't create a configuration file you can explicitly provide log in credentials as follows (see also the [Python section](#dimcli-as-a-python-module) for more options).
 
 ```
 >>> import dimcli
@@ -85,7 +73,7 @@ If you can't create a configuration file you can explicitly provide log in crede
 
 ```
 
-Or if you are using **key-based** authentication: 
+Or if you are using the new **key-based** authentication: 
 
 ```
 >>> import dimcli
@@ -132,8 +120,8 @@ In most situations you can simply copy/paste the text above and update its conte
 
 #### Important
 
-* you must always have an entry in the credentials file called `[instance.live]`
-* depending on whether you authenticate using an API key or username & password, fill in the relevant details and just leave the other stuff blank. Eg this is a valid config snippet if you authenticate using a key:
+* you must always have an entry in the configuration called `[instance.live]`
+* you'll have either a key or a username/password, so leave the other stuff blank. Eg this is a valid config snippet if you authenticate using a key:
 
 ```
 [instance.live]
@@ -148,9 +136,9 @@ key=yourkeyhere
 
 ### Overriding credentials at runtime (e.g. with Jupyter Notebooks)
 
-If you are using Dimcli within a Jupyter notebook and you do not want (or cannot) set up credentials globally, you can simply put a `dsl.ini` file in the current working directory (= where the notebook is located).  
+If you are using Dimcli within a Jupyter notebook and you do not want (or can) set up credentials at the user level, you can simply put a `dsl.ini` file in the current working directory (= where the notebook is located).  
 
-The file contents should look just like above, that is:
+The file should look like this:
 
 ```
 [instance.live]
@@ -160,7 +148,7 @@ password=yourpasswordhere
 key=yourkeyhere
 ```
 
-**Note** the same-directory credentials will take precedence over any system-level credentials previously defined.
+> Note: the same-directory credentials will take precedence over any system-level credentials previously defined.
 
 
 ### Using multiple API endpoints (for advanced users)
@@ -183,6 +171,30 @@ Then when running the CLI you can select which instance to use just by passing i
 $ dimcli private
 ```
 
+
+
+## Dimcli as a Command Line Interface
+
+Dimcli includes a handy Command Line Interface (CLI) which lets you query the Dimensions API interactively. The CLI has several features but, most importantly, it allows to use the TAB key to autocomplete your queries (based on the latest API syntax and fields), which makes it an ideal tool for both newbies and expert users.  
+
+Run the command line application by typing
+
+```
+$ dimcli
+```
+
+That'll launch the Dimcli console, where you can hit `help` in case you need more support :-)
+
+![screenshot1](static/screenshot1.jpg)
+
+
+## Dimcli with Jupyter Notebooks
+
+Dimcli includes a number of features that simplify working with the Dimensions API within a Jupyter notebook. 
+
+For example, it contains a couple of [magic commands](https://github.com/digital-science/dimcli/blob/master/dimcli/jupyter/magics.py) that make it super easy to hit the API from a notebook, or to explore the documentation. 
+
+For more information and examples see the notebooks available in the official [Dimensions API Lab](https://github.com/digital-science/dimensions-api-lab) repository.
 
 
 ## Dimcli as a Python module
@@ -257,45 +269,6 @@ Once logged in, you can get a query object and try some queries:
 
 ```
 
-The [Dimensions API Lab](https://api-lab.dimensions.ai/) includes several notebooks demonstrating the practical use of Dimcli. In particular, these two are a good place to start: 
-
-* [The Dimcli Python library: Installation and Querying](https://api-lab.dimensions.ai/cookbooks/1-getting-started/1-Using-the-Dimcli-library-to-query-the-API.html)
-* [The Dimcli Python library: Working with Pandas Dataframes](https://api-lab.dimensions.ai/cookbooks/1-getting-started/3-Working-with-dataframes.html)
-
-
-
-## Dimcli as a Command Line Interface
-
-Dimcli includes a handy Command Line Interface (CLI) which lets you query the Dimensions API interactively. The CLI has several features but, most importantly, it allows to use the TAB key to autocomplete your queries (based on the latest API syntax and fields), which makes it an ideal tool for both newbies and expert users.  
-
-Run the command line application by typing
-
-```
-$ dimcli
-```
-
-That'll launch the Dimcli console, where you can hit `help` in case you need more support :-)
-
-![dimcli_animation](https://raw.githubusercontent.com/digital-science/dimcli/master/static/dimcli_animated.gif)
-
-
-
-## Dimcli with Jupyter Notebooks
-
-Dimcli includes a number of features that simplify working with the Dimensions API within Jupyter notebooks. 
-
-For example, it contains a few [magic commands](https://github.com/digital-science/dimcli/blob/master/dimcli/jupyter/magics.py) that make it super-easy to hit the API from a notebook cell:
-
-
-* `%dsl` can be used to run an API query
-* `%dslloop` can be used to run an API query, using pagination (= iterations up to 50k records)
-* `%dsldf` can be used to run an API query and transform the JSON data to a dataframe
-* `%dslloopdf` can be used to run a paginated API query and transform the JSON data to a dataframe
-* `%dsldocs` can be used to programmatically extract API schema information
-
-For more information and examples see the [The Dimcli Python library: Magic Commands](https://api-lab.dimensions.ai/cookbooks/1-getting-started/4-Dimcli-magic-commands.html) notebook available in the [Dimensions API Lab](https://api-lab.dimensions.ai/).
-
-
 ## Comments, bug reports
 
-Dimcli lives on [Github](https://github.com/digital-science/dimcli/). You can file [issues](https://github.com/digital-science/dimcli/issues/new)) or pull requests there. Suggestions, pull requests and improvements welcome!
+Dimcli lives on [Github](https://github.com/digital-science/dimcli/). You can file [issues]([issues](https://github.com/digital-science/dimcli/issues/new)) or pull requests there. Suggestions, pull requests and improvements welcome!

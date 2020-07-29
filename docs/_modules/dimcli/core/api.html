@@ -163,16 +163,16 @@
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">click</span>
 <span class="kn">import</span> <span class="nn">IPython.display</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">islice</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">islice</span>
 <span class="kn">import</span> <span class="nn">urllib.parse</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="kn">from</span> <span class="nn">.auth</span> <span class="k">import</span> <span class="n">do_global_login</span><span class="p">,</span> <span class="n">get_connection</span><span class="p">,</span> <span class="n">refresh_login</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">.walkup</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">.dsl_grammar</span> <span class="k">import</span> <span class="n">G</span>
-<span class="kn">from</span> <span class="nn">.dataframe_factory</span> <span class="k">import</span> <span class="n">DfFactory</span>
+<span class="kn">from</span> <span class="nn">.auth</span> <span class="kn">import</span> <span class="n">do_global_login</span><span class="p">,</span> <span class="n">get_connection</span><span class="p">,</span> <span class="n">refresh_login</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.walkup</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.dsl_grammar</span> <span class="kn">import</span> <span class="n">G</span>
+<span class="kn">from</span> <span class="nn">.dataframe_factory</span> <span class="kn">import</span> <span class="n">DfFactory</span>
 
 
 
@@ -202,7 +202,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Dsl.__init__"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.Dsl.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show_results</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="Dsl.__init__"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.Dsl.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show_results</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialises a Dsl object.</span>
 
 <span class="sd">        Parameters</span>
@@ -363,7 +363,7 @@
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">tot_count_prev_query</span><span class="p">:</span>
             <span class="c1"># first iteration</span>
-            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;{limit+skip} / ...&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">limit</span><span class="o">+</span><span class="n">skip</span><span class="si">}</span><span class="s2"> / ...&quot;</span><span class="p">)</span>
             
         <span class="n">output</span><span class="p">,</span> <span class="n">flag_force</span> <span class="o">=</span> <span class="p">[],</span> <span class="kc">False</span>
         <span class="n">q2</span> <span class="o">=</span> <span class="n">q</span> <span class="o">+</span> <span class="s2">&quot; limit </span><span class="si">%d</span><span class="s2"> skip </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">limit</span><span class="p">,</span> <span class="n">skip</span><span class="p">)</span>
@@ -377,10 +377,10 @@
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">pause</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;errors&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">force</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&gt;&gt;&gt;[Dimcli tip] An error occurred with the batch &#39;</span><span class="si">{skip}</span><span class="s2">-{limit+skip}&#39;. Consider using the &#39;limit&#39; argument to retrieve fewer records per iteration, or use &#39;force=True&#39; to ignore errors and continue the extraction.&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&gt;&gt;&gt;[Dimcli tip] An error occurred with the batch &#39;</span><span class="si">{</span><span class="n">skip</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">limit</span><span class="o">+</span><span class="n">skip</span><span class="si">}</span><span class="s2">&#39;. Consider using the &#39;limit&#39; argument to retrieve fewer records per iteration, or use &#39;force=True&#39; to ignore errors and continue the extraction.&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">res</span>
         <span class="k">elif</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;errors&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">force</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&gt;&gt;&gt;[Dimcli log] An error occurred with the batch &#39;</span><span class="si">{skip}</span><span class="s2">-{limit+skip}&#39;. Skipping this batch and continuing iteration.. &quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&gt;&gt;&gt;[Dimcli log] An error occurred with the batch &#39;</span><span class="si">{</span><span class="n">skip</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">limit</span><span class="o">+</span><span class="n">skip</span><span class="si">}</span><span class="s2">&#39;. Skipping this batch and continuing iteration.. &quot;</span><span class="p">)</span>
             <span class="n">flag_force</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="c1"># RECURSION </span>
@@ -394,7 +394,7 @@
         <span class="k">if</span> <span class="n">tot</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">new_skip</span> <span class="o">&gt;</span> <span class="n">tot</span><span class="p">:</span>
             <span class="n">new_skip</span> <span class="o">=</span> <span class="n">tot</span>
         <span class="k">if</span> <span class="n">verbose</span> <span class="ow">and</span> <span class="n">tot</span><span class="p">:</span>  <span class="c1"># if not first iteration</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{new_skip}</span><span class="s2"> / </span><span class="si">{tot}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">new_skip</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="n">tot</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">flag_force</span><span class="p">:</span>
             <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_iterative</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">show_results</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">new_skip</span><span class="p">,</span> <span class="n">pause</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">tot_count_prev_query</span><span class="p">)</span>                    
@@ -422,14 +422,14 @@
             <span class="n">result</span> <span class="o">=</span> <span class="n">DslDataset</span><span class="p">(</span><span class="n">response_simulation</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">show_results</span> <span class="ow">or</span> <span class="p">(</span><span class="n">show_results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_show_results</span><span class="p">):</span>
                 <span class="n">IPython</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;===</span><span class="se">\n</span><span class="s2">Records extracted: {len(output)}&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;===</span><span class="se">\n</span><span class="s2">Records extracted: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">output</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">result</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">output</span></div>
 
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;&lt;dimcli.Dsl #{id(self)}. API endpoint: </span><span class="si">{self._url}</span><span class="s2">&gt;&quot;</span></div>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;dimcli.Dsl #</span><span class="si">{</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2">. API endpoint: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_url</span><span class="si">}</span><span class="s2">&gt;&quot;</span></div>
 
 
 
@@ -489,7 +489,7 @@
 
 
 
-<div class="viewcode-block" id="DslDataset.__init__"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.DslDataset.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="DslDataset.__init__"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.DslDataset.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="n">IPython</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">JSON</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">json</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">errors</span> <span class="o">=</span> <span class="kc">None</span>
@@ -501,7 +501,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">df_factory</span> <span class="o">=</span> <span class="n">DfFactory</span><span class="p">(</span><span class="n">good_data_keys</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">good_data_keys</span><span class="p">())</span></div>
 
-    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="s2">&quot;Trick to return any dict key as a property&quot;</span>
         <span class="c1"># print(key, &quot;==========&quot;)</span>
         <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;stats&quot;</span><span class="p">:</span>
@@ -511,7 +511,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span> <span class="c1"># empty list so to support iteration tests / previously: False</span>
 
-    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="s2">&quot;Return length of first object in JSON (skipping &#39;_stats&#39;&quot;</span>
         <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">good_data_keys</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
@@ -565,12 +565,12 @@
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">good_data_keys</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Please specify a key from {self.good_data_keys()}&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Please specify a key from </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">good_data_keys</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="k">return</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">good_data_keys</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">elif</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">good_data_keys</span><span class="p">():</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Invalid key: should be one of {self.good_data_keys()}&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid key: should be one of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">good_data_keys</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">return</span> 
 
         <span class="n">it</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
@@ -678,7 +678,7 @@
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;errors&quot;</span><span class="p">):</span>
             <span class="k">return</span> <span class="s2">&quot;&lt;dimcli.DslDataset object #</span><span class="si">%s</span><span class="s2">. Errors: </span><span class="si">%d</span><span class="s2">&gt;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;errors&#39;</span><span class="p">]))</span>
         <span class="k">else</span><span class="p">:</span>
@@ -686,7 +686,7 @@
                 <span class="k">return</span> <span class="s2">&quot;&lt;dimcli.DslDataset object #</span><span class="si">%s</span><span class="s2">. Records: </span><span class="si">%d</span><span class="s2">/</span><span class="si">%d</span><span class="s2">&gt;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)),</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_batch</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">count_total</span><span class="p">)</span>
             <span class="k">except</span><span class="p">:</span>
                 <span class="c1"># non-search queries</span>
-                <span class="k">return</span> <span class="s2">&quot;&lt;dimcli.DslDataset object #</span><span class="si">%s</span><span class="s2">. Dict keys: </span><span class="si">%s</span><span class="s2">&gt;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)),</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">f</span><span class="s2">&quot;&#39;</span><span class="si">{x}</span><span class="s2">&#39;&quot;</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">]))</span></div>
+                <span class="k">return</span> <span class="s2">&quot;&lt;dimcli.DslDataset object #</span><span class="si">%s</span><span class="s2">. Dict keys: </span><span class="si">%s</span><span class="s2">&gt;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)),</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">&#39;&quot;</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">]))</span></div>
 
 
 

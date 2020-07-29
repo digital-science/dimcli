@@ -100,9 +100,9 @@
 <li class="toctree-l3"><a class="reference internal" href="#using-multiple-api-endpoints-for-advanced-users">Using multiple API endpoints (for advanced users)</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#dimcli-as-a-python-module">Dimcli as a Python module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dimcli-as-a-command-line-interface">Dimcli as a Command Line Interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dimcli-with-jupyter-notebooks">Dimcli with Jupyter Notebooks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#dimcli-as-a-python-module">Dimcli as a Python module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#comments-bug-reports">Comments, bug reports</a></li>
 </ul>
 </li>
@@ -176,10 +176,35 @@
 <h1>Dimcli<a class="headerlink" href="#dimcli" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="in-a-nutshell">
 <h2>In a nutshell<a class="headerlink" href="#in-a-nutshell" title="Permalink to this headline">¶</a></h2>
-<p>Dimcli is a Python client for accessing the <a class="reference external" href="https://www.dimensions.ai/">Dimensions Analytics API</a>. It makes it easier to authenticate against the API, send queries to it and process the JSON data being returned.</p>
-<p>Dimcli includes also a command line interface (CLI) that aims at simplifying the process of learning the grammar of the Dimensions Search Language (<a class="reference external" href="https://app.dimensions.ai/dsl">DSL</a>). Calling <code class="docutils literal notranslate"><span class="pre">dimcli</span></code> from the terminal opens an interactive query console with syntax autocomplete, persistent history across sessions, pretty-printing and preview of JSON results, export to HTML and CSV, and more.</p>
+<p>Dimcli is a Python client for accessing the <a class="reference external" href="https://www.dimensions.ai/">Dimensions Analytics API</a>. It makes it easier to authenticate against the API, send queries to it and process the JSON data being returned. E.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">dimcli</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="s2">&quot;mary.poppins&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;chimneysweeper&quot;</span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dsl</span> <span class="o">=</span> <span class="n">dimcli</span><span class="o">.</span><span class="n">Dsl</span><span class="p">()</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">dsl</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;search grants for &quot;malaria&quot; return researchers&quot;&quot;&quot;</span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">json</span><span class="p">)</span>
+<span class="go">{&#39;researchers&#39;: [{&#39;id&#39;: &#39;ur.01332073522.49&#39;,</span>
+<span class="go">   &#39;count&#39;: 75,</span>
+<span class="go">   &#39;last_name&#39;: &#39;White&#39;,</span>
+<span class="go">   &#39;first_name&#39;: &#39;Nicholas J&#39;},</span>
+<span class="go">  {&#39;id&#39;: &#39;ur.01343654360.43&#39;,</span>
+<span class="go">   &#39;count&#39;: 59,</span>
+<span class="go">   &#39;last_name&#39;: &#39;Marsh&#39;,</span>
+<span class="go">   &#39;first_name&#39;: &#39;Kevin&#39;},</span>
+<span class="go">  .............</span>
+<span class="go">  ],</span>
+<span class="go"> &#39;_stats&#39;: {&#39;total_count&#39;: 8735}}</span>
+
+</pre></div>
+</div>
+<p>Dimcli includes also a <strong>command line interface</strong> (CLI) that aims at simplifying the process of learning the grammar of the Dimensions Search Language (<a class="reference external" href="https://app.dimensions.ai/dsl">DSL</a>). Calling <code class="docutils literal notranslate"><span class="pre">dimcli</span></code> from the terminal opens an interactive query console with syntax autocomplete, persistent history across sessions, pretty-printing and preview of JSON results, export to HTML and CSV, and more.</p>
 <p><img alt="dimcli_animation" src="https://raw.githubusercontent.com/digital-science/dimcli/master/static/dimcli_animated.gif" /></p>
-<p>Current version: see <a class="reference external" href="https://pypi.org/project/dimcli/">pypi homepage</a>. Source code hosted on <a class="reference external" href="https://github.com/digital-science/dimcli">github</a>. An older animated video on <a class="reference external" href="https://asciinema.org/a/jSzISIsaXN2VbpOApSSOSwGcj">asciicinema</a>.</p>
+<p>Current version: see <a class="reference external" href="https://pypi.org/project/dimcli/">pypi homepage</a>.
+Source code hosted on <a class="reference external" href="https://github.com/digital-science/dimcli">github</a>.
+See also an older animated video on <a class="reference external" href="https://asciinema.org/a/jSzISIsaXN2VbpOApSSOSwGcj">asciicinema</a>.</p>
 </div>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
@@ -202,12 +227,12 @@
 </div>
 <div class="section" id="authentication">
 <h2>Authentication<a class="headerlink" href="#authentication" title="Permalink to this headline">¶</a></h2>
-<p>After installation it’s <strong>strongly advised to create a configuration file</strong> with your Dimensions account credentials. This can be done only once, and it’ll save you from having to type in credentials each time you use Dimcli. E.g.</p>
+<p>After installation it’s <strong>strongly advised to create a configuration file</strong> containing your Dimensions account credentials. This can be done only once and it’ll save you from having to type in credentials each time you use Dimcli. E.g.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">dimcli</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">()</span> <span class="c1"># config file is picked up automatically </span>
 </pre></div>
 </div>
-<p>If you can’t create a configuration file you can explicitly provide log in credentials as follows (see also the <a class="reference external" href="#dimcli-as-a-python-module">Python section</a> for more options).</p>
+<p>If you can’t create a configuration file you can explicitly provide log in credentials as follows (see also the <a class="reference external" href="#dimcli-as-a-python-module">Dimcli as a Python module</a> section for more options).</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">dimcli</span>
 
 <span class="go"># you can specify endpoint, which by default is set to &quot;https://app.dimensions.ai&quot;</span>
@@ -216,7 +241,7 @@
 <span class="go">                 endpoint=&quot;https://app.dimensions.ai&quot;)</span>
 </pre></div>
 </div>
-<p>Or if you are using the new <strong>key-based</strong> authentication:</p>
+<p>Or if you are using <strong>key-based</strong> authentication:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">dimcli</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;123456789qwertyuiop&quot;</span><span class="p">,</span>  
@@ -251,8 +276,8 @@ $ touch ~/.dimensions/dsl.ini
 <div class="section" id="important">
 <h4>Important<a class="headerlink" href="#important" title="Permalink to this headline">¶</a></h4>
 <ul class="simple">
-<li><p>you must always have an entry in the configuration called <code class="docutils literal notranslate"><span class="pre">[instance.live]</span></code></p></li>
-<li><p>you’ll have either a key or a username/password, so leave the other stuff blank. Eg this is a valid config snippet if you authenticate using a key:</p></li>
+<li><p>you must always have an entry in the credentials file called <code class="docutils literal notranslate"><span class="pre">[instance.live]</span></code></p></li>
+<li><p>depending on whether you authenticate using an API key or username &amp; password, fill in the relevant details and just leave the other stuff blank. Eg this is a valid config snippet if you authenticate using a key:</p></li>
 </ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">instance</span><span class="o">.</span><span class="n">live</span><span class="p">]</span>
 <span class="n">url</span><span class="o">=</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">app</span><span class="o">.</span><span class="n">dimensions</span><span class="o">.</span><span class="n">ai</span>
@@ -265,8 +290,8 @@ $ touch ~/.dimensions/dsl.ini
 </div>
 <div class="section" id="overriding-credentials-at-runtime-e-g-with-jupyter-notebooks">
 <h3>Overriding credentials at runtime (e.g. with Jupyter Notebooks)<a class="headerlink" href="#overriding-credentials-at-runtime-e-g-with-jupyter-notebooks" title="Permalink to this headline">¶</a></h3>
-<p>If you are using Dimcli within a Jupyter notebook and you do not want (or can) set up credentials at the user level, you can simply put a <code class="docutils literal notranslate"><span class="pre">dsl.ini</span></code> file in the current working directory (= where the notebook is located).</p>
-<p>The file should look like this:</p>
+<p>If you are using Dimcli within a Jupyter notebook and you do not want (or cannot) set up credentials globally, you can simply put a <code class="docutils literal notranslate"><span class="pre">dsl.ini</span></code> file in the current working directory (= where the notebook is located).</p>
+<p>The file contents should look just like above, that is:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">instance</span><span class="o">.</span><span class="n">live</span><span class="p">]</span>
 <span class="n">url</span><span class="o">=</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">app</span><span class="o">.</span><span class="n">dimensions</span><span class="o">.</span><span class="n">ai</span>
 <span class="n">login</span><span class="o">=</span><span class="n">user</span><span class="nd">@mail</span><span class="o">.</span><span class="n">com</span>
@@ -274,9 +299,7 @@ $ touch ~/.dimensions/dsl.ini
 <span class="n">key</span><span class="o">=</span><span class="n">yourkeyhere</span>
 </pre></div>
 </div>
-<blockquote>
-<div><p>Note: the same-directory credentials will take precedence over any system-level credentials previously defined.</p>
-</div></blockquote>
+<p><strong>Note</strong> the same-directory credentials will take precedence over any system-level credentials previously defined.</p>
 </div>
 <div class="section" id="using-multiple-api-endpoints-for-advanced-users">
 <h3>Using multiple API endpoints (for advanced users)<a class="headerlink" href="#using-multiple-api-endpoints-for-advanced-users" title="Permalink to this headline">¶</a></h3>
@@ -294,22 +317,6 @@ $ touch ~/.dimensions/dsl.ini
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="dimcli-as-a-command-line-interface">
-<h2>Dimcli as a Command Line Interface<a class="headerlink" href="#dimcli-as-a-command-line-interface" title="Permalink to this headline">¶</a></h2>
-<p>Dimcli includes a handy Command Line Interface (CLI) which lets you query the Dimensions API interactively. The CLI has several features but, most importantly, it allows to use the TAB key to autocomplete your queries (based on the latest API syntax and fields), which makes it an ideal tool for both newbies and expert users.</p>
-<p>Run the command line application by typing</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ dimcli
-</pre></div>
-</div>
-<p>That’ll launch the Dimcli console, where you can hit <code class="docutils literal notranslate"><span class="pre">help</span></code> in case you need more support :-)</p>
-<p><img alt="screenshot1" src="static/screenshot1.jpg" /></p>
-</div>
-<div class="section" id="dimcli-with-jupyter-notebooks">
-<h2>Dimcli with Jupyter Notebooks<a class="headerlink" href="#dimcli-with-jupyter-notebooks" title="Permalink to this headline">¶</a></h2>
-<p>Dimcli includes a number of features that simplify working with the Dimensions API within a Jupyter notebook.</p>
-<p>For example, it contains a couple of <a class="reference external" href="https://github.com/digital-science/dimcli/blob/master/dimcli/jupyter/magics.py">magic commands</a> that make it super easy to hit the API from a notebook, or to explore the documentation.</p>
-<p>For more information and examples see the notebooks available in the official <a class="reference external" href="https://github.com/digital-science/dimensions-api-lab">Dimensions API Lab</a> repository.</p>
 </div>
 <div class="section" id="dimcli-as-a-python-module">
 <h2>Dimcli as a Python module<a class="headerlink" href="#dimcli-as-a-python-module" title="Permalink to this headline">¶</a></h2>
@@ -377,10 +384,38 @@ $ touch ~/.dimensions/dsl.ini
  <span class="s1">&#39;Osamu Kaneko&#39;</span><span class="p">,</span> <span class="s1">&#39;Yusuke Wataya&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
+<p>The <a class="reference external" href="https://api-lab.dimensions.ai/">Dimensions API Lab</a> includes several notebooks demonstrating the practical use of Dimcli. In particular, these two are a good place to start:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://api-lab.dimensions.ai/cookbooks/1-getting-started/1-Using-the-Dimcli-library-to-query-the-API.html">The Dimcli Python library: Installation and Querying</a></p></li>
+<li><p><a class="reference external" href="https://api-lab.dimensions.ai/cookbooks/1-getting-started/3-Working-with-dataframes.html">The Dimcli Python library: Working with Pandas Dataframes</a></p></li>
+</ul>
+</div>
+<div class="section" id="dimcli-as-a-command-line-interface">
+<h2>Dimcli as a Command Line Interface<a class="headerlink" href="#dimcli-as-a-command-line-interface" title="Permalink to this headline">¶</a></h2>
+<p>Dimcli includes a handy Command Line Interface (CLI) which lets you query the Dimensions API interactively. The CLI has several features but, most importantly, it allows to use the TAB key to autocomplete your queries (based on the latest API syntax and fields), which makes it an ideal tool for both newbies and expert users.</p>
+<p>Run the command line application by typing</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ dimcli
+</pre></div>
+</div>
+<p>That’ll launch the Dimcli console, where you can hit <code class="docutils literal notranslate"><span class="pre">help</span></code> in case you need more support :-)</p>
+<p><img alt="dimcli_animation" src="https://raw.githubusercontent.com/digital-science/dimcli/master/static/dimcli_animated.gif" /></p>
+</div>
+<div class="section" id="dimcli-with-jupyter-notebooks">
+<h2>Dimcli with Jupyter Notebooks<a class="headerlink" href="#dimcli-with-jupyter-notebooks" title="Permalink to this headline">¶</a></h2>
+<p>Dimcli includes a number of features that simplify working with the Dimensions API within Jupyter notebooks.</p>
+<p>For example, it contains a few <a class="reference external" href="https://github.com/digital-science/dimcli/blob/master/dimcli/jupyter/magics.py">magic commands</a> that make it super-easy to hit the API from a notebook cell:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">%dsl</span></code> can be used to run an API query</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%dslloop</span></code> can be used to run an API query, using pagination (= iterations up to 50k records)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%dsldf</span></code> can be used to run an API query and transform the JSON data to a dataframe</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%dslloopdf</span></code> can be used to run a paginated API query and transform the JSON data to a dataframe</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%dsldocs</span></code> can be used to programmatically extract API schema information</p></li>
+</ul>
+<p>For more information and examples see the <a class="reference external" href="https://api-lab.dimensions.ai/cookbooks/1-getting-started/4-Dimcli-magic-commands.html">The Dimcli Python library: Magic Commands</a> notebook available in the <a class="reference external" href="https://api-lab.dimensions.ai/">Dimensions API Lab</a>.</p>
 </div>
 <div class="section" id="comments-bug-reports">
 <h2>Comments, bug reports<a class="headerlink" href="#comments-bug-reports" title="Permalink to this headline">¶</a></h2>
-<p>Dimcli lives on <a class="reference external" href="https://github.com/digital-science/dimcli/">Github</a>. You can file <a class="reference external" href="%5Bissues%5D(https://github.com/digital-science/dimcli/issues/new)">issues</a> or pull requests there. Suggestions, pull requests and improvements welcome!</p>
+<p>Dimcli lives on <a class="reference external" href="https://github.com/digital-science/dimcli/">Github</a>. You can file <a class="reference external" href="https://github.com/digital-science/dimcli/issues/new">issues</a>) or pull requests there. Suggestions, pull requests and improvements welcome!</p>
 </div>
 </div>
 
