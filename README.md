@@ -1,7 +1,5 @@
 # Dimcli
 
-## In a nutshell
-
 Dimcli is a Python client for accessing the [Dimensions Analytics API](https://www.dimensions.ai/). It makes it easier to authenticate against the API, send queries to it and process the JSON data being returned.  
 
 For more information see the [official documentation](https://digital-science.github.io/dimcli/index.html).
