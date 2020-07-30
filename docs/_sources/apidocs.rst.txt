@@ -1,4 +1,4 @@
-Api Reference
+Module Reference
 ===================
 
 
