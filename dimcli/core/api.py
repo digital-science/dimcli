@@ -110,8 +110,9 @@ class Dsl():
 
         if verbose == None:
             verbose = self._verbose
-
+        
         #   Execute DSL query.
+        start = time.time()
         response = requests.post(
             '{}/api/dsl.json'.format(self._url), data=q.encode(), headers=self._headers)
         if response.status_code == 429:  
@@ -139,7 +140,9 @@ class Dsl():
                 print('Unexpected error. JSON could not be parsed.')
                 return response
             result = DslDataset(res_json)
-            if verbose: print_json_stats(result, q)
+            end = time.time()
+            elapsed = end - start
+            if verbose: print_json_stats(result, q, elapsed)
             print_json_errors(result) # ALWAYS print errors
             if verbose: print_json_warnings(result)
             if show_results or (show_results is None and self._show_results):

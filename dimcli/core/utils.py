@@ -554,7 +554,7 @@ def export_as_jupyter(jjson, query, USER_EXPORTS_DIR):
 
 
 
-def print_json_stats(res, query=""):
+def print_json_stats(res, query="", elapsed=""):
     """
     from a dimcli.DslDataset object, print out basic stats
     * works primarily for 'search' types of query
@@ -570,9 +570,11 @@ def print_json_stats(res, query=""):
                 if not unnest_query:
                     print(f"Returned {source.capitalize()}: {len(res[source])} (total = {tot})")
                 else:
-                    print(f"Returned records after unnesting: {len(res[source])} (total {source}= {tot})")
+                    print(f"Returned objects: {len(res[source])} (total {source}= {tot})")
             else:
                 print(f"Returned {k.capitalize()}: {len(res[k])}")
+        if elapsed:
+            click.secho(f"Time: {elapsed}s", dim=True)
 
 
 
