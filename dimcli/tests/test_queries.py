@@ -59,6 +59,20 @@ class TestOne(unittest.TestCase):
         print(" ==> res['stats']: ", res['stats'])
         print(" ==> len(res['publications']): ", len(res['publications']))
         # ----
+        click.secho("\nTEST 001: Iterative querying with 'unnest' operator", fg="green")
+        # ----
+        d = Dsl()
+        q = """search publications 
+            in title_abstract_only for "cell ontology"
+            where year in [2018:2019]
+        return publications[id+unnest(researchers)]
+        """
+        res = d.query_iterative(q)
+        click.secho("Query results: ", fg="magenta")
+        print(" ==> len(res): ", len(res))
+        print(" ==> res['stats']: ", res['stats'])
+        print(" ==> len(res['publications']): ", len(res['publications']))
+        # ----
         click.secho("Completed test succesfully", fg="green")
 
 
