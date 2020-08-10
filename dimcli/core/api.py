@@ -200,6 +200,8 @@ class Dsl():
         sourcetype = line_search_return(q)  
         if not (sourcetype in G.sources()):
             raise Exception("Iterative queries can return only one of the Dimensions sources: %s" % ", ".join([s for s in G.sources()])) 
+
+        IS_UNNEST = line_search_unnest(q)
         #
         # ensure we stop the loop at 50k **
         #
@@ -213,7 +215,8 @@ class Dsl():
 
         if not tot_count_prev_query:
             # first iteration
-            if verbose: print(f"{limit+skip} / ...")
+            # if verbose: print(f"{limit+skip} / ...")
+            if verbose: print(f"Starting iteration with limit={limit} skip={skip} ...")
             
         output, flag_force = [], False
         q2 = q + " limit %d skip %d" % (limit, skip)
@@ -221,7 +224,8 @@ class Dsl():
         start = time.time()
         res = self.query(q2, show_results=False, retry=0, verbose=False)
         end = time.time()
-        # print(end - start)
+        elapsed = end - start
+
         if (end - start) < 2:
             # print("sleeping")
             time.sleep(pause)
@@ -244,12 +248,18 @@ class Dsl():
         if tot > 0 and new_skip > tot:
             new_skip = tot
         if verbose and tot:  # if not first iteration
-            print(f"{new_skip} / {tot}")
+            # print(f"{new_skip} / {tot}")
+            print(f"{skip}-{new_skip} / {tot} ({elapsed}s)")
 
         if flag_force:
             output = self.query_iterative(q, show_results, limit, new_skip, pause, force, verbose, tot_count_prev_query)                    
 
-        elif len(res[sourcetype]) == limit and not flag_last_round:
+        elif not IS_UNNEST and len(res[sourcetype]) == limit and not flag_last_round:
+            output = res[sourcetype] + self.query_iterative(q, show_results, limit, new_skip, pause, force, verbose, tot)
+
+        elif IS_UNNEST and len(res[sourcetype]) > 0 and not flag_last_round:
+            # unnest returns a number of records that don't relate to actual data left
+            # hence can't match the lenght of results to limit in this case
             output = res[sourcetype] + self.query_iterative(q, show_results, limit, new_skip, pause, force, verbose, tot)
 
         else:
