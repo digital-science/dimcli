@@ -1,6 +1,11 @@
 # Changelog
 
 
+## v 0.7.3
+
+* Improve support for iterative queries using DSL `unnest` operator 
+* Time elapsed info
+
 ## v 0.7.2
 
 * DSL grammar updated for version 1.26 (2020-07 release) 
