@@ -33,7 +33,7 @@ Dimcli lives on `Github <https://github.com/digital-science/dimcli/>`_. Suggesti
 About Dimensions Analytics API
 -------------------------------
 
-The `Dimensions Analytics API <https://www.dimensions.ai/dimensions-apis/>`_. supports extraction of Dimensions data for use in complex analyses and visualizations or the building of analytical tools and reporting templates. The API uses an intuitive `query language <https://docs.dimensions.ai/dsl>`_ specifically developed for Dimensions data. You can retrieve, aggregate, and sort data from highly specific requests in a single API call. Additional services like text categorization are also available. 
+The `Dimensions Analytics API <https://www.dimensions.ai/dimensions-apis/>`_ supports extraction of Dimensions data for use in complex analyses and visualizations or the building of analytical tools and reporting templates. The API uses an intuitive `query language <https://docs.dimensions.ai/dsl>`_ specifically developed for Dimensions data. You can retrieve, aggregate, and sort data from highly specific requests in a single API call. Additional services like text categorization are also available. 
 
 Digital Science's `Dimensions <https://app.dimensions.ai/>`_ is a linked-research data platform that allows to explore the connections between more than 150 million records including grants, publications, clinical trials, patents and policy documents.
 
