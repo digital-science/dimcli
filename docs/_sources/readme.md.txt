@@ -298,4 +298,4 @@ For more information and examples see the [The Dimcli Python library: Magic Comm
 
 ## Comments, bug reports
 
-Dimcli lives on [Github](https://github.com/digital-science/dimcli/). You can file [issues](https://github.com/digital-science/dimcli/issues/new)) or pull requests there. Suggestions, pull requests and improvements welcome!
+Dimcli lives on [Github](https://github.com/digital-science/dimcli/). You can file [issues](https://github.com/digital-science/dimcli/issues/new) or pull requests there. Suggestions, pull requests and improvements welcome!

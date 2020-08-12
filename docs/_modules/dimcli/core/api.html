@@ -260,8 +260,9 @@
 
         <span class="k">if</span> <span class="n">verbose</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">verbose</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_verbose</span>
-
+        
         <span class="c1">#   Execute DSL query.</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
             <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/api/dsl.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_url</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="n">q</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_headers</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">429</span><span class="p">:</span>  
@@ -289,7 +290,9 @@
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Unexpected error. JSON could not be parsed.&#39;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">response</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">DslDataset</span><span class="p">(</span><span class="n">res_json</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">print_json_stats</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">elapsed</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">start</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">print_json_stats</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">elapsed</span><span class="p">)</span>
             <span class="n">print_json_errors</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="c1"># ALWAYS print errors</span>
             <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">print_json_warnings</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">show_results</span> <span class="ow">or</span> <span class="p">(</span><span class="n">show_results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_show_results</span><span class="p">):</span>
@@ -350,6 +353,8 @@
         <span class="n">sourcetype</span> <span class="o">=</span> <span class="n">line_search_return</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>  
         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">sourcetype</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">sources</span><span class="p">()):</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Iterative queries can return only one of the Dimensions sources: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">sources</span><span class="p">()]))</span> 
+
+        <span class="n">IS_UNNEST</span> <span class="o">=</span> <span class="n">line_search_unnest</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
         <span class="c1">#</span>
         <span class="c1"># ensure we stop the loop at 50k **</span>
         <span class="c1">#</span>
@@ -363,7 +368,8 @@
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">tot_count_prev_query</span><span class="p">:</span>
             <span class="c1"># first iteration</span>
-            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">limit</span><span class="o">+</span><span class="n">skip</span><span class="si">}</span><span class="s2"> / ...&quot;</span><span class="p">)</span>
+            <span class="c1"># if verbose: print(f&quot;{limit+skip} / ...&quot;)</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting iteration with limit=</span><span class="si">{</span><span class="n">limit</span><span class="si">}</span><span class="s2"> skip=</span><span class="si">{</span><span class="n">skip</span><span class="si">}</span><span class="s2"> ...&quot;</span><span class="p">)</span>
             
         <span class="n">output</span><span class="p">,</span> <span class="n">flag_force</span> <span class="o">=</span> <span class="p">[],</span> <span class="kc">False</span>
         <span class="n">q2</span> <span class="o">=</span> <span class="n">q</span> <span class="o">+</span> <span class="s2">&quot; limit </span><span class="si">%d</span><span class="s2"> skip </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">limit</span><span class="p">,</span> <span class="n">skip</span><span class="p">)</span>
@@ -371,7 +377,8 @@
         <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">q2</span><span class="p">,</span> <span class="n">show_results</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">retry</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="c1"># print(end - start)</span>
+        <span class="n">elapsed</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">start</span>
+
         <span class="k">if</span> <span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
             <span class="c1"># print(&quot;sleeping&quot;)</span>
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">pause</span><span class="p">)</span>
@@ -394,12 +401,18 @@
         <span class="k">if</span> <span class="n">tot</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">new_skip</span> <span class="o">&gt;</span> <span class="n">tot</span><span class="p">:</span>
             <span class="n">new_skip</span> <span class="o">=</span> <span class="n">tot</span>
         <span class="k">if</span> <span class="n">verbose</span> <span class="ow">and</span> <span class="n">tot</span><span class="p">:</span>  <span class="c1"># if not first iteration</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">new_skip</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="n">tot</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="c1"># print(f&quot;{new_skip} / {tot}&quot;)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">skip</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">new_skip</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="n">tot</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">elapsed</span><span class="si">}</span><span class="s2">s)&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">flag_force</span><span class="p">:</span>
             <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_iterative</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">show_results</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">new_skip</span><span class="p">,</span> <span class="n">pause</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">tot_count_prev_query</span><span class="p">)</span>                    
 
-        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="n">sourcetype</span><span class="p">])</span> <span class="o">==</span> <span class="n">limit</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">flag_last_round</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">IS_UNNEST</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="n">sourcetype</span><span class="p">])</span> <span class="o">==</span> <span class="n">limit</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">flag_last_round</span><span class="p">:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="n">sourcetype</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_iterative</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">show_results</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">new_skip</span><span class="p">,</span> <span class="n">pause</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">tot</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">IS_UNNEST</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="n">sourcetype</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">flag_last_round</span><span class="p">:</span>
+            <span class="c1"># unnest returns a number of records that don&#39;t relate to actual data left</span>
+            <span class="c1"># hence can&#39;t match the lenght of results to limit in this case</span>
             <span class="n">output</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="n">sourcetype</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_iterative</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">show_results</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">new_skip</span><span class="p">,</span> <span class="n">pause</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">tot</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>

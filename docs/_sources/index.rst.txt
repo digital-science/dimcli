@@ -1,7 +1,9 @@
 Welcome to DimCli's documentation!
 ==================================
 
-Dimcli is a Python client for accessing the `Dimensions Analytics API <https://www.dimensions.ai>`_. 
+Dimcli is a Python client for accessing the Dimensions Analytics API. 
+
+Dimcli lives on `Github <https://github.com/digital-science/dimcli/>`_. Suggestions, pull requests and improvements welcome!
 
 .. code::
 
@@ -28,15 +30,17 @@ Dimcli is a Python client for accessing the `Dimensions Analytics API <https://w
 
 
 
-About Dimensions APIs
----------------------
+About Dimensions Analytics API
+-------------------------------
 
-Digital Science's `Dimensions <https://app.dimensions.ai/>`_ is a linked-research data platform that allows to explore the connections between millions of objects including grants, publications, clinical trials, patents and policy documents.
+The `Dimensions Analytics API <https://www.dimensions.ai/dimensions-apis/>`_. supports extraction of Dimensions data for use in complex analyses and visualizations or the building of analytical tools and reporting templates. The API uses an intuitive `query language <https://docs.dimensions.ai/dsl>`_ specifically developed for Dimensions data. You can retrieve, aggregate, and sort data from highly specific requests in a single API call. Additional services like text categorization are also available. 
 
-For more information about the Dimensions APIs, see: 
+Digital Science's `Dimensions <https://app.dimensions.ai/>`_ is a linked-research data platform that allows to explore the connections between more than 150 million records including grants, publications, clinical trials, patents and policy documents.
 
-* the `Dimensions API Lab <https://api-lab.dimensions.ai/>`_ 
-* the official `Dimensions API Documentation <https://docs.dimensions.ai/dsl/>`_
+For more information about the Dimensions Analytics API, see also: 
+
+* The `Dimensions API Lab <https://api-lab.dimensions.ai/>`_ , an open source collection of jupyter notebooks tutorials
+* The official `Dimensions API Documentation <https://docs.dimensions.ai/dsl/>`_
 
 
 
