@@ -163,6 +163,7 @@
 <div class="section" id="api-py">
 <h3>api.py<a class="headerlink" href="#api-py" title="Permalink to this headline">¶</a></h3>
 <p>The core module of DimCli</p>
+<p>Note: in most cases you don’t need to import this module manually. The <cite>Dsl</cite> and <cite>DslDataset</cite> objects are imported automatically and are available via the top level <cite>dimcli</cite> module.</p>
 <dl class="py class">
 <dt id="dimcli.core.api.Dsl">
 <em class="property">class </em><code class="sig-prename descclassname">dimcli.core.api.</code><code class="sig-name descname">Dsl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">show_results</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/api.html#Dsl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.core.api.Dsl" title="Permalink to this definition">¶</a></dt>
@@ -223,18 +224,20 @@
 
 <dl class="py method">
 <dt id="dimcli.core.api.Dsl.query_iterative">
-<code class="sig-name descname">query_iterative</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q</span></em>, <em class="sig-param"><span class="n">show_results</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limit</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">skip</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">pause</span><span class="o">=</span><span class="default_value">1.5</span></em>, <em class="sig-param"><span class="n">force</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tot_count_prev_query</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/api.html#Dsl.query_iterative"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.core.api.Dsl.query_iterative" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">query_iterative</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q</span></em>, <em class="sig-param"><span class="n">show_results</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limit</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">skip</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">pause</span><span class="o">=</span><span class="default_value">1.5</span></em>, <em class="sig-param"><span class="n">force</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">maxlimit</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tot_count_prev_query</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/api.html#Dsl.query_iterative"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.core.api.Dsl.query_iterative" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs a DSL query and then keep querying until all available records are extracted.</p>
 <p>Iterative DSL queries work by automatically paginating through all records available for a result set. The original query gets turned into a loop that uses the <cite>limit</cite> / <cite>skip</cite> operators until all the results available have been extracted.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>q</strong> (<em>str</em>) – The DSL query. Important: pagination keywords eg <cite>limit</cite> / <cite>skip</cite> should be omitted.</p></li>
-<li><p><strong>show_results</strong> (<em>bool</em>) – Determines whether the final results are rendered via the iPython display widget (for Jupyter notebooks).</p></li>
-<li><p><strong>limit</strong> (<em>int</em>) – How many records to extract per iteration. Defaults to 1000.</p></li>
-<li><p><strong>skip</strong> (<em>int</em>) – Offset for first iteration. Defaults to 0. After the first iteration, this value is calculated dynamically.</p></li>
-<li><p><strong>pause</strong> (<em>float</em>) – How much time to pause after each iterarion, expressed in seconds. Defaults to 1.5. Note: each iteration gets timed, so the pause time is used only when the query time is more than 2s.</p></li>
-<li><p><strong>verbose</strong> (<em>bool</em>) – Verbose mode.</p></li>
+<li><p><strong>show_results</strong> (<em>bool</em><em> (</em><em>default=True</em><em>)</em>) – Determines whether the final results are rendered via the iPython display widget (for Jupyter notebooks).</p></li>
+<li><p><strong>limit</strong> (<em>int</em><em> (</em><em>default=1000</em><em>)</em>) – How many records to extract per iteration. Defaults to 1000.</p></li>
+<li><p><strong>skip</strong> (<em>int</em><em> (</em><em>default=0</em><em>)</em>) – Offset for first iteration. Defaults to 0. After the first iteration, this value is calculated dynamically.</p></li>
+<li><p><strong>pause</strong> (<em>float</em><em> (</em><em>default=1.5s</em><em>)</em>) – How much time to pause after each iterarion, expressed in seconds. Defaults to 1.5. Note: each iteration gets timed, so the pause time is used only when the query time is more than 2s.</p></li>
+<li><p><strong>force</strong> (<em>bool</em><em> (</em><em>default=False</em><em>)</em>) – Continue the extraction even if one of the iterations fails due to an error.</p></li>
+<li><p><strong>maxlimit</strong> (<em>int</em><em> (</em><em>default=0</em><em>)</em>) – The maximum number of records to extract in total. If 0, all available records are extracted, up to the API upper limit of 50k records per query.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em> (</em><em>default=False</em><em>)</em>) – Verbose mode.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -386,6 +389,12 @@ test = [len(x) for x in res.chunks()]</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="dimcli.core.api.DslDataset.from_json_file">
+<em class="property">classmethod </em><code class="sig-name descname">from_json_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/api.html#DslDataset.from_json_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.core.api.DslDataset.from_json_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a DslDataset object from JSON API data previously saved.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="dimcli.core.api.DslDataset.good_data_keys">
 <code class="sig-name descname">good_data_keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/api.html#DslDataset.good_data_keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.core.api.DslDataset.good_data_keys" title="Permalink to this definition">¶</a></dt>
 <dd><p>return the results keys other than stats</p>
@@ -395,6 +404,12 @@ test = [len(x) for x in res.chunks()]</p>
 <dt id="dimcli.core.api.DslDataset.keys_and_count">
 <code class="sig-name descname">keys_and_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/api.html#DslDataset.keys_and_count"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.core.api.DslDataset.keys_and_count" title="Permalink to this definition">¶</a></dt>
 <dd><p>Utility to preview contents of results object</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dimcli.core.api.DslDataset.save_json">
+<code class="sig-name descname">save_json</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/api.html#DslDataset.save_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.core.api.DslDataset.save_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export the DSL data to a JSON file</p>
 </dd></dl>
 
 </dd></dl>
