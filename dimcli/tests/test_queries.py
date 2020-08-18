@@ -2,6 +2,9 @@
 #  -*- coding: UTF-8 -*-
 """
 Unit tests for Dimcli 
+
+python -m dimcli.tests.test_queries
+
 """
 
 from __future__ import print_function
@@ -27,16 +30,16 @@ class TestOne(unittest.TestCase):
     d = Dsl()
 
     def test_001(self):
-        click.secho("\nTEST 001: Iterative querying.", fg="green")
+        click.secho("\nTEST 001-A: Iterative querying.", fg="green")
         # ----
         d = Dsl()
-        res = d.query_iterative("""search publications where journal.title="nature medicine" and year>2000 return publications""")
+        res = d.query_iterative("""search publications where journal.title="nature medicine" and year>2007 return publications""")
         click.secho("Query results: ", fg="magenta")
         print(" ==> len(res): ", len(res))
         print(" ==> res['stats']: ", res['stats'])
         print(" ==> len(res['publications']): ", len(res['publications']))
         # ----
-        click.secho("\nTEST 001: Iterative querying with custom pause: 5 seconds.", fg="green")
+        click.secho("\nTEST 001-B: Iterative querying with custom pause: 5 seconds.", fg="green")
         # ----
         d = Dsl()
         res = d.query_iterative("""search publications where journal.title="nature medicine" and year>2015 return publications""", pause=5)
@@ -45,7 +48,7 @@ class TestOne(unittest.TestCase):
         print(" ==> res['stats']: ", res['stats'])
         print(" ==> len(res['publications']): ", len(res['publications']))
         # ----
-        click.secho("\nTEST 001: Iterative querying with force=True", fg="green")
+        click.secho("\nTEST 001-C: Iterative querying with force=True", fg="green")
         # ----
         d = Dsl()
         q = """search publications 
@@ -59,7 +62,7 @@ class TestOne(unittest.TestCase):
         print(" ==> res['stats']: ", res['stats'])
         print(" ==> len(res['publications']): ", len(res['publications']))
         # ----
-        click.secho("\nTEST 001: Iterative querying with 'unnest' operator", fg="green")
+        click.secho("\nTEST 001-D: Iterative querying with 'unnest' operator", fg="green")
         # ----
         d = Dsl()
         q = """search publications 
@@ -176,6 +179,21 @@ class TestOne(unittest.TestCase):
         res.as_dataframe()
         res.count_total
         click.secho("Completed test succesfully", fg="green")
+
+    def test_007(self):
+        click.secho("\nTEST 007: Save to a JSON file and construct a dimcli.DslDataset objects from JSON file.", fg="green")
+        # ----
+        FILENAME = "test-api-save.json"
+        d = Dsl()
+        data = d.query_iterative("""search publications where journal.title="nature medicine" and year>2014 return publications[id+title+year+concepts]""")
+        data.save_json(FILENAME, verbose=True)
+        new_data = DslDataset.from_json_file(FILENAME, verbose=True)
+        print(new_data)
+        os.remove(FILENAME)
+        print("Deleted:", FILENAME)
+        click.secho("Completed test succesfully", fg="green")
+
+
 
 
 if __name__ == "__main__":

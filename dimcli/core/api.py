@@ -253,8 +253,8 @@ class Dsl():
         if tot > 0 and new_skip > tot:
             new_skip = tot
         if verbose and tot:  # if not first iteration
-            # print(f"{new_skip} / {tot}")
-            print(f"{skip}-{new_skip} / {tot} ({elapsed}s)")
+            t = "%.2f" % elapsed
+            print(f"{skip}-{new_skip} / {tot} ({t}s)")
 
         if flag_force:
             output = self.query_iterative(q, show_results, limit, new_skip, pause, force, verbose, tot_count_prev_query)                    
@@ -351,7 +351,13 @@ class DslDataset(IPython.display.JSON):
             return cls({source_type : jsondata, '_stats' : {'total_count' : len(jsondata)}})
         else:
             raise ValueError('Invalid data format. Must be either a dict list, or a pandas dataframe')
-
+    @classmethod
+    def from_json_file(cls, filename, verbose=False):
+        "Return a DslDataset object from JSON API data previously saved. "
+        with open(filename) as json_file:
+            jsondata = json.load(json_file)
+        if verbose: print("Loaded file: ", filename)
+        return cls(jsondata)
 
 
     def __init__(self, data):
@@ -541,6 +547,17 @@ class DslDataset(IPython.display.JSON):
                 except:
                     raise Exception("DslDataset records do not contain a valid ID field.")
         return None
+
+
+    def save_json(self, filename="", verbose=True):
+        """Export the DSL data to a JSON file
+        """
+        if not self.json.get("errors"):
+            if not filename:
+                filename = time.strftime(f"dimensions_data_%Y-%m-%d_%H-%M-%S.json")
+            with open(filename, 'w') as outfile:
+                json.dump(self.json, outfile)
+                if verbose: print("Saved to file: ", filename)
 
 
     def __repr__(self):
