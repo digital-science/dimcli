@@ -2,6 +2,8 @@
 api.py
 ====================================
 The core module of DimCli
+
+Note: in most cases you don't need to import this module manually. The `Dsl` and `DslDataset` objects are imported automatically and are available via the top level `dimcli` module.
 """
 
 
