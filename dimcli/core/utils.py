@@ -574,7 +574,8 @@ def print_json_stats(res, query="", elapsed=""):
             else:
                 print(f"Returned {k.capitalize()}: {len(res[k])}")
         if elapsed:
-            click.secho(f"Time: {elapsed}s", dim=True)
+            t = "%.2f" % elapsed
+            click.secho(f"Time: {t}s", dim=True)
 
 
 
