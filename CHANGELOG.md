@@ -1,6 +1,12 @@
 # Changelog
 
 
+
+## v 0.7.4
+
+* DSL grammar updated for version 1.27 (2020-08 release)
+* Refactoring of grammar objects 
+
 ## v 0.7.3
 
 * Improve support for iterative queries using DSL `unnest` operator 
