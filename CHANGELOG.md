@@ -5,7 +5,11 @@
 ## v 0.7.4
 
 * DSL grammar updated for version 1.27 (2020-08 release)
-* Refactoring of grammar objects 
+  * Refactoring of grammar objects 
+* Added methods to save/load JSON data from DslDataset object
+  * `DslDataset.from_json_file` (class method) and `DslDataset.save_json` (object method)
+* `Dsl.query_iterative` takes an extra argument `maxlimit` forcing to stop the iteration when N results have been extracted
+
 
 ## v 0.7.3
 

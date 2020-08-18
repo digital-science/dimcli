@@ -76,6 +76,20 @@ class TestOne(unittest.TestCase):
         print(" ==> res['stats']: ", res['stats'])
         print(" ==> len(res['publications']): ", len(res['publications']))
         # ----
+        click.secho("\nTEST 001-E: Iterative querying with maxlimit=3000", fg="green")
+        # ----
+        d = Dsl()
+        q = """search publications 
+            in title_abstract_only for "cell ontology"
+            where year in [2018:2019]
+        return publications
+        """
+        res = d.query_iterative(q, maxlimit=3000)
+        click.secho("Query results: ", fg="magenta")
+        print(" ==> len(res): ", len(res))
+        print(" ==> res['stats']: ", res['stats'])
+        print(" ==> len(res['publications']): ", len(res['publications']))
+        # ----
         click.secho("Completed test succesfully", fg="green")
 
 

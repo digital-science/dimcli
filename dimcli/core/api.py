@@ -164,7 +164,7 @@ class Dsl():
 
 
 
-    def query_iterative(self, q, show_results=None, limit=1000, skip=0, pause=1.5, force=False, verbose=None, tot_count_prev_query=0):       
+    def query_iterative(self, q, show_results=None, limit=1000, skip=0, pause=1.5, force=False, maxlimit=0, verbose=None, tot_count_prev_query=0):       
         """Runs a DSL query and then keep querying until all available records are extracted. 
         
         Iterative DSL queries work by automatically paginating through all records available for a result set. The original query gets turned into a loop that uses the `limit` / `skip` operators until all the results available have been extracted. 
@@ -173,15 +173,19 @@ class Dsl():
         ----------
         q: str 
             The DSL query. Important: pagination keywords eg `limit` / `skip` should be omitted.
-        show_results : bool
+        show_results : bool (default=True)
             Determines whether the final results are rendered via the iPython display widget (for Jupyter notebooks).
-        limit : int
+        limit : int (default=1000)
             How many records to extract per iteration. Defaults to 1000.
-        skip : int
+        skip : int (default=0)
             Offset for first iteration. Defaults to 0. After the first iteration, this value is calculated dynamically.
-        pause : float
+        pause : float (default=1.5s)
             How much time to pause after each iterarion, expressed in seconds. Defaults to 1.5. Note: each iteration gets timed, so the pause time is used only when the query time is more than 2s. 
-        verbose : bool
+        force : bool (default=False)
+            Continue the extraction even if one of the iterations fails due to an error. 
+        maxlimit : int (default=0)
+            The maximum number of records to extract in total. If 0, all available records are extracted, up to the API upper limit of 50k records per query.
+        verbose : bool (default=False)
             Verbose mode.
 
 
@@ -210,7 +214,7 @@ class Dsl():
         #
         # ensure we stop the loop at 50k **
         #
-        MAXLIMIT = 50000
+        MAXLIMIT = maxlimit or 50000
         flag_last_round = False
         if skip + limit >= MAXLIMIT:
             flag_last_round = True
@@ -257,15 +261,15 @@ class Dsl():
             print(f"{skip}-{new_skip} / {tot} ({t}s)")
 
         if flag_force:
-            output = self.query_iterative(q, show_results, limit, new_skip, pause, force, verbose, tot_count_prev_query)                    
+            output = self.query_iterative(q, show_results, limit, new_skip, pause, force, maxlimit, verbose, tot_count_prev_query)                    
 
         elif not IS_UNNEST and len(res[sourcetype]) == limit and not flag_last_round:
-            output = res[sourcetype] + self.query_iterative(q, show_results, limit, new_skip, pause, force, verbose, tot)
+            output = res[sourcetype] + self.query_iterative(q, show_results, limit, new_skip, pause, force,maxlimit, verbose, tot)
 
         elif IS_UNNEST and len(res[sourcetype]) > 0 and not flag_last_round:
             # unnest returns a number of records that don't relate to actual data left
             # hence can't match the lenght of results to limit in this case
-            output = res[sourcetype] + self.query_iterative(q, show_results, limit, new_skip, pause, force, verbose, tot)
+            output = res[sourcetype] + self.query_iterative(q, show_results, limit, new_skip, pause, force, maxlimit, verbose, tot)
 
         else:
             output = res[sourcetype]
