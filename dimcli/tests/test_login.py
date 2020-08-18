@@ -2,6 +2,9 @@
 #  -*- coding: UTF-8 -*-
 """
 Unit tests for Dimcli  - logins
+
+python -m dimcli.tests.test_login
+
 """
 
 from __future__ import print_function

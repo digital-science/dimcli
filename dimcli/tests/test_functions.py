@@ -1,7 +1,10 @@
 # !/usr/bin/env python
 #  -*- coding: UTF-8 -*-
 """
-Unit tests for Dimcli 
+Unit tests for Dimcli - functions
+
+python -m dimcli.tests.test_functions
+
 """
 
 from __future__ import print_function

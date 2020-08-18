@@ -1,7 +1,9 @@
 # !/usr/bin/env python
 #  -*- coding: UTF-8 -*-
 """
-Unit tests for Dimcli  - logins
+Unit tests for Dimcli  - grammar
+
+python -m dimcli.tests.test_grammar
 """
 
 from __future__ import print_function

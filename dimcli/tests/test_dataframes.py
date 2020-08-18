@@ -2,6 +2,9 @@
 #  -*- coding: UTF-8 -*-
 """
 Unit tests for Dimcli - Dataframes
+
+python -m dimcli.tests.test_dataframes
+
 """
 
 from __future__ import print_function
