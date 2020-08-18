@@ -1,5 +1,5 @@
 
-# Dimcli
+# Getting Started with Dimcli
 
 ### In a nutshell
 

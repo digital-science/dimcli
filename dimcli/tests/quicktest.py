@@ -86,7 +86,7 @@ def main(test_number=1):
         q.save_json(FILENAME, verbose=True)
         # q.save_json("/Users/michele.pasin/tmp/text.json", verbose=True)
 
-        new_data = DslDataset.from_json_file(FILENAME, verbose=True)
+        new_data = DslDataset.load_json_file(FILENAME, verbose=True)
         print(new_data)
 
         os.remove(FILENAME)

@@ -48,7 +48,7 @@ For more information about the Dimensions Analytics API, see also:
    :maxdepth: 2
    :caption: Contents
 
-   readme
+   getting-started
    apidocs
 
 

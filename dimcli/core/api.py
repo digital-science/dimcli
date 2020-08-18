@@ -1,9 +1,10 @@
 """
 api.py
 ====================================
-The core module of DimCli
+The core module of DimCli, containing funtionalities for querying the API and processing the data returned.
 
-Note: in most cases you don't need to import this module manually. The `Dsl` and `DslDataset` objects are imported automatically and are available via the top level `dimcli` module.
+Note: the two main objects in this module (`Dsl` and `DslDataset`) are imported by default when the top level `dimcli` module gets imported.
+
 """
 
 
@@ -32,37 +33,32 @@ from .dataframe_factory import DfFactory
 class Dsl():
 
     """The Dsl object is the main interface for interacting with the Dimensions API.
- 
+
+    Parameters
+    ----------
+    show_results : bool, default=False
+        Set a global setting that determines whether query JSON results get printed out. Note that in Jupyter environments this is not needed, because iPython rich widgets are used by default..
+    verbose : bool, default=True
+        Verbose mode.
+
     Example
     -------
-    After logging in, the usual workflow is to instantiate this object and use it to query. 
-
-        >>> import dimcli
-        >>> dimcli.login()
-        >>> dsl = dimcli.Dsl()
-        >>> dsl.query("search grants for \"malaria\" return researchers")
-        >>> <dimcli.dimensions.DslDataset object>
-        # queries always return a DslDataset object (subclassing IPython.display.JSON)
-        # use the .json method to get the JSON
-        >>> _.json
-        >>> {'researchers': [{'id': 'ur.01332073522.49',
-                'count': 75,
-                'last_name': 'White',
-                'first_name': 'Nicholas J'},
-            "... JSON data continues ... "
-
-
+    >>> import dimcli
+    >>> dimcli.login()
+    >>> dsl = dimcli.Dsl()
+    >>> dsl.query(\"\""search grants for "graphene" return researchers"\"\")
+    <dimcli.dimensions.DslDataset object>
+    >>> _.json
+    >>> {'researchers': [{'id': 'ur.01332073522.49',
+            'count': 75,
+            'last_name': 'White',
+            'first_name': 'Nicholas J'},
+        "... JSON data continues ... "
     """
 
     def __init__(self, show_results=False, verbose=True):
         """Initialises a Dsl object.
 
-        Parameters
-        ----------
-        show_results : bool
-            Set a global setting that determined whether query JSON results get printed out. Note that in Jupyter environments this is not needed, because the iPython rich widgets is used by default.
-        verbose : bool
-            Verbose mode.
         """
         self._show_results = show_results
         self._verbose = verbose
@@ -88,22 +84,28 @@ class Dsl():
     def query(self, q, show_results=None, retry=0, verbose=None):
         """Execute a single DSL query.
 
-        By default it doesn't show results, but it uses the iPython rich widgets for it, optimized for Jupyter Notebooks.
+        This method handles the query token from the API and regenerates it if it's expired. If the API throws a 'Too Many Requests for the Server' error, the method sleeps 30 seconds before retrying.
 
         Parameters
         ----------
-        show_results : bool
-            Show JSON results.
-        retry : int
+        show_results : bool, default=None
+            Setting that determines whether the query JSON results should be printed out. If None, it inherits from the Dsl global setting. Note that in Jupyter environments this is not needed, because iPython rich widgets are used by default.
+        retry : int, default=0
             Number of times to retry the query if it fails.
-        verbose : bool
-            Verbose mode.
+        verbose : bool, default=None
+            Verbose mode. If None, it inherits from the Dsl global setting. 
 
 
         Returns
         -------
         DslDataset
             A Dimcli wrapper object containing JSON data. 
+
+        Example
+        -------------
+        >>> dsl = dimcli.Dsl()
+        >>> dsl.query("search grants where start_year=2020 return grants")
+        <dimcli.dimensions.DslDataset object>
 
         """
         if not self.is_logged_in:
@@ -165,28 +167,53 @@ class Dsl():
 
 
     def query_iterative(self, q, show_results=None, limit=1000, skip=0, pause=1.5, force=False, maxlimit=0, verbose=None, tot_count_prev_query=0):       
-        """Runs a DSL query and then keep querying until all available records are extracted. 
+        """Runs a DSL query and then keep querying until all matching records have been extracted. 
         
-        Iterative DSL queries work by automatically paginating through all records available for a result set. The original query gets turned into a loop that uses the `limit` / `skip` operators until all the results available have been extracted. 
+        The API returns a maximum of 1000 records per call. If a DSL query results in more than 1000 matches, it is possible to use pagination to get more results. 
+        
+        Iterative querying works by automatically paginating through all records available for a result set. The original query gets turned into a loop that uses the `limit` / `skip` operators until all the results available have been extracted. 
         
         Parameters
         ----------
         q: str 
             The DSL query. Important: pagination keywords eg `limit` / `skip` should be omitted.
-        show_results : bool (default=True)
+        show_results : bool, default=True
             Determines whether the final results are rendered via the iPython display widget (for Jupyter notebooks).
-        limit : int (default=1000)
+        limit : int, default=1000
             How many records to extract per iteration. Defaults to 1000.
-        skip : int (default=0)
+        skip : int, default=0
             Offset for first iteration. Defaults to 0. After the first iteration, this value is calculated dynamically.
-        pause : float (default=1.5s)
+        pause : float, default=1.5s
             How much time to pause after each iterarion, expressed in seconds. Defaults to 1.5. Note: each iteration gets timed, so the pause time is used only when the query time is more than 2s. 
-        force : bool (default=False)
+        force : bool, default=False
             Continue the extraction even if one of the iterations fails due to an error. 
-        maxlimit : int (default=0)
+        maxlimit : int, default=0
             The maximum number of records to extract in total. If 0, all available records are extracted, up to the API upper limit of 50k records per query.
-        verbose : bool (default=False)
+        verbose : bool, default=False
             Verbose mode.
+
+
+        Returns
+        -------
+        DslDataset
+            A Dimcli wrapper object containing JSON data. 
+
+        Example
+        -------
+        >>> dsl = dimcli.Dsl()
+        >>> dsl.query_iterative(\"\""search grants where category_for.name="0206 Quantum Physics" return grants"\"\")
+        Starting iteration with limit=1000 skip=0 ...
+        0-1000 / 8163 (4.062144994735718s)
+        1000-2000 / 8163 (1.5146172046661377s)
+        2000-3000 / 8163 (1.7225260734558105s)
+        3000-4000 / 8163 (1.575329065322876s)
+        4000-5000 / 8163 (1.521540880203247s)
+        5000-6000 / 8163 (1.471721887588501s)
+        6000-7000 / 8163 (1.5068159103393555s)
+        7000-8000 / 8163 (1.4724757671356201s)
+        8000-8163 / 8163 (0.7611980438232422s)
+        ===
+        Records extracted: 8163
 
 
         Returns
@@ -307,47 +334,168 @@ class Dsl():
 class DslDataset(IPython.display.JSON):
     """Wrapper for JSON results from DSL.
 
+    This object makes it easier to process, save and load API JSON data. 
+
     Example
     ----------
-
-        >>> res = dsl.query("search publications return publications")
-        >>> res.data # => shows the underlying JSON data
-        >>> res.json # => same 
-
-        # Shortcuts methods: 
-
-        >>> res['publications'] # => the dict section
-        >>> res['xxx'] # => false, not found
-        >>> res['stats'] # => the _stats dict
+    >>> dsl = dimcli.Dsl()
+    >>> data = dsl.query(\"\""search publications for "machine learning" return publications limit 100"\"\")
+    Returned Publications: 20 (total = 2501114)
+    Time: 1.36s
+    >>> print(data)
+    <dimcli.DslDataset object #4383191536. Records: 100/2501114>
+    >>> len(data)
+    100
+    >>> data.count_batch
+    100
+    >>> data.count_total
+    2501114
+    >>> data.json
+    #  => returns the underlying JSON data
+    >>> data['publications'] 
+    #  => shortcut for the 'publications' key in the underlying JSON data
+    >>> data.publications
+    #  => ..this is valid too!
 
     """
 
-    # class methods to build DslDataset object from raw data (obtained not from a query eg from multiple queries concatenated)
-    # these allow to then take advantage of other functionalities in DslDataset objects eg dataframes etc...
     @classmethod
     def from_publications_list(cls, data):
-        return cls.from_any_list(data, "publications")
+        """Utility method that allows to simulate an API results DslDataset object from raw publications data. 
+        
+        This functionality can be used to reload data that was cached locally, or to combine the merged results of separate API queries into a single DslDataset object. 
+
+        Once created, the DslDataset object has the same exact behaviour as when it is obtained from an API query (so one can take advatange of dataframe creation methods, for example).
+
+        Parameters
+        ----------
+        data: list or pandas dataframe 
+            A list of publications, in the form of either a list of dictionaries, or as a pandas dataframe. 
+
+
+        Returns
+        -------
+        DslDataset
+            A Dimcli wrapper object containing JSON data. 
+
+        Example
+        ----------
+        >>> dsl = dimcli.Dsl()
+        >>> rawdata = dsl.query("search publications return publications").publications
+        >>> type(rawdata)
+        list
+        >>> newDataset = dimcli.DslDataset.from_publications_list(rawdata)
+        >>> newDataset
+        <dimcli.DslDataset object #4767014816. Records: 20/20>
+        """
+        return cls._from_any_list(data, "publications")
+    
     @classmethod
     def from_grants_list(cls, data):
-        return cls.from_any_list(data, "grants")
+        """Utility method that allows to simulate an API results DslDataset object from raw grants data. See the `from_publications_list` method for more information. 
+
+        Parameters
+        ----------
+        data: list or pandas dataframe 
+            A grants list (using the API DSL structure), in the form of either a list of dictionaries, or as a pandas dataframe. 
+
+        Returns
+        -------
+        DslDataset
+            A Dimcli wrapper object containing JSON data.         
+        
+        """
+        return cls._from_any_list(data, "grants")
+    
     @classmethod
     def from_researchers_list(cls, data):
-        return cls.from_any_list(data, "researchers")
+        """Utility method that allows to simulate an API results DslDataset object from raw researchers data. See the `from_publications_list` method for more information. 
+
+        Parameters
+        ----------
+        data: list or pandas dataframe 
+            A researchers list (using the API DSL structure), in the form of either a list of dictionaries, or as a pandas dataframe. 
+
+        Returns
+        -------
+        DslDataset
+            A Dimcli wrapper object containing JSON data.         
+        
+        """
+        return cls._from_any_list(data, "researchers")
+    
     @classmethod
     def from_clinical_trials_list(cls, data):
-        return cls.from_any_list(data, "clinical_trials")
+        """Utility method that allows to simulate an API results DslDataset object from raw clinical_trials data. See the `from_publications_list` method for more information. 
+
+        Parameters
+        ----------
+        data: list or pandas dataframe 
+            A clinical_trials list (using the API DSL structure), in the form of either a list of dictionaries, or as a pandas dataframe. 
+
+        Returns
+        -------
+        DslDataset
+            A Dimcli wrapper object containing JSON data.         
+        
+        """
+        return cls._from_any_list(data, "clinical_trials")
+    
     @classmethod
     def from_patents_list(cls, data):
-        return cls.from_any_list(data, "patents")
+        """Utility method that allows to simulate an API results DslDataset object from raw patents data. See the `from_publications_list` method for more information. 
+
+        Parameters
+        ----------
+        data: list or pandas dataframe 
+            A patents list (using the API DSL structure), in the form of either a list of dictionaries, or as a pandas dataframe. 
+
+        Returns
+        -------
+        DslDataset
+            A Dimcli wrapper object containing JSON data.         
+        
+        """
+        return cls._from_any_list(data, "patents")
+    
     @classmethod
     def from_policy_documents_list(cls, data):
-        return cls.from_any_list(data, "policy_documents")
+        """Utility method that allows to simulate an API results DslDataset object from raw policy_documents data. See the `from_publications_list` method for more information. 
+
+        Parameters
+        ----------
+        data: list or pandas dataframe 
+            A policy_documents list (using the API DSL structure), in the form of either a list of dictionaries, or as a pandas dataframe. 
+
+        Returns
+        -------
+        DslDataset
+            A Dimcli wrapper object containing JSON data.         
+        
+        """
+        return cls._from_any_list(data, "policy_documents")
+    
     @classmethod
     def from_organizations_list(cls, data):
-        return cls.from_any_list(data, "organizations")
+        """Utility method that allows to simulate an API results DslDataset object from raw organizations data. See the `from_publications_list` method for more information. 
+
+        Parameters
+        ----------
+        data: list or pandas dataframe 
+            An organizations list (using the API DSL structure), in the form of either a list of dictionaries, or as a pandas dataframe. 
+
+        Returns
+        -------
+        DslDataset
+            A Dimcli wrapper object containing JSON data.         
+        
+        """
+        return cls._from_any_list(data, "organizations")
+    
     @classmethod
-    def from_any_list(cls, data, source_type):
-        "Generic method used by all the ones above"
+    def _from_any_list(cls, data, source_type):
+        """Generic method that allows to simulate an API results DslDataset object from raw data.
+        """
         if type(data) == list:
             return cls({source_type : data, '_stats' : {'total_count' : len(data)}})
         elif type(data) == pd.DataFrame:
@@ -355,9 +503,44 @@ class DslDataset(IPython.display.JSON):
             return cls({source_type : jsondata, '_stats' : {'total_count' : len(jsondata)}})
         else:
             raise ValueError('Invalid data format. Must be either a dict list, or a pandas dataframe')
+    
     @classmethod
-    def from_json_file(cls, filename, verbose=False):
-        "Return a DslDataset object from JSON API data previously saved. "
+    def load_json_file(cls, filename, verbose=False):
+        """Load a file containing DSL JSON data and returns a valid DslDataset object. 
+
+        Note: this is normally used in combination with the `save_json` method.
+
+        Parameters
+        ----------
+        filename: str 
+            A valid filename (including path if necessary) that contains the JSON data.
+
+        Returns
+        -------
+        DslDataset
+            A Dimcli wrapper object containing JSON data.         
+
+        Example
+        -------
+        Save the results of a query to a JSON file, then reload the same file and create a new dataset.
+
+        >>> dataset = dsl.query(\"\""search publications where journal.title="nature medicine" return publications[id+title+year+concepts] limit 100"\"\")
+        Returned Publications: 100 (total = 12641)
+
+        Save the data to a local json file
+
+        >>> FILENAME = "test-api-save.json"
+        >>> dataset.save_json(FILENAME, verbose=True)
+        Saved to file:  test-api-save.json
+        
+        Create a new DslDataset object by loading the contents of the JSON file.
+
+        >>> new_dataset = DslDataset.load_json_file(FILENAME, verbose=True)
+        Loaded file:  test-api-save.json
+        >>> print(new_dataset)
+        <dimcli.DslDataset object #4370267824. Records: 100/12641>
+
+        """
         with open(filename) as json_file:
             jsondata = json.load(json_file)
         if verbose: print("Loaded file: ", filename)
@@ -395,17 +578,47 @@ class DslDataset(IPython.display.JSON):
             return 0
 
     def good_data_keys(self,):
-        "return the results keys other than stats"
+        """Utility that returns the 'data' keys of the inner JSON object, excluding metadata like 'stats', 'warnings' and 'version' info. 
+
+        Returns
+        -------
+        list
+            A list of dictionary keys.         
+
+        Example
+        -------
+        >>> queryresults.good_data_keys()
+        ['publications']
+
+        """
         skips = ["_warnings", "_notes", "_stats", "_version"]
         return [x for x in self.json.keys() if x not in skips]
 
     def keys_and_count(self,):
-        "Utility to preview contents of results object"
+        """Utility that previews the contents of the inner JSON object. 
+
+        Returns
+        -------
+        list
+            A list of tuples.       
+
+        Example
+        -------
+        >>> queryresults.keys_and_count()
+        [('_stats', 3), ('_warnings', 1), ('_version', 2), ('publications', 100)]
+
+        """
         return [(x, len(self.json[x])) for x in self.json.keys()]
 
     @property
     def count_total(self,):
-        "Quickly return tot count for query (not for current payload)"
+        """Total number of results in Dimensions for the query (as opposed to the results returned in the JSON payload). 
+
+        Returns
+        -------
+        int
+            The number of results
+        """
         if self.json.get("_stats"):
             return self.json['_stats']['total_count']
         else:
@@ -413,28 +626,46 @@ class DslDataset(IPython.display.JSON):
 
     @property
     def count_batch(self,):
-        "Quickly return tot count for current batch from query"
+        """Number of results returned from the query. 
+
+        Returns
+        -------
+        int
+            The number of results
+        """
         return len(self)
 
     @property
     def errors_string(self,):  # can't be called 'error' due to conflict with auto-set field
-        "Quickly return errors string"
+        """Utility that merges all errors messages into a single string."""
         if self.json.get("errors"):
             return self.json['errors']['query']['header'] + self.json['errors']['query']['details'][0]
         else:
             return ""
 
     def chunks(self, size=400, key=""):
-        """
-        Return an iterator for going through chunks of the JSON results. 
-        NB the first available dict key is taken, to determine what is the data 
-        object being returned. 
-        Default size of chunks = 400 elements
+        """Return an iterator for going through chunks of the JSON results. 
 
-        EG
+        Note: in DSL queries with multiple `return` statements it is better to specify which result-type needs to be chunked using the `key` parameter. 
 
-        res = dslquery("search publications return publications limit 1000")
-        test = [len(x) for x in res.chunks()]
+        Parameters
+        ----------
+        size: int, default=400 
+            Number of objects (records) to include in each chunk.
+        key: str, optional
+            The JSON results data object that needs to be chunked eg 'publications' or 'grants'. If not specified, the first available dict key is used. 
+
+        Returns
+        -------
+        iterator
+            A iterator object         
+
+        Example
+        -------
+        Break up a 1000 records dataset into groups of 100.
+
+        >>> data = dslquery("search publications return publications limit 1000")
+        >>> groups = [len(x) for x in data.chunks(size=100)]
 
         """
 
@@ -457,74 +688,151 @@ class DslDataset(IPython.display.JSON):
     # Dataframe Methods 
 
     def as_dataframe(self, key=""):
-        "utility method: return inner json as a pandas dataframe"
+        """Return the JSON data as a Pandas DataFrame. 
+
+        If `key` is empty, the first available JSON key (eg 'publications') is used to determine
+        what JSON data should be turned into a dataframe (mostly relevant when using multi-result DSL queries).
+
+        Parameters
+        ----------
+        key: str, optional
+            The JSON results data object that needs to be processed.
+
+        Returns
+        -------
+        pandas.DataFrame
+            A DataFrame instance containing API records.   
+
+        Example
+        -------
+        See https://api-lab.dimensions.ai/cookbooks/1-getting-started/3-Working-with-dataframes.html        
+
+        """
 
         if not self.json.get("errors"):
             return self.df_factory.df_simple(self.json, key)
 
 
     def as_dataframe_authors(self):
-        """Utility method: return inner json as a pandas dataframe, exposing authors + pubId
-            Note: affiliations are not broken down. So one gets one row per author
+        """Return the JSON data as a Pandas DataFrame, in which each row corresponds to a publication author.
+
+        This method works only with 'publications' queries and it's clever enough to know if the `authors` or `author_affiliations` (deprecated) fields are used. The list of affiliations per each author are not broken down and are returned as JSON. So in essence you get one row per author.
+
+        Returns
+        -------
+        pandas.DataFrame
+            A DataFrame instance containing API records.          
+
+        Example
+        -------
+        See https://api-lab.dimensions.ai/cookbooks/1-getting-started/3-Working-with-dataframes.html  
         """
         if not self.json.get("errors"):
             return self.df_factory.df_authors(self.json)
 
 
     def as_dataframe_authors_affiliations(self):
-        """Utility method: return inner json as a pandas dataframe, exposing authors + affiliations + pubId
-        Affiliations ARE broken down and are returned as JSON - So one gets one row per affiliation (+1 row per author if having more than one affiliation)
+        """Return the JSON data as a Pandas DataFrame, in which each row corresponds to a publication affiliation.
+
+        This method works only with 'publications' queries and it's clever enough to know if the `authors` or `author_affiliations` (deprecated) fields are used. If an author has multiple affiliations, they would be represented in different rows (hence the same authors may appear on different rows). 
+
+        Returns
+        -------
+        pandas.DataFrame
+            A DataFrame instance containing API records.          
+
+        Example
+        -------
+        See https://api-lab.dimensions.ai/cookbooks/1-getting-started/3-Working-with-dataframes.html  
         """
         if not self.json.get("errors"):
             return self.df_factory.df_authors_affiliations(self.json)
 
     def as_dataframe_concepts(self, key=""):
-        """Utility method: return inner concepts list as a pandas dataframe, including several metrics for working with concepts.
+        """Return the JSON data as a Pandas DataFrame, in which each row corresponds to a single 'concept'.
 
-        :param key: the JSON data key including concept information. If key is empty, the first available JSON key (eg 'publications') is used to build the dataframe
+        This method works only with 'publications' and 'grants' queries and it's clever enough to know if the `concepts` or `concepts_scores` fields are used. Additional metrics like 'frequency' and 'score_average' are also included in the results. 
 
-        The resulting dataframe has extra columns for ranking concepts:
-        1) `concepts_count`: an integer representing the total number of concepts per document.
-        2) `rank`: an integer representing the ranking of the concept within the list of concepts for a single document. E.g., the first concept has rank=1, while the fifth has rank=5.
-        3) `score`: a float representing the importance of the concept in within a document. This is obtained by  normalizing its ranking against the total number of concepts for a single document (eg publication or grant). So if a document has 10 concepts in total, the first concept gets a score=1, the second score=0.9, etc..
-        4) `frequency`: an integer representing how often that concept occurs within the full results-set returned by a query, i.e. how many documents have that concept name. So if a concept appears in 5 documents, frequency=5.
-        5) `rank_avg`: the average (mean) value of all ranks for a single concept, across the full set of documents returned by the query. 
-        6) `score_avg`: the average (mean) value of all scores for a single concept, across the full set of documents returned by a query.  
-        7) `score_sum`: the sum of all scores for a single concept, across the full set of documents returned by a query.  
+        Returns
+        -------
+        pandas.DataFrame
+            A DataFrame instance containing API records.          
+
+        Example
+        -------
+        See https://api-lab.dimensions.ai/cookbooks/1-getting-started/3-Working-with-dataframes.html  
         """
         if not self.json.get("errors"):
             return self.df_factory.df_concepts(self.json, key)
 
 
     def as_dataframe_funders(self):
-        """Utility method: return inner json as a pandas dataframe, for grants funders
+        """Return the JSON data as a Pandas DataFrame, in which each row corresponds to a single 'funder'.
+
+        This method works only with 'grants' queries.
+
+        Returns
+        -------
+        pandas.DataFrame
+            A DataFrame instance containing API records.          
+
+        Example
+        -------
+        See https://api-lab.dimensions.ai/cookbooks/1-getting-started/3-Working-with-dataframes.html  
         """
         if not self.json.get("errors"):
             return self.df_factory.df_grant_funders(self.json)
 
     def as_dataframe_investigators(self):
-        """Utility method: return inner json as a pandas dataframe, for grants funders
+        """Return the JSON data as a Pandas DataFrame, in which each row corresponds to a single 'investigator'.
+
+        This method works only with 'grants' queries.
+
+        Returns
+        -------
+        pandas.DataFrame
+            A DataFrame instance containing API records.          
+
+        Example
+        -------
+        See https://api-lab.dimensions.ai/cookbooks/1-getting-started/3-Working-with-dataframes.html  
         """
         if not self.json.get("errors"):
             return self.df_factory.df_grant_investigators(self.json)
 
-    def as_dimensions_url(self, max=500, verbose=True):
-        """Generates a valid Dimensions search URL using all the object IDs as filters.
-        NOTE: this is EXPERIMENTAL and may break or be removed in future versions. 
-        Also, doesn't work with all sources. 
+    def as_dimensions_url(self, records=500, verbose=True):
+        """Utility that turns a list of records into a Dimensions webapp URL, by using the record IDs as filters.
+        
+        NOTE: this functionality is EXPERIMENTAL and may break or be removed in future versions. Also, it works only with: publications, grants, patents, clinical_trials, policy_documents.
 
-        <max> 500 cause to prevent error 414 Request-URI Too Large 
-        <verbose> to print out the warning
+        Parameters
+        ----------
+        records: int, default=500 
+            The number of record IDs to use. With more than 500, it is likely to incur into a '414 Request-URI Too Large' error. 
+        verbose: bool, default=True
+            Verbose mode
 
-        General query structure for IDs: 
-           
-        `id: (pub.1120715293 OR pub.1120975084 OR pub.1122068834 OR pub.1120602308)`
+        Returns
+        -------
+        str
+            A string representing a Dimensions URL.  
 
-        Final URL looks like this https://app.dimensions.ai/discover/publication?search_text=id%3A+%28pub.1120715293+OR+pub.1120975084+OR+pub.1122068834+OR+pub.1120602308%29
+        Example
+        -------
 
+        >>> data = dsl.query(\"\""search publications where id in ["pub.1120715293", "pub.1120975084", "pub1122068834", "pub.1120602308"] return publications\"\"")
+        >>> data.as_dimensions_url()
+        'https://app.dimensions.ai/discover/publication?search_text=id%3A+%28pub.1120975084+OR+pub.1120715293+OR+pub.1120602308%29'
         """
         
         if verbose: print("Warning: this is an experimental and unsupported feature.")
+
+
+        # General query structure for IDs: 
+           
+        # `id: (pub.1120715293 OR pub.112097508 4 OR pub.1122068834 OR pub.1120602308)`
+
+        # Final URL looks like this https://app.dimensions.ai/discover/publication?search_text=id%3A+%28pub.1120715293+OR+pub.1120975084+OR+pub.1122068834+OR+pub.1120602308%29
 
         # hardcoded
         supported_url_templates = {
@@ -554,7 +862,40 @@ class DslDataset(IPython.display.JSON):
 
 
     def save_json(self, filename="", verbose=True):
-        """Export the DSL data to a JSON file
+        """Export API results data to a JSON file. 
+
+        Note: this is normally used in combination with the `load_json_file` method.
+
+        Parameters
+        ----------
+        filename: str, optional 
+            A filename/path where to save the data. If not provided, a unique name is generated automatically.
+
+        Returns
+        -------
+        str
+            The string representation of the filename the data is saved to.         
+
+        Example
+        -------
+        Save the results of a query to a JSON file, then reload the same file and create a new dataset.
+
+        >>> dataset = dsl.query(\"\""search publications where journal.title="nature medicine" return publications[id+title+year+concepts] limit 100"\"\")
+        Returned Publications: 100 (total = 12641)
+
+        Save the data to a local json file
+
+        >>> FILENAME = "test-api-save.json"
+        >>> dataset.save_json(FILENAME, verbose=True)
+        Saved to file:  test-api-save.json
+        
+        Data can be reloaded from file, using the `load_json_file` class method. 
+
+        >>> new_dataset = DslDataset.load_json_file(FILENAME, verbose=True)
+        Loaded file:  test-api-save.json
+        >>> print(new_dataset)
+        <dimcli.DslDataset object #4370267824. Records: 100/12641>
+
         """
         if not self.json.get("errors"):
             if not filename:
@@ -562,6 +903,7 @@ class DslDataset(IPython.display.JSON):
             with open(filename, 'w') as outfile:
                 json.dump(self.json, outfile)
                 if verbose: print("Saved to file: ", filename)
+                return filename
 
 
     def __repr__(self):

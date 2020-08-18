@@ -6,7 +6,7 @@
 
 import json
 import dimcli
-dimcli.login()
+dimcli.login("test")
 dsl = dimcli.Dsl()
 
 data = dsl.query("describe schema").json

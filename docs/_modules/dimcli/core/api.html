@@ -82,8 +82,8 @@
             
               <p class="caption"><span class="caption-text">Contents</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">Dimcli</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../apidocs.html">Module Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started.html">Getting Started with Dimcli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../apidocs.html">Reference</a></li>
 </ul>
 
             
@@ -151,9 +151,10 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">api.py</span>
 <span class="sd">====================================</span>
-<span class="sd">The core module of DimCli</span>
+<span class="sd">The core module of DimCli, containing funtionalities for querying the API and processing the data returned.</span>
 
-<span class="sd">Note: in most cases you don&#39;t need to import this module manually. The `Dsl` and `DslDataset` objects are imported automatically and are available via the top level `dimcli` module.</span>
+<span class="sd">Note: the two main objects in this module (`Dsl` and `DslDataset`) are imported by default when the top level `dimcli` module gets imported.</span>
+
 <span class="sd">&quot;&quot;&quot;</span>
 
 
@@ -182,37 +183,32 @@
 <div class="viewcode-block" id="Dsl"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.Dsl">[docs]</a><span class="k">class</span> <span class="nc">Dsl</span><span class="p">():</span>
 
     <span class="sd">&quot;&quot;&quot;The Dsl object is the main interface for interacting with the Dimensions API.</span>
-<span class="sd"> </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    show_results : bool, default=False</span>
+<span class="sd">        Set a global setting that determines whether query JSON results get printed out. Note that in Jupyter environments this is not needed, because iPython rich widgets are used by default..</span>
+<span class="sd">    verbose : bool, default=True</span>
+<span class="sd">        Verbose mode.</span>
+
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    After logging in, the usual workflow is to instantiate this object and use it to query. </span>
-
-<span class="sd">        &gt;&gt;&gt; import dimcli</span>
-<span class="sd">        &gt;&gt;&gt; dimcli.login()</span>
-<span class="sd">        &gt;&gt;&gt; dsl = dimcli.Dsl()</span>
-<span class="sd">        &gt;&gt;&gt; dsl.query(&quot;search grants for \&quot;malaria\&quot; return researchers&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; &lt;dimcli.dimensions.DslDataset object&gt;</span>
-<span class="sd">        # queries always return a DslDataset object (subclassing IPython.display.JSON)</span>
-<span class="sd">        # use the .json method to get the JSON</span>
-<span class="sd">        &gt;&gt;&gt; _.json</span>
-<span class="sd">        &gt;&gt;&gt; {&#39;researchers&#39;: [{&#39;id&#39;: &#39;ur.01332073522.49&#39;,</span>
-<span class="sd">                &#39;count&#39;: 75,</span>
-<span class="sd">                &#39;last_name&#39;: &#39;White&#39;,</span>
-<span class="sd">                &#39;first_name&#39;: &#39;Nicholas J&#39;},</span>
-<span class="sd">            &quot;... JSON data continues ... &quot;</span>
-
-
+<span class="sd">    &gt;&gt;&gt; import dimcli</span>
+<span class="sd">    &gt;&gt;&gt; dimcli.login()</span>
+<span class="sd">    &gt;&gt;&gt; dsl = dimcli.Dsl()</span>
+<span class="sd">    &gt;&gt;&gt; dsl.query(\&quot;\&quot;&quot;search grants for &quot;graphene&quot; return researchers&quot;\&quot;\&quot;)</span>
+<span class="sd">    &lt;dimcli.dimensions.DslDataset object&gt;</span>
+<span class="sd">    &gt;&gt;&gt; _.json</span>
+<span class="sd">    &gt;&gt;&gt; {&#39;researchers&#39;: [{&#39;id&#39;: &#39;ur.01332073522.49&#39;,</span>
+<span class="sd">            &#39;count&#39;: 75,</span>
+<span class="sd">            &#39;last_name&#39;: &#39;White&#39;,</span>
+<span class="sd">            &#39;first_name&#39;: &#39;Nicholas J&#39;},</span>
+<span class="sd">        &quot;... JSON data continues ... &quot;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Dsl.__init__"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.Dsl.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show_results</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show_results</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialises a Dsl object.</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        show_results : bool</span>
-<span class="sd">            Set a global setting that determined whether query JSON results get printed out. Note that in Jupyter environments this is not needed, because the iPython rich widgets is used by default.</span>
-<span class="sd">        verbose : bool</span>
-<span class="sd">            Verbose mode.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_show_results</span> <span class="o">=</span> <span class="n">show_results</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_verbose</span> <span class="o">=</span> <span class="n">verbose</span>
@@ -225,7 +221,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CONNECTION</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Authorization&#39;</span><span class="p">:</span> <span class="s2">&quot;JWT &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CONNECTION</span><span class="p">[</span><span class="s1">&#39;token&#39;</span><span class="p">]}</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_print_please_login</span><span class="p">()</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_print_please_login</span><span class="p">()</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_logged_in</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -238,22 +234,28 @@
 <div class="viewcode-block" id="Dsl.query"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.Dsl.query">[docs]</a>    <span class="k">def</span> <span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">show_results</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">retry</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Execute a single DSL query.</span>
 
-<span class="sd">        By default it doesn&#39;t show results, but it uses the iPython rich widgets for it, optimized for Jupyter Notebooks.</span>
+<span class="sd">        This method handles the query token from the API and regenerates it if it&#39;s expired. If the API throws a &#39;Too Many Requests for the Server&#39; error, the method sleeps 30 seconds before retrying.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        show_results : bool</span>
-<span class="sd">            Show JSON results.</span>
-<span class="sd">        retry : int</span>
+<span class="sd">        show_results : bool, default=None</span>
+<span class="sd">            Setting that determines whether the query JSON results should be printed out. If None, it inherits from the Dsl global setting. Note that in Jupyter environments this is not needed, because iPython rich widgets are used by default.</span>
+<span class="sd">        retry : int, default=0</span>
 <span class="sd">            Number of times to retry the query if it fails.</span>
-<span class="sd">        verbose : bool</span>
-<span class="sd">            Verbose mode.</span>
+<span class="sd">        verbose : bool, default=None</span>
+<span class="sd">            Verbose mode. If None, it inherits from the Dsl global setting. </span>
 
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        DslDataset</span>
 <span class="sd">            A Dimcli wrapper object containing JSON data. </span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------------</span>
+<span class="sd">        &gt;&gt;&gt; dsl = dimcli.Dsl()</span>
+<span class="sd">        &gt;&gt;&gt; dsl.query(&quot;search grants where start_year=2020 return grants&quot;)</span>
+<span class="sd">        &lt;dimcli.dimensions.DslDataset object&gt;</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_logged_in</span><span class="p">:</span>
@@ -315,28 +317,53 @@
 
 
 <div class="viewcode-block" id="Dsl.query_iterative"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.Dsl.query_iterative">[docs]</a>    <span class="k">def</span> <span class="nf">query_iterative</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">show_results</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pause</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">maxlimit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tot_count_prev_query</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>       
-        <span class="sd">&quot;&quot;&quot;Runs a DSL query and then keep querying until all available records are extracted. </span>
+        <span class="sd">&quot;&quot;&quot;Runs a DSL query and then keep querying until all matching records have been extracted. </span>
 <span class="sd">        </span>
-<span class="sd">        Iterative DSL queries work by automatically paginating through all records available for a result set. The original query gets turned into a loop that uses the `limit` / `skip` operators until all the results available have been extracted. </span>
+<span class="sd">        The API returns a maximum of 1000 records per call. If a DSL query results in more than 1000 matches, it is possible to use pagination to get more results. </span>
+<span class="sd">        </span>
+<span class="sd">        Iterative querying works by automatically paginating through all records available for a result set. The original query gets turned into a loop that uses the `limit` / `skip` operators until all the results available have been extracted. </span>
 <span class="sd">        </span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        q: str </span>
 <span class="sd">            The DSL query. Important: pagination keywords eg `limit` / `skip` should be omitted.</span>
-<span class="sd">        show_results : bool (default=True)</span>
+<span class="sd">        show_results : bool, default=True</span>
 <span class="sd">            Determines whether the final results are rendered via the iPython display widget (for Jupyter notebooks).</span>
-<span class="sd">        limit : int (default=1000)</span>
+<span class="sd">        limit : int, default=1000</span>
 <span class="sd">            How many records to extract per iteration. Defaults to 1000.</span>
-<span class="sd">        skip : int (default=0)</span>
+<span class="sd">        skip : int, default=0</span>
 <span class="sd">            Offset for first iteration. Defaults to 0. After the first iteration, this value is calculated dynamically.</span>
-<span class="sd">        pause : float (default=1.5s)</span>
+<span class="sd">        pause : float, default=1.5s</span>
 <span class="sd">            How much time to pause after each iterarion, expressed in seconds. Defaults to 1.5. Note: each iteration gets timed, so the pause time is used only when the query time is more than 2s. </span>
-<span class="sd">        force : bool (default=False)</span>
+<span class="sd">        force : bool, default=False</span>
 <span class="sd">            Continue the extraction even if one of the iterations fails due to an error. </span>
-<span class="sd">        maxlimit : int (default=0)</span>
+<span class="sd">        maxlimit : int, default=0</span>
 <span class="sd">            The maximum number of records to extract in total. If 0, all available records are extracted, up to the API upper limit of 50k records per query.</span>
-<span class="sd">        verbose : bool (default=False)</span>
+<span class="sd">        verbose : bool, default=False</span>
 <span class="sd">            Verbose mode.</span>
+
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        DslDataset</span>
+<span class="sd">            A Dimcli wrapper object containing JSON data. </span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; dsl = dimcli.Dsl()</span>
+<span class="sd">        &gt;&gt;&gt; dsl.query_iterative(\&quot;\&quot;&quot;search grants where category_for.name=&quot;0206 Quantum Physics&quot; return grants&quot;\&quot;\&quot;)</span>
+<span class="sd">        Starting iteration with limit=1000 skip=0 ...</span>
+<span class="sd">        0-1000 / 8163 (4.062144994735718s)</span>
+<span class="sd">        1000-2000 / 8163 (1.5146172046661377s)</span>
+<span class="sd">        2000-3000 / 8163 (1.7225260734558105s)</span>
+<span class="sd">        3000-4000 / 8163 (1.575329065322876s)</span>
+<span class="sd">        4000-5000 / 8163 (1.521540880203247s)</span>
+<span class="sd">        5000-6000 / 8163 (1.471721887588501s)</span>
+<span class="sd">        6000-7000 / 8163 (1.5068159103393555s)</span>
+<span class="sd">        7000-8000 / 8163 (1.4724757671356201s)</span>
+<span class="sd">        8000-8163 / 8163 (0.7611980438232422s)</span>
+<span class="sd">        ===</span>
+<span class="sd">        Records extracted: 8163</span>
 
 
 <span class="sd">        Returns</span>
@@ -457,64 +484,220 @@
 <div class="viewcode-block" id="DslDataset"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.DslDataset">[docs]</a><span class="k">class</span> <span class="nc">DslDataset</span><span class="p">(</span><span class="n">IPython</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">JSON</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Wrapper for JSON results from DSL.</span>
 
+<span class="sd">    This object makes it easier to process, save and load API JSON data. </span>
+
 <span class="sd">    Example</span>
 <span class="sd">    ----------</span>
-
-<span class="sd">        &gt;&gt;&gt; res = dsl.query(&quot;search publications return publications&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; res.data # =&gt; shows the underlying JSON data</span>
-<span class="sd">        &gt;&gt;&gt; res.json # =&gt; same </span>
-
-<span class="sd">        # Shortcuts methods: </span>
-
-<span class="sd">        &gt;&gt;&gt; res[&#39;publications&#39;] # =&gt; the dict section</span>
-<span class="sd">        &gt;&gt;&gt; res[&#39;xxx&#39;] # =&gt; false, not found</span>
-<span class="sd">        &gt;&gt;&gt; res[&#39;stats&#39;] # =&gt; the _stats dict</span>
+<span class="sd">    &gt;&gt;&gt; dsl = dimcli.Dsl()</span>
+<span class="sd">    &gt;&gt;&gt; data = dsl.query(\&quot;\&quot;&quot;search publications for &quot;machine learning&quot; return publications limit 100&quot;\&quot;\&quot;)</span>
+<span class="sd">    Returned Publications: 20 (total = 2501114)</span>
+<span class="sd">    Time: 1.36s</span>
+<span class="sd">    &gt;&gt;&gt; print(data)</span>
+<span class="sd">    &lt;dimcli.DslDataset object #4383191536. Records: 100/2501114&gt;</span>
+<span class="sd">    &gt;&gt;&gt; len(data)</span>
+<span class="sd">    100</span>
+<span class="sd">    &gt;&gt;&gt; data.count_batch</span>
+<span class="sd">    100</span>
+<span class="sd">    &gt;&gt;&gt; data.count_total</span>
+<span class="sd">    2501114</span>
+<span class="sd">    &gt;&gt;&gt; data.json</span>
+<span class="sd">    #  =&gt; returns the underlying JSON data</span>
+<span class="sd">    &gt;&gt;&gt; data[&#39;publications&#39;] </span>
+<span class="sd">    #  =&gt; shortcut for the &#39;publications&#39; key in the underlying JSON data</span>
+<span class="sd">    &gt;&gt;&gt; data.publications</span>
+<span class="sd">    #  =&gt; ..this is valid too!</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1"># class methods to build DslDataset object from raw data (obtained not from a query eg from multiple queries concatenated)</span>
-    <span class="c1"># these allow to then take advantage of other functionalities in DslDataset objects eg dataframes etc...</span>
-    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="DslDataset.from_publications_list"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.DslDataset.from_publications_list">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_publications_list</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_any_list</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;publications&quot;</span><span class="p">)</span>
-    <span class="nd">@classmethod</span>
+        <span class="sd">&quot;&quot;&quot;Utility method that allows to simulate an API results DslDataset object from raw publications data. </span>
+<span class="sd">        </span>
+<span class="sd">        This functionality can be used to reload data that was cached locally, or to combine the merged results of separate API queries into a single DslDataset object. </span>
+
+<span class="sd">        Once created, the DslDataset object has the same exact behaviour as when it is obtained from an API query (so one can take advatange of dataframe creation methods, for example).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data: list or pandas dataframe </span>
+<span class="sd">            A list of publications, in the form of either a list of dictionaries, or as a pandas dataframe. </span>
+
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        DslDataset</span>
+<span class="sd">            A Dimcli wrapper object containing JSON data. </span>
+
+<span class="sd">        Example</span>
+<span class="sd">        ----------</span>
+<span class="sd">        &gt;&gt;&gt; dsl = dimcli.Dsl()</span>
+<span class="sd">        &gt;&gt;&gt; rawdata = dsl.query(&quot;search publications return publications&quot;).publications</span>
+<span class="sd">        &gt;&gt;&gt; type(rawdata)</span>
+<span class="sd">        list</span>
+<span class="sd">        &gt;&gt;&gt; newDataset = dimcli.DslDataset.from_publications_list(rawdata)</span>
+<span class="sd">        &gt;&gt;&gt; newDataset</span>
+<span class="sd">        &lt;dimcli.DslDataset object #4767014816. Records: 20/20&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_from_any_list</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;publications&quot;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="DslDataset.from_grants_list"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.DslDataset.from_grants_list">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_grants_list</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_any_list</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;grants&quot;</span><span class="p">)</span>
-    <span class="nd">@classmethod</span>
+        <span class="sd">&quot;&quot;&quot;Utility method that allows to simulate an API results DslDataset object from raw grants data. See the `from_publications_list` method for more information. </span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data: list or pandas dataframe </span>
+<span class="sd">            A grants list (using the API DSL structure), in the form of either a list of dictionaries, or as a pandas dataframe. </span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        DslDataset</span>
+<span class="sd">            A Dimcli wrapper object containing JSON data.         </span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_from_any_list</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;grants&quot;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="DslDataset.from_researchers_list"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.DslDataset.from_researchers_list">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_researchers_list</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_any_list</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;researchers&quot;</span><span class="p">)</span>
-    <span class="nd">@classmethod</span>
+        <span class="sd">&quot;&quot;&quot;Utility method that allows to simulate an API results DslDataset object from raw researchers data. See the `from_publications_list` method for more information. </span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data: list or pandas dataframe </span>
+<span class="sd">            A researchers list (using the API DSL structure), in the form of either a list of dictionaries, or as a pandas dataframe. </span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        DslDataset</span>
+<span class="sd">            A Dimcli wrapper object containing JSON data.         </span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_from_any_list</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;researchers&quot;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="DslDataset.from_clinical_trials_list"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.DslDataset.from_clinical_trials_list">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_clinical_trials_list</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_any_list</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;clinical_trials&quot;</span><span class="p">)</span>
-    <span class="nd">@classmethod</span>
+        <span class="sd">&quot;&quot;&quot;Utility method that allows to simulate an API results DslDataset object from raw clinical_trials data. See the `from_publications_list` method for more information. </span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data: list or pandas dataframe </span>
+<span class="sd">            A clinical_trials list (using the API DSL structure), in the form of either a list of dictionaries, or as a pandas dataframe. </span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        DslDataset</span>
+<span class="sd">            A Dimcli wrapper object containing JSON data.         </span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_from_any_list</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;clinical_trials&quot;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="DslDataset.from_patents_list"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.DslDataset.from_patents_list">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_patents_list</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_any_list</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;patents&quot;</span><span class="p">)</span>
-    <span class="nd">@classmethod</span>
+        <span class="sd">&quot;&quot;&quot;Utility method that allows to simulate an API results DslDataset object from raw patents data. See the `from_publications_list` method for more information. </span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data: list or pandas dataframe </span>
+<span class="sd">            A patents list (using the API DSL structure), in the form of either a list of dictionaries, or as a pandas dataframe. </span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        DslDataset</span>
+<span class="sd">            A Dimcli wrapper object containing JSON data.         </span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_from_any_list</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;patents&quot;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="DslDataset.from_policy_documents_list"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.DslDataset.from_policy_documents_list">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_policy_documents_list</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_any_list</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;policy_documents&quot;</span><span class="p">)</span>
-    <span class="nd">@classmethod</span>
+        <span class="sd">&quot;&quot;&quot;Utility method that allows to simulate an API results DslDataset object from raw policy_documents data. See the `from_publications_list` method for more information. </span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data: list or pandas dataframe </span>
+<span class="sd">            A policy_documents list (using the API DSL structure), in the form of either a list of dictionaries, or as a pandas dataframe. </span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        DslDataset</span>
+<span class="sd">            A Dimcli wrapper object containing JSON data.         </span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_from_any_list</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;policy_documents&quot;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="DslDataset.from_organizations_list"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.DslDataset.from_organizations_list">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_organizations_list</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_any_list</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;organizations&quot;</span><span class="p">)</span>
-<div class="viewcode-block" id="DslDataset.from_any_list"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.DslDataset.from_any_list">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_any_list</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">source_type</span><span class="p">):</span>
-        <span class="s2">&quot;Generic method used by all the ones above&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Utility method that allows to simulate an API results DslDataset object from raw organizations data. See the `from_publications_list` method for more information. </span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data: list or pandas dataframe </span>
+<span class="sd">            An organizations list (using the API DSL structure), in the form of either a list of dictionaries, or as a pandas dataframe. </span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        DslDataset</span>
+<span class="sd">            A Dimcli wrapper object containing JSON data.         </span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_from_any_list</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;organizations&quot;</span><span class="p">)</span></div>
+    
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_from_any_list</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">source_type</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generic method that allows to simulate an API results DslDataset object from raw data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">cls</span><span class="p">({</span><span class="n">source_type</span> <span class="p">:</span> <span class="n">data</span><span class="p">,</span> <span class="s1">&#39;_stats&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;total_count&#39;</span> <span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)}})</span>
         <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
             <span class="n">jsondata</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">))</span>
             <span class="k">return</span> <span class="bp">cls</span><span class="p">({</span><span class="n">source_type</span> <span class="p">:</span> <span class="n">jsondata</span><span class="p">,</span> <span class="s1">&#39;_stats&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;total_count&#39;</span> <span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">jsondata</span><span class="p">)}})</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid data format. Must be either a dict list, or a pandas dataframe&#39;</span><span class="p">)</span></div>
-<div class="viewcode-block" id="DslDataset.from_json_file"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.DslDataset.from_json_file">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_json_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="s2">&quot;Return a DslDataset object from JSON API data previously saved. &quot;</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid data format. Must be either a dict list, or a pandas dataframe&#39;</span><span class="p">)</span>
+    
+<div class="viewcode-block" id="DslDataset.load_json_file"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.DslDataset.load_json_file">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">load_json_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load a file containing DSL JSON data and returns a valid DslDataset object. </span>
+
+<span class="sd">        Note: this is normally used in combination with the `save_json` method.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename: str </span>
+<span class="sd">            A valid filename (including path if necessary) that contains the JSON data.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        DslDataset</span>
+<span class="sd">            A Dimcli wrapper object containing JSON data.         </span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        Save the results of a query to a JSON file, then reload the same file and create a new dataset.</span>
+
+<span class="sd">        &gt;&gt;&gt; dataset = dsl.query(\&quot;\&quot;&quot;search publications where journal.title=&quot;nature medicine&quot; return publications[id+title+year+concepts] limit 100&quot;\&quot;\&quot;)</span>
+<span class="sd">        Returned Publications: 100 (total = 12641)</span>
+
+<span class="sd">        Save the data to a local json file</span>
+
+<span class="sd">        &gt;&gt;&gt; FILENAME = &quot;test-api-save.json&quot;</span>
+<span class="sd">        &gt;&gt;&gt; dataset.save_json(FILENAME, verbose=True)</span>
+<span class="sd">        Saved to file:  test-api-save.json</span>
+<span class="sd">        </span>
+<span class="sd">        Create a new DslDataset object by loading the contents of the JSON file.</span>
+
+<span class="sd">        &gt;&gt;&gt; new_dataset = DslDataset.load_json_file(FILENAME, verbose=True)</span>
+<span class="sd">        Loaded file:  test-api-save.json</span>
+<span class="sd">        &gt;&gt;&gt; print(new_dataset)</span>
+<span class="sd">        &lt;dimcli.DslDataset object #4370267824. Records: 100/12641&gt;</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span>
             <span class="n">jsondata</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">json_file</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loaded file: &quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">jsondata</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="DslDataset.__init__"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.DslDataset.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="n">IPython</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">JSON</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">json</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">errors</span> <span class="o">=</span> <span class="kc">None</span>
@@ -524,7 +707,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">df_factory</span> <span class="o">=</span> <span class="n">DfFactory</span><span class="p">(</span><span class="n">good_data_keys</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">good_data_keys</span><span class="p">())</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df_factory</span> <span class="o">=</span> <span class="n">DfFactory</span><span class="p">(</span><span class="n">good_data_keys</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">good_data_keys</span><span class="p">())</span>
 
     <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="s2">&quot;Trick to return any dict key as a property&quot;</span>
@@ -545,17 +728,47 @@
             <span class="k">return</span> <span class="mi">0</span>
 
 <div class="viewcode-block" id="DslDataset.good_data_keys"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.DslDataset.good_data_keys">[docs]</a>    <span class="k">def</span> <span class="nf">good_data_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
-        <span class="s2">&quot;return the results keys other than stats&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Utility that returns the &#39;data&#39; keys of the inner JSON object, excluding metadata like &#39;stats&#39;, &#39;warnings&#39; and &#39;version&#39; info. </span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list</span>
+<span class="sd">            A list of dictionary keys.         </span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; queryresults.good_data_keys()</span>
+<span class="sd">        [&#39;publications&#39;]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">skips</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;_warnings&quot;</span><span class="p">,</span> <span class="s2">&quot;_notes&quot;</span><span class="p">,</span> <span class="s2">&quot;_stats&quot;</span><span class="p">,</span> <span class="s2">&quot;_version&quot;</span><span class="p">]</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skips</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="DslDataset.keys_and_count"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.DslDataset.keys_and_count">[docs]</a>    <span class="k">def</span> <span class="nf">keys_and_count</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
-        <span class="s2">&quot;Utility to preview contents of results object&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Utility that previews the contents of the inner JSON object. </span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list</span>
+<span class="sd">            A list of tuples.       </span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; queryresults.keys_and_count()</span>
+<span class="sd">        [(&#39;_stats&#39;, 3), (&#39;_warnings&#39;, 1), (&#39;_version&#39;, 2), (&#39;publications&#39;, 100)]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[(</span><span class="n">x</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="n">x</span><span class="p">]))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">count_total</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
-        <span class="s2">&quot;Quickly return tot count for query (not for current payload)&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Total number of results in Dimensions for the query (as opposed to the results returned in the JSON payload). </span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        int</span>
+<span class="sd">            The number of results</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;_stats&quot;</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;_stats&#39;</span><span class="p">][</span><span class="s1">&#39;total_count&#39;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
@@ -563,28 +776,46 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">count_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
-        <span class="s2">&quot;Quickly return tot count for current batch from query&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Number of results returned from the query. </span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        int</span>
+<span class="sd">            The number of results</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">errors_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>  <span class="c1"># can&#39;t be called &#39;error&#39; due to conflict with auto-set field</span>
-        <span class="s2">&quot;Quickly return errors string&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Utility that merges all errors messages into a single string.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;errors&quot;</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;errors&#39;</span><span class="p">][</span><span class="s1">&#39;query&#39;</span><span class="p">][</span><span class="s1">&#39;header&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;errors&#39;</span><span class="p">][</span><span class="s1">&#39;query&#39;</span><span class="p">][</span><span class="s1">&#39;details&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;&quot;</span>
 
 <div class="viewcode-block" id="DslDataset.chunks"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.DslDataset.chunks">[docs]</a>    <span class="k">def</span> <span class="nf">chunks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return an iterator for going through chunks of the JSON results. </span>
-<span class="sd">        NB the first available dict key is taken, to determine what is the data </span>
-<span class="sd">        object being returned. </span>
-<span class="sd">        Default size of chunks = 400 elements</span>
+        <span class="sd">&quot;&quot;&quot;Return an iterator for going through chunks of the JSON results. </span>
 
-<span class="sd">        EG</span>
+<span class="sd">        Note: in DSL queries with multiple `return` statements it is better to specify which result-type needs to be chunked using the `key` parameter. </span>
 
-<span class="sd">        res = dslquery(&quot;search publications return publications limit 1000&quot;)</span>
-<span class="sd">        test = [len(x) for x in res.chunks()]</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        size: int, default=400 </span>
+<span class="sd">            Number of objects (records) to include in each chunk.</span>
+<span class="sd">        key: str, optional</span>
+<span class="sd">            The JSON results data object that needs to be chunked eg &#39;publications&#39; or &#39;grants&#39;. If not specified, the first available dict key is used. </span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        iterator</span>
+<span class="sd">            A iterator object         </span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        Break up a 1000 records dataset into groups of 100.</span>
+
+<span class="sd">        &gt;&gt;&gt; data = dslquery(&quot;search publications return publications limit 1000&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; groups = [len(x) for x in data.chunks(size=100)]</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -607,74 +838,151 @@
     <span class="c1"># Dataframe Methods </span>
 
 <div class="viewcode-block" id="DslDataset.as_dataframe"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.DslDataset.as_dataframe">[docs]</a>    <span class="k">def</span> <span class="nf">as_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
-        <span class="s2">&quot;utility method: return inner json as a pandas dataframe&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return the JSON data as a Pandas DataFrame. </span>
+
+<span class="sd">        If `key` is empty, the first available JSON key (eg &#39;publications&#39;) is used to determine</span>
+<span class="sd">        what JSON data should be turned into a dataframe (mostly relevant when using multi-result DSL queries).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        key: str, optional</span>
+<span class="sd">            The JSON results data object that needs to be processed.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pandas.DataFrame</span>
+<span class="sd">            A DataFrame instance containing API records.   </span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        See https://api-lab.dimensions.ai/cookbooks/1-getting-started/3-Working-with-dataframes.html        </span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;errors&quot;</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_factory</span><span class="o">.</span><span class="n">df_simple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="DslDataset.as_dataframe_authors"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.DslDataset.as_dataframe_authors">[docs]</a>    <span class="k">def</span> <span class="nf">as_dataframe_authors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Utility method: return inner json as a pandas dataframe, exposing authors + pubId</span>
-<span class="sd">            Note: affiliations are not broken down. So one gets one row per author</span>
+        <span class="sd">&quot;&quot;&quot;Return the JSON data as a Pandas DataFrame, in which each row corresponds to a publication author.</span>
+
+<span class="sd">        This method works only with &#39;publications&#39; queries and it&#39;s clever enough to know if the `authors` or `author_affiliations` (deprecated) fields are used. The list of affiliations per each author are not broken down and are returned as JSON. So in essence you get one row per author.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pandas.DataFrame</span>
+<span class="sd">            A DataFrame instance containing API records.          </span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        See https://api-lab.dimensions.ai/cookbooks/1-getting-started/3-Working-with-dataframes.html  </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;errors&quot;</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_factory</span><span class="o">.</span><span class="n">df_authors</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="DslDataset.as_dataframe_authors_affiliations"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.DslDataset.as_dataframe_authors_affiliations">[docs]</a>    <span class="k">def</span> <span class="nf">as_dataframe_authors_affiliations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Utility method: return inner json as a pandas dataframe, exposing authors + affiliations + pubId</span>
-<span class="sd">        Affiliations ARE broken down and are returned as JSON - So one gets one row per affiliation (+1 row per author if having more than one affiliation)</span>
+        <span class="sd">&quot;&quot;&quot;Return the JSON data as a Pandas DataFrame, in which each row corresponds to a publication affiliation.</span>
+
+<span class="sd">        This method works only with &#39;publications&#39; queries and it&#39;s clever enough to know if the `authors` or `author_affiliations` (deprecated) fields are used. If an author has multiple affiliations, they would be represented in different rows (hence the same authors may appear on different rows). </span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pandas.DataFrame</span>
+<span class="sd">            A DataFrame instance containing API records.          </span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        See https://api-lab.dimensions.ai/cookbooks/1-getting-started/3-Working-with-dataframes.html  </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;errors&quot;</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_factory</span><span class="o">.</span><span class="n">df_authors_affiliations</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DslDataset.as_dataframe_concepts"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.DslDataset.as_dataframe_concepts">[docs]</a>    <span class="k">def</span> <span class="nf">as_dataframe_concepts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Utility method: return inner concepts list as a pandas dataframe, including several metrics for working with concepts.</span>
+        <span class="sd">&quot;&quot;&quot;Return the JSON data as a Pandas DataFrame, in which each row corresponds to a single &#39;concept&#39;.</span>
 
-<span class="sd">        :param key: the JSON data key including concept information. If key is empty, the first available JSON key (eg &#39;publications&#39;) is used to build the dataframe</span>
+<span class="sd">        This method works only with &#39;publications&#39; and &#39;grants&#39; queries and it&#39;s clever enough to know if the `concepts` or `concepts_scores` fields are used. Additional metrics like &#39;frequency&#39; and &#39;score_average&#39; are also included in the results. </span>
 
-<span class="sd">        The resulting dataframe has extra columns for ranking concepts:</span>
-<span class="sd">        1) `concepts_count`: an integer representing the total number of concepts per document.</span>
-<span class="sd">        2) `rank`: an integer representing the ranking of the concept within the list of concepts for a single document. E.g., the first concept has rank=1, while the fifth has rank=5.</span>
-<span class="sd">        3) `score`: a float representing the importance of the concept in within a document. This is obtained by  normalizing its ranking against the total number of concepts for a single document (eg publication or grant). So if a document has 10 concepts in total, the first concept gets a score=1, the second score=0.9, etc..</span>
-<span class="sd">        4) `frequency`: an integer representing how often that concept occurs within the full results-set returned by a query, i.e. how many documents have that concept name. So if a concept appears in 5 documents, frequency=5.</span>
-<span class="sd">        5) `rank_avg`: the average (mean) value of all ranks for a single concept, across the full set of documents returned by the query. </span>
-<span class="sd">        6) `score_avg`: the average (mean) value of all scores for a single concept, across the full set of documents returned by a query.  </span>
-<span class="sd">        7) `score_sum`: the sum of all scores for a single concept, across the full set of documents returned by a query.  </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pandas.DataFrame</span>
+<span class="sd">            A DataFrame instance containing API records.          </span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        See https://api-lab.dimensions.ai/cookbooks/1-getting-started/3-Working-with-dataframes.html  </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;errors&quot;</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_factory</span><span class="o">.</span><span class="n">df_concepts</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="DslDataset.as_dataframe_funders"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.DslDataset.as_dataframe_funders">[docs]</a>    <span class="k">def</span> <span class="nf">as_dataframe_funders</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Utility method: return inner json as a pandas dataframe, for grants funders</span>
+        <span class="sd">&quot;&quot;&quot;Return the JSON data as a Pandas DataFrame, in which each row corresponds to a single &#39;funder&#39;.</span>
+
+<span class="sd">        This method works only with &#39;grants&#39; queries.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pandas.DataFrame</span>
+<span class="sd">            A DataFrame instance containing API records.          </span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        See https://api-lab.dimensions.ai/cookbooks/1-getting-started/3-Working-with-dataframes.html  </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;errors&quot;</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_factory</span><span class="o">.</span><span class="n">df_grant_funders</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DslDataset.as_dataframe_investigators"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.DslDataset.as_dataframe_investigators">[docs]</a>    <span class="k">def</span> <span class="nf">as_dataframe_investigators</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Utility method: return inner json as a pandas dataframe, for grants funders</span>
+        <span class="sd">&quot;&quot;&quot;Return the JSON data as a Pandas DataFrame, in which each row corresponds to a single &#39;investigator&#39;.</span>
+
+<span class="sd">        This method works only with &#39;grants&#39; queries.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pandas.DataFrame</span>
+<span class="sd">            A DataFrame instance containing API records.          </span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        See https://api-lab.dimensions.ai/cookbooks/1-getting-started/3-Working-with-dataframes.html  </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;errors&quot;</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_factory</span><span class="o">.</span><span class="n">df_grant_investigators</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="DslDataset.as_dimensions_url"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.DslDataset.as_dimensions_url">[docs]</a>    <span class="k">def</span> <span class="nf">as_dimensions_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Generates a valid Dimensions search URL using all the object IDs as filters.</span>
-<span class="sd">        NOTE: this is EXPERIMENTAL and may break or be removed in future versions. </span>
-<span class="sd">        Also, doesn&#39;t work with all sources. </span>
+<div class="viewcode-block" id="DslDataset.as_dimensions_url"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.DslDataset.as_dimensions_url">[docs]</a>    <span class="k">def</span> <span class="nf">as_dimensions_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">records</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Utility that turns a list of records into a Dimensions webapp URL, by using the record IDs as filters.</span>
+<span class="sd">        </span>
+<span class="sd">        NOTE: this functionality is EXPERIMENTAL and may break or be removed in future versions. Also, it works only with: publications, grants, patents, clinical_trials, policy_documents.</span>
 
-<span class="sd">        &lt;max&gt; 500 cause to prevent error 414 Request-URI Too Large </span>
-<span class="sd">        &lt;verbose&gt; to print out the warning</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        records: int, default=500 </span>
+<span class="sd">            The number of record IDs to use. With more than 500, it is likely to incur into a &#39;414 Request-URI Too Large&#39; error. </span>
+<span class="sd">        verbose: bool, default=True</span>
+<span class="sd">            Verbose mode</span>
 
-<span class="sd">        General query structure for IDs: </span>
-<span class="sd">           </span>
-<span class="sd">        `id: (pub.1120715293 OR pub.1120975084 OR pub.1122068834 OR pub.1120602308)`</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            A string representing a Dimensions URL.  </span>
 
-<span class="sd">        Final URL looks like this https://app.dimensions.ai/discover/publication?search_text=id%3A+%28pub.1120715293+OR+pub.1120975084+OR+pub.1122068834+OR+pub.1120602308%29</span>
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
 
+<span class="sd">        &gt;&gt;&gt; data = dsl.query(\&quot;\&quot;&quot;search publications where id in [&quot;pub.1120715293&quot;, &quot;pub.1120975084&quot;, &quot;pub1122068834&quot;, &quot;pub.1120602308&quot;] return publications\&quot;\&quot;&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; data.as_dimensions_url()</span>
+<span class="sd">        &#39;https://app.dimensions.ai/discover/publication?search_text=id%3A+%28pub.1120975084+OR+pub.1120715293+OR+pub.1120602308%29&#39;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: this is an experimental and unsupported feature.&quot;</span><span class="p">)</span>
+
+
+        <span class="c1"># General query structure for IDs: </span>
+           
+        <span class="c1"># `id: (pub.1120715293 OR pub.112097508 4 OR pub.1122068834 OR pub.1120602308)`</span>
+
+        <span class="c1"># Final URL looks like this https://app.dimensions.ai/discover/publication?search_text=id%3A+%28pub.1120715293+OR+pub.1120975084+OR+pub.1122068834+OR+pub.1120602308%29</span>
 
         <span class="c1"># hardcoded</span>
         <span class="n">supported_url_templates</span> <span class="o">=</span> <span class="p">{</span>
@@ -704,14 +1012,48 @@
 
 
 <div class="viewcode-block" id="DslDataset.save_json"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.DslDataset.save_json">[docs]</a>    <span class="k">def</span> <span class="nf">save_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Export the DSL data to a JSON file</span>
+        <span class="sd">&quot;&quot;&quot;Export API results data to a JSON file. </span>
+
+<span class="sd">        Note: this is normally used in combination with the `load_json_file` method.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename: str, optional </span>
+<span class="sd">            A filename/path where to save the data. If not provided, a unique name is generated automatically.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            The string representation of the filename the data is saved to.         </span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        Save the results of a query to a JSON file, then reload the same file and create a new dataset.</span>
+
+<span class="sd">        &gt;&gt;&gt; dataset = dsl.query(\&quot;\&quot;&quot;search publications where journal.title=&quot;nature medicine&quot; return publications[id+title+year+concepts] limit 100&quot;\&quot;\&quot;)</span>
+<span class="sd">        Returned Publications: 100 (total = 12641)</span>
+
+<span class="sd">        Save the data to a local json file</span>
+
+<span class="sd">        &gt;&gt;&gt; FILENAME = &quot;test-api-save.json&quot;</span>
+<span class="sd">        &gt;&gt;&gt; dataset.save_json(FILENAME, verbose=True)</span>
+<span class="sd">        Saved to file:  test-api-save.json</span>
+<span class="sd">        </span>
+<span class="sd">        Data can be reloaded from file, using the `load_json_file` class method. </span>
+
+<span class="sd">        &gt;&gt;&gt; new_dataset = DslDataset.load_json_file(FILENAME, verbose=True)</span>
+<span class="sd">        Loaded file:  test-api-save.json</span>
+<span class="sd">        &gt;&gt;&gt; print(new_dataset)</span>
+<span class="sd">        &lt;dimcli.DslDataset object #4370267824. Records: 100/12641&gt;</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;errors&quot;</span><span class="p">):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">filename</span><span class="p">:</span>
                 <span class="n">filename</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;dimensions_data_%Y-%m-%d_%H-%M-%S.json&quot;</span><span class="p">)</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
                 <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">,</span> <span class="n">outfile</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saved to file: &quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span></div>
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saved to file: &quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">filename</span></div>
 
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

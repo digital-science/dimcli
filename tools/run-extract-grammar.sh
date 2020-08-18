@@ -7,7 +7,7 @@ clear
 echo "=================="
 echo "Opening iPython and extracting latest grammar info..."
 echo "import dimcli"
-echo "dimcli.login()"
+echo "dimcli.login('test')"
 echo "dsl = dimcli.Dsl()"
 echo "data = dsl.query('describe schema').json"
 echo "with open('dimcli/core/dsl_grammar_language_NEW.py', 'w') as f:"

@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-
 #
 # GRAMMAR_DICT is a dictionary rendering of the DSL grammar JSON
 # which can be obtained with the query `describe schema`
@@ -13,7 +12,6 @@
 # then copy contents of `dsl_grammar_language_NEW.py` to this file (after formatting them)
 #
 #
-
 
 GRAMMAR_DICT = {
     'sources': {
