@@ -172,7 +172,7 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>show_results</strong> (<em>bool</em><em>, </em><em>default=False</em>) – Set a global setting that determines whether query JSON results get printed out. Note that in Jupyter environments this is not needed, because iPython rich widgets are used by default..</p></li>
+<li><p><strong>show_results</strong> (<em>bool</em><em>, </em><em>default=False</em>) – Set a global setting that determines whether query JSON results get printed out. Note that in Jupyter environments this is not needed, because iPython rich widgets are used by default.</p></li>
 <li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>default=True</em>) – Verbose mode.</p></li>
 </ul>
 </dd>
@@ -699,6 +699,36 @@ what JSON data should be turned into a dataframe (mostly relevant when using mul
 <span class="go">&lt;dimcli.DslDataset object #4370267824. Records: 100/12641&gt;</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dimcli.core.api.DslDataset.save_gsheets">
+<code class="sig-name descname">save_gsheets</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">title</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/api.html#DslDataset.save_gsheets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.core.api.DslDataset.save_gsheets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export the dataframe version of some API results to a public google sheet. Google OAUTH client credentials are a prerequisite for this method to work correctly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>optional</em>) – The spreadsheet title, if one wants to reuse an existing spreadsheet.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>default=True</em>) – Verbose mode</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This method assumes that the calling environment can provide valid Google authentication credentials.
+There are two routes to make this work, depending on whether one is using Google Colab or a traditional Jupyter environment.</p>
+<p><strong>Google Colab</strong>
+This is the easiest route. In Google Colab, all required libraries are already available. The <cite>save_gsheets</cite> method simply triggers the built-in authentication process via a pop up window.</p>
+<p><strong>Jupyter</strong>
+This route involves a few more steps. In Jupyter, it is necessary to install the gspread, oauth2client and gspread_dataframe modules first. Secondly, one needs to create Google Drive access credentials using OAUTH (which boils down to a JSON file). Note that the credentials file needs to be saved in: <cite>~/.config/gspread/credentials.json</cite> (for gpread).
+The steps are described at <a class="reference external" href="https://gspread.readthedocs.io/en/latest/oauth2.html#for-end-users-using-oauth-client-id">https://gspread.readthedocs.io/en/latest/oauth2.html#for-end-users-using-oauth-client-id</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The google sheet URL as a string.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">

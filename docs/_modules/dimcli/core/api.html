@@ -187,7 +187,7 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    show_results : bool, default=False</span>
-<span class="sd">        Set a global setting that determines whether query JSON results get printed out. Note that in Jupyter environments this is not needed, because iPython rich widgets are used by default..</span>
+<span class="sd">        Set a global setting that determines whether query JSON results get printed out. Note that in Jupyter environments this is not needed, because iPython rich widgets are used by default.</span>
 <span class="sd">    verbose : bool, default=True</span>
 <span class="sd">        Verbose mode.</span>
 
@@ -1055,6 +1055,84 @@
                 <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saved to file: &quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">filename</span></div>
 
+
+
+
+<div class="viewcode-block" id="DslDataset.save_gsheets"><a class="viewcode-back" href="../../../apidocs.html#dimcli.core.api.DslDataset.save_gsheets">[docs]</a>    <span class="k">def</span> <span class="nf">save_gsheets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Export the dataframe version of some API results to a public google sheet. Google OAUTH client credentials are a prerequisite for this method to work correctly. </span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        title: str, optional </span>
+<span class="sd">            The spreadsheet title, if one wants to reuse an existing spreadsheet.</span>
+<span class="sd">        verbose: bool, default=True</span>
+<span class="sd">            Verbose mode</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This method assumes that the calling environment can provide valid Google authentication credentials.</span>
+<span class="sd">        There are two routes to make this work, depending on whether one is using Google Colab or a traditional Jupyter environment.</span>
+
+<span class="sd">        **Google Colab**</span>
+<span class="sd">        This is the easiest route. In Google Colab, all required libraries are already available. The `save_gsheets` method simply triggers the built-in authentication process via a pop up window. </span>
+<span class="sd">        </span>
+<span class="sd">        **Jupyter**</span>
+<span class="sd">        This route involves a few more steps. In Jupyter, it is necessary to install the gspread, oauth2client and gspread_dataframe modules first. Secondly, one needs to create Google Drive access credentials using OAUTH (which boils down to a JSON file). Note that the credentials file needs to be saved in: `~/.config/gspread/credentials.json` (for gpread). </span>
+<span class="sd">        The steps are described at https://gspread.readthedocs.io/en/latest/oauth2.html#for-end-users-using-oauth-client-id.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            The google sheet URL as a string.   </span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;errors&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">google.colab</span> <span class="kn">import</span> <span class="n">auth</span>
+            <span class="n">auth</span><span class="o">.</span><span class="n">authenticate_user</span><span class="p">()</span>
+
+            <span class="kn">import</span> <span class="nn">gspread</span>
+            <span class="kn">from</span> <span class="nn">gspread_dataframe</span> <span class="kn">import</span> <span class="n">set_with_dataframe</span>
+            <span class="kn">from</span> <span class="nn">oauth2client.client</span> <span class="kn">import</span> <span class="n">GoogleCredentials</span>
+            <span class="n">gc</span> <span class="o">=</span> <span class="n">gspread</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="n">GoogleCredentials</span><span class="o">.</span><span class="n">get_application_default</span><span class="p">())</span>
+
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="kn">import</span> <span class="nn">gspread</span>
+                <span class="kn">from</span> <span class="nn">oauth2client.service_account</span> <span class="kn">import</span> <span class="n">ServiceAccountCredentials</span>
+                <span class="kn">from</span> <span class="nn">gspread_dataframe</span> <span class="kn">import</span> <span class="n">set_with_dataframe</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Missing libraries. Please install gspread, oauth2client and gspread_dataframe: `pip install gspread gspread_dataframe oauth2client -U`.&quot;</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="s2">&quot;..authorizing with google..&quot;</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">gc</span> <span class="o">=</span> <span class="n">gspread</span><span class="o">.</span><span class="n">oauth</span><span class="p">()</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Google authorization failed. Do you have all the required files? Please see the documentation for more information.&quot;</span><span class="p">)</span>
+
+        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_dataframe</span><span class="p">()</span>
+        
+        <span class="k">if</span> <span class="n">title</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;..opening google sheet with title: </span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">gsheet</span> <span class="o">=</span> <span class="n">gc</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>  
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="s2">&quot;..creating a google sheet..&quot;</span><span class="p">)</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;dimcli-export-&quot;</span> <span class="o">+</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">-%H%M%S&quot;</span><span class="p">)</span>
+            <span class="n">gsheet</span> <span class="o">=</span> <span class="n">gc</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">title</span><span class="p">)</span> 
+        
+        <span class="n">worksheet</span> <span class="o">=</span> <span class="n">gsheet</span><span class="o">.</span><span class="n">sheet1</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="s2">&quot;..uploading..&quot;</span><span class="p">)</span>
+        <span class="n">set_with_dataframe</span><span class="p">(</span><span class="n">worksheet</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span> 
+        
+        <span class="c1"># https://gspread.readthedocs.io/en/latest/api.html#gspread.models.Spreadsheet.share</span>
+        <span class="n">gsheet</span><span class="o">.</span><span class="n">share</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">perm_type</span><span class="o">=</span><span class="s1">&#39;anyone&#39;</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="s1">&#39;reader&#39;</span><span class="p">)</span> <span class="c1"># anyone can see with url</span>
+        <span class="n">spreadsheet_url</span> <span class="o">=</span> <span class="s2">&quot;https://docs.google.com/spreadsheets/d/</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">gsheet</span><span class="o">.</span><span class="n">id</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved: </span><span class="si">{</span><span class="n">spreadsheet_url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">bold</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">spreadsheet_url</span>                </div>
+    
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;errors&quot;</span><span class="p">):</span>

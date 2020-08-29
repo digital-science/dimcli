@@ -1,5 +1,8 @@
 # Changelog
 
+## v 0.7.4.1 (beta)
+
+* export DSL results to gsheets
 
 
 ## v 0.7.4
