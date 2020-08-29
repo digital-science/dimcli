@@ -80,16 +80,11 @@ def main(test_number=1):
         res.to_csv("test.csv", index=False)
 
     if test_number == 2:
-        
-        FILENAME = "test-api-save.json"
-        q = dsl.query_iterative("""search publications where journal.title="nature medicine" and year>2014 return publications[id+title+year+concepts]""")
-        q.save_json(FILENAME, verbose=True)
-        # q.save_json("/Users/michele.pasin/tmp/text.json", verbose=True)
+        # GSHEET EXPORT TEST
+        #         
+        q = dsl.query_iterative("""search publications where journal.title="nature medicine" and year>2017 return publications[id+title+year+unnest(concepts)]""")
+        q.save_gsheets()
 
-        new_data = DslDataset.load_json_file(FILENAME, verbose=True)
-        print(new_data)
-
-        os.remove(FILENAME)
 
 
 if __name__ == '__main__':

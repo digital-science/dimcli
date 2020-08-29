@@ -39,6 +39,13 @@ sleep 1
 python -m dimcli.tests.test_functions
 sleep 2
 
+echo "=================="
+echo "CALLING [test_export] in 1 second..."
+echo "=================="
+sleep 1
+python -m dimcli.tests.test_export
+sleep 2
+
 echo ""
 echo "=================="
 echo "Completed."
