@@ -41,7 +41,7 @@ class DfFactory(object):
         if valid_key:
             if type(data[valid_key]) == list:
                 if data[valid_key] and type(data[valid_key][0]) == dict:
-                    output = json_normalize(data[valid_key])
+                    output = json_normalize(data[valid_key], errors="ignore")
                 else: # return empty list, or list of strings/numbers  
                     output = pd.DataFrame.from_dict(data[valid_key]) 
             elif type(data[valid_key]) == dict: # top level dict, use keys as index
@@ -127,8 +127,11 @@ class DfFactory(object):
         
         authors = self.df_authors(data)
         if len(authors):
-            affiliations = json_normalize(json.loads(authors.to_json(orient='records')), record_path=['affiliations'], 
-               meta=['pub_id', 'researcher_id', 'first_name', 'last_name'], record_prefix='aff_')
+            affiliations = json_normalize(json.loads(authors.to_json(orient='records')), 
+                            record_path=['affiliations'], 
+                            meta=['pub_id', 'researcher_id', 'first_name', 'last_name'], 
+                            record_prefix='aff_',
+                            errors="ignore")
         else:
             affiliations = authors # empty df
         affiliations.fillna('', inplace=True) # 2019-09-30: simplifies subsequent operations
@@ -278,8 +281,11 @@ class DfFactory(object):
         
         investigators = self.df_grant_investigators(data)
         if len(investigators):
-            affiliations = json_normalize(json.loads(investigators.to_json(orient='records')), record_path=['affiliations'], 
-               meta=['id', 'first_name', 'last_name',  'role', 'grant_id', 'grant_title', 'grant_start_date', 'grant_end_date' ], record_prefix='aff_')
+            affiliations = json_normalize(json.loads(investigators.to_json(orient='records')), 
+                                                record_path=['affiliations'], 
+                                                meta=['id', 'first_name', 'last_name',  'role', 'grant_id', 'grant_title', 'grant_start_date', 'grant_end_date' ], 
+                                                record_prefix='aff_',
+                                                errors="ignore")
         else:
             affiliations = authors # empty df
         affiliations.fillna('', inplace=True) # 2019-09-30: simplifies subsequent operations
