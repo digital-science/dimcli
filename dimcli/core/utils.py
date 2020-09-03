@@ -9,6 +9,7 @@ import subprocess
 import os
 import webbrowser
 from itertools import islice
+from pandas import json_normalize
 
 from .dsl_grammar import *
 from .html import html_template_interactive
@@ -414,20 +415,12 @@ def normalize_key(key_name, dict_list, new_val=None):
 
 
 def export_json_csv(jjson, query, USER_EXPORTS_DIR):
-    """
-    requires the pandas library which is not installed by default
-
-    """
-    try:
-        from pandas import json_normalize
-    except:
-        click.secho("This feature requires the pandas library (`pip install pandas` from the terminal)", fg="red")
-        return
+    """Export to a CSV"""
     return_object = line_search_return(query)
     try:
-        df =  json_normalize(jjson[return_object])
+        df =  json_normalize(jjson[return_object], errors="ignore")
     except:
-        df =  json_normalize(jjson)
+        df =  json_normalize(jjson, errors="ignore")
     filename = time.strftime("dsl_export_%Y%m%d-%H%M%S.csv")
     url = save2File(df.to_csv(), filename, USER_EXPORTS_DIR)
     webbrowser.open(url)
@@ -447,9 +440,7 @@ def export_json_html(jjson, query, api_endpoint, USER_EXPORTS_DIR):
 
 
 def export_json_json(jjson, query, USER_EXPORTS_DIR):
-    """
-    requires the pandas library which is not installed by default
-
+    """Export to a json file
     """
     formatted_json = json.dumps(jjson, indent=4, sort_keys=True)
     filename = time.strftime("dsl_export_%Y%m%d-%H%M%S.json")
@@ -459,27 +450,72 @@ def export_json_json(jjson, query, USER_EXPORTS_DIR):
     print("Exported: ", "%s%s" % (USER_EXPORTS_DIR, filename))
 
 
+def export_as_gsheets(jjson, query):
+    """Export the results as a google sheet. 
+
+    NOTE: this code is a replica of DslDataset.save_gsheets(), to avoid circular dependencies. 
+    Also, here only local OAuth credentials can be used - Colab OAuth is not supported.
+    """
+
+    try:
+        import gspread
+        from oauth2client.service_account import ServiceAccountCredentials
+        from gspread_dataframe import set_with_dataframe
+    except:
+        raise Exception("Missing libraries. Please install gspread, oauth2client and gspread_dataframe: `pip install gspread gspread_dataframe oauth2client -U`.")
+    
+    click.secho("..authorizing with google..")
+    try:
+        gc = gspread.oauth()
+    except:
+        raise Exception("Google authorization failed. Do you have all the required files? Please see the documentation for more information.")
+
+    return_object = line_search_return(query)
+    try:
+        df =  json_normalize(jjson[return_object], errors="ignore")
+    except:
+        df =  json_normalize(jjson, errors="ignore")
+
+
+    click.secho("..creating a google sheet..")
+    title = "dimcli-export-" + time.strftime("%Y%m%d-%H%M%S")
+    gsheet = gc.create(title) 
+
+    worksheet = gsheet.sheet1
+    click.secho("..uploading..")
+    set_with_dataframe(worksheet, df) 
+
+    # https://gspread.readthedocs.io/en/latest/api.html#gspread.models.Spreadsheet.share
+    gsheet.share(None, perm_type='anyone', role='reader') # anyone can see with url
+    spreadsheet_url = "https://docs.google.com/spreadsheets/d/%s" % gsheet.id
+    click.secho(f"Saved: {spreadsheet_url}", bold=True)
+     
+
+
+
+
+
+
 
 def export_as_bar_chart(jjson, query, USER_EXPORTS_DIR):
     """
-    requires the pandas and plotly libraries, which are not installed by default
+    requires the plotly library, which is not installed by default
 
     """
 
     try:
-        from pandas import json_normalize
         import plotly.express as px
         from plotly.offline import plot
     except:
-        click.secho("This feature requires the pandas and plotly library (`pip install pandas plotly` from the terminal)", fg="red")
+        click.secho("This feature requires the plotly library (`pip install plotly` from the terminal)", fg="red")
         return
 
     return_object = line_search_return(query)
     
     try:
-        df =  json_normalize(jjson[return_object])
+        df =  json_normalize(jjson[return_object], errors="ignore")
     except:
-        df =  json_normalize(jjson)
+        df =  json_normalize(jjson, errors="ignore")
 
     REQUIRED = ["id", "count"]
     for x in REQUIRED:
