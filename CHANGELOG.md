@@ -1,8 +1,11 @@
 # Changelog
 
-## v 0.7.4.1 (beta)
+## v 0.7.4.2 (beta)
 
-* export DSL results to gsheets
+* Export DSL results to gsheets: `DslDataset.save_gsheets()`
+* CLI command: `.export_as_gsheets`
+* Bug fix: json_normalize errors when creating 
+* Updated DSL grammar for dimcli CLI autocomplete
 
 
 ## v 0.7.4
