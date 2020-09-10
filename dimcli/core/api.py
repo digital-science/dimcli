@@ -591,7 +591,7 @@ class DslDataset(IPython.display.JSON):
         ['publications']
 
         """
-        skips = ["_warnings", "_notes", "_stats", "_version"]
+        skips = ["_warnings", "_notes", "_stats", "_version", "_copyright"]
         return [x for x in self.json.keys() if x not in skips]
 
     def keys_and_count(self,):
