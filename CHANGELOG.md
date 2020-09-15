@@ -1,11 +1,12 @@
 # Changelog
 
-## v 0.7.4.2 (beta)
+## v 0.7.4.3 (beta)
 
 * Export DSL results to gsheets: `DslDataset.save_gsheets()`
 * CLI command: `.export_as_gsheets`
 * Bug fix: json_normalize errors when creating 
 * Updated DSL grammar for dimcli CLI autocomplete
+* fix bug caused by new `_copyright` in JSON response 
 
 
 ## v 0.7.4
