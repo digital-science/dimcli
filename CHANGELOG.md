@@ -2,14 +2,16 @@
 
 ## v 0.7.5
 
-* Export DSL results to gsheets: `DslDataset.save_gsheets()`
-* CLI command: `.export_as_gsheets`
+* Gsheets export shortcuts
+  * Export DSL results to gsheets: `DslDataset.to_gsheets()`
+  * CLI command: `.export_as_gsheets`
+  * `utils.export_as_gsheets` accepts both API JSON and (any) pd.DataFrame
+* DSL grammar updated for version 1.28 (2020-09 release)
 * Bug fix: json_normalize errors when creating 
 * Updated DSL grammar for dimcli CLI autocomplete
 * fix bug caused by new `_copyright` in JSON response 
 * `to_json_file` replaces `DslDataset.save_json`
-* `to_gsheets` replaces `DslDataset.save_gsheets`
-* `utils.export_as_gsheets` added
+
 
 ## v 0.7.4
 
