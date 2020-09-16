@@ -200,7 +200,7 @@ class TestOne(unittest.TestCase):
         FILENAME = "test-api-save.json"
         d = Dsl()
         data = d.query_iterative("""search publications where journal.title="nature medicine" and year>2014 return publications[id+title+year+concepts]""")
-        data.save_json(FILENAME, verbose=True)
+        data.to_json_file(FILENAME, verbose=True)
         new_data = DslDataset.load_json_file(FILENAME, verbose=True)
         print(new_data)
         os.remove(FILENAME)

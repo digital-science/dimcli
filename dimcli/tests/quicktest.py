@@ -83,7 +83,7 @@ def main(test_number=1):
         # GSHEET EXPORT TEST
         #         
         q = dsl.query_iterative("""search publications where journal.title="nature medicine" and year>2017 return publications[id+title+year+unnest(concepts)]""")
-        q.save_gsheets()
+        q.to_gsheets()
 
 
 

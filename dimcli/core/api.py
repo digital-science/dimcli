@@ -508,7 +508,7 @@ class DslDataset(IPython.display.JSON):
     def load_json_file(cls, filename, verbose=False):
         """Load a file containing DSL JSON data and returns a valid DslDataset object. 
 
-        Note: this is normally used in combination with the `save_json` method.
+        Note: this is normally used in combination with the `to_json_file` method.
 
         Parameters
         ----------
@@ -530,7 +530,7 @@ class DslDataset(IPython.display.JSON):
         Save the data to a local json file
 
         >>> FILENAME = "test-api-save.json"
-        >>> dataset.save_json(FILENAME, verbose=True)
+        >>> dataset.to_json_file(FILENAME, verbose=True)
         Saved to file:  test-api-save.json
         
         Create a new DslDataset object by loading the contents of the JSON file.
@@ -861,7 +861,7 @@ class DslDataset(IPython.display.JSON):
         return None
 
 
-    def save_json(self, filename="", verbose=True):
+    def to_json_file(self, filename="", verbose=True):
         """Export API results data to a JSON file. 
 
         Note: this is normally used in combination with the `load_json_file` method.
@@ -886,7 +886,7 @@ class DslDataset(IPython.display.JSON):
         Save the data to a local json file
 
         >>> FILENAME = "test-api-save.json"
-        >>> dataset.save_json(FILENAME, verbose=True)
+        >>> dataset.to_json_file(FILENAME, verbose=True)
         Saved to file:  test-api-save.json
         
         Data can be reloaded from file, using the `load_json_file` class method. 
@@ -908,7 +908,7 @@ class DslDataset(IPython.display.JSON):
 
 
 
-    def save_gsheets(self, title=None, verbose=True):
+    def to_gsheets(self, title=None, verbose=True):
         """Export the dataframe version of some API results to a public google sheet. Google OAUTH client credentials are a prerequisite for this method to work correctly. 
 
         Parameters
@@ -924,7 +924,7 @@ class DslDataset(IPython.display.JSON):
         There are two routes to make this work, depending on whether one is using Google Colab or a traditional Jupyter environment.
 
         **Google Colab**
-        This is the easiest route. In Google Colab, all required libraries are already available. The `save_gsheets` method simply triggers the built-in authentication process via a pop up window. 
+        This is the easiest route. In Google Colab, all required libraries are already available. The `to_gsheets` method simply triggers the built-in authentication process via a pop up window. 
         
         **Jupyter**
         This route involves a few more steps. In Jupyter, it is necessary to install the gspread, oauth2client and gspread_dataframe modules first. Secondly, one needs to create Google Drive access credentials using OAUTH (which boils down to a JSON file). Note that the credentials file needs to be saved in: `~/.config/gspread/credentials.json` (for gpread). 
@@ -939,49 +939,10 @@ class DslDataset(IPython.display.JSON):
         if self.json.get("errors"):
             return None
 
-        if 'google.colab' in sys.modules:
-            from google.colab import auth
-            auth.authenticate_user()
-
-            import gspread
-            from gspread_dataframe import set_with_dataframe
-            from oauth2client.client import GoogleCredentials
-            gc = gspread.authorize(GoogleCredentials.get_application_default())
-
-
-        else:
-            try:
-                import gspread
-                from oauth2client.service_account import ServiceAccountCredentials
-                from gspread_dataframe import set_with_dataframe
-            except:
-                raise Exception("Missing libraries. Please install gspread, oauth2client and gspread_dataframe: `pip install gspread gspread_dataframe oauth2client -U`.")
-            
-            if verbose: click.secho("..authorizing with google..")
-            try:
-                gc = gspread.oauth()
-            except:
-                raise Exception("Google authorization failed. Do you have all the required files? Please see the documentation for more information.")
-
         df = self.as_dataframe()
-        
-        if title:
-            if verbose: click.secho(f"..opening google sheet with title: {title}")
-            gsheet = gc.open(title)  
-        else:
-            if verbose: click.secho("..creating a google sheet..")
-            title = "dimcli-export-" + time.strftime("%Y%m%d-%H%M%S")
-            gsheet = gc.create(title) 
-        
-        worksheet = gsheet.sheet1
-        if verbose: click.secho("..uploading..")
-        set_with_dataframe(worksheet, df) 
-        
-        # https://gspread.readthedocs.io/en/latest/api.html#gspread.models.Spreadsheet.share
-        gsheet.share(None, perm_type='anyone', role='reader') # anyone can see with url
-        spreadsheet_url = "https://docs.google.com/spreadsheets/d/%s" % gsheet.id
-        if verbose: click.secho(f"Saved: {spreadsheet_url}", bold=True)
-        return spreadsheet_url                
+
+        return export_as_gsheets(df,  title=title, verbose=verbose)        
+             
     
 
     def __repr__(self):
