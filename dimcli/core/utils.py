@@ -9,8 +9,11 @@ import subprocess
 import os
 import webbrowser
 from itertools import islice
-from pandas import json_normalize, DataFrame
-
+from pandas import DataFrame
+try:
+    from pandas import json_normalize
+except:
+    from pandas.io.json import json_normalize
 from .dsl_grammar import *
 from .html import html_template_interactive
 
