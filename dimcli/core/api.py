@@ -229,7 +229,7 @@ class Dsl():
         if verbose == None:
             verbose = self._verbose
 
-        if q.split().count('return') != 1:
+        if line_count_returns(q) != 1:
             raise Exception("Iterative queries support only 1 return statement")
         if line_has_limit_or_skip(q):
             raise Exception("Iterative queries should not contain the keywords `limit` or `skip`")

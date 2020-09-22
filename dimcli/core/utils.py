@@ -7,6 +7,7 @@ import json
 import sys
 import subprocess
 import os
+import re
 import webbrowser
 from itertools import islice
 from pandas import json_normalize, DataFrame
@@ -93,6 +94,33 @@ def in_categories_search(line):
                     return x
     return False
 
+
+def remove_fulltext_search_clause(line):
+    """Strips out the content in quotes in a DSL query.
+
+    Helper to avoid situations when full-text contents interfere with DSL keywords (eg limit or return)
+
+    TODO dbcheck where to use this method in `line_..` helpers.
+    
+    Example
+    --------
+
+        a = 'search grants in title_abstract_only for "Heisenberg limit " return grants[id]'
+        re.sub(r'\"(.+?)\"', "", a)
+        # => 'search grants in title_abstract_only for return grants[id]'
+
+    TODO fails with inner escaped quotes 
+        a = 'search grants in title_abstract_only for "Heisenberg limit " and for "\"b\" return c" return grants[id]'
+        re.sub(r'\"(.+?)\"', "", a)
+        # => 'search grants in title_abstract_only for  and for  return c" return grants[id]'
+
+    """
+    return re.sub(r'\"(.+?)\"', "", line)
+
+def line_count_returns(line):
+    "check how many returns we have in the query"
+    text = remove_fulltext_search_clause(line)
+        return text.split().count('return')
 
 def line_has_limit_or_skip(line):
     "check if there is a limit or skip statement"
@@ -546,53 +574,6 @@ def export_as_gsheets(input_data, query="", title=None, verbose=True):
     spreadsheet_url = "https://docs.google.com/spreadsheets/d/%s" % gsheet.id
     if verbose: click.secho(f"Saved:\n{spreadsheet_url}", bold=True)
     return spreadsheet_url 
-
-
-
-def OLD_export_as_gsheets(jjson, query):
-    """Export the results as a google sheet. 
-
-    NOTE: this code is a replica of DslDataset.to_gsheets(), to avoid circular dependencies. 
-    Also, here only local OAuth credentials can be used - Colab OAuth is not supported.
-    """
-
-    try:
-        import gspread
-        from oauth2client.service_account import ServiceAccountCredentials
-        from gspread_dataframe import set_with_dataframe
-    except:
-        raise Exception("Missing libraries. Please install gspread, oauth2client and gspread_dataframe: `pip install gspread gspread_dataframe oauth2client -U`.")
-    
-    click.secho("..authorizing with google..")
-    try:
-        gc = gspread.oauth()
-    except:
-        raise Exception("Google authorization failed. Do you have all the required files? Please see the documentation for more information.")
-
-    return_object = line_search_return(query)
-    try:
-        df =  json_normalize(jjson[return_object], errors="ignore")
-    except:
-        df =  json_normalize(jjson, errors="ignore")
-
-
-    click.secho("..creating a google sheet..")
-    title = "dimcli-export-" + time.strftime("%Y%m%d-%H%M%S")
-    gsheet = gc.create(title) 
-
-    worksheet = gsheet.sheet1
-    click.secho("..uploading..")
-    set_with_dataframe(worksheet, df) 
-
-    # https://gspread.readthedocs.io/en/latest/api.html#gspread.models.Spreadsheet.share
-    gsheet.share(None, perm_type='anyone', role='reader') # anyone can see with url
-    spreadsheet_url = "https://docs.google.com/spreadsheets/d/%s" % gsheet.id
-    click.secho(f"Saved: {spreadsheet_url}", bold=True)
-     
-
-
-
-
 
 
 
