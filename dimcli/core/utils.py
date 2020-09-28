@@ -117,10 +117,12 @@ def remove_fulltext_search_clause(line):
     """
     return re.sub(r'\"(.+?)\"', "", line)
 
+
 def line_count_returns(line):
     "check how many returns we have in the query"
     text = remove_fulltext_search_clause(line)
-        return text.split().count('return')
+    return text.split().count('return')
+
 
 def line_has_limit_or_skip(line):
     "check if there is a limit or skip statement"
@@ -128,6 +130,7 @@ def line_has_limit_or_skip(line):
         pos = line.rindex("return") # last position right side
         if "limit" in line[pos:] or "skip" in line[pos:]:
             return True
+
 
 def line_last_return_subject(line):
     "get the last 'return <object>' statement "
