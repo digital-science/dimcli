@@ -35,7 +35,7 @@ import requests
 from ..core.api import Dsl
 from ..core.auth import USER_HISTORY_FILE, USER_EXPORTS_DIR, do_global_login, get_connection
 from ..core.dsl_grammar import *
-from ..core.utils import *
+from ..utils.all import *
 
 
 

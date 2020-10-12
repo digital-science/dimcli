@@ -1,7 +1,6 @@
 # https://gist.github.com/zdavkeos/1098474
 
 import os
-from os import path
 
 def walk_up(bottom):
     """ 
@@ -21,14 +20,14 @@ def walk_up(bottom):
 
     dirs, nondirs = [], []
     for name in names:
-        if path.isdir(path.join(bottom, name)):
+        if os.path.isdir(os.path.join(bottom, name)):
             dirs.append(name)
         else:
             nondirs.append(name)
 
     yield bottom, dirs, nondirs
 
-    new_path = path.realpath(path.join(bottom, '..'))
+    new_path = os.path.realpath(path.join(bottom, '..'))
     
     # see if we are at the top
     if new_path == bottom:

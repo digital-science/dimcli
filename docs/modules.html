@@ -36,7 +36,6 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="API Module" href="apidocs-api.html" />
     <link rel="prev" title="Getting Started with Dimcli" href="getting-started.html" /> 
 </head>
 
@@ -86,12 +85,9 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started with Dimcli</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Module Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="apidocs-api.html">API Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-dimcli.shortcuts">dimcli.shortcuts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-dimcli.core.api">dimcli.core.api</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#api-py">api.py</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-dimcli.__init__">dimcli.login</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-dimcli.core.api">dimcli.core.api</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-dimcli.utils">dimcli.utils</a></li>
 </ul>
 </li>
 </ul>
@@ -146,7 +142,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/apidocs.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/modules.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -161,46 +157,94 @@
             
   <div class="section" id="module-reference">
 <h1>Module Reference<a class="headerlink" href="#module-reference" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="apidocs-api.html">API Module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="apidocs-api.html#module-dimcli.core.functions">dimcli.core.functions</a></li>
-</ul>
-</li>
-</ul>
+<div class="section" id="module-dimcli.__init__">
+<span id="dimcli-login"></span><h2>dimcli.login<a class="headerlink" href="#module-dimcli.__init__" title="Permalink to this headline">¶</a></h2>
+<p>This module contains utilities for logging in and out of the Dimensions API.</p>
+<p>NOTE: these functions are available via the top level <code class="docutils literal notranslate"><span class="pre">dimcli</span></code> module. E.g.:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">dimcli</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
+</pre></div>
 </div>
-<div class="section" id="module-dimcli.shortcuts">
-<span id="dimcli-shortcuts"></span><h2>dimcli.shortcuts<a class="headerlink" href="#module-dimcli.shortcuts" title="Permalink to this headline">¶</a></h2>
-<p>NOTE this module is deprecated and will be removed in future versions.</p>
-<p>Use instead dimcli.utils</p>
 <dl class="py function">
-<dt id="dimcli.shortcuts.dslquery">
-<code class="sig-prename descclassname">dimcli.shortcuts.</code><code class="sig-name descname">dslquery</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">query_string</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/shortcuts.html#dslquery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.shortcuts.dslquery" title="Permalink to this definition">¶</a></dt>
-<dd><p>shortcut for running a query - meant to be used only within interactive computing environments</p>
+<dt id="dimcli.__init__.login">
+<code class="sig-prename descclassname">dimcli.__init__.</code><code class="sig-name descname">login</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">username</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">password</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">endpoint</span><span class="o">=</span><span class="default_value">'https://app.dimensions.ai'</span></em>, <em class="sig-param"><span class="n">instance</span><span class="o">=</span><span class="default_value">'live'</span></em>, <em class="sig-param"><span class="n">key</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/__init__.html#login"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.__init__.login" title="Permalink to this definition">¶</a></dt>
+<dd><p>Login into the Dimensions API and store the query token in memory.</p>
+<p>Two cases:</p>
+<ul class="simple">
+<li><p>If credentials are not passed, login is attempted using the local dsl.ini credentials file.</p></li>
+<li><p>If Google COLAB is detected and user/psw is not available, the interactive login workflow is triggered</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em><em>, </em><em>optional</em>) – A filename/path where to save the data. If not provided, a unique name is generated automatically.</p></li>
+<li><p><strong>username</strong> (<em>str</em><em>, </em><em>optional</em>) – The API username</p></li>
+<li><p><strong>password</strong> (<em>str</em><em>, </em><em>optional</em>) – The API password</p></li>
+<li><p><strong>endpoint</strong> (<em>str</em><em>, </em><em>optional</em>) – The API endpoint - default is “<a class="reference external" href="https://app.dimensions.ai">https://app.dimensions.ai</a>”</p></li>
+<li><p><strong>instance</strong> (<em>str</em><em>, </em><em>optional</em>) – The instance name, from the local dsl.ini credentials file. Default: ‘live’</p></li>
+<li><p><strong>key</strong> (<em>str</em><em>, </em><em>optional</em>) – The API key (available to some users instead of username/password)</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – Verbose mode. Default: True.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>If you have already set up the credentials file (see above), no need to pass log in details</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Otherwise you can authenticate by passing your login details as arguments</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="s2">&quot;mary.poppins&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;chimneysweeper&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can specify endpoint, which by default is set to “<a class="reference external" href="https://app.dimensions.ai">https://app.dimensions.ai</a>”</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="s2">&quot;mary.poppins&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;chimneysweeper&quot;</span><span class="p">,</span> <span class="n">ednpoint</span><span class="o">=</span><span class="s2">&quot;https://nannies-research.dimensions.ai&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you use key based authentication, then do</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;my-secret-key&quot;</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="s2">&quot;https://your-url.dimensions.ai&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
-<dt id="dimcli.shortcuts.dslquery_json">
-<code class="sig-prename descclassname">dimcli.shortcuts.</code><code class="sig-name descname">dslquery_json</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">query_string</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/shortcuts.html#dslquery_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.shortcuts.dslquery_json" title="Permalink to this definition">¶</a></dt>
-<dd><p>shortcut for backward compatibility
-Same as above but returns raw JSON instead of Api.DslDataset object</p>
-<p>Pattern: <cite>from dimcli.shortcuts import dslquery_json as dslquery</cite></p>
+<dt id="dimcli.__init__.login_status">
+<code class="sig-prename descclassname">dimcli.__init__.</code><code class="sig-name descname">login_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/__init__.html#login_status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.__init__.login_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Utility to check whether we are logged in or not</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True if logged in, otherwise False.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login_status</span><span class="p">()</span>
+<span class="go">False</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
-<dt id="dimcli.shortcuts.dslqueryall">
-<code class="sig-prename descclassname">dimcli.shortcuts.</code><code class="sig-name descname">dslqueryall</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">query_string</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/shortcuts.html#dslqueryall"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.shortcuts.dslqueryall" title="Permalink to this definition">¶</a></dt>
-<dd><p>shortcut for running a loop query - meant to be used only within interactive computing environments
-NOTE: this requires the file-based credentials file set up.</p>
+<dt id="dimcli.__init__.logout">
+<code class="sig-prename descclassname">dimcli.__init__.</code><code class="sig-name descname">logout</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/__init__.html#logout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.__init__.logout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the connection to the Dimensions API.</p>
+<p>This allows to create a new connection subsequently, eg to a different endpoint.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">logout</span><span class="p">()</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </div>
 <div class="section" id="module-dimcli.core.api">
 <span id="dimcli-core-api"></span><h2>dimcli.core.api<a class="headerlink" href="#module-dimcli.core.api" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="api-py">
-<h3>api.py<a class="headerlink" href="#api-py" title="Permalink to this headline">¶</a></h3>
-<p>The core module of DimCli, containing funtionalities for querying the API and processing the data returned.</p>
-<p>Note: the two main objects in this module (<cite>Dsl</cite> and <cite>DslDataset</cite>) are imported by default when the top level <cite>dimcli</cite> module gets imported.</p>
+<p>This module contains core functionalities for querying the Dimensions API.</p>
+<p>NOTE: the two main objects in this module (<code class="docutils literal notranslate"><span class="pre">Dsl</span></code> and <code class="docutils literal notranslate"><span class="pre">DslDataset</span></code>) are available via the <code class="docutils literal notranslate"><span class="pre">dimcli</span></code> module. E.g.:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">dimcli</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dsl</span> <span class="o">=</span> <span class="n">dimcli</span><span class="o">.</span><span class="n">Dsl</span><span class="p">()</span>
+</pre></div>
+</div>
 <dl class="py class">
 <dt id="dimcli.core.api.Dsl">
 <em class="property">class </em><code class="sig-prename descclassname">dimcli.core.api.</code><code class="sig-name descname">Dsl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">show_results</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/api.html#Dsl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.core.api.Dsl" title="Permalink to this definition">¶</a></dt>
@@ -808,6 +852,26 @@ The steps are described at <a class="reference external" href="https://gspread.r
 </dd></dl>
 
 </div>
+<div class="section" id="module-dimcli.utils">
+<span id="dimcli-utils"></span><h2>dimcli.utils<a class="headerlink" href="#module-dimcli.utils" title="Permalink to this headline">¶</a></h2>
+<p>This module contains various utilities for working with the API and the data it returns.</p>
+<dl class="py function">
+<dt id="dimcli.utils.chunks_of">
+<code class="sig-prename descclassname">dimcli.utils.</code><code class="sig-name descname">chunks_of</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">size</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/utils.html#chunks_of"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.chunks_of" title="Permalink to this definition">¶</a></dt>
+<dd><p>Splits up a list or sequence in to chunks of selected size.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – A sequence eg a list</p></li>
+<li><p><strong>size</strong> – A number</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An iterable</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 </div>
 
@@ -818,8 +882,6 @@ The steps are described at <a class="reference external" href="https://gspread.r
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="apidocs-api.html" class="btn btn-neutral float-right" title="API Module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="getting-started.html" class="btn btn-neutral float-left" title="Getting Started with Dimcli" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

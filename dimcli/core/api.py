@@ -1,9 +1,10 @@
 """
-api.py
-====================================
-The core module of DimCli, containing funtionalities for querying the API and processing the data returned.
+This module contains core functionalities for querying the Dimensions API. 
 
-Note: the two main objects in this module (`Dsl` and `DslDataset`) are imported by default when the top level `dimcli` module gets imported.
+NOTE: the two main objects in this module (``Dsl`` and ``DslDataset``) are available via the ``dimcli`` module. E.g.:
+
+>>> import dimcli
+>>> dsl = dimcli.Dsl()
 
 """
 
@@ -22,11 +23,10 @@ import urllib.parse
 import pandas as pd
 
 from .auth import do_global_login, get_connection, refresh_login
-from .utils import *
-from .walkup import *
 from .dsl_grammar import G
 from .dataframe_factory import DfFactory
 
+from ..utils.all import *
 
 
 

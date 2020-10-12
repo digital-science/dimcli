@@ -1,13 +1,11 @@
 """
-NOTE this module is deprecated and will be removed in future versions.
+This module contains various utilities for working with the API and the data it returns.
 
-Use instead dimcli.utils 
 """
 
 
 from . import *
-from .utils.utils_general import chunks_of, normalize_key, google_url, save2File, exists_key_in_dicts_list
-from .utils.utils_dimensions import dimensions_url, dsl_escape
+from .core.utils import chunks_of, normalize_key, dimensions_url, google_url, save2File, exists_key_in_dicts_list, dsl_escape
 from .core.functions import *
 
 

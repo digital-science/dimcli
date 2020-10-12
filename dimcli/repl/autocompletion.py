@@ -15,7 +15,7 @@ from __future__ import unicode_literals
 from prompt_toolkit.completion import Completion, Completer
 
 from ..core.dsl_grammar import *
-from ..core.utils import *
+from ..utils.all import *
 
 #
 # AUTO COMPLETION

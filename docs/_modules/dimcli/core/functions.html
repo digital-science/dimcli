@@ -1,0 +1,273 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>dimcli.core.functions &mdash; DimCli  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> DimCli
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started.html">Getting Started with Dimcli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Module Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DimCli</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>dimcli.core.functions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for dimcli.core.functions</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Wrappers around DSL functions</span>
+
+<span class="sd">https://docs.dimensions.ai/dsl/functions.html</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">dsl_escape</span>
+<span class="kn">from</span> <span class="nn">.api</span> <span class="kn">import</span> <span class="n">Dsl</span>
+<span class="kn">from</span> <span class="nn">.auth</span> <span class="kn">import</span> <span class="n">is_logged_in</span>
+
+
+<div class="viewcode-block" id="extract_concepts"><a class="viewcode-back" href="../../../module-functions.html#dimcli.core.functions.extract_concepts">[docs]</a><span class="k">def</span> <span class="nf">extract_concepts</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">with_scores</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;wrapper for the `extract_concepts` function</span>
+<span class="sd">    https://docs.dimensions.ai/dsl/functions.html#function-extract-concepts</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">is_logged_in</span><span class="p">():</span>
+        <span class="n">dsl</span> <span class="o">=</span> <span class="n">Dsl</span><span class="p">()</span>
+        <span class="n">_score</span> <span class="o">=</span> <span class="s1">&#39;true&#39;</span> <span class="k">if</span> <span class="n">with_scores</span> <span class="k">else</span> <span class="s1">&#39;false&#39;</span>
+        <span class="k">if</span> <span class="n">as_df</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">dsl</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;extract_concepts(&quot;</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;, return_scores=</span><span class="si">{</span><span class="n">_score</span><span class="si">}</span><span class="s2">)&quot;&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">as_dataframe</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">dsl</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;extract_concepts(&quot;</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;, return_scores=</span><span class="si">{</span><span class="n">_score</span><span class="si">}</span><span class="s2">)&quot;&quot;&quot;</span><span class="p">)</span></div>
+
+
+
+
+<div class="viewcode-block" id="extract_grants"><a class="viewcode-back" href="../../../module-functions.html#dimcli.core.functions.extract_grants">[docs]</a><span class="k">def</span> <span class="nf">extract_grants</span><span class="p">(</span><span class="n">grant_number</span><span class="p">,</span> <span class="n">fundref</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">funder_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;wrapper for the `extract_grants` function</span>
+<span class="sd">    https://docs.dimensions.ai/dsl/functions.html#function-extract-grants</span>
+<span class="sd">    NOTE either fundref or funder_name needs to be provided</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">is_logged_in</span><span class="p">():</span>
+        <span class="n">dsl</span> <span class="o">=</span> <span class="n">Dsl</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">fundref</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">dsl</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;extract_grants(grant_number=&quot;</span><span class="si">{</span><span class="n">grant_number</span><span class="si">}</span><span class="s2">&quot;, fundref=&quot;</span><span class="si">{</span><span class="n">fundref</span><span class="si">}</span><span class="s2">&quot;)&quot;&quot;&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">dsl</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;extract_grants(grant_number=&quot;</span><span class="si">{</span><span class="n">grant_number</span><span class="si">}</span><span class="s2">&quot;, funder_name=&quot;</span><span class="si">{</span><span class="n">funder_name</span><span class="si">}</span><span class="s2">&quot;)&quot;&quot;&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="extract_classification"><a class="viewcode-back" href="../../../module-functions.html#dimcli.core.functions.extract_classification">[docs]</a><span class="k">def</span> <span class="nf">extract_classification</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">abstract</span><span class="p">,</span> <span class="n">system</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;wrapper for the `classify` function</span>
+<span class="sd">    https://docs.dimensions.ai/dsl/functions.html#function-classify</span>
+
+<span class="sd">    `system` must be an acronym from the supported classification systems:</span>
+
+<span class="sd">    * Fields of Research (FOR)</span>
+<span class="sd">    * Research, Condition, and Disease Categorization (RCDC)</span>
+<span class="sd">    * Health Research Classification System Health Categories (HRCS_HC)</span>
+<span class="sd">    * Health Research Classification System Research Activity Classifications (HRCS_RAC)</span>
+<span class="sd">    * Health Research Areas (HRA)</span>
+<span class="sd">    * Broad Research Areas (BRA)</span>
+<span class="sd">    * ICRP Common Scientific Outline (ICRP_CSO)</span>
+<span class="sd">    * ICRP Cancer Types (ICRP_CT)</span>
+<span class="sd">    * Units of Assessment (UOA)</span>
+<span class="sd">    * Sustainable Development Goals (SDG)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">classifications</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;FOR&quot;</span><span class="p">,</span> <span class="s2">&quot;RCDC&quot;</span><span class="p">,</span> <span class="s2">&quot;HRCS_HC&quot;</span><span class="p">,</span> <span class="s2">&quot;HRCS_RAC&quot;</span><span class="p">,</span> <span class="s2">&quot;HRA&quot;</span><span class="p">,</span> <span class="s2">&quot;BRA&quot;</span><span class="p">,</span> <span class="s2">&quot;ICRP_CSO&quot;</span><span class="p">,</span> <span class="s2">&quot;ICRP_CT&quot;</span><span class="p">,</span> <span class="s2">&quot;UOA&quot;</span><span class="p">,</span> <span class="s2">&quot;SDG&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">is_logged_in</span><span class="p">():</span>
+        <span class="n">dsl</span> <span class="o">=</span> <span class="n">Dsl</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">system</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">dsl</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;classify(title=&quot;</span><span class="si">{</span><span class="n">dsl_escape</span><span class="p">(</span><span class="n">title</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;, </span>
+<span class="s2">                                        abstract=&quot;</span><span class="si">{</span><span class="n">dsl_escape</span><span class="p">(</span><span class="n">abstract</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;, </span>
+<span class="s2">                                        system=&quot;</span><span class="si">{</span><span class="n">system</span><span class="si">}</span><span class="s2">&quot;)&quot;&quot;&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;No system provided, using all known systems (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">classifications</span><span class="p">)</span><span class="si">}</span><span class="s2"> queries). Warning: This may lead to &#39;too many API queries&#39; errors.&quot;&quot;&quot;</span><span class="p">)</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">classifier</span> <span class="ow">in</span> <span class="n">classifications</span><span class="p">:</span>
+                <span class="n">new</span> <span class="o">=</span> <span class="n">dsl</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;classify(title=&quot;</span><span class="si">{</span><span class="n">dsl_escape</span><span class="p">(</span><span class="n">title</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;, </span>
+<span class="s2">                                        abstract=&quot;</span><span class="si">{</span><span class="n">dsl_escape</span><span class="p">(</span><span class="n">abstract</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;, </span>
+<span class="s2">                                        system=&quot;</span><span class="si">{</span><span class="n">classifier</span><span class="si">}</span><span class="s2">&quot;)&quot;&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
+                <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">new</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">d</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Digital Science
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

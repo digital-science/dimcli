@@ -4,9 +4,10 @@ Wrappers around DSL functions
 https://docs.dimensions.ai/dsl/functions.html
 """
 
-from .utils import dsl_escape
 from .api import Dsl
 from .auth import is_logged_in
+
+from ..utils.utils_dimensions import dsl_escape
 
 
 def extract_concepts(text, with_scores=True, as_df=True):

@@ -1,8 +1,18 @@
+"""
+This module contains utilities for logging in and out of the Dimensions API.  
+
+NOTE: these functions are available via the top level ``dimcli`` module. E.g.:
+
+>>> import dimcli
+>>> dimcli.login()
+
+"""
+
 from .VERSION import __version__, VERSION
 
 from .core.api import Dsl, DslDataset
 from .core.dsl_grammar import G 
-from .core.version_utils import print_dimcli_report_if_outdated
+from .utils.version_utils import print_dimcli_report_if_outdated
 
 import click
 
@@ -31,18 +41,54 @@ except:
 
 
 def login(username="", password="", endpoint="https://app.dimensions.ai", instance="live", key="", verbose=True):
-    """
-    Login into the Dimensions API and obtain a query token. 
-    - If credentials are not passed, we attempt to login using the local dsl.ini credentials file. 
-    - If COLAB is detected and user/psw is not available, try running the interactive login
+    """Login into the Dimensions API and store the query token in memory. 
 
-    Args: 
-    * username
-    * password
-    * endpoint (defaults to "https://app.dimensions.ai")
-    * instance (defaults to "live")
-    * key (for newest login mechanism)
+    Two cases:
+
+    * If credentials are not passed, login is attempted using the local dsl.ini credentials file. 
+    
+    * If Google COLAB is detected and user/psw is not available, the interactive login workflow is triggered
+
+    Parameters
+    ----------
+    filename: str, optional 
+        A filename/path where to save the data. If not provided, a unique name is generated automatically.
+
+    username: str, optional
+        The API username
+    password: str, optional
+        The API password
+    endpoint: str, optional
+        The API endpoint - default is "https://app.dimensions.ai"
+    instance: str, optional
+        The instance name, from the local dsl.ini credentials file. Default: 'live'
+    key: str, optional
+        The API key (available to some users instead of username/password)
+    verbose: bool, optional
+        Verbose mode. Default: True.
+       
+
+    Example
+    -------
+    If you have already set up the credentials file (see above), no need to pass log in details
+    
+    >>> dimcli.login()
+
+    Otherwise you can authenticate by passing your login details as arguments
+    
+    >>> dimcli.login(user="mary.poppins", password="chimneysweeper")
+
+    You can specify endpoint, which by default is set to "https://app.dimensions.ai"
+    
+    >>> dimcli.login(user="mary.poppins", password="chimneysweeper", ednpoint="https://nannies-research.dimensions.ai")
+
+    If you use key based authentication, then do
+    
+    >>> dimcli.login(key="my-secret-key", endpoint="https://your-url.dimensions.ai")
+
+
     """
+
     from .core.auth import do_global_login, get_connection
 
     try:
@@ -79,8 +125,15 @@ def _print_login_success(CONNECTION, username, password, key):
 
 
 def logout():
-    """
-    Reset the connectiont to the Dimensions API. This allows to create a new connection subsequently, eg to a different endpoint.
+    """Reset the connection to the Dimensions API. 
+    
+    This allows to create a new connection subsequently, eg to a different endpoint.
+
+    Example
+    -------
+
+    >>> dimcli.logout()
+
     """
     from .core.auth import reset_login, get_connection
     CONNECTION = get_connection()
@@ -93,7 +146,20 @@ def logout():
 
 
 def login_status():
-    """Simply output info on whether we are logged in or not"""
+    """Utility to check whether we are logged in or not
+
+    Returns
+    -------
+    bool
+        True if logged in, otherwise False.  
+
+    Example
+    -------
+
+    >>> dimcli.login_status()
+    False
+
+    """
     from .core.auth import get_connection
     CONNECTION = get_connection()
     if CONNECTION['token']:

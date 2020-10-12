@@ -10,7 +10,7 @@
 
 from prompt_toolkit.lexers import Lexer
 from ..core.dsl_grammar import *
-from ..core.utils import *
+from ..utils.all import *
 
 
 

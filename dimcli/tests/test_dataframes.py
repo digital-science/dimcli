@@ -14,7 +14,7 @@ import configparser
 
 from .. import *
 from ..core.auth import USER_CONFIG_FILE_PATH
-from ..core.utils import dimensions_url
+from ..utils.utils_dimensions import dimensions_url
 from ..shortcuts import *
 
 

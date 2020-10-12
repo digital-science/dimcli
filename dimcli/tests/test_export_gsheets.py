@@ -15,7 +15,7 @@ import configparser
 from .. import *
 from ..core.auth import USER_CONFIG_FILE_PATH
 from ..core.api import DslDataset
-from ..core.utils import export_as_gsheets
+from ..utils.utils_dimensions import export_as_gsheets
 from ..shortcuts import *
 
 

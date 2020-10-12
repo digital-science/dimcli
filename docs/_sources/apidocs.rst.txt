@@ -1,10 +1,30 @@
-Reference
+Module Reference
 ===================
 
 
-dimcli.core.api module
+
+.. toctree::
+   :maxdepth: 2
+
+   apidocs-api
+
+
+
+
+
+dimcli.shortcuts
+----------------------
+
+.. automodule:: dimcli.shortcuts
+    :members: 
+    :show-inheritance:
+
+
+
+dimcli.core.api 
 ----------------------
 
 .. automodule:: dimcli.core.api
     :members: Dsl, DslDataset
     :show-inheritance:
+

@@ -6,7 +6,7 @@ from ..VERSION import VERSION
 
 from ..core.api import Dsl
 from ..core.auth import get_connection, is_logged_in
-from ..core.utils import *
+from ..utils.all import *
 
 
 @magics_class

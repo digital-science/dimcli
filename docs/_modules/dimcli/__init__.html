@@ -1,0 +1,369 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>dimcli.__init__ &mdash; DimCli  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> DimCli
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started.html">Getting Started with Dimcli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Module Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">DimCli</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>dimcli.__init__</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for dimcli.__init__</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains utilities for logging in and out of the Dimensions API.  </span>
+
+<span class="sd">NOTE: these functions are available via the top level ``dimcli`` module. E.g.:</span>
+
+<span class="sd">&gt;&gt;&gt; import dimcli</span>
+<span class="sd">&gt;&gt;&gt; dimcli.login()</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">.VERSION</span> <span class="kn">import</span> <span class="n">__version__</span><span class="p">,</span> <span class="n">VERSION</span>
+
+<span class="kn">from</span> <span class="nn">.core.api</span> <span class="kn">import</span> <span class="n">Dsl</span><span class="p">,</span> <span class="n">DslDataset</span>
+<span class="kn">from</span> <span class="nn">.core.dsl_grammar</span> <span class="kn">import</span> <span class="n">G</span> 
+<span class="kn">from</span> <span class="nn">.core.version_utils</span> <span class="kn">import</span> <span class="n">print_dimcli_report_if_outdated</span>
+
+<span class="kn">import</span> <span class="nn">click</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># if run outside iPython, the magic fails so we use this as a test</span>
+    <span class="c1"># https://stackoverflow.com/questions/32538758/nameerror-name-get-ipython-is-not-defined</span>
+    <span class="n">get_ipython</span><span class="p">()</span>
+    <span class="n">ipython_env</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="n">ipython_env</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="k">if</span> <span class="n">ipython_env</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">.jupyter</span> <span class="kn">import</span> <span class="n">magics</span>
+
+
+<span class="c1">#</span>
+<span class="c1"># determine if we are in Google Colab or Jupyter</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">google.colab</span> <span class="kn">import</span> <span class="n">files</span>
+    <span class="c1"># load table plugin =&gt; %load_ext google.colab.data_table</span>
+    <span class="n">get_ipython</span><span class="p">()</span><span class="o">.</span><span class="n">run_line_magic</span><span class="p">(</span><span class="s2">&quot;load_ext&quot;</span><span class="p">,</span> <span class="s2">&quot;google.colab.data_table&quot;</span><span class="p">)</span>
+    <span class="n">COLAB_ENV</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="n">COLAB_ENV</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+
+<div class="viewcode-block" id="login"><a class="viewcode-back" href="../../modules.html#dimcli.__init__.login">[docs]</a><span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="s2">&quot;https://app.dimensions.ai&quot;</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="s2">&quot;live&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Login into the Dimensions API and store the query token in memory. </span>
+
+<span class="sd">    Two cases:</span>
+
+<span class="sd">    * If credentials are not passed, login is attempted using the local dsl.ini credentials file. </span>
+<span class="sd">    </span>
+<span class="sd">    * If Google COLAB is detected and user/psw is not available, the interactive login workflow is triggered</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filename: str, optional </span>
+<span class="sd">        A filename/path where to save the data. If not provided, a unique name is generated automatically.</span>
+
+<span class="sd">    username: str, optional</span>
+<span class="sd">        The API username</span>
+<span class="sd">    password: str, optional</span>
+<span class="sd">        The API password</span>
+<span class="sd">    endpoint: str, optional</span>
+<span class="sd">        The API endpoint - default is &quot;https://app.dimensions.ai&quot;</span>
+<span class="sd">    instance: str, optional</span>
+<span class="sd">        The instance name, from the local dsl.ini credentials file. Default: &#39;live&#39;</span>
+<span class="sd">    key: str, optional</span>
+<span class="sd">        The API key (available to some users instead of username/password)</span>
+<span class="sd">    verbose: bool, optional</span>
+<span class="sd">        Verbose mode. Default: True.</span>
+<span class="sd">       </span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    If you have already set up the credentials file (see above), no need to pass log in details</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; dimcli.login()</span>
+
+<span class="sd">    Otherwise you can authenticate by passing your login details as arguments</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; dimcli.login(user=&quot;mary.poppins&quot;, password=&quot;chimneysweeper&quot;)</span>
+
+<span class="sd">    You can specify endpoint, which by default is set to &quot;https://app.dimensions.ai&quot;</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; dimcli.login(user=&quot;mary.poppins&quot;, password=&quot;chimneysweeper&quot;, ednpoint=&quot;https://nannies-research.dimensions.ai&quot;)</span>
+
+<span class="sd">    If you use key based authentication, then do</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; dimcli.login(key=&quot;my-secret-key&quot;, endpoint=&quot;https://your-url.dimensions.ai&quot;)</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="kn">from</span> <span class="nn">.core.auth</span> <span class="kn">import</span> <span class="n">do_global_login</span><span class="p">,</span> <span class="n">get_connection</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">do_global_login</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Login failed: please ensure your credentials are correct.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+    <span class="n">CONNECTION</span> <span class="o">=</span> <span class="n">get_connection</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">CONNECTION</span><span class="p">[</span><span class="s1">&#39;token&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">_print_login_success</span><span class="p">(</span><span class="n">CONNECTION</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+        <span class="n">print_dimcli_report_if_outdated</span><span class="p">()</span></div>
+
+
+
+<span class="k">def</span> <span class="nf">_print_login_success</span><span class="p">(</span><span class="n">CONNECTION</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="s2">&quot;Dimcli - Dimensions API Client (&quot;</span> <span class="o">+</span> <span class="n">VERSION</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">CLIENT</span> <span class="o">=</span> <span class="n">Dsl</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="c1"># dynamically retrieve dsl version </span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">_info</span> <span class="o">=</span> <span class="n">CLIENT</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;describe version&quot;</span><span class="p">)[</span><span class="s1">&#39;release&#39;</span><span class="p">]</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">_info</span> <span class="o">=</span> <span class="s2">&quot;not available&quot;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">username</span> <span class="ow">and</span> <span class="n">password</span><span class="p">)</span> <span class="ow">or</span> <span class="n">key</span><span class="p">:</span>
+        <span class="n">_method</span> <span class="o">=</span> <span class="s2">&quot;manual login&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">_method</span> <span class="o">=</span> <span class="s2">&quot;dsl.ini file&quot;</span>
+    <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Connected to: </span><span class="si">{</span><span class="n">CLIENT</span><span class="o">.</span><span class="n">_url</span><span class="si">}</span><span class="s2"> - DSL v</span><span class="si">{</span><span class="n">_info</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Method: </span><span class="si">{</span><span class="n">_method</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+
+
+<div class="viewcode-block" id="logout"><a class="viewcode-back" href="../../modules.html#dimcli.__init__.logout">[docs]</a><span class="k">def</span> <span class="nf">logout</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Reset the connection to the Dimensions API. </span>
+<span class="sd">    </span>
+<span class="sd">    This allows to create a new connection subsequently, eg to a different endpoint.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    &gt;&gt;&gt; dimcli.logout()</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">.core.auth</span> <span class="kn">import</span> <span class="n">reset_login</span><span class="p">,</span> <span class="n">get_connection</span>
+    <span class="n">CONNECTION</span> <span class="o">=</span> <span class="n">get_connection</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">CONNECTION</span><span class="p">[</span><span class="s1">&#39;token&#39;</span><span class="p">]:</span>
+        <span class="n">reset_login</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Logging out... done&quot;</span><span class="p">)</span> 
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Please login first&quot;</span><span class="p">)</span> </div>
+
+
+
+<div class="viewcode-block" id="login_status"><a class="viewcode-back" href="../../modules.html#dimcli.__init__.login_status">[docs]</a><span class="k">def</span> <span class="nf">login_status</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Utility to check whether we are logged in or not</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">        True if logged in, otherwise False.  </span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    &gt;&gt;&gt; dimcli.login_status()</span>
+<span class="sd">    False</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">.core.auth</span> <span class="kn">import</span> <span class="n">get_connection</span>
+    <span class="n">CONNECTION</span> <span class="o">=</span> <span class="n">get_connection</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">CONNECTION</span><span class="p">[</span><span class="s1">&#39;token&#39;</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dimcli </span><span class="si">%s</span><span class="s2"> - Succesfully connected to &lt;</span><span class="si">%s</span><span class="s2">&gt;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">VERSION</span><span class="p">),</span> <span class="n">CONNECTION</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">]))</span> 
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Status: not logged in&quot;</span><span class="p">)</span> 
+        <span class="k">return</span> <span class="kc">False</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Digital Science
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

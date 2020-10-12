@@ -10,8 +10,9 @@ from .VERSION import *
 
 from .core.auth import USER_DIR, USER_CONFIG_FILE_PATH, USER_HISTORY_FILE
 from .core.api import *
-from .core.utils import open_multi_platform, init_config_folder, print_warning_prompt_version, preview_contents, print_dimensions_url
-from .core.version_utils import print_dimcli_report, is_dimcli_outdated
+from .utils.utils_general import open_multi_platform
+from .utils.utils_repl import init_config_folder, print_warning_prompt_version, preview_contents, print_dimensions_url
+from .utils.version_utils import print_dimcli_report, is_dimcli_outdated
 
 try:
     from prompt_toolkit.formatted_text import HTML
