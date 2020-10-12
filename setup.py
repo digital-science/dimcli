@@ -24,6 +24,10 @@ else:
 with open(path.join(HERE, "README.md"), encoding="utf-8") as f:
     long_description = f.read()
 
+# fix broken animation on pypi
+long_description = long_description.replace("https://raw.githubusercontent.com/digital-science/dimcli/master/static/dimcli_animated.gif", "http://api-sample-data.dimensions.ai/videos/dimcli_animated.gif")
+
+
 # Parse requirements.txt file so to have one single source of truth
 REQUIREMENTS_DATA = []
 with open(path.join(HERE, "requirements.txt"), encoding="utf-8") as f:
