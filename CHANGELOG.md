@@ -1,5 +1,14 @@
 # Changelog
 
+
+## v 0.8
+
+* new `utils` module: misc utilities all grouped under `dimcli.utils`
+* `dimcli.shortcuts` is replaced with `dimcli.utils` 
+* the pyvis port is now located at `dimcli.utils.networkviz`
+* documentation updated 
+
+
 ## v 0.7.5
 
 * Gsheets export shortcuts

@@ -21,10 +21,19 @@ dimcli.core.api
 
 
 
-dimcli.utils
-----------------------
+dimcli.utils.dimensions
+-------------------------------
 
-.. automodule:: dimcli.utils
-    :members: chunks_of
+.. automodule:: dimcli.utils.utils_dimensions
+    :members: 
+    :show-inheritance:
+
+
+
+dimcli.utils.general
+-------------------------------
+
+.. automodule:: dimcli.utils.utils_general
+    :members: 
     :show-inheritance:
 

@@ -151,7 +151,7 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module contains core functionalities for querying the Dimensions API. </span>
 
-<span class="sd">NOTE: the two main objects in this module (``Dsl`` and ``DslDataset``) are available via the ``dimcli`` module. E.g.:</span>
+<span class="sd">NOTE: these objects are attached to the top level ``dimcli`` module. E.g.:</span>
 
 <span class="sd">&gt;&gt;&gt; import dimcli</span>
 <span class="sd">&gt;&gt;&gt; dsl = dimcli.Dsl()</span>
@@ -173,11 +173,10 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">from</span> <span class="nn">.auth</span> <span class="kn">import</span> <span class="n">do_global_login</span><span class="p">,</span> <span class="n">get_connection</span><span class="p">,</span> <span class="n">refresh_login</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">.walkup</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">.dsl_grammar</span> <span class="kn">import</span> <span class="n">G</span>
 <span class="kn">from</span> <span class="nn">.dataframe_factory</span> <span class="kn">import</span> <span class="n">DfFactory</span>
 
+<span class="kn">from</span> <span class="nn">..utils.all</span> <span class="kn">import</span> <span class="o">*</span>
 
 
 

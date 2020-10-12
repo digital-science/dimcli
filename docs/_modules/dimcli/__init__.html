@@ -149,9 +149,9 @@
             
   <h1>Source code for dimcli.__init__</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">This module contains utilities for logging in and out of the Dimensions API.  </span>
+<span class="sd">This module contains utilities for logging in/out of the Dimensions API.  </span>
 
-<span class="sd">NOTE: these functions are available via the top level ``dimcli`` module. E.g.:</span>
+<span class="sd">NOTE: these functions are attached to the top level ``dimcli`` module. E.g.:</span>
 
 <span class="sd">&gt;&gt;&gt; import dimcli</span>
 <span class="sd">&gt;&gt;&gt; dimcli.login()</span>
@@ -162,7 +162,7 @@
 
 <span class="kn">from</span> <span class="nn">.core.api</span> <span class="kn">import</span> <span class="n">Dsl</span><span class="p">,</span> <span class="n">DslDataset</span>
 <span class="kn">from</span> <span class="nn">.core.dsl_grammar</span> <span class="kn">import</span> <span class="n">G</span> 
-<span class="kn">from</span> <span class="nn">.core.version_utils</span> <span class="kn">import</span> <span class="n">print_dimcli_report_if_outdated</span>
+<span class="kn">from</span> <span class="nn">.utils.version_utils</span> <span class="kn">import</span> <span class="n">print_dimcli_report_if_outdated</span>
 
 <span class="kn">import</span> <span class="nn">click</span>
 

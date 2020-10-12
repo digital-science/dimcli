@@ -1,8 +1,5 @@
 """
-NOTE this should be replaced with utils.networkviz
-
-This .core module is deprecated and will be removed later.
-
+Wrapper around PyVis so that we can use a modified template. [EXPERIMENTAL]
 """
 
 try:

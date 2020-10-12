@@ -1,7 +1,7 @@
 """
 This module contains core functionalities for querying the Dimensions API. 
 
-NOTE: the two main objects in this module (``Dsl`` and ``DslDataset``) are available via the ``dimcli`` module. E.g.:
+NOTE: these objects are attached to the top level ``dimcli`` module. E.g.:
 
 >>> import dimcli
 >>> dsl = dimcli.Dsl()

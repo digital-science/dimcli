@@ -1,7 +1,14 @@
 """
-This module contains various general purpose utilities.
+This module contains various general purpose utilities for working with data. 
+
+NOTE: these functions are attached to the top level ``dimcli.utils`` module. E.g.:
+
+>>> from dimcli.utils import chunks_of
+>>> list(chunks_of(a, 5))
+[[0, 1, 2, 3, 4], [5, 6, 7, 8, 9]]
 
 """
+
 
 
 import click
@@ -20,12 +27,29 @@ from pandas import json_normalize, DataFrame
 def chunks_of(data, size):
     """Splits up a list or sequence in to chunks of selected size. 
 
-    Args:
-        data: A sequence eg a list
-        size: A number
+    Parameters
+    ----------
+    data: sequence
+        A sequence eg a list that needs to be chunked.
+    size: int
+        The number of items in each group.
 
-    Returns:
+    Returns
+    -------
+    Iterator
         An iterable
+
+    Example
+    -------
+    >>> from dimcli.utils import chunks_of
+    >>> a = range(10)
+    >>> for x in chunks_of(a, 5):
+            print(len(x))
+    5
+    5
+    >>> list(chunks_of(a, 5))
+    [[0, 1, 2, 3, 4], [5, 6, 7, 8, 9]]
+
     """
     it = iter(data)
     chunk = list(islice(it, size))
@@ -35,17 +59,25 @@ def chunks_of(data, size):
 
 
 def save2File(contents, filename, path):
-    """Save string contents to a file.
+    """Save string contents to a file, creating the file if it doesn't exist.
 
-    Not generalized much, so use at your own risk.
+    NOTE Not generalized much, so use at your own risk.
 
-    Args:
-        contents: string
-        filename: string
-        path: full valid path
 
-    Returns:
-        File location in URL format eg "file://..."
+    Parameters
+    ----------
+    contents: str
+        File contents
+    filename: str
+        Name of the file.
+    path: str
+        Full path of the file to save. If not existing, it gets created.
+    
+    Returns
+    -------
+    str
+        The file path with format  "file://..."
+
     """
     if not os.path.exists(path):
         os.makedirs(path)
@@ -61,8 +93,9 @@ def save2File(contents, filename, path):
 
 
 def open_multi_platform(fpath):
-    """
-    util to open a file on any platform (i hope)
+    """Open a file using the native OS tools, taking care of platform differences. 
+
+    Supports win, macos and linux.
     """
     click.secho("Opening `%s` ..." % fpath)
     if sys.platform == 'win32':
@@ -84,12 +117,17 @@ def exists_key_in_dicts_list(dict_list, key):
 
     See also https://stackoverflow.com/questions/14790980/how-can-i-check-if-key-exists-in-list-of-dicts-in-python
 
-    Args:
-        dict_list: A list of dictionaries
-        key: a string to be found in dict keys
+    Parameters
+    ----------
+    dict_list: list 
+        A list of dictionaries.
+    key: obj 
+        The obj to be found in dict keys
 
-    Returns:
-        Dictionary or None
+    Returns
+    -------
+    Dict or None
+
     """
     # return next((i for i,d in enumerate(dict_list) if key in d), None)
     return next((d for i,d in enumerate(dict_list) if key in d), None)
@@ -97,26 +135,36 @@ def exists_key_in_dicts_list(dict_list, key):
 
 
 def normalize_key(key_name, dict_list, new_val=None):
-    """Ensures the key always appear in a JSON dict/objects list, by adding it when missing 
-    
-    EG
-    ```
-    for x in pubs_details.publications:
-        if not 'FOR' in x:
-            x['FOR'] = []
-    ```
-    becomes
-    
-    ```
-    normalize_key("FOR", pubs_details.publications)
-    ```
-    Changes happen in-place.
+    """Ensures the key always appear in a JSON dict/objects list by adding it when missing.
 
-    TIP If `new_val` is not passed, it is inferred from first available non-empty value
-
-    TODO add third argument to pass a lambda function for modifying key
     UPDATE 2019-11-28
     v0.6.1.2: normalizes also 'None' values (to address 1.21 DSL change)
+
+    Parameters
+    ----------
+    key_name : obj
+        The dict key to normalize.
+    dict_list : list
+        List of dictionaries where to be processed.
+    new_val : obj, optional
+        Default value to add to the key, when not found. If `new_val` is not passed, it is inferred from first available non-empty value. 
+
+
+    Returns
+    -------
+    dict
+        Same dictionary being passed. Changes happen in-place.    
+
+    Example
+    -------------
+    >>> for x in pubs_details.publications:
+            if not 'FOR' in x:
+                x['FOR'] = []
+
+    becomes simply:
+    
+    >>> normalize_key("FOR", pubs_details.publications)
+
     """
     if new_val == None:
         for x in dict_list:
@@ -132,7 +180,7 @@ def normalize_key(key_name, dict_list, new_val=None):
 
 
 def export_as_gsheets(input_data, query="", title=None, verbose=True):
-    """Quick method to save some data to google sheets.
+    """Save data to google sheets with one-line. 
 
     Works with raw JSON (from API), or even a Dataframe. 
 
@@ -163,7 +211,21 @@ def export_as_gsheets(input_data, query="", title=None, verbose=True):
     -------
     str
         The google sheet URL as a string.   
-        
+
+    Example
+    -------
+    >>> import pandas as pd
+    >>> from dimcli.utils export_as_gsheets
+    >>> cars = {'Brand': ['Honda Civic','Toyota Corolla','Ford Focus','Audi A4'],
+                 'Price': [22000,25000,27000,35000]
+                 }
+    >>> df = pd.DataFrame(cars, columns = ['Brand', 'Price'])
+    >>> export_as_gsheets(df)
+    ..authorizing with google..
+    ..creating a google sheet..
+    ..uploading..
+    Saved:
+    https://docs.google.com/spreadsheets/d/1tsyRFDEsADltWDdqjuyDWDOg81sl9hN3Nu8MXVlqDDI
     """
 
     if 'google.colab' in sys.modules:
@@ -231,8 +293,13 @@ def export_as_gsheets(input_data, query="", title=None, verbose=True):
 
 
 def google_url(stringa):
-    """
-    Generate a valid google search URL from a string (URL quoting is applied)
+    """Generate a valid google search URL from a string (URL quoting is applied). 
+
+    Example
+    -------
+    >>> from dimcli.utils import google_url
+    >>> google_url("malaria AND africa")
+    'https://www.google.com/search?q=malaria%20AND%20africa'
     """
     from urllib.parse import quote   
     s = quote(stringa)    

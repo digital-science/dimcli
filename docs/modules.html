@@ -87,7 +87,8 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Module Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-dimcli.__init__">dimcli.login</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-dimcli.core.api">dimcli.core.api</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-dimcli.utils">dimcli.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-dimcli.utils.utils_dimensions">dimcli.utils.dimensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-dimcli.utils.utils_general">dimcli.utils.general</a></li>
 </ul>
 </li>
 </ul>
@@ -159,8 +160,8 @@
 <h1>Module Reference<a class="headerlink" href="#module-reference" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="module-dimcli.__init__">
 <span id="dimcli-login"></span><h2>dimcli.login<a class="headerlink" href="#module-dimcli.__init__" title="Permalink to this headline">¶</a></h2>
-<p>This module contains utilities for logging in and out of the Dimensions API.</p>
-<p>NOTE: these functions are available via the top level <code class="docutils literal notranslate"><span class="pre">dimcli</span></code> module. E.g.:</p>
+<p>This module contains utilities for logging in/out of the Dimensions API.</p>
+<p>NOTE: these functions are attached to the top level <code class="docutils literal notranslate"><span class="pre">dimcli</span></code> module. E.g.:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">dimcli</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
 </pre></div>
@@ -240,7 +241,7 @@
 <div class="section" id="module-dimcli.core.api">
 <span id="dimcli-core-api"></span><h2>dimcli.core.api<a class="headerlink" href="#module-dimcli.core.api" title="Permalink to this headline">¶</a></h2>
 <p>This module contains core functionalities for querying the Dimensions API.</p>
-<p>NOTE: the two main objects in this module (<code class="docutils literal notranslate"><span class="pre">Dsl</span></code> and <code class="docutils literal notranslate"><span class="pre">DslDataset</span></code>) are available via the <code class="docutils literal notranslate"><span class="pre">dimcli</span></code> module. E.g.:</p>
+<p>NOTE: these objects are attached to the top level <code class="docutils literal notranslate"><span class="pre">dimcli</span></code> module. E.g.:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">dimcli</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dsl</span> <span class="o">=</span> <span class="n">dimcli</span><span class="o">.</span><span class="n">Dsl</span><span class="p">()</span>
 </pre></div>
@@ -852,22 +853,322 @@ The steps are described at <a class="reference external" href="https://gspread.r
 </dd></dl>
 
 </div>
-<div class="section" id="module-dimcli.utils">
-<span id="dimcli-utils"></span><h2>dimcli.utils<a class="headerlink" href="#module-dimcli.utils" title="Permalink to this headline">¶</a></h2>
-<p>This module contains various utilities for working with the API and the data it returns.</p>
+<div class="section" id="module-dimcli.utils.utils_dimensions">
+<span id="dimcli-utils-dimensions"></span><h2>dimcli.utils.dimensions<a class="headerlink" href="#module-dimcli.utils.utils_dimensions" title="Permalink to this headline">¶</a></h2>
+<p>This module contains utilities for querying the API and working with Dimensions data.</p>
+<p>NOTE: these functions are attached to the top level <code class="docutils literal notranslate"><span class="pre">dimcli.utils</span></code> module. E.g.:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dimcli.utils</span> <span class="kn">import</span> <span class="n">dimensions_url</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dimensions_url</span><span class="p">(</span><span class="s2">&quot;pub.1127419018&quot;</span><span class="p">)</span>
+<span class="go">&#39;https://app.dimensions.ai/details/publication/pub.1127419018&#39;</span>
+</pre></div>
+</div>
 <dl class="py function">
-<dt id="dimcli.utils.chunks_of">
-<code class="sig-prename descclassname">dimcli.utils.</code><code class="sig-name descname">chunks_of</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">size</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/utils.html#chunks_of"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.chunks_of" title="Permalink to this definition">¶</a></dt>
+<dt id="dimcli.utils.utils_dimensions.dimensions_url">
+<code class="sig-prename descclassname">dimcli.utils.utils_dimensions.</code><code class="sig-name descname">dimensions_url</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj_id</span></em>, <em class="sig-param"><span class="n">obj_type</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/utils_dimensions.html#dimensions_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.utils_dimensions.dimensions_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a valid Dimensions URL for one of the available sources.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj_id</strong> (<em>str</em>) – A Dimensions ID for one of the available sources.</p></li>
+<li><p><strong>obj_type</strong> (<em>str</em><em>, </em><em>optional</em>) – The name of the source: one of ‘publications’, ‘grants’, ‘patents’, ‘policy_documents’, ‘clinical_trials’, ‘researchers’. If not provided, it’s inferred using the ID structure.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The object URL.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dimcli.utils</span> <span class="kn">import</span> <span class="n">dimensions_url</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dimensions_url</span><span class="p">(</span><span class="s2">&quot;pub.1127419018&quot;</span><span class="p">)</span>
+<span class="go">&#39;https://app.dimensions.ai/details/publication/pub.1127419018&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dimcli.utils.utils_dimensions.dimensions_url_search">
+<code class="sig-prename descclassname">dimcli.utils.utils_dimensions.</code><code class="sig-name descname">dimensions_url_search</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">keywords_list_as_string</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/utils_dimensions.html#dimensions_url_search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.utils_dimensions.dimensions_url_search" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a valid keyword search URL for Dimensions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>keywords_list_as_string</strong> (<em>str</em>) – List of search keywords.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Dimensions URL.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dimcli.utils</span> <span class="kn">import</span> <span class="n">dimensions_url_search</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dimensions_url_search</span><span class="p">(</span><span class="s2">&quot;graphene AND south korea&quot;</span><span class="p">)</span>
+<span class="go">&#39;https://app.dimensions.ai/discover/publication?search_text=graphene%20AND%20south%20korea&amp;search_type=kws&amp;search_field=full_search&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dimcli.utils.utils_dimensions.dsl_escape">
+<code class="sig-prename descclassname">dimcli.utils.utils_dimensions.</code><code class="sig-name descname">dsl_escape</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">stringa</span></em>, <em class="sig-param"><span class="n">all</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/utils_dimensions.html#dsl_escape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.utils_dimensions.dsl_escape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper for escaping the full-text inner query strings, when they includes quotes.</p>
+<p>EG with the query string:
+‘“2019-nCoV” OR “COVID-19” OR “SARS-CoV-2” OR ((“coronavirus”  OR “corona virus”) AND (Wuhan OR China))’</p>
+<p>In Python, if you want to embed it into a DSL query, it has to become:
+‘&quot;2019-nCoV&quot; OR &quot;COVID-19&quot; OR &quot;SARS-CoV-2&quot; OR ((&quot;coronavirus&quot;  OR &quot;corona virus&quot;) AND (Wuhan OR China))’</p>
+<p>See also: <a class="reference external" href="https://docs.dimensions.ai/dsl/language.html#for-search-term">https://docs.dimensions.ai/dsl/language.html#for-search-term</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stringa</strong> (<em>str</em>) – Full-text search component of a DSL query.</p></li>
+<li><p><strong>all</strong> (<em>bool</em><em>, </em><em>default=False</em>) – By default only quotes as escaped. Set to True to escape all special characters (eg colons)</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dsl_escape</span><span class="p">(</span><span class="s1">&#39;Solar cells: a new technology?&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="go">&#39;Solar cells\: a new technology?&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dimcli.utils.utils_dimensions.dslquery">
+<code class="sig-prename descclassname">dimcli.utils.utils_dimensions.</code><code class="sig-name descname">dslquery</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">query_string</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/utils_dimensions.html#dslquery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.utils_dimensions.dslquery" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shortcut for running a query without instantiating dimcli.Dsl().</p>
+<p>Added for backward compatibility with legacy API tutorials. Requires file-based credentials for logging in.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>query_string</strong> (<em>str</em>) – A valid DSL query.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A Dimcli wrapper object containing JSON data.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#dimcli.core.api.DslDataset" title="dimcli.core.api.DslDataset">DslDataset</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dimcli.utils.utils_dimensions.dslquery_json">
+<code class="sig-prename descclassname">dimcli.utils.utils_dimensions.</code><code class="sig-name descname">dslquery_json</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">query_string</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/utils_dimensions.html#dslquery_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.utils_dimensions.dslquery_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shortcut for running a query without instantiating dimcli.Dsl(). Same as <code class="docutils literal notranslate"><span class="pre">dslquery</span></code> but returns raw JSON instead of Api.DslDataset object</p>
+<p>Added for backward compatibility with legacy API tutorials. Requires file-based credentials for logging in.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>query_string</strong> (<em>str</em>) – A valid DSL query.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>API JSON data, represented as a dict object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dimcli.utils.utils_dimensions.dslqueryall">
+<code class="sig-prename descclassname">dimcli.utils.utils_dimensions.</code><code class="sig-name descname">dslqueryall</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">query_string</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/utils_dimensions.html#dslqueryall"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.utils_dimensions.dslqueryall" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shortcut for running a loop query without instantiating dimcli.Dsl().</p>
+<p>Added for backward compatibility with legacy API tutorials. Requires file-based credentials for logging in.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>query_string</strong> (<em>str</em>) – A valid DSL query.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A Dimcli wrapper object containing JSON data.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#dimcli.core.api.DslDataset" title="dimcli.core.api.DslDataset">DslDataset</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-dimcli.utils.utils_general">
+<span id="dimcli-utils-general"></span><h2>dimcli.utils.general<a class="headerlink" href="#module-dimcli.utils.utils_general" title="Permalink to this headline">¶</a></h2>
+<p>This module contains various general purpose utilities for working with data.</p>
+<p>NOTE: these functions are attached to the top level <code class="docutils literal notranslate"><span class="pre">dimcli.utils</span></code> module. E.g.:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dimcli.utils</span> <span class="kn">import</span> <span class="n">chunks_of</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">chunks_of</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="go">[[0, 1, 2, 3, 4], [5, 6, 7, 8, 9]]</span>
+</pre></div>
+</div>
+<dl class="py function">
+<dt id="dimcli.utils.utils_general.chunks_of">
+<code class="sig-prename descclassname">dimcli.utils.utils_general.</code><code class="sig-name descname">chunks_of</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">size</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/utils_general.html#chunks_of"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.utils_general.chunks_of" title="Permalink to this definition">¶</a></dt>
 <dd><p>Splits up a list or sequence in to chunks of selected size.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> – A sequence eg a list</p></li>
-<li><p><strong>size</strong> – A number</p></li>
+<li><p><strong>data</strong> (<em>sequence</em>) – A sequence eg a list that needs to be chunked.</p></li>
+<li><p><strong>size</strong> (<em>int</em>) – The number of items in each group.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>An iterable</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Iterator</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dimcli.utils</span> <span class="kn">import</span> <span class="n">chunks_of</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">chunks_of</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+<span class="go">        print(len(x))</span>
+<span class="go">5</span>
+<span class="go">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">chunks_of</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="go">[[0, 1, 2, 3, 4], [5, 6, 7, 8, 9]]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dimcli.utils.utils_general.exists_key_in_dicts_list">
+<code class="sig-prename descclassname">dimcli.utils.utils_general.</code><code class="sig-name descname">exists_key_in_dicts_list</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dict_list</span></em>, <em class="sig-param"><span class="n">key</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/utils_general.html#exists_key_in_dicts_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.utils_general.exists_key_in_dicts_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>From a list of dicts, checks if a certain key is in one of the dicts in the list.</p>
+<p>See also <a class="reference external" href="https://stackoverflow.com/questions/14790980/how-can-i-check-if-key-exists-in-list-of-dicts-in-python">https://stackoverflow.com/questions/14790980/how-can-i-check-if-key-exists-in-list-of-dicts-in-python</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dict_list</strong> (<em>list</em>) – A list of dictionaries.</p></li>
+<li><p><strong>key</strong> (<em>obj</em>) – The obj to be found in dict keys</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dict or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dimcli.utils.utils_general.export_as_gsheets">
+<code class="sig-prename descclassname">dimcli.utils.utils_general.</code><code class="sig-name descname">export_as_gsheets</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_data</span></em>, <em class="sig-param"><span class="n">query</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">title</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/utils_general.html#export_as_gsheets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.utils_general.export_as_gsheets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save data to google sheets with one-line.</p>
+<p>Works with raw JSON (from API), or even a Dataframe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_data</strong> (<em>JSON</em><em> or </em><em>DataFrame</em>) – The data to be uploaded</p></li>
+<li><p><strong>query</strong> (<em>str</em>) – The DSL query - this is neeeded only when raw API JSON is passed</p></li>
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>optional</em>) – The spreadsheet title, if one wants to reuse an existing spreadsheet.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>default=True</em>) – Verbose mode</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This method assumes that the calling environment can provide valid Google authentication credentials.
+There are two routes to make this work, depending on whether one is using Google Colab or a traditional Jupyter environment.</p>
+<p><strong>Google Colab</strong>
+This is the easiest route. In Google Colab, all required libraries are already available. The <cite>to_gsheets</cite> method simply triggers the built-in authentication process via a pop up window.</p>
+<p><strong>Jupyter</strong>
+This route involves a few more steps. In Jupyter, it is necessary to install the gspread, oauth2client and gspread_dataframe modules first. Secondly, one needs to create Google Drive access credentials using OAUTH (which boils down to a JSON file). Note that the credentials file needs to be saved in: <cite>~/.config/gspread/credentials.json</cite> (for gpread).
+The steps are described at <a class="reference external" href="https://gspread.readthedocs.io/en/latest/oauth2.html#for-end-users-using-oauth-client-id">https://gspread.readthedocs.io/en/latest/oauth2.html#for-end-users-using-oauth-client-id</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The google sheet URL as a string.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dimcli.utils</span> <span class="n">export_as_gsheets</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cars</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Brand&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Honda Civic&#39;</span><span class="p">,</span><span class="s1">&#39;Toyota Corolla&#39;</span><span class="p">,</span><span class="s1">&#39;Ford Focus&#39;</span><span class="p">,</span><span class="s1">&#39;Audi A4&#39;</span><span class="p">],</span>
+<span class="go">             &#39;Price&#39;: [22000,25000,27000,35000]</span>
+<span class="go">             }</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">cars</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Brand&#39;</span><span class="p">,</span> <span class="s1">&#39;Price&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">export_as_gsheets</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="go">..authorizing with google..</span>
+<span class="go">..creating a google sheet..</span>
+<span class="go">..uploading..</span>
+<span class="go">Saved:</span>
+<span class="go">https://docs.google.com/spreadsheets/d/1tsyRFDEsADltWDdqjuyDWDOg81sl9hN3Nu8MXVlqDDI</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dimcli.utils.utils_general.google_url">
+<code class="sig-prename descclassname">dimcli.utils.utils_general.</code><code class="sig-name descname">google_url</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">stringa</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/utils_general.html#google_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.utils_general.google_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a valid google search URL from a string (URL quoting is applied).</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dimcli.utils</span> <span class="kn">import</span> <span class="n">google_url</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">google_url</span><span class="p">(</span><span class="s2">&quot;malaria AND africa&quot;</span><span class="p">)</span>
+<span class="go">&#39;https://www.google.com/search?q=malaria%20AND%20africa&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dimcli.utils.utils_general.normalize_key">
+<code class="sig-prename descclassname">dimcli.utils.utils_general.</code><code class="sig-name descname">normalize_key</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">key_name</span></em>, <em class="sig-param"><span class="n">dict_list</span></em>, <em class="sig-param"><span class="n">new_val</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/utils_general.html#normalize_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.utils_general.normalize_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensures the key always appear in a JSON dict/objects list by adding it when missing.</p>
+<p>UPDATE 2019-11-28
+v0.6.1.2: normalizes also ‘None’ values (to address 1.21 DSL change)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key_name</strong> (<em>obj</em>) – The dict key to normalize.</p></li>
+<li><p><strong>dict_list</strong> (<em>list</em>) – List of dictionaries where to be processed.</p></li>
+<li><p><strong>new_val</strong> (<em>obj</em><em>, </em><em>optional</em>) – Default value to add to the key, when not found. If <cite>new_val</cite> is not passed, it is inferred from first available non-empty value.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Same dictionary being passed. Changes happen in-place.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">pubs_details</span><span class="o">.</span><span class="n">publications</span><span class="p">:</span>
+<span class="go">        if not &#39;FOR&#39; in x:</span>
+<span class="go">            x[&#39;FOR&#39;] = []</span>
+</pre></div>
+</div>
+<p>becomes simply:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">normalize_key</span><span class="p">(</span><span class="s2">&quot;FOR&quot;</span><span class="p">,</span> <span class="n">pubs_details</span><span class="o">.</span><span class="n">publications</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dimcli.utils.utils_general.open_multi_platform">
+<code class="sig-prename descclassname">dimcli.utils.utils_general.</code><code class="sig-name descname">open_multi_platform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fpath</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/utils_general.html#open_multi_platform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.utils_general.open_multi_platform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open a file using the native OS tools, taking care of platform differences.</p>
+<p>Supports win, macos and linux.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dimcli.utils.utils_general.save2File">
+<code class="sig-prename descclassname">dimcli.utils.utils_general.</code><code class="sig-name descname">save2File</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">contents</span></em>, <em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/utils_general.html#save2File"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.utils_general.save2File" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save string contents to a file, creating the file if it doesn’t exist.</p>
+<p>NOTE Not generalized much, so use at your own risk.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>contents</strong> (<em>str</em>) – File contents</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – Name of the file.</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Full path of the file to save. If not existing, it gets created.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The file path with format  “<a class="reference external" href="file://">file://</a>…”</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
