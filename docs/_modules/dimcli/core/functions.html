@@ -272,11 +272,12 @@
 
 <span class="sd">    Example</span>
 <span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from dimcli.functions import extract_classification</span>
 <span class="sd">    &gt;&gt;&gt; title=&quot;Burnout and intentions to quit the practice among community pediatricians: associations with specific professional activities&quot;</span>
 <span class="sd">    &gt;&gt;&gt; extract_classification(title, &quot;&quot;, &quot;FOR&quot;).json</span>
 <span class="sd">    {&#39;FOR&#39;: [{&#39;id&#39;: &#39;3177&#39;, &#39;name&#39;: &#39;1117 Public Health and Health Services&#39;}]}</span>
 <span class="sd">    &quot;&quot;&quot;</span>    
-    
+
     <span class="n">classifications</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;FOR&quot;</span><span class="p">,</span> <span class="s2">&quot;RCDC&quot;</span><span class="p">,</span> <span class="s2">&quot;HRCS_HC&quot;</span><span class="p">,</span> <span class="s2">&quot;HRCS_RAC&quot;</span><span class="p">,</span> <span class="s2">&quot;HRA&quot;</span><span class="p">,</span> <span class="s2">&quot;BRA&quot;</span><span class="p">,</span> <span class="s2">&quot;ICRP_CSO&quot;</span><span class="p">,</span> <span class="s2">&quot;ICRP_CT&quot;</span><span class="p">,</span> <span class="s2">&quot;UOA&quot;</span><span class="p">,</span> <span class="s2">&quot;SDG&quot;</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">is_logged_in</span><span class="p">():</span>
         <span class="n">dsl</span> <span class="o">=</span> <span class="n">Dsl</span><span class="p">()</span>

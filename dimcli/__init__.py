@@ -51,9 +51,6 @@ def login(username="", password="", endpoint="https://app.dimensions.ai", instan
 
     Parameters
     ----------
-    filename: str, optional 
-        A filename/path where to save the data. If not provided, a unique name is generated automatically.
-
     username: str, optional
         The API username
     password: str, optional
