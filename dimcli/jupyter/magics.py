@@ -1,3 +1,10 @@
+"""
+Dimcli magic commands used with iPython / Jupyter environments only. 
+
+By default the results of magic command queries are saved to a variable called ``dsl_last_results``.
+
+See also: https://api-lab.dimensions.ai/cookbooks/1-getting-started/4-Dimcli-magic-commands.html
+"""
 
 from IPython.core import magic_arguments
 from IPython.core.magic import line_magic, cell_magic, line_cell_magic, Magics, magics_class
@@ -47,8 +54,24 @@ class DslMagics(Magics):
 
     @line_cell_magic
     def dsl(self, line, cell=None):
-        """
-        Dimcli Magic Method: enter a DSL query string and send it directly to Dimensions API. 
+        """Magic command to run a single DSL query. 
+
+        Can be used as a single-line (``%dsl``) or multi-line (``%%dsl``) command. Requires an authenticated API session. Results are saved to a variable called ``dsl_last_results``.
+
+        Parameters
+        ----------
+        line: str
+            A valid DSL search query. 
+            
+        Returns
+        -------
+        DslDataset
+            A Dimcli wrapper object containing JSON data.     
+
+        Example
+        -------
+        >>> %dsl search publications for "malaria" return publications limit 500
+
         """
         if self._handle_login():
             if cell:
@@ -62,6 +85,26 @@ class DslMagics(Magics):
     def dsldf(self, line, cell=None):
         """Dimcli Magic method: query the Dimensions DSL API with the text passed - return a pandas dataframe.
         """
+        """Magic command to run a single DSL query, results are transformed to a Pandas DataFrame. 
+
+        Can be used as a single-line (``%dsldf``) or multi-line (``%%dsldf``) command. Requires an authenticated API session. Results are saved to a variable called ``dsl_last_results``.
+
+        Parameters
+        ----------
+        line: str
+            A valid DSL search query. 
+
+        Returns
+        -------
+        pandas.DataFrame
+            A pandas dataframe containing the query results.      
+
+        Example
+        -------
+        >>> %dsldf search publications for "malaria" return publications limit 500
+
+        """
+
         if self._handle_login():
             if cell:
                 line = cell
@@ -72,10 +115,61 @@ class DslMagics(Magics):
             self.shell.user_ns[self.results_var] = data
             return data
 
+    @line_cell_magic
+    def dslgsheets(self, line, cell=None):
+        """Magic command to run a single DSL query and to save the results to a google sheet.
+
+        NOTE: this method requires preexisting valid Google authentication credentials. See the description of ``utils.export_as_gsheets`` for more information.
+
+        Can be used as a single-line (``%dslgsheets``) or multi-line (``%%dslgsheets``) command. Requires an authenticated API session. Results are also saved to a variable called ``dsl_last_results``.
+
+        Parameters
+        ----------
+        line: str
+            A valid DSL search query. 
+
+        Returns
+        -------
+        str
+            A string representing the google sheet URL.    
+
+        Example
+        -------
+        >>> %dslgsheets search publications for "malaria" return publications limit 500
+
+        """
+        if self._handle_login():
+            if cell:
+                line = cell
+            if not line_is_search_query(line):
+                print("Sorry - DSL to dataframe magic methods work only with `search` queries.")
+                return None
+            data = self._handle_query(line).as_dataframe()
+            self.shell.user_ns[self.results_var] = data
+            return export_as_gsheets(data, line)
 
     @line_cell_magic
     def dslloop(self, line, cell=None):
-        """Dimcli Magic Method: transforms a simple query into a loop, by adding limit/skip parameters automatically. The final object returns contains all results into a single JSON object.  
+        """Magic command to run a DSL 'loop' (iterative) query. 
+
+        This command automatically loops over all the pages of a results set, until all possible records have been returned.
+
+        Can be used as a single-line (``%dslloop``) or multi-line (``%%dslloop``) command. Requires an authenticated API session. Results are saved to a variable called ``dsl_last_results``.
+
+        Parameters
+        ----------
+        line: str
+            A valid DSL search query. Should not include limit/skip clauses, as those are added automatically during the iterations.
+
+        Returns
+        -------
+        DslDataset
+            A Dimcli wrapper object containing JSON data.     
+
+        Example
+        -------
+        >>> %dslloop search publications for "malaria" where times_cited > 200 return publications 
+
         """
         if self._handle_login():
             if cell:
@@ -87,7 +181,24 @@ class DslMagics(Magics):
 
     @line_cell_magic
     def dslloopdf(self, line, cell=None):
-        """Dimcli Magic method: query the Dimensions DSL API with the text passed, looping over all results pages - return a pandas dataframe.
+        """Magic command to run a DSL 'loop' (iterative) query. Results are automatically transformed to a pandas dataframe.
+
+        Can be used as a single-line (``%dslloopdf``) or multi-line (``%%dslloopdf``) command. Requires an authenticated API session. Results are saved to a variable called ``dsl_last_results``.
+
+        Parameters
+        ----------
+        line: str
+            A valid DSL search query. Should not include limit/skip clauses, as those are added automatically during the iterations.
+
+        Returns
+        -------
+        pandas.DataFrame
+            A pandas dataframe containing the query results.      
+
+        Example
+        -------
+        >>> %dslloopdf search publications for "malaria" where times_cited > 200 return publications 
+
         """
         if self._handle_login():
             if cell:
@@ -99,11 +210,59 @@ class DslMagics(Magics):
             self.shell.user_ns[self.results_var] = data
             return data
 
+    @line_cell_magic
+    def dslloopgsheets(self, line, cell=None):
+        """Magic command to run a DSL 'loop' (iterative) query. Results are automatically uploaded to google sheets. 
+
+        NOTE: this method requires preexisting valid Google authentication credentials. See the description of ``utils.export_as_gsheets`` for more information.
+
+        Can be used as a single-line (``%dslloopgsheets``) or multi-line (``%%dslloopgsheets``) command. Requires an authenticated API session. Results are also saved to a variable called ``dsl_last_results``.
+
+        Parameters
+        ----------
+        line: str
+            A valid DSL search query. Should not include limit/skip clauses, as those are added automatically during the iterations.
+
+        Returns
+        -------
+        pandas.DataFrame
+            A pandas dataframe containing the query results.      
+
+        Example
+        -------
+        >>> %dslloopdf search publications for "malaria" where times_cited > 200 return publications 
+        """
+        if self._handle_login():
+            if cell:
+                line = cell
+            if not line_is_search_query(line):
+                print("Sorry - DSL to dataframe magic methods work only with `search` queries.")
+                return None
+            data = self._handle_query(line, loop=True).as_dataframe()
+            self.shell.user_ns[self.results_var] = data
+            return export_as_gsheets(data, line)
 
     @line_magic
     def dsldocs(self, line):
-        """
-        Dimcli Magic method: wrapper around the dsl `describe` function - outputs documentation for a DSL Source or Entity as a pandas dataframe.
+        """Magic command to get DSL documentation about sources and fields.
+        
+        This is a wrapper around the DSL `describe` function.
+
+        Parameters
+        ----------
+        line: str, optional
+            The DSL source or entity name to get documentation for. If omitted, all the documentation is downloaded.
+
+        Returns
+        -------
+        pandas.DataFrame
+            A pandas dataframe containing the query results.      
+
+        Example
+        -------
+        >>> %dsldocs publications
+
+
         """
         if not self._handle_login():
             return
@@ -159,20 +318,10 @@ class DslMagics(Magics):
 
 
 
-
-
-
-
-ip = get_ipython()
-ip.register_magics(DslMagics)
-
-# https://github.com/ipython/ipython/issues/11878#issuecomment-554790961
-ip.Completer.use_jedi = False
-
 from ..repl.autocompletion import CleverCompleter
 from prompt_toolkit.document import Document
 
-def load_ipython_custom_completers(ipython):
+def _load_ipython_custom_completers(ipython):
     """
 
     # TODO 
@@ -230,7 +379,21 @@ def load_ipython_custom_completers(ipython):
     ipython.set_hook('complete_command', dsldocs_completers, re_key = "%dsldocs")
 
 
-load_ipython_custom_completers(ip)
+
+
+
+try:
+    ip = get_ipython()
+    ip.register_magics(DslMagics)
+    # https://github.com/ipython/ipython/issues/11878#issuecomment-554790961
+    ip.Completer.use_jedi = False
+    _load_ipython_custom_completers(ip)
+except:
+    print("WARNING: magics.py could load the ipython environment")
+
+
+
+
 
 
 

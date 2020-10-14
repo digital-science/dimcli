@@ -1,7 +1,7 @@
 """
-This module contains core functionalities for querying the Dimensions API. 
+Dimcli objects for querying the Dimensions API. 
 
-NOTE: these objects are attached to the top level ``dimcli`` module. E.g.:
+NOTE: these objects are attached to the top level ``dimcli`` module. So you can simply do:
 
 >>> import dimcli
 >>> dsl = dimcli.Dsl()

@@ -19,6 +19,13 @@ dimcli.core.api
     :members: Dsl, DslDataset
     :show-inheritance:
 
+dimcli.core.functions 
+----------------------
+
+.. automodule:: dimcli.core.functions
+    :members: 
+    :show-inheritance:
+
 
 
 dimcli.utils.dimensions
@@ -34,6 +41,13 @@ dimcli.utils.general
 -------------------------------
 
 .. automodule:: dimcli.utils.utils_general
+    :members: 
+    :show-inheritance:
+
+dimcli.jupyter.magics 
+----------------------
+
+.. automodule:: dimcli.jupyter.magics
     :members: 
     :show-inheritance:
 

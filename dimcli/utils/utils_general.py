@@ -1,7 +1,7 @@
 """
-This module contains various general purpose utilities for working with data. 
+Dimcli general purpose utilities for working with data. 
 
-NOTE: these functions are attached to the top level ``dimcli.utils`` module. E.g.:
+NOTE: these functions are attached to the top level ``dimcli.utils`` module. So you import them like this:
 
 >>> from dimcli.utils import chunks_of
 >>> list(chunks_of(a, 5))
@@ -204,8 +204,8 @@ def export_as_gsheets(input_data, query="", title=None, verbose=True):
     This is the easiest route. In Google Colab, all required libraries are already available. The `to_gsheets` method simply triggers the built-in authentication process via a pop up window. 
     
     **Jupyter**
-    This route involves a few more steps. In Jupyter, it is necessary to install the gspread, oauth2client and gspread_dataframe modules first. Secondly, one needs to create Google Drive access credentials using OAUTH (which boils down to a JSON file). Note that the credentials file needs to be saved in: `~/.config/gspread/credentials.json` (for gpread). 
-    The steps are described at https://gspread.readthedocs.io/en/latest/oauth2.html#for-end-users-using-oauth-client-id.
+    This route involves a few more steps. In Jupyter, it is necessary to install the ``gspread``, ``oauth2client`` and ``gspread_dataframe`` modules first. Secondly, one needs to create Google Drive access credentials using OAUTH (which boils down to a JSON file). Note that the credentials file needs to be saved in: `~/.config/gspread/credentials.json` (for gpread to work correctly). 
+    These steps are described at https://gspread.readthedocs.io/en/latest/oauth2.html#for-end-users-using-oauth-client-id.
 
     Returns
     -------
@@ -286,7 +286,7 @@ def export_as_gsheets(input_data, query="", title=None, verbose=True):
     # https://gspread.readthedocs.io/en/latest/api.html#gspread.models.Spreadsheet.share
     gsheet.share(None, perm_type='anyone', role='reader') # anyone can see with url
     spreadsheet_url = "https://docs.google.com/spreadsheets/d/%s" % gsheet.id
-    if verbose: click.secho(f"Saved:\n{spreadsheet_url}", bold=True)
+    # if verbose: click.secho(f"Saved:\n{spreadsheet_url}", bold=True)
     return spreadsheet_url 
 
 

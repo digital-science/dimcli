@@ -154,15 +154,43 @@
 <span class="sd">https://docs.dimensions.ai/dsl/functions.html</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">dsl_escape</span>
 <span class="kn">from</span> <span class="nn">.api</span> <span class="kn">import</span> <span class="n">Dsl</span>
 <span class="kn">from</span> <span class="nn">.auth</span> <span class="kn">import</span> <span class="n">is_logged_in</span>
 
+<span class="kn">from</span> <span class="nn">..utils.utils_dimensions</span> <span class="kn">import</span> <span class="n">dsl_escape</span>
 
-<div class="viewcode-block" id="extract_concepts"><a class="viewcode-back" href="../../../module-functions.html#dimcli.core.functions.extract_concepts">[docs]</a><span class="k">def</span> <span class="nf">extract_concepts</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">with_scores</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;wrapper for the `extract_concepts` function</span>
-<span class="sd">    https://docs.dimensions.ai/dsl/functions.html#function-extract-concepts</span>
+
+<div class="viewcode-block" id="extract_concepts"><a class="viewcode-back" href="../../../modules.html#dimcli.core.functions.extract_concepts">[docs]</a><span class="k">def</span> <span class="nf">extract_concepts</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">with_scores</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Python wrapper for the DSL function `extract_concepts`.</span>
+
+<span class="sd">    Extract concepts from any text. Text input is processed and extracted concepts are returned as an array of strings ordered by their relevance. See also: https://docs.dimensions.ai/dsl/functions.html#function-extract-concepts</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    text : str</span>
+<span class="sd">        The text paragraphs to extract concepts from. </span>
+<span class="sd">    with_scores : bool, optional</span>
+<span class="sd">        Return the concepts scores as well, by default True</span>
+<span class="sd">    as_df : bool, optional</span>
+<span class="sd">        Return results as a pandas dataframe (instead of JSON), by default True</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas.Dataframe or dimcli.DslDataset</span>
+<span class="sd">        The list of concepts that have been extracted. </span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from dimcli.functions import extract_concepts</span>
+<span class="sd">    &gt;&gt;&gt; extract_concepts(&quot;The impact of solar rays on the moon is not trivial.&quot;)</span>
+<span class="sd">    n	concept	relevance</span>
+<span class="sd">    0	impact	0.070622</span>
+<span class="sd">    1	rays	0.062369</span>
+<span class="sd">    2	solar rays	0.022934</span>
+<span class="sd">    3	Moon	0.013245</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+     
+
     <span class="k">if</span> <span class="n">is_logged_in</span><span class="p">():</span>
         <span class="n">dsl</span> <span class="o">=</span> <span class="n">Dsl</span><span class="p">()</span>
         <span class="n">_score</span> <span class="o">=</span> <span class="s1">&#39;true&#39;</span> <span class="k">if</span> <span class="n">with_scores</span> <span class="k">else</span> <span class="s1">&#39;false&#39;</span>
@@ -174,11 +202,31 @@
 
 
 
-<div class="viewcode-block" id="extract_grants"><a class="viewcode-back" href="../../../module-functions.html#dimcli.core.functions.extract_grants">[docs]</a><span class="k">def</span> <span class="nf">extract_grants</span><span class="p">(</span><span class="n">grant_number</span><span class="p">,</span> <span class="n">fundref</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">funder_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;wrapper for the `extract_grants` function</span>
-<span class="sd">    https://docs.dimensions.ai/dsl/functions.html#function-extract-grants</span>
-<span class="sd">    NOTE either fundref or funder_name needs to be provided</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="extract_grants"><a class="viewcode-back" href="../../../modules.html#dimcli.core.functions.extract_grants">[docs]</a><span class="k">def</span> <span class="nf">extract_grants</span><span class="p">(</span><span class="n">grant_number</span><span class="p">,</span> <span class="n">fundref</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">funder_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Python wrapper for the DSL function `extract_grants`.</span>
+
+<span class="sd">    Extract grant Dimensions ID from provided parameters. Grant number must be provided with either a fundref or a funder name as an argument. See also: https://docs.dimensions.ai/dsl/functions.html#function-extract-grants</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    grant_number : str</span>
+<span class="sd">        The grant number/ID</span>
+<span class="sd">    fundref : str, optional</span>
+<span class="sd">        Fundref name    </span>
+<span class="sd">    funder_name : str, optional</span>
+<span class="sd">        Funder name</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dimcli.DslDataset</span>
+<span class="sd">        A Dimcli wrapper object containing JSON data. </span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from dimcli.functions import extract_grants</span>
+<span class="sd">    &gt;&gt;&gt; extract_grants(&quot;R01HL117329&quot;,  fundref=&quot;100000050&quot;).json</span>
+<span class="sd">    {&#39;grant_id&#39;: &#39;grant.2544064&#39;}</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
     <span class="k">if</span> <span class="n">is_logged_in</span><span class="p">():</span>
         <span class="n">dsl</span> <span class="o">=</span> <span class="n">Dsl</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">fundref</span><span class="p">:</span>
@@ -188,11 +236,12 @@
 
 
 
-<div class="viewcode-block" id="extract_classification"><a class="viewcode-back" href="../../../module-functions.html#dimcli.core.functions.extract_classification">[docs]</a><span class="k">def</span> <span class="nf">extract_classification</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">abstract</span><span class="p">,</span> <span class="n">system</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;wrapper for the `classify` function</span>
-<span class="sd">    https://docs.dimensions.ai/dsl/functions.html#function-classify</span>
+<div class="viewcode-block" id="extract_classification"><a class="viewcode-back" href="../../../modules.html#dimcli.core.functions.extract_classification">[docs]</a><span class="k">def</span> <span class="nf">extract_classification</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">abstract</span><span class="p">,</span> <span class="n">system</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Python wrapper for the DSL function `classify`.</span>
 
-<span class="sd">    `system` must be an acronym from the supported classification systems:</span>
+<span class="sd">    This function retrieves suggested classifications codes for any text. See also: https://docs.dimensions.ai/dsl/functions.html#function-classify</span>
+
+<span class="sd">    NOTE `system` must be the acronym of one of the supported classification systems:</span>
 
 <span class="sd">    * Fields of Research (FOR)</span>
 <span class="sd">    * Research, Condition, and Disease Categorization (RCDC)</span>
@@ -205,7 +254,29 @@
 <span class="sd">    * Units of Assessment (UOA)</span>
 <span class="sd">    * Sustainable Development Goals (SDG)</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    title : str</span>
+<span class="sd">        The title of the document to classify.</span>
+<span class="sd">    abstract : str</span>
+<span class="sd">        The abstract of the document to classify.</span>
+<span class="sd">    system : str, optional</span>
+<span class="sd">        The classification system to use. Either an acronym from the supported classification systems, or null. If no system is provided, all systems are attempted in sequence (one query per system).</span>
+<span class="sd">    verbose : bool, optional</span>
+<span class="sd">        Verbose mode, by default True</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dimcli.DslDataset</span>
+<span class="sd">        A Dimcli wrapper object containing JSON data. </span>
+
+<span class="sd">    Example</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; title=&quot;Burnout and intentions to quit the practice among community pediatricians: associations with specific professional activities&quot;</span>
+<span class="sd">    &gt;&gt;&gt; extract_classification(title, &quot;&quot;, &quot;FOR&quot;).json</span>
+<span class="sd">    {&#39;FOR&#39;: [{&#39;id&#39;: &#39;3177&#39;, &#39;name&#39;: &#39;1117 Public Health and Health Services&#39;}]}</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
+    
     <span class="n">classifications</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;FOR&quot;</span><span class="p">,</span> <span class="s2">&quot;RCDC&quot;</span><span class="p">,</span> <span class="s2">&quot;HRCS_HC&quot;</span><span class="p">,</span> <span class="s2">&quot;HRCS_RAC&quot;</span><span class="p">,</span> <span class="s2">&quot;HRA&quot;</span><span class="p">,</span> <span class="s2">&quot;BRA&quot;</span><span class="p">,</span> <span class="s2">&quot;ICRP_CSO&quot;</span><span class="p">,</span> <span class="s2">&quot;ICRP_CT&quot;</span><span class="p">,</span> <span class="s2">&quot;UOA&quot;</span><span class="p">,</span> <span class="s2">&quot;SDG&quot;</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">is_logged_in</span><span class="p">():</span>
         <span class="n">dsl</span> <span class="o">=</span> <span class="n">Dsl</span><span class="p">()</span>

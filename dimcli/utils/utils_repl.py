@@ -1,5 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+"""
+Dimcli utilities for the REPL feature and for parsing DSL queries. 
+"""
 
 import click
 import time

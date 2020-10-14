@@ -1,0 +1,627 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>dimcli.jupyter.magics &mdash; DimCli  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> DimCli
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started.html">Getting Started with Dimcli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Module Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DimCli</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>dimcli.jupyter.magics</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for dimcli.jupyter.magics</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Dimcli magic commands used with iPython / Jupyter environments only. </span>
+
+<span class="sd">By default the results of magic command queries are saved to a variable called ``dsl_last_results``.</span>
+
+<span class="sd">See also: https://api-lab.dimensions.ai/cookbooks/1-getting-started/4-Dimcli-magic-commands.html</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">IPython.core</span> <span class="kn">import</span> <span class="n">magic_arguments</span>
+<span class="kn">from</span> <span class="nn">IPython.core.magic</span> <span class="kn">import</span> <span class="n">line_magic</span><span class="p">,</span> <span class="n">cell_magic</span><span class="p">,</span> <span class="n">line_cell_magic</span><span class="p">,</span> <span class="n">Magics</span><span class="p">,</span> <span class="n">magics_class</span>
+
+<span class="kn">from</span> <span class="nn">..VERSION</span> <span class="kn">import</span> <span class="n">VERSION</span>
+
+<span class="kn">from</span> <span class="nn">..core.api</span> <span class="kn">import</span> <span class="n">Dsl</span>
+<span class="kn">from</span> <span class="nn">..core.auth</span> <span class="kn">import</span> <span class="n">get_connection</span><span class="p">,</span> <span class="n">is_logged_in</span>
+<span class="kn">from</span> <span class="nn">..utils.all</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<div class="viewcode-block" id="DslMagics"><a class="viewcode-back" href="../../../modules.html#dimcli.jupyter.magics.DslMagics">[docs]</a><span class="nd">@magics_class</span>
+<span class="k">class</span> <span class="nc">DslMagics</span><span class="p">(</span><span class="n">Magics</span><span class="p">):</span>
+
+    <span class="n">results_var</span> <span class="o">=</span> <span class="s2">&quot;dsl_last_results&quot;</span> <span class="c1"># VAR AUTOMATICALLY SET TO LATEST QUERY RESULTS</span>
+    <span class="n">dslobject</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+    <span class="k">def</span> <span class="nf">_handle_login</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">is_logged_in</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dslobject</span> <span class="o">=</span> <span class="n">Dsl</span><span class="p">(</span><span class="n">show_results</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+
+    <span class="k">def</span> <span class="nf">_handle_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;main procedure after user input&quot;&quot;&quot;</span>
+       
+        <span class="c1"># lazy complete</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">line_add_lazy_return</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">line_add_lazy_describe</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="c1"># RUN QUERY</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">loop</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dslobject</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">res</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dslobject</span><span class="o">.</span><span class="n">query_iterative</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">res</span>
+        
+
+    <span class="c1">#</span>
+    <span class="c1"># MAGIC METHODS</span>
+    <span class="c1"># </span>
+
+
+<div class="viewcode-block" id="DslMagics.dsl"><a class="viewcode-back" href="../../../modules.html#dimcli.jupyter.magics.DslMagics.dsl">[docs]</a>    <span class="nd">@line_cell_magic</span>
+    <span class="k">def</span> <span class="nf">dsl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Magic command to run a single DSL query. </span>
+
+<span class="sd">        Can be used as a single-line (``%dsl``) or multi-line (``%%dsl``) command. Requires an authenticated API session. Results are saved to a variable called ``dsl_last_results``.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        line: str</span>
+<span class="sd">            A valid DSL search query. </span>
+<span class="sd">            </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        DslDataset</span>
+<span class="sd">            A Dimcli wrapper object containing JSON data.     </span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; %dsl search publications for &quot;malaria&quot; return publications limit 500</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_login</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">cell</span><span class="p">:</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">cell</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_query</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">results_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+            <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="DslMagics.dsldf"><a class="viewcode-back" href="../../../modules.html#dimcli.jupyter.magics.DslMagics.dsldf">[docs]</a>    <span class="nd">@line_cell_magic</span>
+    <span class="k">def</span> <span class="nf">dsldf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Dimcli Magic method: query the Dimensions DSL API with the text passed - return a pandas dataframe.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Magic command to run a single DSL query, results are transformed to a Pandas DataFrame. </span>
+
+<span class="sd">        Can be used as a single-line (``%dsldf``) or multi-line (``%%dsldf``) command. Requires an authenticated API session. Results are saved to a variable called ``dsl_last_results``.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        line: str</span>
+<span class="sd">            A valid DSL search query. </span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pandas.DataFrame</span>
+<span class="sd">            A pandas dataframe containing the query results.      </span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; %dsldf search publications for &quot;malaria&quot; return publications limit 500</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_login</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">cell</span><span class="p">:</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">cell</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">line_is_search_query</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sorry - DSL to dataframe magic methods work only with `search` queries.&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_query</span><span class="p">(</span><span class="n">line</span><span class="p">)</span><span class="o">.</span><span class="n">as_dataframe</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">results_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+            <span class="k">return</span> <span class="n">data</span></div>
+
+<div class="viewcode-block" id="DslMagics.dslgsheets"><a class="viewcode-back" href="../../../modules.html#dimcli.jupyter.magics.DslMagics.dslgsheets">[docs]</a>    <span class="nd">@line_cell_magic</span>
+    <span class="k">def</span> <span class="nf">dslgsheets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Magic command to run a single DSL query and to save the results to a google sheet.</span>
+
+<span class="sd">        NOTE: this method requires preexisting valid Google authentication credentials. See the description of ``utils.export_as_gsheets`` for more information.</span>
+
+<span class="sd">        Can be used as a single-line (``%dslgsheets``) or multi-line (``%%dslgsheets``) command. Requires an authenticated API session. Results are also saved to a variable called ``dsl_last_results``.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        line: str</span>
+<span class="sd">            A valid DSL search query. </span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            A string representing the google sheet URL.    </span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; %dslgsheets search publications for &quot;malaria&quot; return publications limit 500</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_login</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">cell</span><span class="p">:</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">cell</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">line_is_search_query</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sorry - DSL to dataframe magic methods work only with `search` queries.&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_query</span><span class="p">(</span><span class="n">line</span><span class="p">)</span><span class="o">.</span><span class="n">as_dataframe</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">results_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+            <span class="k">return</span> <span class="n">export_as_gsheets</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DslMagics.dslloop"><a class="viewcode-back" href="../../../modules.html#dimcli.jupyter.magics.DslMagics.dslloop">[docs]</a>    <span class="nd">@line_cell_magic</span>
+    <span class="k">def</span> <span class="nf">dslloop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Magic command to run a DSL &#39;loop&#39; (iterative) query. </span>
+
+<span class="sd">        This command automatically loops over all the pages of a results set, until all possible records have been returned.</span>
+
+<span class="sd">        Can be used as a single-line (``%dslloop``) or multi-line (``%%dslloop``) command. Requires an authenticated API session. Results are saved to a variable called ``dsl_last_results``.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        line: str</span>
+<span class="sd">            A valid DSL search query. Should not include limit/skip clauses, as those are added automatically during the iterations.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        DslDataset</span>
+<span class="sd">            A Dimcli wrapper object containing JSON data.     </span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; %dslloop search publications for &quot;malaria&quot; where times_cited &gt; 200 return publications </span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_login</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">cell</span><span class="p">:</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">cell</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_query</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">results_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+            <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="DslMagics.dslloopdf"><a class="viewcode-back" href="../../../modules.html#dimcli.jupyter.magics.DslMagics.dslloopdf">[docs]</a>    <span class="nd">@line_cell_magic</span>
+    <span class="k">def</span> <span class="nf">dslloopdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Magic command to run a DSL &#39;loop&#39; (iterative) query. Results are automatically transformed to a pandas dataframe.</span>
+
+<span class="sd">        Can be used as a single-line (``%dslloopdf``) or multi-line (``%%dslloopdf``) command. Requires an authenticated API session. Results are saved to a variable called ``dsl_last_results``.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        line: str</span>
+<span class="sd">            A valid DSL search query. Should not include limit/skip clauses, as those are added automatically during the iterations.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pandas.DataFrame</span>
+<span class="sd">            A pandas dataframe containing the query results.      </span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; %dslloopdf search publications for &quot;malaria&quot; where times_cited &gt; 200 return publications </span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_login</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">cell</span><span class="p">:</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">cell</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">line_is_search_query</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sorry - DSL to dataframe magic methods work only with `search` queries.&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_query</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">as_dataframe</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">results_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+            <span class="k">return</span> <span class="n">data</span></div>
+
+<div class="viewcode-block" id="DslMagics.dslloopgsheets"><a class="viewcode-back" href="../../../modules.html#dimcli.jupyter.magics.DslMagics.dslloopgsheets">[docs]</a>    <span class="nd">@line_cell_magic</span>
+    <span class="k">def</span> <span class="nf">dslloopgsheets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Magic command to run a DSL &#39;loop&#39; (iterative) query. Results are automatically uploaded to google sheets. </span>
+
+<span class="sd">        NOTE: this method requires preexisting valid Google authentication credentials. See the description of ``utils.export_as_gsheets`` for more information.</span>
+
+<span class="sd">        Can be used as a single-line (``%dslloopgsheets``) or multi-line (``%%dslloopgsheets``) command. Requires an authenticated API session. Results are also saved to a variable called ``dsl_last_results``.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        line: str</span>
+<span class="sd">            A valid DSL search query. Should not include limit/skip clauses, as those are added automatically during the iterations.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pandas.DataFrame</span>
+<span class="sd">            A pandas dataframe containing the query results.      </span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; %dslloopdf search publications for &quot;malaria&quot; where times_cited &gt; 200 return publications </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_login</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">cell</span><span class="p">:</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">cell</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">line_is_search_query</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sorry - DSL to dataframe magic methods work only with `search` queries.&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_query</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">as_dataframe</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">results_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+            <span class="k">return</span> <span class="n">export_as_gsheets</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DslMagics.dsldocs"><a class="viewcode-back" href="../../../modules.html#dimcli.jupyter.magics.DslMagics.dsldocs">[docs]</a>    <span class="nd">@line_magic</span>
+    <span class="k">def</span> <span class="nf">dsldocs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Magic command to get DSL documentation about sources and fields.</span>
+<span class="sd">        </span>
+<span class="sd">        This is a wrapper around the DSL `describe` function.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        line: str, optional</span>
+<span class="sd">            The DSL source or entity name to get documentation for. If omitted, all the documentation is downloaded.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pandas.DataFrame</span>
+<span class="sd">            A pandas dataframe containing the query results.      </span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; %dsldocs publications</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_login</span><span class="p">():</span>
+            <span class="k">return</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sorry this functionality requires the Pandas python library. Please install it first&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">obj</span> <span class="ow">and</span> <span class="n">obj</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">entities</span><span class="p">()</span> <span class="ow">and</span> <span class="n">obj</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">sources</span><span class="p">():</span>
+            <span class="n">sou</span> <span class="o">=</span> <span class="s2">&quot; - &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">sources</span><span class="p">()])</span>
+            <span class="n">ent</span> <span class="o">=</span> <span class="s2">&quot; - &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">entities</span><span class="p">()])</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Can&#39;t recognize this object. Dimcli knows about:</span><span class="se">\n</span><span class="s2"> Sources=[</span><span class="si">{</span><span class="n">sou</span><span class="si">}</span><span class="s2">] Entities=[</span><span class="si">{</span><span class="n">ent</span><span class="si">}</span><span class="s2">] &quot;</span><span class="p">)</span>
+            <span class="c1"># continue anyways</span>
+        
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_query</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;describe schema&quot;</span><span class="p">)</span> <span class="c1"># same query for all requests (filtering done here)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">obj</span><span class="p">:</span>
+            <span class="c1"># show data for all sources</span>
+            <span class="n">docs_for</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">sources</span><span class="p">()</span>
+            <span class="n">header</span> <span class="o">=</span> <span class="s2">&quot;sources&quot;</span>
+        <span class="k">elif</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">entities</span><span class="p">():</span>
+            <span class="c1"># match single entity</span>
+            <span class="n">docs_for</span> <span class="o">=</span> <span class="p">[</span><span class="n">obj</span><span class="p">]</span>
+            <span class="n">header</span> <span class="o">=</span> <span class="s2">&quot;entities&quot;</span>
+        <span class="k">elif</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">sources</span><span class="p">():</span>
+            <span class="c1"># match single source</span>
+            <span class="n">docs_for</span> <span class="o">=</span> <span class="p">[</span><span class="n">obj</span><span class="p">]</span>
+            <span class="n">header</span> <span class="o">=</span> <span class="s2">&quot;sources&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># unknown key: try to match a source (eg for newly published sources)</span>
+            <span class="n">docs_for</span> <span class="o">=</span> <span class="p">[</span><span class="n">obj</span><span class="p">]</span>
+            <span class="n">header</span> <span class="o">=</span> <span class="s2">&quot;sources&quot;</span>            
+
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="n">header</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;field&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;description&#39;</span><span class="p">:[],</span> <span class="s1">&#39;is_filter&#39;</span><span class="p">:[],</span> <span class="s1">&#39;is_entity&#39;</span><span class="p">:</span> <span class="p">[],</span>  <span class="s1">&#39;is_facet&#39;</span><span class="p">:[],}</span>
+        <span class="k">for</span> <span class="n">S</span> <span class="ow">in</span> <span class="n">docs_for</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="n">header</span><span class="p">][</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">]):</span>
+                <span class="n">d</span><span class="p">[</span><span class="n">header</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">S</span><span class="p">]</span>
+                <span class="n">d</span><span class="p">[</span><span class="s1">&#39;field&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span>
+                <span class="n">d</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">res</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="n">header</span><span class="p">][</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">x</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]]</span>
+                <span class="n">d</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">res</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="n">header</span><span class="p">][</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">x</span><span class="p">][</span><span class="s1">&#39;description&#39;</span><span class="p">]]</span>
+                <span class="n">d</span><span class="p">[</span><span class="s1">&#39;is_filter&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">res</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="n">header</span><span class="p">][</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">x</span><span class="p">][</span><span class="s1">&#39;is_filter&#39;</span><span class="p">]]</span>
+                <span class="n">d</span><span class="p">[</span><span class="s1">&#39;is_facet&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">res</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="n">header</span><span class="p">][</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">x</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;is_facet&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)]</span>
+                <span class="n">d</span><span class="p">[</span><span class="s1">&#39;is_entity&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">res</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="n">header</span><span class="p">][</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">][</span><span class="n">x</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;is_entity&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)]</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">results_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="k">return</span> <span class="n">data</span></div></div>
+
+
+
+
+<span class="kn">from</span> <span class="nn">..repl.autocompletion</span> <span class="kn">import</span> <span class="n">CleverCompleter</span>
+<span class="kn">from</span> <span class="nn">prompt_toolkit.document</span> <span class="kn">import</span> <span class="n">Document</span>
+
+<span class="k">def</span> <span class="nf">_load_ipython_custom_completers</span><span class="p">(</span><span class="n">ipython</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    # TODO </span>
+<span class="sd">    # check more Completer behaviour in order to remove extra suggestions eg</span>
+<span class="sd">    # https://www.programcreek.com/python/example/50972/IPython.get_ipython</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">dslq_completers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This should return a list of strings with possible completions.</span>
+
+<span class="sd">        Note that all the included strings that don&#39;t start with event.symbol</span>
+<span class="sd">        are removed, in order to not confuse readline.</span>
+
+<span class="sd">        eg Typing %%apt foo then hitting tab would yield an event like so: namespace(command=&#39;%%apt&#39;, line=&#39;%%apt foo&#39;, symbol=&#39;foo&#39;, text_until_cursor=&#39;%%apt foo&#39;)</span>
+
+<span class="sd">        https://stackoverflow.com/questions/36479197/ipython-custom-tab-completion-for-user-magic-function</span>
+
+<span class="sd">        &gt; https://github.com/ipython/ipython/issues/11878</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># print(dir(event), event)</span>
+
+        <span class="c1"># FIXME only first line gets the autocomplete!</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%%</span><span class="s2">&quot;</span><span class="p">):</span>
+            <span class="n">event</span><span class="o">.</span><span class="n">line</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="c1">#  reduce cell symbol (double %) to line symbol</span>
+        <span class="k">for</span> <span class="n">command</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">slloopdf&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">sldf&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">slloop&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">sl&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">command</span> <span class="ow">in</span> <span class="n">event</span><span class="o">.</span><span class="n">line</span><span class="p">:</span> <span class="c1"># first match will return results</span>
+                <span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="n">CleverCompleter</span><span class="p">()</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">get_completions</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="c1"># print(res)</span>
+                <span class="k">return</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">res</span><span class="p">]</span>
+            
+    <span class="k">def</span> <span class="nf">dsldocs_completers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        Completer for dsldocs command (= describe)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># print(dir(event), event)</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">sldocs&quot;</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">command</span><span class="p">):</span>
+            <span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="s2">&quot;.docs&quot;</span><span class="p">))</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">CleverCompleter</span><span class="p">()</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">get_completions</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="c1"># print(res)</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">res</span><span class="p">]</span>           
+
+    
+    <span class="c1"># loader</span>
+
+    <span class="k">for</span> <span class="n">command</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">slloop_to_dataframe&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">sl_to_dataframe&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">slloop&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">sl&quot;</span><span class="p">]:</span>
+        <span class="n">ipython</span><span class="o">.</span><span class="n">set_hook</span><span class="p">(</span><span class="s1">&#39;complete_command&#39;</span><span class="p">,</span> <span class="n">dslq_completers</span><span class="p">,</span> <span class="n">re_key</span> <span class="o">=</span> <span class="n">command</span><span class="p">)</span>
+        <span class="n">ipython</span><span class="o">.</span><span class="n">set_hook</span><span class="p">(</span><span class="s1">&#39;complete_command&#39;</span><span class="p">,</span> <span class="n">dslq_completers</span><span class="p">,</span> <span class="n">re_key</span> <span class="o">=</span> <span class="s2">&quot;%&quot;</span> <span class="o">+</span> <span class="n">command</span><span class="p">)</span>
+
+    <span class="n">ipython</span><span class="o">.</span><span class="n">set_hook</span><span class="p">(</span><span class="s1">&#39;complete_command&#39;</span><span class="p">,</span> <span class="n">dsldocs_completers</span><span class="p">,</span> <span class="n">re_key</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">sldocs&quot;</span><span class="p">)</span>
+
+
+
+
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">ip</span> <span class="o">=</span> <span class="n">get_ipython</span><span class="p">()</span>
+    <span class="n">ip</span><span class="o">.</span><span class="n">register_magics</span><span class="p">(</span><span class="n">DslMagics</span><span class="p">)</span>
+    <span class="c1"># https://github.com/ipython/ipython/issues/11878#issuecomment-554790961</span>
+    <span class="n">ip</span><span class="o">.</span><span class="n">Completer</span><span class="o">.</span><span class="n">use_jedi</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">_load_ipython_custom_completers</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WARNING: magics.py could load the ipython environment&quot;</span><span class="p">)</span>
+
+
+
+
+
+
+
+
+<span class="c1"># ****************************************************************************</span>
+
+<span class="c1"># </span>
+<span class="c1"># MEMOS </span>
+<span class="c1"># </span>
+
+<span class="c1"># ARGUMENTS AND LINE MAGICS </span>
+<span class="c1"># </span>
+<span class="c1"># line magics and arguments don&#39;t play well together when you need to parse a line content</span>
+<span class="c1"># in that case the args parsing throws an error</span>
+<span class="c1"># hence better to have a cell magic, and pass only the args in the line</span>
+
+<span class="c1"># @magic_arguments.magic_arguments()</span>
+<span class="c1"># @magic_arguments.argument(&#39;--endpoint&#39;,</span>
+<span class="c1">#     help=&#39;The query endpoint: default is https://app.dimensions.ai&#39;</span>
+<span class="c1"># )</span>
+<span class="c1"># @magic_arguments.argument(&#39;--user&#39;,</span>
+<span class="c1">#     help=&#39;The account username&#39;</span>
+<span class="c1"># )</span>
+<span class="c1"># @magic_arguments.argument(&#39;--password&#39;,</span>
+<span class="c1">#     help=&#39;The account password&#39;</span>
+<span class="c1"># )</span>
+<span class="c1"># @magic_arguments.argument(&#39;--env&#39;,</span>
+<span class="c1">#     help=&#39;The instance name as defined in init.py. Default: live.&#39;</span>
+<span class="c1"># )</span>
+
+
+<span class="c1"># ****************************************************************************</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Digital Science
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

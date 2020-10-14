@@ -17,6 +17,7 @@ from ..core.auth import USER_CONFIG_FILE_PATH
 from ..utils.utils_dimensions import dimensions_url
 from ..core.api import DslDataset
 from ..shortcuts import *
+from ..functions import *
 
 
 class TestOne(unittest.TestCase):

@@ -24,7 +24,7 @@ Dimcli lives on `Github <https://github.com/digital-science/dimcli/>`_. Suggesti
          'count': 59,
          'last_name': 'Marsh',
          'first_name': 'Kevin'},
-      .............
+      { ............. }
       ],
       '_stats': {'total_count': 8735}}
 

@@ -11,9 +11,36 @@ from ..utils.utils_dimensions import dsl_escape
 
 
 def extract_concepts(text, with_scores=True, as_df=True):
-    """wrapper for the `extract_concepts` function
-    https://docs.dimensions.ai/dsl/functions.html#function-extract-concepts
+    """Python wrapper for the DSL function `extract_concepts`.
+
+    Extract concepts from any text. Text input is processed and extracted concepts are returned as an array of strings ordered by their relevance. See also: https://docs.dimensions.ai/dsl/functions.html#function-extract-concepts
+
+    Parameters
+    ----------
+    text : str
+        The text paragraphs to extract concepts from. 
+    with_scores : bool, optional
+        Return the concepts scores as well, by default True
+    as_df : bool, optional
+        Return results as a pandas dataframe (instead of JSON), by default True
+
+    Returns
+    -------
+    pandas.Dataframe or dimcli.DslDataset
+        The list of concepts that have been extracted. 
+
+    Example
+    -------
+    >>> from dimcli.functions import extract_concepts
+    >>> extract_concepts("The impact of solar rays on the moon is not trivial.")
+    n	concept	relevance
+    0	impact	0.070622
+    1	rays	0.062369
+    2	solar rays	0.022934
+    3	Moon	0.013245
     """
+     
+
     if is_logged_in():
         dsl = Dsl()
         _score = 'true' if with_scores else 'false'
@@ -26,10 +53,30 @@ def extract_concepts(text, with_scores=True, as_df=True):
 
 
 def extract_grants(grant_number, fundref="", funder_name=""):
-    """wrapper for the `extract_grants` function
-    https://docs.dimensions.ai/dsl/functions.html#function-extract-grants
-    NOTE either fundref or funder_name needs to be provided
-    """
+    """Python wrapper for the DSL function `extract_grants`.
+
+    Extract grant Dimensions ID from provided parameters. Grant number must be provided with either a fundref or a funder name as an argument. See also: https://docs.dimensions.ai/dsl/functions.html#function-extract-grants
+
+    Parameters
+    ----------
+    grant_number : str
+        The grant number/ID
+    fundref : str, optional
+        Fundref name    
+    funder_name : str, optional
+        Funder name
+
+    Returns
+    -------
+    dimcli.DslDataset
+        A Dimcli wrapper object containing JSON data. 
+
+    Example
+    -------
+    >>> from dimcli.functions import extract_grants
+    >>> extract_grants("R01HL117329",  fundref="100000050").json
+    {'grant_id': 'grant.2544064'}
+    """    
     if is_logged_in():
         dsl = Dsl()
         if fundref:
@@ -40,10 +87,11 @@ def extract_grants(grant_number, fundref="", funder_name=""):
 
 
 def extract_classification(title, abstract, system="", verbose=True):
-    """wrapper for the `classify` function
-    https://docs.dimensions.ai/dsl/functions.html#function-classify
+    """Python wrapper for the DSL function `classify`.
 
-    `system` must be an acronym from the supported classification systems:
+    This function retrieves suggested classifications codes for any text. See also: https://docs.dimensions.ai/dsl/functions.html#function-classify
+
+    NOTE `system` must be the acronym of one of the supported classification systems:
 
     * Fields of Research (FOR)
     * Research, Condition, and Disease Categorization (RCDC)
@@ -56,7 +104,30 @@ def extract_classification(title, abstract, system="", verbose=True):
     * Units of Assessment (UOA)
     * Sustainable Development Goals (SDG)
 
-    """
+    Parameters
+    ----------
+    title : str
+        The title of the document to classify.
+    abstract : str
+        The abstract of the document to classify.
+    system : str, optional
+        The classification system to use. Either an acronym from the supported classification systems, or null. If no system is provided, all systems are attempted in sequence (one query per system).
+    verbose : bool, optional
+        Verbose mode, by default True
+
+    Returns
+    -------
+    dimcli.DslDataset
+        A Dimcli wrapper object containing JSON data. 
+
+    Example
+    --------
+    >>> from dimcli.functions import extract_classification
+    >>> title="Burnout and intentions to quit the practice among community pediatricians: associations with specific professional activities"
+    >>> extract_classification(title, "", "FOR").json
+    {'FOR': [{'id': '3177', 'name': '1117 Public Health and Health Services'}]}
+    """    
+
     classifications = ["FOR", "RCDC", "HRCS_HC", "HRCS_RAC", "HRA", "BRA", "ICRP_CSO", "ICRP_CT", "UOA", "SDG"]
     if is_logged_in():
         dsl = Dsl()

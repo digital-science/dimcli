@@ -7,7 +7,8 @@
 * `dimcli.shortcuts` is replaced with `dimcli.utils` 
 * the pyvis port is now located at `dimcli.utils.networkviz`
 * documentation updated 
-
+* new magic command: `dslgsheets` and `dslloopgsheets`
+* module documentation greatly improved: https://digital-science.github.io/dimcli/modules.html
 
 ## v 0.7.5
 

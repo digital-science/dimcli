@@ -151,9 +151,9 @@
             
   <h1>Source code for dimcli.utils.utils_general</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">This module contains various general purpose utilities for working with data. </span>
+<span class="sd">Dimcli general purpose utilities for working with data. </span>
 
-<span class="sd">NOTE: these functions are attached to the top level ``dimcli.utils`` module. E.g.:</span>
+<span class="sd">NOTE: these functions are attached to the top level ``dimcli.utils`` module. So you import them like this:</span>
 
 <span class="sd">&gt;&gt;&gt; from dimcli.utils import chunks_of</span>
 <span class="sd">&gt;&gt;&gt; list(chunks_of(a, 5))</span>
@@ -356,8 +356,8 @@
 <span class="sd">    This is the easiest route. In Google Colab, all required libraries are already available. The `to_gsheets` method simply triggers the built-in authentication process via a pop up window. </span>
 <span class="sd">    </span>
 <span class="sd">    **Jupyter**</span>
-<span class="sd">    This route involves a few more steps. In Jupyter, it is necessary to install the gspread, oauth2client and gspread_dataframe modules first. Secondly, one needs to create Google Drive access credentials using OAUTH (which boils down to a JSON file). Note that the credentials file needs to be saved in: `~/.config/gspread/credentials.json` (for gpread). </span>
-<span class="sd">    The steps are described at https://gspread.readthedocs.io/en/latest/oauth2.html#for-end-users-using-oauth-client-id.</span>
+<span class="sd">    This route involves a few more steps. In Jupyter, it is necessary to install the ``gspread``, ``oauth2client`` and ``gspread_dataframe`` modules first. Secondly, one needs to create Google Drive access credentials using OAUTH (which boils down to a JSON file). Note that the credentials file needs to be saved in: `~/.config/gspread/credentials.json` (for gpread to work correctly). </span>
+<span class="sd">    These steps are described at https://gspread.readthedocs.io/en/latest/oauth2.html#for-end-users-using-oauth-client-id.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -438,7 +438,7 @@
     <span class="c1"># https://gspread.readthedocs.io/en/latest/api.html#gspread.models.Spreadsheet.share</span>
     <span class="n">gsheet</span><span class="o">.</span><span class="n">share</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">perm_type</span><span class="o">=</span><span class="s1">&#39;anyone&#39;</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="s1">&#39;reader&#39;</span><span class="p">)</span> <span class="c1"># anyone can see with url</span>
     <span class="n">spreadsheet_url</span> <span class="o">=</span> <span class="s2">&quot;https://docs.google.com/spreadsheets/d/</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">gsheet</span><span class="o">.</span><span class="n">id</span>
-    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved:</span><span class="se">\n</span><span class="si">{</span><span class="n">spreadsheet_url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">bold</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># if verbose: click.secho(f&quot;Saved:\n{spreadsheet_url}&quot;, bold=True)</span>
     <span class="k">return</span> <span class="n">spreadsheet_url</span> </div>
 
 

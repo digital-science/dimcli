@@ -1,7 +1,7 @@
 """
-This module contains utilities for querying the API and working with Dimensions data.  
+Dimcli utilities for quicker queries and working with Dimensions data.  
 
-NOTE: these functions are attached to the top level ``dimcli.utils`` module. E.g.:
+NOTE: these functions are attached to the top level ``dimcli.utils`` module. So you can do:
 
 >>> from dimcli.utils import dimensions_url
 >>> dimensions_url("pub.1127419018")
