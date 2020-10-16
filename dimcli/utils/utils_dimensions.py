@@ -115,20 +115,21 @@ def dimensions_url(obj_id, obj_type="", verbose=True):
     
     from ..core.dsl_grammar import G 
 
-    if obj_type and obj_type not in G.sources():
+    if obj_type and (obj_type not in G.sources()):
         raise ValueError("ERROR: valid sources are: " + " ".join([x for x in G.sources()]))
-    if not obj_type:
-        for source, prefix in G.object_id_patterns().items():
-            if obj_id.startswith(prefix):
-                obj_type = source
-    if obj_type:
-        url = G.url_for_source(obj_type)
-        if url:
-            return url + obj_id
+    else:
+        if not obj_type:
+            for source, prefix in G.object_id_patterns().items():
+                if obj_id.startswith(prefix):
+                    obj_type = source
+        if obj_type:
+            url = G.url_for_source(obj_type)
+            if url:
+                return url + obj_id
 
 
 
-def dimensions_url_search(keywords_list_as_string):
+def dimensions_search_url(keywords_list_as_string):
     """Generate a valid keyword search URL for Dimensions.
 
     Parameters
@@ -143,8 +144,8 @@ def dimensions_url_search(keywords_list_as_string):
 
     Example
     ----------
-    >>> from dimcli.utils import dimensions_url_search
-    >>> dimensions_url_search("graphene AND south korea")
+    >>> from dimcli.utils import dimensions_search_url
+    >>> dimensions_search_url("graphene AND south korea")
     'https://app.dimensions.ai/discover/publication?search_text=graphene%20AND%20south%20korea&search_type=kws&search_field=full_search'
 
     """

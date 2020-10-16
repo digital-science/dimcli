@@ -11,7 +11,8 @@ from .VERSION import *
 from .core.auth import USER_DIR, USER_CONFIG_FILE_PATH, USER_HISTORY_FILE
 from .core.api import *
 from .utils.utils_general import open_multi_platform
-from .utils.utils_repl import init_config_folder, print_warning_prompt_version, preview_contents, print_dimensions_url
+from .utils.utils_repl import init_config_folder, print_warning_prompt_version, preview_contents
+from .utils.utils_dimensions import dimensions_url
 from .utils.version_utils import print_dimcli_report, is_dimcli_outdated
 
 try:
@@ -32,43 +33,48 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 @click.option(
     "--init",
     is_flag=True,
-    help="Create a configuration file with your API credentials.")
+    help="Create a local API configuration.")
 @click.option(
     "--settings",
     is_flag=True,
-    help="Show the local configuration file.")
+    help="Show the local configuration.")
 @click.option(
-    "--vcheck",
+    "--checkversion",
     is_flag=True,
-    help="Check online if your dimcli version is the latest.")
+    help="Check if dimcli is up to date.")
 @click.option(
-    "--history", is_flag=True, help="Open history file with default editor.")
+    "--history", is_flag=True, help="Open query history file.")
 @click.option(
-    "--id", "-id", help="Resolve a Dimensions ID to its public URL.")
+    "--identifier", "-i", help="Open Dimensions homepage from an object ID.")
 @click.option(
-    "--websearch", "-w", help="Search a quoted string in Dimensions web.")
+    "--websearch", "-w", help="Search Dimensions with a quoted string.")
 @click.pass_context
-def main_cli(ctx, instance_name=None, init=False, settings=False, vcheck=False, history=False, id=None, websearch=None):
+def main_cli(ctx, instance_name=None, init=False, settings=False, checkversion=False, history=False, identifier=None, websearch=None):
     """
     Python client for the Dimensions Analytics API.
     More info: https://github.com/digital-science/dimcli
     """
-    click.secho("Dimcli - Dimensions API Client (" + VERSION + ")", dim=True)
+    if not identifier or websearch:
+        click.secho("Dimcli - Dimensions API Client (" + VERSION + ")", dim=True)
 
     if init:
         init_config_folder(USER_DIR, USER_CONFIG_FILE_PATH)
         return
 
-    if vcheck:
+    if checkversion:
         print_dimcli_report()
         return
 
-    if id:
-        print_dimensions_url(id)
+    if identifier:
+        url = dimensions_url(identifier)
+        if not url: 
+            print("Cannot resolve automatically. Can be a patent, dataset or clinical trial ID. Falling back to search ..")
+            url = dimensions_search_url(identifier)
+        webbrowser.open(url)
         return 
 
     if websearch:
-        url = dimensions_url_search(websearch)
+        url = dimensions_search_url(websearch)
         webbrowser.open(url)
         return 
 

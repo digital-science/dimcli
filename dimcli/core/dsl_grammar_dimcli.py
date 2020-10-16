@@ -48,10 +48,10 @@ SYNTAX_DICT = {
     'dimensions_object_id_patterns' : {
         'publications' : 'pub.',
         'grants' : 'grant.',
-        # 'patents' : 'not available',
+        'patents' : ' ', # leave space to ensure matching fails always
         'policy_documents' : 'policy.',
-        # 'clinical_trials' : 'not available',
-        # 'datasets' : 'not available'
+        'clinical_trials' : ' ',
+        'datasets' : ' ',
         'researchers' : 'ur.',
         'organizations' : 'grid.',
     },
