@@ -20,7 +20,12 @@ import os
 import re
 import webbrowser
 from itertools import islice
-from pandas import json_normalize, DataFrame
+
+from pandas import DataFrame
+try:
+    from pandas import json_normalize
+except:
+    from pandas.io.json import json_normalize
 
 
 
