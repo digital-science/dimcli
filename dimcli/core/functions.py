@@ -144,3 +144,70 @@ def extract_classification(title, abstract, system="", verbose=True):
                                         system="{classifier}")""").json
                 d.update(new)
             return d
+
+
+
+
+
+
+# see also: https://www.kaggle.com/jboysen/quick-tutorial-flatten-nested-json-in-pandas
+
+def extract_affiliations(affiliations=[], as_df=True):
+    """
+    1st case - affiliation as a whole
+    a = [{"affiliation": "university of oxford, uk"}, {"affiliation": "university of columbia"}]
+    we can take either be list of strings, or list of dict as it is expected by the API 
+    
+    aalwaays use the batch processing
+    """
+    if not is_logged_in(): return
+    dsl = Dsl()
+    
+    if type(affiliations) == str:
+        input_data = [{"affiliation": affiliations}]
+    
+    elif type(affiliations) == list and type(affiliations[0]) == str:
+        input_data = [{"affiliation": x} for x in affiliations]
+        
+    elif type(affiliations) == list and type(affiliations[0]) == dict:
+        if "affiliation" in affiliations[0]:
+            input_data = affiliations
+        else:
+            raise Exception("Dictionary is badly formatted.")
+        
+    output = dsl.query(f"""extract_affiliations(json={json.dumps(input_data)})""")
+    
+    if as_df:
+#         return pd.DataFrame(output.json['results'])
+        temp = pd.json_normalize(output.json['results'],  'matches', errors='ignore')
+        temp = temp.explode("institutes")
+        temp = temp.explode("geo.countries")
+        temp = temp.explode("geo.states")
+        temp = temp.explode("geo.cities")
+        # institutes fields
+        if temp['institutes'].any():
+            temp['grid_id'] = temp['institutes'].apply(lambda x: x['institute']['id'])
+            temp['grid_name'] = temp['institutes'].apply(lambda x: x['institute']['name'])
+            temp['grid_city'] = temp['institutes'].apply(lambda x: x['institute']['city'])
+            temp['grid_state'] = temp['institutes'].apply(lambda x: x['institute']['state'])
+            temp['grid_country'] = temp['institutes'].apply(lambda x: x['institute']['country'])
+            temp['requires_review'] = temp['institutes'].apply(lambda x: x['metadata']['requires_manual_review'])
+        # geo fields - country
+        if temp['geo.countries'].any():
+            temp['geo_country_id'] = temp['geo.countries'].apply(lambda x: x['geonames_id'])
+            temp['geo_country_name'] = temp['geo.countries'].apply(lambda x: x['name'])
+            temp['geo_country_code'] = temp['geo.countries'].apply(lambda x: x['code'])
+        # state
+        if temp['geo.states'].any():
+            temp['geo_state_id'] = temp['geo.states'].apply(lambda x: x['geonames_id'])
+            temp['geo_state_name'] = temp['geo.states'].apply(lambda x: x['name'])
+            temp['geo_state_code'] = temp['geo.states'].apply(lambda x: x['code'])
+        # city
+        if temp['geo.cities'].any():
+            temp['geo_city_id'] = temp['geo.cities'].apply(lambda x: x['geonames_id'])
+            temp['geo_city_name'] = temp['geo.cities'].apply(lambda x: x['name'])
+        # drop cols
+        temp = temp.drop(columns=['institutes', 'geo.countries', 'geo.states', 'geo.cities'])
+        return temp
+    else:
+        return output.json

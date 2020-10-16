@@ -265,20 +265,21 @@
     
     <span class="kn">from</span> <span class="nn">..core.dsl_grammar</span> <span class="kn">import</span> <span class="n">G</span> 
 
-    <span class="k">if</span> <span class="n">obj_type</span> <span class="ow">and</span> <span class="n">obj_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">sources</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">obj_type</span> <span class="ow">and</span> <span class="p">(</span><span class="n">obj_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">sources</span><span class="p">()):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;ERROR: valid sources are: &quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">sources</span><span class="p">()]))</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">obj_type</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">source</span><span class="p">,</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">object_id_patterns</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">obj_id</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">):</span>
-                <span class="n">obj_type</span> <span class="o">=</span> <span class="n">source</span>
-    <span class="k">if</span> <span class="n">obj_type</span><span class="p">:</span>
-        <span class="n">url</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">url_for_source</span><span class="p">(</span><span class="n">obj_type</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">url</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">url</span> <span class="o">+</span> <span class="n">obj_id</span></div>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">obj_type</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">source</span><span class="p">,</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">object_id_patterns</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">obj_id</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">):</span>
+                    <span class="n">obj_type</span> <span class="o">=</span> <span class="n">source</span>
+        <span class="k">if</span> <span class="n">obj_type</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">url_for_source</span><span class="p">(</span><span class="n">obj_type</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">url</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">url</span> <span class="o">+</span> <span class="n">obj_id</span></div>
 
 
 
-<div class="viewcode-block" id="dimensions_url_search"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.utils_dimensions.dimensions_url_search">[docs]</a><span class="k">def</span> <span class="nf">dimensions_url_search</span><span class="p">(</span><span class="n">keywords_list_as_string</span><span class="p">):</span>
+<div class="viewcode-block" id="dimensions_search_url"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.utils_dimensions.dimensions_search_url">[docs]</a><span class="k">def</span> <span class="nf">dimensions_search_url</span><span class="p">(</span><span class="n">keywords_list_as_string</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Generate a valid keyword search URL for Dimensions.</span>
 
 <span class="sd">    Parameters</span>
@@ -293,8 +294,8 @@
 
 <span class="sd">    Example</span>
 <span class="sd">    ----------</span>
-<span class="sd">    &gt;&gt;&gt; from dimcli.utils import dimensions_url_search</span>
-<span class="sd">    &gt;&gt;&gt; dimensions_url_search(&quot;graphene AND south korea&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; from dimcli.utils import dimensions_search_url</span>
+<span class="sd">    &gt;&gt;&gt; dimensions_search_url(&quot;graphene AND south korea&quot;)</span>
 <span class="sd">    &#39;https://app.dimensions.ai/discover/publication?search_text=graphene%20AND%20south%20korea&amp;search_type=kws&amp;search_field=full_search&#39;</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>

@@ -180,7 +180,6 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> (<em>str</em><em>, </em><em>optional</em>) – A filename/path where to save the data. If not provided, a unique name is generated automatically.</p></li>
 <li><p><strong>username</strong> (<em>str</em><em>, </em><em>optional</em>) – The API username</p></li>
 <li><p><strong>password</strong> (<em>str</em><em>, </em><em>optional</em>) – The API password</p></li>
 <li><p><strong>endpoint</strong> (<em>str</em><em>, </em><em>optional</em>) – The API endpoint - default is “<a class="reference external" href="https://app.dimensions.ai">https://app.dimensions.ai</a>”</p></li>
@@ -973,6 +972,29 @@ The steps are described at <a class="reference external" href="https://gspread.r
 </pre></div>
 </div>
 <dl class="py function">
+<dt id="dimcli.utils.utils_dimensions.dimensions_search_url">
+<code class="sig-prename descclassname">dimcli.utils.utils_dimensions.</code><code class="sig-name descname">dimensions_search_url</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">keywords_list_as_string</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/utils_dimensions.html#dimensions_search_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.utils_dimensions.dimensions_search_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a valid keyword search URL for Dimensions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>keywords_list_as_string</strong> (<em>str</em>) – List of search keywords.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Dimensions URL.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dimcli.utils</span> <span class="kn">import</span> <span class="n">dimensions_search_url</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dimensions_search_url</span><span class="p">(</span><span class="s2">&quot;graphene AND south korea&quot;</span><span class="p">)</span>
+<span class="go">&#39;https://app.dimensions.ai/discover/publication?search_text=graphene%20AND%20south%20korea&amp;search_type=kws&amp;search_field=full_search&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt id="dimcli.utils.utils_dimensions.dimensions_url">
 <code class="sig-prename descclassname">dimcli.utils.utils_dimensions.</code><code class="sig-name descname">dimensions_url</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj_id</span></em>, <em class="sig-param"><span class="n">obj_type</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/utils_dimensions.html#dimensions_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.utils_dimensions.dimensions_url" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate a valid Dimensions URL for one of the available sources.</p>
@@ -994,29 +1016,6 @@ The steps are described at <a class="reference external" href="https://gspread.r
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dimcli.utils</span> <span class="kn">import</span> <span class="n">dimensions_url</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dimensions_url</span><span class="p">(</span><span class="s2">&quot;pub.1127419018&quot;</span><span class="p">)</span>
 <span class="go">&#39;https://app.dimensions.ai/details/publication/pub.1127419018&#39;</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt id="dimcli.utils.utils_dimensions.dimensions_url_search">
-<code class="sig-prename descclassname">dimcli.utils.utils_dimensions.</code><code class="sig-name descname">dimensions_url_search</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">keywords_list_as_string</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/utils_dimensions.html#dimensions_url_search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.utils_dimensions.dimensions_url_search" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate a valid keyword search URL for Dimensions.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>keywords_list_as_string</strong> (<em>str</em>) – List of search keywords.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The Dimensions URL.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-<p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dimcli.utils</span> <span class="kn">import</span> <span class="n">dimensions_url_search</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dimensions_url_search</span><span class="p">(</span><span class="s2">&quot;graphene AND south korea&quot;</span><span class="p">)</span>
-<span class="go">&#39;https://app.dimensions.ai/discover/publication?search_text=graphene%20AND%20south%20korea&amp;search_type=kws&amp;search_field=full_search&#39;</span>
 </pre></div>
 </div>
 </dd></dl>
