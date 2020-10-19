@@ -78,6 +78,45 @@ BACKGROUND: In order to make further gains in preventing newborn deaths, effecti
         click.secho("Completed test succesfully", fg="green")
 
 
+    def test_004(self):
+        click.secho("\nTEST 004: Extract affiliations.", fg="green")
+        # ----
+        click.secho("Return json, no results", fg="magenta")
+        print(extract_affiliations("nothing", as_json=True))
+
+        click.secho("Return DF, no results", fg="magenta")
+        print(extract_affiliations("nothing"))
+
+        click.secho("Return DF, valid results", fg="magenta")
+        print(extract_affiliations("london college cambridge, new york university"))
+
+        click.secho("Return DF, multiple results including failing ones", fg="magenta")
+        print(extract_affiliations(["london college cambridge", "universita di roma", "universita sapienza ", "nothing"]))        
+        
+        input_data_struct = [
+            {"name":"london college cambridge",
+            "city":"",
+            "state":"",
+            "country":""},
+            {"name":"milano bicocca",
+            "city":"Milano",
+            "state":"",
+            "country":"Italy"},
+            {"name":"nothing",
+            "city":"Milano",
+            "state":"",
+            "country":"Italy"}, 
+            {"name":"nothing",
+            "city":"",
+            "state":"",
+            "country":""}, 
+        ]
+        click.secho("Return DF, structured data, multiple results including failing ones", fg="magenta")
+        print(extract_affiliations(input_data_struct))
+        # ----
+
+        click.secho("Completed test succesfully", fg="green")
+
 
 if __name__ == "__main__":
     unittest.main()
