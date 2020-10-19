@@ -1,117 +1,37 @@
 {
     "results": [
         {
-            "matches": [
+            "institutes": [
                 {
-                    "affiliation_part": "london college cambridge",
-                    "institutes": [
-                        {
-                            "institute": {
-                                "id": "grid.499389.6",
-                                "name": "The London College",
-                                "city": "London",
-                                "state": None,
-                                "country": "United Kingdom"
-                            },
-                            "metadata": { "requires_manual_review": True }
-                        }
-                    ],
-                    "geo": {
-                        "cities": [
-                            { "geonames_id": 2643743, "name": "London" }
-                        ],
-                        "states": [
-                            {
-                                "geonames_id": 6269131,
-                                "name": "England",
-                                "code": None
-                            }
-                        ],
-                        "countries": [
-                            {
-                                "geonames_id": 2635167,
-                                "name": "United Kingdom",
-                                "code": "GB"
-                            }
-                        ]
-                    }
+                    "institute": {
+                        "id": "grid.499389.6",
+                        "name": "The London College",
+                        "city": "London",
+                        "state": None,
+                        "country": "United Kingdom"
+                    },
+                    "metadata": { "requires_manual_review": True }
                 }
             ],
-            "input": { "affiliation": "london college cambridge" }
-        },
-        {
-            "matches": [
-                {
-                    "affiliation_part": "universita di roma",
-                    "institutes": [
-                        {
-                            "institute": {
-                                "id": "grid.7841.a",
-                                "name": "Sapienza University of Rome",
-                                "city": "Rome",
-                                "state": "Lazio",
-                                "country": "Italy"
-                            },
-                            "metadata": { "requires_manual_review": False }
-                        }
-                    ],
-                    "geo": {
-                        "cities": [{ "geonames_id": 3169070, "name": "Rome" }],
-                        "states": [
-                            {
-                                "geonames_id": 3174976,
-                                "name": "Latium",
-                                "code": None
-                            }
-                        ],
-                        "countries": [
-                            {
-                                "geonames_id": 3175395,
-                                "name": "Italy",
-                                "code": "IT"
-                            }
-                        ]
+            "geo": {
+                "cities": [{ "geonames_id": 2643743, "name": "London" }],
+                "states": [
+                    { "geonames_id": 6269131, "name": "England", "code": None }
+                ],
+                "countries": [
+                    {
+                        "geonames_id": 2635167,
+                        "name": "United Kingdom",
+                        "code": "GB"
                     }
-                }
-            ],
-            "input": { "affiliation": "universita di roma" }
-        },
-        {
-            "matches": [
-                {
-                    "affiliation_part": "universita sapienza",
-                    "institutes": [
-                        {
-                            "institute": {
-                                "id": "grid.7841.a",
-                                "name": "Sapienza University of Rome",
-                                "city": "Rome",
-                                "state": "Lazio",
-                                "country": "Italy"
-                            },
-                            "metadata": { "requires_manual_review": True }
-                        }
-                    ],
-                    "geo": {
-                        "cities": [{ "geonames_id": 3169070, "name": "Rome" }],
-                        "states": [
-                            {
-                                "geonames_id": 3174976,
-                                "name": "Latium",
-                                "code": None
-                            }
-                        ],
-                        "countries": [
-                            {
-                                "geonames_id": 3175395,
-                                "name": "Italy",
-                                "code": "IT"
-                            }
-                        ]
-                    }
-                }
-            ],
-            "input": { "affiliation": "universita sapienza " }
+                ]
+            },
+            "input": {
+                "name": "london college cambridge",
+                "city": "",
+                "state": "",
+                "country": ""
+            }
         }
     ]
 }

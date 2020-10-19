@@ -154,6 +154,9 @@
 <span class="sd">https://docs.dimensions.ai/dsl/functions.html</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
 <span class="kn">from</span> <span class="nn">.api</span> <span class="kn">import</span> <span class="n">Dsl</span>
 <span class="kn">from</span> <span class="nn">.auth</span> <span class="kn">import</span> <span class="n">is_logged_in</span>
 
@@ -294,6 +297,222 @@
 <span class="s2">                                        system=&quot;</span><span class="si">{</span><span class="n">classifier</span><span class="si">}</span><span class="s2">&quot;)&quot;&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
                 <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">new</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">d</span></div>
+
+
+
+
+<div class="viewcode-block" id="extract_affiliations"><a class="viewcode-back" href="../../../modules.html#dimcli.core.functions.extract_affiliations">[docs]</a><span class="k">def</span> <span class="nf">extract_affiliations</span><span class="p">(</span><span class="n">affiliations</span><span class="p">,</span> <span class="n">as_json</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Python wrapper for the DSL function `extract_affiliations`. </span>
+
+<span class="sd">    This function returns GRID affiliations either using structured or unstructured input. Up to 200 input objects are allowed per request. See also: https://docs.dimensions.ai/dsl/functions.html#function-extract-affiliations</span>
+
+<span class="sd">    The input argument ``affiliations`` can be one of the following:</span>
+
+<span class="sd">    * a string, representing a single **unstructured** &#39;affiliation&#39;, eg</span>
+
+<span class="sd">         &quot;new york university&quot;</span>
+
+<span class="sd">    * a list of strings, representing **unstructured** &#39;affiliations&#39;, eg</span>
+
+<span class="sd">        [&quot;new york university&quot;, &quot;london college of surgeons&quot;]</span>
+
+<span class="sd">    * a list of dictionaries of **unstructured** &#39;affiliations&#39; data, eg </span>
+<span class="sd">        </span>
+<span class="sd">        [{&quot;affiliation&quot;: &quot;london college&quot;}, {&quot;affiliation&quot;: &quot;new york university&quot;}]</span>
+<span class="sd">    </span>
+<span class="sd">    * a list of dictionaries of **structured** &#39;affiliations&#39; data, eg </span>
+
+<span class="sd">        [{&quot;name&quot;:&quot;london college cambridge&quot;,</span>
+<span class="sd">        &quot;city&quot;:&quot;&quot;,</span>
+<span class="sd">        &quot;state&quot;:&quot;&quot;,</span>
+<span class="sd">        &quot;country&quot;:&quot;&quot;},</span>
+<span class="sd">        {&quot;name&quot;:&quot;milano bicocca&quot;,</span>
+<span class="sd">        &quot;city&quot;:&quot;Milano&quot;,</span>
+<span class="sd">        &quot;state&quot;:&quot;&quot;,</span>
+<span class="sd">        &quot;country&quot;:&quot;Italy&quot;}</span>
+<span class="sd">        ]</span>
+
+<span class="sd">    By default, the JSON results are flattened and returned as a pandas dataframe.</span>
+
+<span class="sd">    **NOTE** internally this function always uses the &#39;batch processing&#39; version of the API. The optional argument `results` is currently not supported (and hence defaults to &#39;basic&#39;).</span>
+
+<span class="sd">    </span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    affiliations : str or list or dict</span>
+<span class="sd">        The raw affiliation data to process. </span>
+<span class="sd">    as_json : bool, optional</span>
+<span class="sd">        Return raw JSON encoded as a Python dict (instead of a pandas dataframe, by default). </span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas.DataFrame or dict </span>
+<span class="sd">        A pandas dataframe containing a flattened representation of the JSON results. </span>
+
+<span class="sd">    Example</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from dimcli.functions import extract_affiliations</span>
+<span class="sd">    &gt;&gt;&gt; extract_affiliations(&quot;stanford medical center&quot;)</span>
+<span class="sd">    n  affiliation_part        grid_id          grid_name grid_city  grid_state   grid_country  requires_review geo_country_id geo_country_name geo_country_code geo_state_id geo_state_name geo_state_code geo_city_id geo_city_name</span>
+<span class="sd">    0  stanford medical center  grid.240952.8  Stanford Medicine  Stanford  California  United States             True        6252001    United States               US      5332921     California          US-CA     5398563      Stanford    </span>
+<span class="sd">    &gt;&gt;&gt; data = [{&quot;affiliation&quot;: &quot;london college&quot;}, {&quot;affiliation&quot;: &quot;new york university&quot;}]</span>
+<span class="sd">    &gt;&gt;&gt; extract_affiliations(data)</span>
+<span class="sd">    n  affiliation_part        grid_id            grid_name grid_city grid_state    grid_country  requires_review geo_country_id geo_country_name geo_country_code geo_state_id geo_state_name geo_state_code geo_city_id  geo_city_name</span>
+<span class="sd">    0  london college  grid.499389.6   The London College    London       None  United Kingdom             True        2635167   United Kingdom               GB      6269131        England           None     2643743         London</span>
+<span class="sd">    1  new york university  grid.137628.9  New York University  New York   New York   United States            False        6252001    United States               US      5128638       New York          US-NY     5128581  New York City</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_logged_in</span><span class="p">():</span> <span class="k">return</span>
+    <span class="n">dsl</span> <span class="o">=</span> <span class="n">Dsl</span><span class="p">()</span>
+    <span class="n">affiliation_type</span> <span class="o">=</span> <span class="s2">&quot;UNSTRUCTURED&quot;</span>
+    
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">affiliations</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">input_data</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;affiliation&quot;</span><span class="p">:</span> <span class="n">affiliations</span><span class="p">}]</span>
+    
+    <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">affiliations</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">affiliations</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">input_data</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;affiliation&quot;</span><span class="p">:</span> <span class="n">x</span><span class="p">}</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">affiliations</span><span class="p">]</span>
+        
+    <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">affiliations</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">affiliations</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;affiliation&quot;</span> <span class="ow">in</span> <span class="n">affiliations</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">input_data</span> <span class="o">=</span> <span class="n">affiliations</span>
+        <span class="k">elif</span> <span class="s2">&quot;name&quot;</span> <span class="ow">in</span> <span class="n">affiliations</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">affiliation_type</span> <span class="o">=</span> <span class="s2">&quot;STRUCTURED&quot;</span>
+            <span class="n">input_data</span> <span class="o">=</span> <span class="n">affiliations</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Dictionary is badly formatted. Cannot find &#39;affiliation&#39;, nor &#39;name&#39; keys. See https://docs.dimensions.ai/dsl/functions.html#function-extract-affiliations&quot;</span><span class="p">)</span>
+
+    <span class="c1">#        </span>
+    <span class="c1"># == main DSL query == </span>
+    <span class="c1">#        </span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">dsl</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;extract_affiliations(json=</span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span><span class="si">}</span><span class="s2">, results=&quot;basic&quot;)&quot;&quot;&quot;</span><span class="p">)</span>  <span class="c1"># same query for both struct and unstruct</span>
+    
+    <span class="k">if</span> <span class="n">as_json</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">output</span><span class="o">.</span><span class="n">json</span>
+    <span class="k">else</span><span class="p">:</span> <span class="c1"># return DF</span>
+        <span class="k">if</span> <span class="n">affiliation_type</span> <span class="o">==</span> <span class="s2">&quot;STRUCTURED&quot;</span><span class="p">:</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">json_normalize</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">],</span>  <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">affiliation_type</span> <span class="o">==</span> <span class="s2">&quot;UNSTRUCTURED&quot;</span><span class="p">:</span> 
+            <span class="n">temp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">json_normalize</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">],</span>  <span class="s1">&#39;matches&#39;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">temp</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="s2">&quot;institutes&quot;</span><span class="p">)</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">temp</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="s2">&quot;geo.countries&quot;</span><span class="p">)</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">temp</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="s2">&quot;geo.states&quot;</span><span class="p">)</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">temp</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="s2">&quot;geo.cities&quot;</span><span class="p">)</span>
+        <span class="c1"># institutes fields</span>
+        <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;grid_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;institutes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;institute&#39;</span><span class="p">][</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="nb">dict</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;grid_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;institutes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;institute&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="nb">dict</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;grid_city&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;institutes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;institute&#39;</span><span class="p">][</span><span class="s1">&#39;city&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="nb">dict</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;grid_state&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;institutes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;institute&#39;</span><span class="p">][</span><span class="s1">&#39;state&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="nb">dict</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;grid_country&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;institutes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;institute&#39;</span><span class="p">][</span><span class="s1">&#39;country&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="nb">dict</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;requires_review&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;institutes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">][</span><span class="s1">&#39;requires_manual_review&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="nb">dict</span> <span class="k">else</span> <span class="kc">None</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="nb">dict</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="c1"># geo fields - country</span>
+        <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;geo_country_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;geo.countries&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;geonames_id&#39;</span><span class="p">])</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="nb">dict</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;geo_country_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;geo.countries&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="nb">dict</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;geo_country_code&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;geo.countries&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="nb">dict</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="c1"># state</span>
+        <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;geo_state_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;geo.states&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;geonames_id&#39;</span><span class="p">])</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="nb">dict</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;geo_state_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;geo.states&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="nb">dict</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;geo_state_code&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;geo.states&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="nb">dict</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="c1"># city</span>
+        <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;geo_city_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;geo.cities&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;geonames_id&#39;</span><span class="p">])</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="nb">dict</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;geo_city_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;geo.cities&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="nb">dict</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="c1"># drop cols</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">temp</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;institutes&#39;</span><span class="p">,</span> <span class="s1">&#39;geo.countries&#39;</span><span class="p">,</span> <span class="s1">&#39;geo.states&#39;</span><span class="p">,</span> <span class="s1">&#39;geo.cities&#39;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">temp</span></div>
+
+
+
+
+
+<span class="c1"># ===</span>
+<span class="c1"># extract_affiliations sample raw outputs </span>
+<span class="c1"># ===</span>
+
+
+<span class="c1"># API OUTPUT for UNSTRUCTURED SEARCH</span>
+
+<span class="c1"># {</span>
+<span class="c1">#     &quot;results&quot;: [</span>
+<span class="c1">#         {</span>
+<span class="c1">#             &quot;matches&quot;: [</span>
+<span class="c1">#                 {</span>
+<span class="c1">#                     &quot;affiliation_part&quot;: &quot;london college cambridge&quot;,</span>
+<span class="c1">#                     &quot;institutes&quot;: [</span>
+<span class="c1">#                         {</span>
+<span class="c1">#                             &quot;institute&quot;: {</span>
+<span class="c1">#                                 &quot;id&quot;: &quot;grid.499389.6&quot;,</span>
+<span class="c1">#                                 &quot;name&quot;: &quot;The London College&quot;,</span>
+<span class="c1">#                                 &quot;city&quot;: &quot;London&quot;,</span>
+<span class="c1">#                                 &quot;state&quot;: None,</span>
+<span class="c1">#                                 &quot;country&quot;: &quot;United Kingdom&quot;</span>
+<span class="c1">#                             },</span>
+<span class="c1">#                             &quot;metadata&quot;: { &quot;requires_manual_review&quot;: True }</span>
+<span class="c1">#                         }</span>
+<span class="c1">#                     ],</span>
+<span class="c1">#                     &quot;geo&quot;: {</span>
+<span class="c1">#                         &quot;cities&quot;: [</span>
+<span class="c1">#                             { &quot;geonames_id&quot;: 2643743, &quot;name&quot;: &quot;London&quot; }</span>
+<span class="c1">#                         ],</span>
+<span class="c1">#                         &quot;states&quot;: [</span>
+<span class="c1">#                             {</span>
+<span class="c1">#                                 &quot;geonames_id&quot;: 6269131,</span>
+<span class="c1">#                                 &quot;name&quot;: &quot;England&quot;,</span>
+<span class="c1">#                                 &quot;code&quot;: None</span>
+<span class="c1">#                             }</span>
+<span class="c1">#                         ],</span>
+<span class="c1">#                         &quot;countries&quot;: [</span>
+<span class="c1">#                             {</span>
+<span class="c1">#                                 &quot;geonames_id&quot;: 2635167,</span>
+<span class="c1">#                                 &quot;name&quot;: &quot;United Kingdom&quot;,</span>
+<span class="c1">#                                 &quot;code&quot;: &quot;GB&quot;</span>
+<span class="c1">#                             }</span>
+<span class="c1">#                         ]</span>
+<span class="c1">#                     }</span>
+<span class="c1">#                 }</span>
+<span class="c1">#             ],</span>
+<span class="c1">#             &quot;input&quot;: { &quot;affiliation&quot;: &quot;london college cambridge&quot; }</span>
+<span class="c1">#         }]</span>
+<span class="c1"># }</span>
+
+<span class="c1"># API OUTPUT for STRUCTURED SEARCH</span>
+
+<span class="c1"># {</span>
+<span class="c1">#     &quot;results&quot;: [</span>
+<span class="c1">#         {</span>
+<span class="c1">#             &quot;institutes&quot;: [</span>
+<span class="c1">#                 {</span>
+<span class="c1">#                     &quot;institute&quot;: {</span>
+<span class="c1">#                         &quot;id&quot;: &quot;grid.499389.6&quot;,</span>
+<span class="c1">#                         &quot;name&quot;: &quot;The London College&quot;,</span>
+<span class="c1">#                         &quot;city&quot;: &quot;London&quot;,</span>
+<span class="c1">#                         &quot;state&quot;: None,</span>
+<span class="c1">#                         &quot;country&quot;: &quot;United Kingdom&quot;</span>
+<span class="c1">#                     },</span>
+<span class="c1">#                     &quot;metadata&quot;: { &quot;requires_manual_review&quot;: True }</span>
+<span class="c1">#                 }</span>
+<span class="c1">#             ],</span>
+<span class="c1">#             &quot;geo&quot;: {</span>
+<span class="c1">#                 &quot;cities&quot;: [{ &quot;geonames_id&quot;: 2643743, &quot;name&quot;: &quot;London&quot; }],</span>
+<span class="c1">#                 &quot;states&quot;: [</span>
+<span class="c1">#                     { &quot;geonames_id&quot;: 6269131, &quot;name&quot;: &quot;England&quot;, &quot;code&quot;: None }</span>
+<span class="c1">#                 ],</span>
+<span class="c1">#                 &quot;countries&quot;: [</span>
+<span class="c1">#                     {</span>
+<span class="c1">#                         &quot;geonames_id&quot;: 2635167,</span>
+<span class="c1">#                         &quot;name&quot;: &quot;United Kingdom&quot;,</span>
+<span class="c1">#                         &quot;code&quot;: &quot;GB&quot;</span>
+<span class="c1">#                     }</span>
+<span class="c1">#                 ]</span>
+<span class="c1">#             },</span>
+<span class="c1">#             &quot;input&quot;: {</span>
+<span class="c1">#                 &quot;name&quot;: &quot;london college cambridge&quot;,</span>
+<span class="c1">#                 &quot;city&quot;: &quot;&quot;,</span>
+<span class="c1">#                 &quot;state&quot;: &quot;&quot;,</span>
+<span class="c1">#                 &quot;country&quot;: &quot;&quot;</span>
+<span class="c1">#             }</span>
+<span class="c1">#         }</span>
+<span class="c1">#     ]</span>
+<span class="c1"># }</span>
 </pre></div>
 
            </div>

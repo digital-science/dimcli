@@ -859,6 +859,72 @@ The steps are described at <a class="reference external" href="https://gspread.r
 <p>Wrappers around DSL functions</p>
 <p><a class="reference external" href="https://docs.dimensions.ai/dsl/functions.html">https://docs.dimensions.ai/dsl/functions.html</a></p>
 <dl class="py function">
+<dt id="dimcli.core.functions.extract_affiliations">
+<code class="sig-prename descclassname">dimcli.core.functions.</code><code class="sig-name descname">extract_affiliations</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">affiliations</span></em>, <em class="sig-param"><span class="n">as_json</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/functions.html#extract_affiliations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.core.functions.extract_affiliations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Python wrapper for the DSL function <cite>extract_affiliations</cite>.</p>
+<p>This function returns GRID affiliations either using structured or unstructured input. Up to 200 input objects are allowed per request. See also: <a class="reference external" href="https://docs.dimensions.ai/dsl/functions.html#function-extract-affiliations">https://docs.dimensions.ai/dsl/functions.html#function-extract-affiliations</a></p>
+<p>The input argument <code class="docutils literal notranslate"><span class="pre">affiliations</span></code> can be one of the following:</p>
+<ul>
+<li><p>a string, representing a single <strong>unstructured</strong> ‘affiliation’, eg</p>
+<blockquote>
+<div><p>“new york university”</p>
+</div></blockquote>
+</li>
+<li><p>a list of strings, representing <strong>unstructured</strong> ‘affiliations’, eg</p>
+<blockquote>
+<div><p>[“new york university”, “london college of surgeons”]</p>
+</div></blockquote>
+</li>
+<li><p>a list of dictionaries of <strong>unstructured</strong> ‘affiliations’ data, eg</p>
+<blockquote>
+<div><p>[{“affiliation”: “london college”}, {“affiliation”: “new york university”}]</p>
+</div></blockquote>
+</li>
+<li><p>a list of dictionaries of <strong>structured</strong> ‘affiliations’ data, eg</p>
+<blockquote>
+<div><p>[{“name”:”london college cambridge”,
+“city”:””,
+“state”:””,
+“country”:””},
+{“name”:”milano bicocca”,
+“city”:”Milano”,
+“state”:””,
+“country”:”Italy”}
+]</p>
+</div></blockquote>
+</li>
+</ul>
+<p>By default, the JSON results are flattened and returned as a pandas dataframe.</p>
+<p><strong>NOTE</strong> internally this function always uses the ‘batch processing’ version of the API. The optional argument <cite>results</cite> is currently not supported (and hence defaults to ‘basic’).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>affiliations</strong> (<em>str</em><em> or </em><em>list</em><em> or </em><em>dict</em>) – The raw affiliation data to process.</p></li>
+<li><p><strong>as_json</strong> (<em>bool</em><em>, </em><em>optional</em>) – Return raw JSON encoded as a Python dict (instead of a pandas dataframe, by default).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A pandas dataframe containing a flattened representation of the JSON results.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame or dict</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dimcli.functions</span> <span class="kn">import</span> <span class="n">extract_affiliations</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">extract_affiliations</span><span class="p">(</span><span class="s2">&quot;stanford medical center&quot;</span><span class="p">)</span>
+<span class="go">n  affiliation_part        grid_id          grid_name grid_city  grid_state   grid_country  requires_review geo_country_id geo_country_name geo_country_code geo_state_id geo_state_name geo_state_code geo_city_id geo_city_name</span>
+<span class="go">0  stanford medical center  grid.240952.8  Stanford Medicine  Stanford  California  United States             True        6252001    United States               US      5332921     California          US-CA     5398563      Stanford</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;affiliation&quot;</span><span class="p">:</span> <span class="s2">&quot;london college&quot;</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;affiliation&quot;</span><span class="p">:</span> <span class="s2">&quot;new york university&quot;</span><span class="p">}]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">extract_affiliations</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="go">n  affiliation_part        grid_id            grid_name grid_city grid_state    grid_country  requires_review geo_country_id geo_country_name geo_country_code geo_state_id geo_state_name geo_state_code geo_city_id  geo_city_name</span>
+<span class="go">0  london college  grid.499389.6   The London College    London       None  United Kingdom             True        2635167   United Kingdom               GB      6269131        England           None     2643743         London</span>
+<span class="go">1  new york university  grid.137628.9  New York University  New York   New York   United States            False        6252001    United States               US      5128638       New York          US-NY     5128581  New York City</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt id="dimcli.core.functions.extract_classification">
 <code class="sig-prename descclassname">dimcli.core.functions.</code><code class="sig-name descname">extract_classification</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">title</span></em>, <em class="sig-param"><span class="n">abstract</span></em>, <em class="sig-param"><span class="n">system</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/functions.html#extract_classification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.core.functions.extract_classification" title="Permalink to this definition">¶</a></dt>
 <dd><p>Python wrapper for the DSL function <cite>classify</cite>.</p>

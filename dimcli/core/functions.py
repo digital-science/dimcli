@@ -4,6 +4,9 @@ Wrappers around DSL functions
 https://docs.dimensions.ai/dsl/functions.html
 """
 
+import json
+import pandas as pd
+
 from .api import Dsl
 from .auth import is_logged_in
 
@@ -148,20 +151,71 @@ def extract_classification(title, abstract, system="", verbose=True):
 
 
 
+def extract_affiliations(affiliations, as_json=False):
+    """Python wrapper for the DSL function `extract_affiliations`. 
 
+    This function returns GRID affiliations either using structured or unstructured input. Up to 200 input objects are allowed per request. See also: https://docs.dimensions.ai/dsl/functions.html#function-extract-affiliations
 
-# see also: https://www.kaggle.com/jboysen/quick-tutorial-flatten-nested-json-in-pandas
+    The input argument ``affiliations`` can be one of the following:
 
-def extract_affiliations(affiliations=[], as_df=True):
-    """
-    1st case - affiliation as a whole
-    a = [{"affiliation": "university of oxford, uk"}, {"affiliation": "university of columbia"}]
-    we can take either be list of strings, or list of dict as it is expected by the API 
+    * a string, representing a single **unstructured** 'affiliation', eg
+
+         "new york university"
+
+    * a list of strings, representing **unstructured** 'affiliations', eg
+
+        ["new york university", "london college of surgeons"]
+
+    * a list of dictionaries of **unstructured** 'affiliations' data, eg 
+        
+        [{"affiliation": "london college"}, {"affiliation": "new york university"}]
     
-    aalwaays use the batch processing
+    * a list of dictionaries of **structured** 'affiliations' data, eg 
+
+        [{"name":"london college cambridge",
+        "city":"",
+        "state":"",
+        "country":""},
+        {"name":"milano bicocca",
+        "city":"Milano",
+        "state":"",
+        "country":"Italy"}
+        ]
+
+    By default, the JSON results are flattened and returned as a pandas dataframe.
+
+    **NOTE** internally this function always uses the 'batch processing' version of the API. The optional argument `results` is currently not supported (and hence defaults to 'basic').
+
+    
+
+
+    Parameters
+    ----------
+    affiliations : str or list or dict
+        The raw affiliation data to process. 
+    as_json : bool, optional
+        Return raw JSON encoded as a Python dict (instead of a pandas dataframe, by default). 
+
+    Returns
+    -------
+    pandas.DataFrame or dict 
+        A pandas dataframe containing a flattened representation of the JSON results. 
+
+    Example
+    --------
+    >>> from dimcli.functions import extract_affiliations
+    >>> extract_affiliations("stanford medical center")
+    n  affiliation_part        grid_id          grid_name grid_city  grid_state   grid_country  requires_review geo_country_id geo_country_name geo_country_code geo_state_id geo_state_name geo_state_code geo_city_id geo_city_name
+    0  stanford medical center  grid.240952.8  Stanford Medicine  Stanford  California  United States             True        6252001    United States               US      5332921     California          US-CA     5398563      Stanford    
+    >>> data = [{"affiliation": "london college"}, {"affiliation": "new york university"}]
+    >>> extract_affiliations(data)
+    n  affiliation_part        grid_id            grid_name grid_city grid_state    grid_country  requires_review geo_country_id geo_country_name geo_country_code geo_state_id geo_state_name geo_state_code geo_city_id  geo_city_name
+    0  london college  grid.499389.6   The London College    London       None  United Kingdom             True        2635167   United Kingdom               GB      6269131        England           None     2643743         London
+    1  new york university  grid.137628.9  New York University  New York   New York   United States            False        6252001    United States               US      5128638       New York          US-NY     5128581  New York City
     """
     if not is_logged_in(): return
     dsl = Dsl()
+    affiliation_type = "UNSTRUCTURED"
     
     if type(affiliations) == str:
         input_data = [{"affiliation": affiliations}]
@@ -172,42 +226,140 @@ def extract_affiliations(affiliations=[], as_df=True):
     elif type(affiliations) == list and type(affiliations[0]) == dict:
         if "affiliation" in affiliations[0]:
             input_data = affiliations
+        elif "name" in affiliations[0]:
+            affiliation_type = "STRUCTURED"
+            input_data = affiliations
         else:
-            raise Exception("Dictionary is badly formatted.")
-        
-    output = dsl.query(f"""extract_affiliations(json={json.dumps(input_data)})""")
+            raise Exception("Dictionary is badly formatted. Cannot find 'affiliation', nor 'name' keys. See https://docs.dimensions.ai/dsl/functions.html#function-extract-affiliations")
+
+    #        
+    # == main DSL query == 
+    #        
+    output = dsl.query(f"""extract_affiliations(json={json.dumps(input_data)}, results="basic")""")  # same query for both struct and unstruct
     
-    if as_df:
-#         return pd.DataFrame(output.json['results'])
-        temp = pd.json_normalize(output.json['results'],  'matches', errors='ignore')
+    if as_json:
+        return output.json
+    else: # return DF
+        if affiliation_type == "STRUCTURED":
+            temp = pd.json_normalize(output.json['results'],  errors='ignore')
+        if affiliation_type == "UNSTRUCTURED": 
+            temp = pd.json_normalize(output.json['results'],  'matches', errors='ignore')
         temp = temp.explode("institutes")
         temp = temp.explode("geo.countries")
         temp = temp.explode("geo.states")
         temp = temp.explode("geo.cities")
         # institutes fields
-        if temp['institutes'].any():
-            temp['grid_id'] = temp['institutes'].apply(lambda x: x['institute']['id'])
-            temp['grid_name'] = temp['institutes'].apply(lambda x: x['institute']['name'])
-            temp['grid_city'] = temp['institutes'].apply(lambda x: x['institute']['city'])
-            temp['grid_state'] = temp['institutes'].apply(lambda x: x['institute']['state'])
-            temp['grid_country'] = temp['institutes'].apply(lambda x: x['institute']['country'])
-            temp['requires_review'] = temp['institutes'].apply(lambda x: x['metadata']['requires_manual_review'])
+        temp['grid_id'] = temp['institutes'].apply(lambda x: x['institute']['id'] if type(x) == dict else None)
+        temp['grid_name'] = temp['institutes'].apply(lambda x: x['institute']['name'] if type(x) == dict else None)
+        temp['grid_city'] = temp['institutes'].apply(lambda x: x['institute']['city'] if type(x) == dict else None)
+        temp['grid_state'] = temp['institutes'].apply(lambda x: x['institute']['state'] if type(x) == dict else None)
+        temp['grid_country'] = temp['institutes'].apply(lambda x: x['institute']['country'] if type(x) == dict else None)
+        temp['requires_review'] = temp['institutes'].apply(lambda x: x['metadata']['requires_manual_review'] if type(x) == dict else None if type(x) == dict else None)
         # geo fields - country
-        if temp['geo.countries'].any():
-            temp['geo_country_id'] = temp['geo.countries'].apply(lambda x: x['geonames_id'])
-            temp['geo_country_name'] = temp['geo.countries'].apply(lambda x: x['name'])
-            temp['geo_country_code'] = temp['geo.countries'].apply(lambda x: x['code'])
+        temp['geo_country_id'] = temp['geo.countries'].apply(lambda x: str(x['geonames_id']) if type(x) == dict else None)
+        temp['geo_country_name'] = temp['geo.countries'].apply(lambda x: x['name'] if type(x) == dict else None)
+        temp['geo_country_code'] = temp['geo.countries'].apply(lambda x: x['code'] if type(x) == dict else None)
         # state
-        if temp['geo.states'].any():
-            temp['geo_state_id'] = temp['geo.states'].apply(lambda x: x['geonames_id'])
-            temp['geo_state_name'] = temp['geo.states'].apply(lambda x: x['name'])
-            temp['geo_state_code'] = temp['geo.states'].apply(lambda x: x['code'])
+        temp['geo_state_id'] = temp['geo.states'].apply(lambda x: str(x['geonames_id']) if type(x) == dict else None)
+        temp['geo_state_name'] = temp['geo.states'].apply(lambda x: x['name'] if type(x) == dict else None)
+        temp['geo_state_code'] = temp['geo.states'].apply(lambda x: x['code'] if type(x) == dict else None)
         # city
-        if temp['geo.cities'].any():
-            temp['geo_city_id'] = temp['geo.cities'].apply(lambda x: x['geonames_id'])
-            temp['geo_city_name'] = temp['geo.cities'].apply(lambda x: x['name'])
+        temp['geo_city_id'] = temp['geo.cities'].apply(lambda x: str(x['geonames_id']) if type(x) == dict else None)
+        temp['geo_city_name'] = temp['geo.cities'].apply(lambda x: x['name'] if type(x) == dict else None)
         # drop cols
         temp = temp.drop(columns=['institutes', 'geo.countries', 'geo.states', 'geo.cities'])
         return temp
-    else:
-        return output.json
+
+
+
+
+
+# ===
+# extract_affiliations sample raw outputs 
+# ===
+
+
+# API OUTPUT for UNSTRUCTURED SEARCH
+
+# {
+#     "results": [
+#         {
+#             "matches": [
+#                 {
+#                     "affiliation_part": "london college cambridge",
+#                     "institutes": [
+#                         {
+#                             "institute": {
+#                                 "id": "grid.499389.6",
+#                                 "name": "The London College",
+#                                 "city": "London",
+#                                 "state": None,
+#                                 "country": "United Kingdom"
+#                             },
+#                             "metadata": { "requires_manual_review": True }
+#                         }
+#                     ],
+#                     "geo": {
+#                         "cities": [
+#                             { "geonames_id": 2643743, "name": "London" }
+#                         ],
+#                         "states": [
+#                             {
+#                                 "geonames_id": 6269131,
+#                                 "name": "England",
+#                                 "code": None
+#                             }
+#                         ],
+#                         "countries": [
+#                             {
+#                                 "geonames_id": 2635167,
+#                                 "name": "United Kingdom",
+#                                 "code": "GB"
+#                             }
+#                         ]
+#                     }
+#                 }
+#             ],
+#             "input": { "affiliation": "london college cambridge" }
+#         }]
+# }
+
+# API OUTPUT for STRUCTURED SEARCH
+
+# {
+#     "results": [
+#         {
+#             "institutes": [
+#                 {
+#                     "institute": {
+#                         "id": "grid.499389.6",
+#                         "name": "The London College",
+#                         "city": "London",
+#                         "state": None,
+#                         "country": "United Kingdom"
+#                     },
+#                     "metadata": { "requires_manual_review": True }
+#                 }
+#             ],
+#             "geo": {
+#                 "cities": [{ "geonames_id": 2643743, "name": "London" }],
+#                 "states": [
+#                     { "geonames_id": 6269131, "name": "England", "code": None }
+#                 ],
+#                 "countries": [
+#                     {
+#                         "geonames_id": 2635167,
+#                         "name": "United Kingdom",
+#                         "code": "GB"
+#                     }
+#                 ]
+#             },
+#             "input": {
+#                 "name": "london college cambridge",
+#                 "city": "",
+#                 "state": "",
+#                 "country": ""
+#             }
+#         }
+#     ]
+# }
