@@ -149,13 +149,17 @@
             
   <h1>Source code for dimcli.core.functions</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Wrappers around DSL functions</span>
+<span class="sd">Python wrappers for the DSL functions.</span>
+<span class="sd">See also: https://docs.dimensions.ai/dsl/functions.html</span>
 
-<span class="sd">https://docs.dimensions.ai/dsl/functions.html</span>
+<span class="sd">NOTE: these objects are attached to the top level ``dimcli.functions`` module. So you can load them as follows:</span>
+
+<span class="sd">&gt;&gt;&gt; from dimcli.functions import *</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">click</span>
 
 <span class="kn">from</span> <span class="nn">.api</span> <span class="kn">import</span> <span class="n">Dsl</span>
 <span class="kn">from</span> <span class="nn">.auth</span> <span class="kn">import</span> <span class="n">is_logged_in</span>
@@ -163,7 +167,7 @@
 <span class="kn">from</span> <span class="nn">..utils.utils_dimensions</span> <span class="kn">import</span> <span class="n">dsl_escape</span>
 
 
-<div class="viewcode-block" id="extract_concepts"><a class="viewcode-back" href="../../../modules.html#dimcli.core.functions.extract_concepts">[docs]</a><span class="k">def</span> <span class="nf">extract_concepts</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">with_scores</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="extract_concepts"><a class="viewcode-back" href="../../../modules.html#dimcli.core.functions.extract_concepts">[docs]</a><span class="k">def</span> <span class="nf">extract_concepts</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">scores</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Python wrapper for the DSL function `extract_concepts`.</span>
 
 <span class="sd">    Extract concepts from any text. Text input is processed and extracted concepts are returned as an array of strings ordered by their relevance. See also: https://docs.dimensions.ai/dsl/functions.html#function-extract-concepts</span>
@@ -172,7 +176,7 @@
 <span class="sd">    ----------</span>
 <span class="sd">    text : str</span>
 <span class="sd">        The text paragraphs to extract concepts from. </span>
-<span class="sd">    with_scores : bool, optional</span>
+<span class="sd">    scores : bool, optional</span>
 <span class="sd">        Return the concepts scores as well, by default True</span>
 <span class="sd">    as_df : bool, optional</span>
 <span class="sd">        Return results as a pandas dataframe (instead of JSON), by default True</span>
@@ -196,9 +200,12 @@
 
     <span class="k">if</span> <span class="n">is_logged_in</span><span class="p">():</span>
         <span class="n">dsl</span> <span class="o">=</span> <span class="n">Dsl</span><span class="p">()</span>
-        <span class="n">_score</span> <span class="o">=</span> <span class="s1">&#39;true&#39;</span> <span class="k">if</span> <span class="n">with_scores</span> <span class="k">else</span> <span class="s1">&#39;false&#39;</span>
+        <span class="n">_score</span> <span class="o">=</span> <span class="s1">&#39;true&#39;</span> <span class="k">if</span> <span class="n">scores</span> <span class="k">else</span> <span class="s1">&#39;false&#39;</span>
         <span class="k">if</span> <span class="n">as_df</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">dsl</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;extract_concepts(&quot;</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;, return_scores=</span><span class="si">{</span><span class="n">_score</span><span class="si">}</span><span class="s2">)&quot;&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">as_dataframe</span><span class="p">()</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">dsl</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;extract_concepts(&quot;</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;, return_scores=</span><span class="si">{</span><span class="n">_score</span><span class="si">}</span><span class="s2">)&quot;&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">as_dataframe</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">scores</span><span class="p">:</span>
+                <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="s2">&quot;concepts&quot;</span> <span class="p">},</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">df</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">dsl</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;extract_concepts(&quot;</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;, return_scores=</span><span class="si">{</span><span class="n">_score</span><span class="si">}</span><span class="s2">)&quot;&quot;&quot;</span><span class="p">)</span></div>
 
@@ -513,6 +520,99 @@
 <span class="c1">#         }</span>
 <span class="c1">#     ]</span>
 <span class="c1"># }</span>
+
+
+
+
+
+<div class="viewcode-block" id="identify_experts"><a class="viewcode-back" href="../../../modules.html#dimcli.core.functions.identify_experts">[docs]</a><span class="k">def</span> <span class="nf">identify_experts</span><span class="p">(</span><span class="n">abstract</span><span class="p">,</span> <span class="n">max_concepts</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">connector</span><span class="o">=</span><span class="s2">&quot;OR&quot;</span><span class="p">,</span> <span class="n">conflicts</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">extra_dsl</span><span class="o">=</span><span class="s2">&quot;where year &gt;= 2010&quot;</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="s2">&quot;publications&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Python wrapper for the expert identification workflow. See also https://docs.dimensions.ai/dsl/expert-identification.html</span>
+
+<span class="sd">    This wrapper provide a simpler version of the expert identification API. It is meant to be a convenient alternative for basic queries. For more options, it is advised to use the API directly. </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    abstract : str</span>
+<span class="sd">        The abstract text used to identify experts. Concepts are automatically extracted from it.</span>
+<span class="sd">    max_concepts : int, optional</span>
+<span class="sd">        The maximum number of concepts to use for the identification. Concepts are ranked by relevance. By default, this is 15.</span>
+<span class="sd">    connector : str, optional</span>
+<span class="sd">        The logical connector used in the concepts query. Should be either &#39;AND&#39;, or &#39;OR&#39; (=default).</span>
+<span class="sd">    conflicts : list, optional</span>
+<span class="sd">        A list of Dimensions researchers IDs used to determine overlap / conflicts of interest.</span>
+<span class="sd">    extra_dsl : str, optional</span>
+<span class="sd">        A DSL clause to add after the main concepts search statement. Default is ``where year &gt;= 2010``.</span>
+<span class="sd">    source : str, optional</span>
+<span class="sd">        The DSL source to derive experts from. Either &#39;publications&#39; (default) or &#39;grants&#39;.  </span>
+<span class="sd">    verbose : bool, optional</span>
+<span class="sd">        Verbose mode, by default False</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas.Dataframe</span>
+<span class="sd">        A dataframe containing experts details, including the dimensions URL of the experts. </span>
+
+<span class="sd">    Example</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from dimcli.functions import identify_experts</span>
+<span class="sd">    &gt;&gt;&gt; identify_experts(&quot;Moon landing paved the way for supercomputers becoming mainstream&quot;, verbose=True)</span>
+<span class="sd">    Concepts extracted: 5</span>
+<span class="sd">    Query:</span>
+<span class="sd">    &quot;</span>
+<span class="sd">    identify experts</span>
+<span class="sd">        from concepts &quot;\&quot;landing\&quot; OR \&quot;way\&quot; OR \&quot;mainstream\&quot; OR \&quot;moon landing\&quot; OR \&quot;supercomputers\&quot;&quot;</span>
+<span class="sd">        using publications where year &gt;= 2010</span>
+<span class="sd">    return experts[all+dimensions_url-obsolete]``` </span>
+<span class="sd">    &quot;</span>
+<span class="sd">    Experts found: 20</span>
+<span class="sd">    &quot;&quot;&quot;</span>       
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_logged_in</span><span class="p">():</span> <span class="k">return</span>
+    <span class="n">dsl</span> <span class="o">=</span> <span class="n">Dsl</span><span class="p">()</span>
+
+    <span class="n">connector</span> <span class="o">=</span> <span class="n">connector</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">connector</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;AND&quot;</span><span class="p">,</span> <span class="s2">&quot;OR&quot;</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Invalid connector: must be either &#39;AND&#39; or &#39;OR&#39;.&quot;</span><span class="p">)</span>
+
+    <span class="n">source</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">source</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;publications&quot;</span><span class="p">,</span> <span class="s2">&quot;grants&quot;</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Invalid source: must be either &#39;publications&#39; or &#39;grants&#39;.&quot;</span><span class="p">)</span>
+        
+    <span class="k">if</span> <span class="n">extra_dsl</span><span class="o">==</span><span class="s2">&quot;where year &gt;= 2010&quot;</span> <span class="ow">and</span> <span class="n">source</span><span class="o">==</span><span class="s2">&quot;grants&quot;</span><span class="p">:</span>
+        <span class="n">extra_dsl</span><span class="o">=</span><span class="s2">&quot;where start_year &gt;= 2010&quot;</span>
+
+    <span class="n">conflicts_query</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">conflicts</span><span class="p">:</span>
+        <span class="n">conflicts_query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;annotate coauthorship, organizational overlap</span>
+<span class="s2">            with </span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">conflicts</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;&quot;&quot;</span>
+    
+    <span class="c1"># get concepts</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">extract_concepts</span><span class="p">(</span><span class="n">abstract</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Concepts extracted: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="k">return</span>
+    <span class="n">concepts_list</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">concept</span><span class="p">[:</span><span class="n">max_concepts</span><span class="p">]</span>
+    <span class="n">concepts_list_query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">connector</span><span class="si">}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;&quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">concepts_list</span><span class="p">])</span>
+    
+    
+    <span class="c1"># get experts</span>
+    <span class="n">thequery</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        identify experts</span>
+<span class="s2">            from concepts &quot;</span><span class="si">{</span><span class="n">dsl_escape</span><span class="p">(</span><span class="n">concepts_list_query</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="s2">            using </span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">extra_dsl</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">        return experts[all+dimensions_url-obsolete] </span><span class="si">{</span><span class="n">conflicts_query</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">        &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="s2">&quot;Query:</span><span class="se">\n</span><span class="s2">======&quot;</span> <span class="o">+</span> <span class="n">thequery</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">======&quot;</span><span class="p">)</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">dsl</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">thequery</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;experts&quot;</span> <span class="ow">in</span> <span class="n">results</span><span class="o">.</span><span class="n">json</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Experts found: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">experts</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">as_dataframe</span><span class="p">()</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span> <span class="p">[</span> <span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">col</span> <span class="o">!=</span> <span class="s1">&#39;dimensions_url&#39;</span> <span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;dimensions_url&#39;</span><span class="p">]</span> <span class="p">]</span>
+        <span class="k">return</span> <span class="n">df</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Experts found: 0&quot;</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="p">[]</span></div>
 </pre></div>
 
            </div>

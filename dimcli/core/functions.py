@@ -1,7 +1,6 @@
 """
 Python wrappers for the DSL functions.
 See also: https://docs.dimensions.ai/dsl/functions.html
-
 NOTE: these objects are attached to the top level ``dimcli.functions`` module. So you can load them as follows:
 
 >>> from dimcli.functions import *
@@ -385,7 +384,7 @@ def identify_experts(abstract, max_concepts=15, connector="OR", conflicts=None, 
     abstract : str
         The abstract text used to identify experts. Concepts are automatically extracted from it.
     max_concepts : int, optional
-        The maximum number of concepts to use for the identification. Concepts are ranked by relevance. By default, this is 15.
+        The maximum number of concepts to use for the identification. By default, this is 15. Concepts are ranked by relevance.
     connector : str, optional
         The logical connector used in the concepts query. Should be either 'AND', or 'OR' (=default).
     conflicts : list, optional
@@ -408,14 +407,14 @@ def identify_experts(abstract, max_concepts=15, connector="OR", conflicts=None, 
     >>> identify_experts("Moon landing paved the way for supercomputers becoming mainstream", verbose=True)
     Concepts extracted: 5
     Query:
-    ======
-            identify experts
-                from concepts "\"landing\" OR \"way\" OR \"mainstream\" OR \"moon landing\" OR \"supercomputers\""
-                using publications where year >= 2010
-            return experts[all+dimensions_url-obsolete] 
-
-    ======
+    "
+    identify experts
+        from concepts "\"landing\" OR \"way\" OR \"mainstream\" OR \"moon landing\" OR \"supercomputers\""
+        using publications where year >= 2010
+    return experts[all+dimensions_url-obsolete] 
+    "
     Experts found: 20
+    [..experts list..]
     """       
 
     if not is_logged_in(): return

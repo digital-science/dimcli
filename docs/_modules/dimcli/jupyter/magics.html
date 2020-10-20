@@ -162,6 +162,7 @@
 <span class="kn">from</span> <span class="nn">..VERSION</span> <span class="kn">import</span> <span class="n">VERSION</span>
 
 <span class="kn">from</span> <span class="nn">..core.api</span> <span class="kn">import</span> <span class="n">Dsl</span>
+<span class="kn">from</span> <span class="nn">..core.functions</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">..core.auth</span> <span class="kn">import</span> <span class="n">get_connection</span><span class="p">,</span> <span class="n">is_logged_in</span>
 <span class="kn">from</span> <span class="nn">..utils.all</span> <span class="kn">import</span> <span class="o">*</span>
 
@@ -233,8 +234,6 @@
 
 <div class="viewcode-block" id="DslMagics.dsldf"><a class="viewcode-back" href="../../../modules.html#dimcli.jupyter.magics.DslMagics.dsldf">[docs]</a>    <span class="nd">@line_cell_magic</span>
     <span class="k">def</span> <span class="nf">dsldf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Dimcli Magic method: query the Dimensions DSL API with the text passed - return a pandas dataframe.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="sd">&quot;&quot;&quot;Magic command to run a single DSL query, results are transformed to a Pandas DataFrame. </span>
 
 <span class="sd">        Can be used as a single-line (``%dsldf``) or multi-line (``%%dsldf``) command. Requires an authenticated API session. Results are saved to a variable called ``dsl_last_results``.</span>
@@ -364,7 +363,7 @@
     <span class="k">def</span> <span class="nf">dslloopgsheets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Magic command to run a DSL &#39;loop&#39; (iterative) query. Results are automatically uploaded to google sheets. </span>
 
-<span class="sd">        NOTE: this method requires preexisting valid Google authentication credentials. See the description of ``utils.export_as_gsheets`` for more information.</span>
+<span class="sd">        NOTE: this method requires preexisting valid Google authentication credentials. See also https://gspread.readthedocs.io/en/latest/oauth2.html and the description of ``utils.export_as_gsheets`` for more information.</span>
 
 <span class="sd">        Can be used as a single-line (``%dslloopgsheets``) or multi-line (``%%dslloopgsheets``) command. Requires an authenticated API session. Results are also saved to a variable called ``dsl_last_results``.</span>
 
@@ -391,6 +390,69 @@
             <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_query</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">as_dataframe</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">results_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
             <span class="k">return</span> <span class="n">export_as_gsheets</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DslMagics.extract_concepts"><a class="viewcode-back" href="../../../modules.html#dimcli.jupyter.magics.DslMagics.extract_concepts">[docs]</a>    <span class="nd">@line_cell_magic</span>
+    <span class="k">def</span> <span class="nf">extract_concepts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Magic command to run the `extract_concepts` function. Results are transformed to a Pandas DataFrame. Score are included by default.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cell: str</span>
+<span class="sd">            Text to extract concepts from. </span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pandas.DataFrame</span>
+<span class="sd">            A pandas dataframe containing the concepts and scores.      </span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; %%extract_concepts </span>
+<span class="sd">        ... &lt;text&gt;</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_login</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">cell</span><span class="p">:</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">cell</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">extract_concepts</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">scores</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">results_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+            <span class="k">return</span> <span class="n">data</span></div>
+
+
+
+<div class="viewcode-block" id="DslMagics.identify_experts"><a class="viewcode-back" href="../../../modules.html#dimcli.jupyter.magics.DslMagics.identify_experts">[docs]</a>    <span class="nd">@line_cell_magic</span>
+    <span class="k">def</span> <span class="nf">identify_experts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Magic command to run the `identify_experts` function. Uses all the default options, takes only the `abstract` argument.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cell: str</span>
+<span class="sd">            Text abstract to use to find experts. </span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pandas.DataFrame</span>
+<span class="sd">            A pandas dataframe containing experts details.     </span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; %%identify_experts </span>
+<span class="sd">        ... &lt;text&gt;</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_login</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">cell</span><span class="p">:</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">cell</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">identify_experts</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">results_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+            <span class="k">return</span> <span class="n">data</span></div>
+
+
 
 <div class="viewcode-block" id="DslMagics.dsldocs"><a class="viewcode-back" href="../../../modules.html#dimcli.jupyter.magics.DslMagics.dsldocs">[docs]</a>    <span class="nd">@line_magic</span>
     <span class="k">def</span> <span class="nf">dsldocs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
