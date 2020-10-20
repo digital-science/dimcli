@@ -6,10 +6,14 @@
 * new `utils` module: misc utilities all grouped under `dimcli.utils`
 * `dimcli.shortcuts` is replaced with `dimcli.utils` 
 * the pyvis port is now located at `dimcli.utils.networkviz`
-* new magic command: `dslgsheets` and `dslloopgsheets`
+* new magic command: 
+  * `%%dslgsheets` 
+  * `%%dslloopgsheets`
+  * `%%extract_concepts`
 * module documentation greatly improved: https://digital-science.github.io/dimcli/modules.html
+* function wrapper: `extract_affiliations`
 * CLI improvements
-  * ID resolver works better
+  * ID resolver improvements
 
 
 ## v 0.7.5

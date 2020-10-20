@@ -1,7 +1,6 @@
 """
 Dimcli utilities for logging in/out of the Dimensions API.  
-
-NOTE: these functions are attached to the top level ``dimcli`` module. So you can do:
+NOTE: these functions are attached to the top level ``dimcli`` module. So you can load them as follows::
 
 >>> import dimcli
 >>> dimcli.login()

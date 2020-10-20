@@ -1,7 +1,6 @@
 """
 Dimcli objects for querying the Dimensions API. 
-
-NOTE: these objects are attached to the top level ``dimcli`` module. So you can simply do:
+NOTE: these objects are attached to the top level ``dimcli`` module. So you can load them as follows:
 
 >>> import dimcli
 >>> dsl = dimcli.Dsl()

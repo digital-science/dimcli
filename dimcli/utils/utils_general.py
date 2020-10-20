@@ -1,7 +1,6 @@
 """
 Dimcli general purpose utilities for working with data. 
-
-NOTE: these functions are attached to the top level ``dimcli.utils`` module. So you import them like this:
+NOTE: these functions are attached to the top level ``dimcli.utils`` module. So you can import them as follows:
 
 >>> from dimcli.utils import chunks_of
 >>> list(chunks_of(a, 5))

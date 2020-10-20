@@ -1,7 +1,10 @@
 """
-Wrappers around DSL functions
+Python wrappers for the DSL functions.
+See also: https://docs.dimensions.ai/dsl/functions.html
 
-https://docs.dimensions.ai/dsl/functions.html
+NOTE: these objects are attached to the top level ``dimcli.functions`` module. So you can load them as follows:
+
+>>> from dimcli.functions import *
 """
 
 import json
