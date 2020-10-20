@@ -10,8 +10,10 @@
   * `%%dslgsheets` 
   * `%%dslloopgsheets`
   * `%%extract_concepts`
+  * `%%identify_experts`
 * module documentation greatly improved: https://digital-science.github.io/dimcli/modules.html
 * function wrapper: `extract_affiliations`
+* function wrapper: `identify_experts`
 * CLI improvements
   * ID resolver improvements
 

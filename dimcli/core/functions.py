@@ -9,6 +9,7 @@ NOTE: these objects are attached to the top level ``dimcli.functions`` module. S
 
 import json
 import pandas as pd
+import click
 
 from .api import Dsl
 from .auth import is_logged_in
@@ -16,7 +17,7 @@ from .auth import is_logged_in
 from ..utils.utils_dimensions import dsl_escape
 
 
-def extract_concepts(text, with_scores=True, as_df=True):
+def extract_concepts(text, scores=True, as_df=True):
     """Python wrapper for the DSL function `extract_concepts`.
 
     Extract concepts from any text. Text input is processed and extracted concepts are returned as an array of strings ordered by their relevance. See also: https://docs.dimensions.ai/dsl/functions.html#function-extract-concepts
@@ -25,7 +26,7 @@ def extract_concepts(text, with_scores=True, as_df=True):
     ----------
     text : str
         The text paragraphs to extract concepts from. 
-    with_scores : bool, optional
+    scores : bool, optional
         Return the concepts scores as well, by default True
     as_df : bool, optional
         Return results as a pandas dataframe (instead of JSON), by default True
@@ -49,9 +50,12 @@ def extract_concepts(text, with_scores=True, as_df=True):
 
     if is_logged_in():
         dsl = Dsl()
-        _score = 'true' if with_scores else 'false'
+        _score = 'true' if scores else 'false'
         if as_df:
-            return dsl.query(f"""extract_concepts("{text}", return_scores={_score})""").as_dataframe()
+            df = dsl.query(f"""extract_concepts("{text}", return_scores={_score})""").as_dataframe()
+            if not scores:
+                df.rename(columns={ df.columns[0]: "concepts" }, inplace = True)
+            return df
         else:
             return dsl.query(f"""extract_concepts("{text}", return_scores={_score})""")
 
@@ -366,3 +370,97 @@ def extract_affiliations(affiliations, as_json=False):
 #         }
 #     ]
 # }
+
+
+
+
+
+def identify_experts(abstract, max_concepts=15, connector="OR", conflicts=None, extra_dsl="where year >= 2010", source="publications", verbose=False):
+    """Python wrapper for the expert identification workflow. See also https://docs.dimensions.ai/dsl/expert-identification.html
+
+    This wrapper provide a simpler version of the expert identification API. It is meant to be a convenient alternative for basic queries. For more options, it is advised to use the API directly. 
+
+    Parameters
+    ----------
+    abstract : str
+        The abstract text used to identify experts. Concepts are automatically extracted from it.
+    max_concepts : int, optional
+        The maximum number of concepts to use for the identification. Concepts are ranked by relevance. By default, this is 15.
+    connector : str, optional
+        The logical connector used in the concepts query. Should be either 'AND', or 'OR' (=default).
+    conflicts : list, optional
+        A list of Dimensions researchers IDs used to determine overlap / conflicts of interest.
+    extra_dsl : str, optional
+        A DSL clause to add after the main concepts search statement. Default is ``where year >= 2010``.
+    source : str, optional
+        The DSL source to derive experts from. Either 'publications' (default) or 'grants'.  
+    verbose : bool, optional
+        Verbose mode, by default False
+
+    Returns
+    -------
+    pandas.Dataframe
+        A dataframe containing experts details, including the dimensions URL of the experts. 
+
+    Example
+    --------
+    >>> from dimcli.functions import identify_experts
+    >>> identify_experts("Moon landing paved the way for supercomputers becoming mainstream", verbose=True)
+    Concepts extracted: 5
+    Query:
+    ======
+            identify experts
+                from concepts "\"landing\" OR \"way\" OR \"mainstream\" OR \"moon landing\" OR \"supercomputers\""
+                using publications where year >= 2010
+            return experts[all+dimensions_url-obsolete] 
+
+    ======
+    Experts found: 20
+    """       
+
+    if not is_logged_in(): return
+    dsl = Dsl()
+
+    connector = connector.strip()
+    if connector not in ["AND", "OR"]:
+        raise Exception("Invalid connector: must be either 'AND' or 'OR'.")
+
+    source = source.strip()
+    if source not in ["publications", "grants"]:
+        raise Exception("Invalid source: must be either 'publications' or 'grants'.")
+        
+    if extra_dsl=="where year >= 2010" and source=="grants":
+        extra_dsl="where start_year >= 2010"
+
+    conflicts_query = ""
+    if conflicts:
+        conflicts_query = f"""annotate coauthorship, organizational overlap
+            with {json.dumps(conflicts)}"""
+    
+    # get concepts
+    df = extract_concepts(abstract)
+    if verbose: click.secho(f"Concepts extracted: {len(df)}")
+    if len(df) == 0: return
+    concepts_list = df.concept[:max_concepts]
+    concepts_list_query = f" {connector} ".join(['"%s"' % x for x in concepts_list])
+    
+    
+    # get experts
+    thequery = f"""
+        identify experts
+            from concepts "{dsl_escape(concepts_list_query)}"
+            using {source} {extra_dsl}
+        return experts[all+dimensions_url-obsolete] {conflicts_query}
+        """
+    
+    if verbose: click.secho("Query:\n======" + thequery + "\n======")
+    results = dsl.query(thequery)
+
+    if "experts" in results.json:
+        if verbose: click.secho(f"Experts found: {len(results.experts)}" )
+        df = results.as_dataframe()
+        df = df[ [ col for col in df.columns if col != 'dimensions_url' ] + ['dimensions_url'] ]
+        return df
+    else:
+        if verbose: click.secho(f"Experts found: 0" )
+        return []

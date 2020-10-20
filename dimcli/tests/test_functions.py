@@ -36,11 +36,11 @@ class TestOne(unittest.TestCase):
         a = """
 BACKGROUND: In order to make further gains in preventing newborn deaths, effective interventions are needed. Ultrasounds and newborn anthropometry are proven interventions to identify preterm birth complications, the leading cause of newborn deaths. The INTERGROWTH-21st global gestational dating and fetal and newborn growth standards prescribe optimal growth in any population. Jacaranda Health in Kenya was the first low-resource health facility to implement the standards and evaluate their feasibility and acceptability. OBJECTIVE: To capture patients' perceptions of ultrasound and newborn care before and during implementation of the INTERGROWTH-21st standards. METHODS: The study was conducted over two years before and during the introduction of the INTERGROWTH-21st standards. Fifty pregnant and/or newly delivered women were selected for in-depth interviews and focus group discussions using convenience and purposive sampling. Interviews were conducted by research assistants using semi-structured guides once in the pre-implementation phase and twice in the implementation phase. Interviews were transcribed, double-coded by two independent researchers and thematically analyzed together. Demographic information was obtained from hospital records. RESULTS: Patients reported being generally satisfied with ultrasound care when providers communicated effectively. Women reported a priority for ultrasound was that it allowed them to feel reassured. However, a clear need for better pre-screening information emerged consistently from patients. Women noted that factors facilitating their choosing to have an ultrasound included ensuring the well-being of the fetus and learning the sex. Barriers included wait times and financial constraints. Patients were generally satisfied with care using the newborn standards. CONCLUSIONS: As the INTERGROWTH-21st standards are implemented worldwide, understanding ways to facilitate implementation is critical. Increased and standardized communication about ultrasound should be provided before the procedure to increase satisfaction and uptake. Considering patient perspectives when integrating new standards or guidelines into routine clinical care will inform effective strategies in care provision, thus improving maternal and newborn health and survival."""
         click.secho("With scores", fg="magenta")
-        print(extract_concepts(a, with_scores=True))
+        print(extract_concepts(a, scores=True))
         click.secho("Without scores", fg="magenta")
-        print(extract_concepts(a, with_scores=False))
+        print(extract_concepts(a, scores=False))
         click.secho("Without scores, as dimcli.DslDataset", fg="magenta")
-        print(extract_concepts(a, with_scores=False, as_df=False))
+        print(extract_concepts(a, scores=False, as_df=False))
         # ----
         click.secho("Completed test succesfully", fg="green")
 
@@ -113,6 +113,31 @@ BACKGROUND: In order to make further gains in preventing newborn deaths, effecti
         ]
         click.secho("Return DF, structured data, multiple results including failing ones", fg="magenta")
         print(extract_affiliations(input_data_struct))
+        # ----
+
+        click.secho("Completed test succesfully", fg="green")
+
+
+
+
+    def test_005(self):
+        click.secho("\nTEST 005: Identify experts.", fg="green")
+        # ----
+
+        click.secho("No text, no results", fg="magenta")
+        print(identify_experts("", verbose=True))
+
+        text = """It is a truism among scientists that our enterprise benefits humanity because of the technological breakthroughs that follow in discovery's wake. And it is a truism among historians that the relation between science and technology is far more complex and much less linear than people often assume. Before the 19th century, invention and innovation emerged primarily from craft traditions among people who were not scientists and who were typically unaware of pertinent scientific developments. The magnetic compass, gunpowder, the printing press, the chronometer, the cotton gin, the steam engine and the water wheel are among the many examples. In the late 1800s matters changed: craft traditions were reconstructed as “technology” that bore an important relation to science, and scientists began to take a deeper interest in applying theories to practical problems. A good example of the latter is the steam boiler explosion commission, appointed by Congress to investigate such accidents and discussed in Scientific American's issue of March 23, 1878. Still, technologists frequently worked more in parallel with contemporary science than in sequence. Technologists—soon to be known as engineers—were a different community of people with different goals, values, expectations and methodologies. Their accomplishments could not be understood simply as applied science. Even in the early 20th century the often loose link between scientific knowledge and technological advance was surprising; for example, aviation took off before scientists had a working theory of lift. Scientists said that flight by machines “heavier than air” was impossible, but nonetheless airplanes flew."""
+
+        click.secho("Long text, no options", fg="magenta")
+        print(identify_experts(text, verbose=True))
+
+        click.secho("Long text, misc options", fg="magenta")
+        print(identify_experts(text, max_concepts=3, connector="AND", source="grants", verbose=True))
+
+        click.secho("Long text, conflict options", fg="magenta")
+        print(identify_experts(text, conflicts=["ur.012331705127.09", "ur.013104324735.47"], verbose=True))
+
         # ----
 
         click.secho("Completed test succesfully", fg="green")

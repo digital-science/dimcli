@@ -213,7 +213,7 @@ class DslMagics(Magics):
     def dslloopgsheets(self, line, cell=None):
         """Magic command to run a DSL 'loop' (iterative) query. Results are automatically uploaded to google sheets. 
 
-        NOTE: this method requires preexisting valid Google authentication credentials. See the description of ``utils.export_as_gsheets`` for more information.
+        NOTE: this method requires preexisting valid Google authentication credentials. See also https://gspread.readthedocs.io/en/latest/oauth2.html and the description of ``utils.export_as_gsheets`` for more information.
 
         Can be used as a single-line (``%dslloopgsheets``) or multi-line (``%%dslloopgsheets``) command. Requires an authenticated API session. Results are also saved to a variable called ``dsl_last_results``.
 
@@ -267,7 +267,38 @@ class DslMagics(Magics):
             if cell:
                 line = cell
             data = line.replace("\n", "")
-            data = extract_concepts(data, with_scores=True, as_df=True)
+            data = extract_concepts(data, scores=True, as_df=True)
+            self.shell.user_ns[self.results_var] = data
+            return data
+
+
+
+    @line_cell_magic
+    def identify_experts(self, line, cell=None):
+        """Magic command to run the `identify_experts` function. Uses all the default options, takes only the `abstract` argument.
+        
+        Parameters
+        ----------
+        cell: str
+            Text abstract to use to find experts. 
+
+        Returns
+        -------
+        pandas.DataFrame
+            A pandas dataframe containing experts details.     
+
+        Example
+        -------
+        >>> %%identify_experts 
+        ... <text>
+
+        """
+
+        if self._handle_login():
+            if cell:
+                line = cell
+            data = line.replace("\n", "")
+            data = identify_experts(data)
             self.shell.user_ns[self.results_var] = data
             return data
 
