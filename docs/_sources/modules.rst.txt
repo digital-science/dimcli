@@ -1,4 +1,4 @@
-Module Reference
+Modules Reference
 ===================
 
 
