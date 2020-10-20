@@ -857,11 +857,69 @@ The steps are described at <a class="reference external" href="https://gspread.r
 <div class="section" id="module-dimcli.core.functions">
 <span id="dimcli-core-functions"></span><h2>dimcli.core.functions<a class="headerlink" href="#module-dimcli.core.functions" title="Permalink to this headline">¶</a></h2>
 <p>Python wrappers for the DSL functions.
-See also: <a class="reference external" href="https://docs.dimensions.ai/dsl/functions.html">https://docs.dimensions.ai/dsl/functions.html</a></p>
-<p>NOTE: these objects are attached to the top level <code class="docutils literal notranslate"><span class="pre">dimcli.functions</span></code> module. So you can load them as follows:</p>
+See also: <a class="reference external" href="https://docs.dimensions.ai/dsl/functions.html">https://docs.dimensions.ai/dsl/functions.html</a>
+NOTE: these objects are attached to the top level <code class="docutils literal notranslate"><span class="pre">dimcli.functions</span></code> module. So you can load them as follows:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dimcli.functions</span> <span class="kn">import</span> <span class="o">*</span>
 </pre></div>
 </div>
+<dl class="py function">
+<dt id="dimcli.core.functions.build_reviewers_matrix">
+<code class="sig-prename descclassname">dimcli.core.functions.</code><code class="sig-name descname">build_reviewers_matrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">abstracts</span></em>, <em class="sig-param"><span class="n">candidates</span></em>, <em class="sig-param"><span class="n">max_concepts</span><span class="o">=</span><span class="default_value">15</span></em>, <em class="sig-param"><span class="n">connector</span><span class="o">=</span><span class="default_value">'OR'</span></em>, <em class="sig-param"><span class="n">source</span><span class="o">=</span><span class="default_value">'publications'</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/functions.html#build_reviewers_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.core.functions.build_reviewers_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a matrix of candidate reviewers for abstracts, using the expert identification workflow. See also <a class="reference external" href="https://docs.dimensions.ai/dsl/expert-identification.html">https://docs.dimensions.ai/dsl/expert-identification.html</a></p>
+<p>If the input abstracts include identifiers, then those are used in the resulting matrix.
+Alternatively, a simple list of strings as input will result in a matrix where the identifiers are auto-generated from the abstracts order (first one is 1, etc..).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>abstracts</strong> (<em>list</em>) – The list of abstracts used for matching reviewers. Should be either a list of strings, or a list of dictionaries <code class="docutils literal notranslate"><span class="pre">{'id'</span> <span class="pre">:</span> <span class="pre">'{unique-ID}',</span> <span class="pre">'text'</span> <span class="pre">:</span> <span class="pre">'{the-abstract}'}</span></code> including a unique identifier for each abstract.</p></li>
+<li><p><strong>candidates</strong> (<em>list</em>) – A list of Dimensions researchers IDs.</p></li>
+<li><p><strong>max_concepts</strong> (<em>int</em><em>, </em><em>optional</em>) – The maximum number of concepts to use for the matching. By default, this is 15. Concepts are ranked by relevance.</p></li>
+<li><p><strong>connector</strong> (<em>str</em><em>, </em><em>optional</em>) – The logical connector used in the concepts query. Should be either ‘AND’, or ‘OR’ (=default).</p></li>
+<li><p><strong>source</strong> (<em>str</em><em>, </em><em>optional</em>) – The DSL source to derive experts from. Either ‘publications’ (default) or ‘grants’.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – Verbose mode, by default False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dataframe containing experts details, including the dimensions URL of the experts.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.Dataframe</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dimcli.functions</span> <span class="kn">import</span> <span class="n">build_reviewers_matrix</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">abstracts</span> <span class="o">=</span> <span class="p">[</span>
+<span class="go">...:     {</span>
+<span class="go">...:     &#39;id&#39; : &#39;A1&#39;,</span>
+<span class="go">...:     &#39;text&#39; : We describe monocrystalline graphitic films, which are a few atoms thick but are nonetheless stable under ambient conditions,</span>
+<span class="go">...: metallic, and of remarkably high quality. The films are found to be a two-dimensional semimetal with a tiny overlap between</span>
+<span class="go">...: valence and conductance bands, and they exhibit a strong ambipolar electric field effect such that electrons and</span>
+<span class="go">...: holes in concentrations up to 10 per square centimeter and with room-temperature mobilities of approximately 10,000 square</span>
+<span class="go">...: centimeters per volt-second can be induced by applying gate voltage.&quot;</span>
+<span class="go">...:     },</span>
+<span class="go">...:     {</span>
+<span class="go">...:     &#39;id&#39; : &quot;A2&quot;,</span>
+<span class="go">...:     &#39;text&#39; : &quot;&quot;The physicochemical properties of a molecule-metal interface, in principle, can play a significant role in tuning the electronic properties</span>
+<span class="go">...: of organic devices. In this report, we demonstrate an electrode engineering approach in a robust, reproducible molecular memristor that</span>
+<span class="go">...: enables a colossal tunability in both switching voltage (from 130 mV to 4 V i.e. &gt;2500% variation) and current (by ~6 orders of magnitude).</span>
+<span class="go">...: This provides a spectrum of device design parameters that can be “dialed-in” to create fast, scalable and ultralow energy organic</span>
+<span class="go">...: memristors optimal for applications spanning digital memory, logic circuits and brain-inspired computing.&quot;</span>
+<span class="go">...:     }</span>
+<span class="go">...: ]</span>
+<span class="go">...:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">candidates</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ur.01146544531.57&quot;</span><span class="p">,</span> <span class="s2">&quot;ur.011535264111.51&quot;</span><span class="p">,</span> <span class="s2">&quot;ur.0767105504.29&quot;</span><span class="p">,</span>
+<span class="go">...:               &quot;ur.011513332561.53&quot;, &quot;ur.01055006635.53&quot;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">build_reviewers_matrix</span><span class="p">(</span><span class="n">abstracts</span><span class="p">,</span> <span class="n">candidates</span><span class="p">)</span>
+<span class="go">           researcher         A1        A2</span>
+<span class="go">0   ur.01146544531.57   8.185277  0.000000</span>
+<span class="go">1  ur.011535264111.51   8.203130  0.000000</span>
+<span class="go">2    ur.0767105504.29   8.686363  2.626348</span>
+<span class="go">3  ur.011513332561.53  12.920304  1.551920</span>
+<span class="go">4   ur.01055006635.53   6.756862  1.797738</span>
+</pre></div>
+</div>
+</dd></dl>
+
 <dl class="py function">
 <dt id="dimcli.core.functions.extract_affiliations">
 <code class="sig-prename descclassname">dimcli.core.functions.</code><code class="sig-name descname">extract_affiliations</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">affiliations</span></em>, <em class="sig-param"><span class="n">as_json</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/functions.html#extract_affiliations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.core.functions.extract_affiliations" title="Permalink to this definition">¶</a></dt>
@@ -1040,7 +1098,7 @@ See also: <a class="reference external" href="https://docs.dimensions.ai/dsl/fun
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>abstract</strong> (<em>str</em>) – The abstract text used to identify experts. Concepts are automatically extracted from it.</p></li>
-<li><p><strong>max_concepts</strong> (<em>int</em><em>, </em><em>optional</em>) – The maximum number of concepts to use for the identification. Concepts are ranked by relevance. By default, this is 15.</p></li>
+<li><p><strong>max_concepts</strong> (<em>int</em><em>, </em><em>optional</em>) – The maximum number of concepts to use for the identification. By default, this is 15. Concepts are ranked by relevance.</p></li>
 <li><p><strong>connector</strong> (<em>str</em><em>, </em><em>optional</em>) – The logical connector used in the concepts query. Should be either ‘AND’, or ‘OR’ (=default).</p></li>
 <li><p><strong>conflicts</strong> (<em>list</em><em>, </em><em>optional</em>) – A list of Dimensions researchers IDs used to determine overlap / conflicts of interest.</p></li>
 <li><p><strong>extra_dsl</strong> (<em>str</em><em>, </em><em>optional</em>) – A DSL clause to add after the main concepts search statement. Default is <code class="docutils literal notranslate"><span class="pre">where</span> <span class="pre">year</span> <span class="pre">&gt;=</span> <span class="pre">2010</span></code>.</p></li>
@@ -1064,9 +1122,10 @@ See also: <a class="reference external" href="https://docs.dimensions.ai/dsl/fun
 <span class="go">identify experts</span>
 <span class="go">    from concepts &quot;&quot;landing&quot; OR &quot;way&quot; OR &quot;mainstream&quot; OR &quot;moon landing&quot; OR &quot;supercomputers&quot;&quot;</span>
 <span class="go">    using publications where year &gt;= 2010</span>
-<span class="go">return experts[all+dimensions_url-obsolete]```</span>
+<span class="go">return experts[all+dimensions_url-obsolete]</span>
 <span class="go">&quot;</span>
 <span class="go">Experts found: 20</span>
+<span class="go">[..experts list..]</span>
 </pre></div>
 </div>
 </dd></dl>

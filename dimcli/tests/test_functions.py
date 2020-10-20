@@ -143,5 +143,54 @@ BACKGROUND: In order to make further gains in preventing newborn deaths, effecti
         click.secho("Completed test succesfully", fg="green")
 
 
+
+    def test_006(self):
+        click.secho("\nTEST 006: Build reviewers matrix.", fg="green")
+        # ----
+
+        click.secho("No text, no results", fg="magenta")
+        try:
+            print(build_reviewers_matrix("", "", verbose=True))
+        except:
+            pass
+
+        click.secho("Some text, random candidates, returns no results", fg="magenta")
+        print(build_reviewers_matrix(["lorem", "some"], ["ur.1234", "ur.4354w6"], verbose=True))
+
+        abstracts = [
+            {
+            'id' : 'A1',
+            'text' : """We describe monocrystalline graphitic films, which are a few atoms thick but are nonetheless stable under ambient conditions,
+        metallic, and of remarkably high quality. The films are found to be a two-dimensional semimetal with a tiny overlap between
+        valence and conductance bands, and they exhibit a strong ambipolar electric field effect such that electrons and
+        holes in concentrations up to 10 per square centimeter and with room-temperature mobilities of approximately 10,000 square
+        centimeters per volt-second can be induced by applying gate voltage.
+        """
+            },
+            {
+            'id' : "A2",
+            'text' : """The physicochemical properties of a molecule-metal interface, in principle, can play a significant role in tuning the electronic properties 
+        of organic devices. In this report, we demonstrate an electrode engineering approach in a robust, reproducible molecular memristor that 
+        enables a colossal tunability in both switching voltage (from 130 mV to 4 V i.e. >2500% variation) and current (by ~6 orders of magnitude). 
+        This provides a spectrum of device design parameters that can be “dialed-in” to create fast, scalable and ultralow energy organic 
+        memristors optimal for applications spanning digital memory, logic circuits and brain-inspired computing.
+        """
+        }
+        ]
+
+        candidates = ["ur.01146544531.57", "ur.011535264111.51", "ur.0767105504.29", 
+                    "ur.011513332561.53", "ur.01055006635.53"]
+
+
+        click.secho("Good input data, default params", fg="magenta")
+        print(build_reviewers_matrix(abstracts, candidates, max_concepts=10, source="grants"))
+
+        click.secho("Good input data, custom params max_concepts=10, source=grants", fg="magenta")
+        print(build_reviewers_matrix(abstracts, candidates, max_concepts=10, source="grants"))
+        # ----
+
+        click.secho("Completed test succesfully", fg="green")
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -9,6 +9,8 @@ NOTE: these objects are attached to the top level ``dimcli.functions`` module. S
 import json
 import pandas as pd
 import click
+from tqdm import tqdm
+import time
 
 from .api import Dsl
 from .auth import is_logged_in
@@ -145,13 +147,14 @@ def extract_classification(title, abstract, system="", verbose=True):
                                         abstract="{dsl_escape(abstract)}", 
                                         system="{system}")""")
         else:
-            if verbose: print(f"""No system provided, using all known systems ({len(classifications)} queries). Warning: This may lead to 'too many API queries' errors.""")
+            if verbose: print(f"""No system provided, using all known systems ({len(classifications)} queries).""")
             d = {}
             for classifier in classifications:
                 new = dsl.query(f"""classify(title="{dsl_escape(title)}", 
                                         abstract="{dsl_escape(abstract)}", 
                                         system="{classifier}")""").json
                 d.update(new)
+                time.sleep(1)
             return d
 
 
@@ -439,7 +442,8 @@ def identify_experts(abstract, max_concepts=15, connector="OR", conflicts=None, 
     # get concepts
     df = extract_concepts(abstract)
     if verbose: click.secho(f"Concepts extracted: {len(df)}")
-    if len(df) == 0: return
+    if len(df) == 0: 
+        return []
     concepts_list = df.concept[:max_concepts]
     concepts_list_query = f" {connector} ".join(['"%s"' % x for x in concepts_list])
     
@@ -463,3 +467,107 @@ def identify_experts(abstract, max_concepts=15, connector="OR", conflicts=None, 
     else:
         if verbose: click.secho(f"Experts found: 0" )
         return []
+
+
+
+
+
+
+def build_reviewers_matrix(abstracts, candidates, max_concepts=15, connector="OR", source="publications", verbose=False):
+    """Generates a matrix of candidate reviewers for abstracts, using the expert identification workflow. See also https://docs.dimensions.ai/dsl/expert-identification.html
+
+    If the input abstracts include identifiers, then those are used in the resulting matrix. 
+    Alternatively, a simple list of strings as input will result in a matrix where the identifiers are auto-generated from the abstracts order (first one is 1, etc..).
+    
+    Parameters
+    ----------
+    abstracts : list
+        The list of abstracts used for matching reviewers. Should be either a list of strings, or a list of dictionaries ``{'id' : '{unique-ID}', 'text' : '{the-abstract}'}`` including a unique identifier for each abstract.  
+    candidates : list
+        A list of Dimensions researchers IDs. 
+    max_concepts : int, optional
+        The maximum number of concepts to use for the matching. By default, this is 15. Concepts are ranked by relevance.
+    connector : str, optional
+        The logical connector used in the concepts query. Should be either 'AND', or 'OR' (=default).
+    source : str, optional
+        The DSL source to derive experts from. Either 'publications' (default) or 'grants'.  
+    verbose : bool, optional
+        Verbose mode, by default False
+
+    Returns
+    -------
+    pandas.Dataframe
+        A dataframe containing experts details, including the dimensions URL of the experts. 
+
+    Example
+    --------
+    >>> from dimcli.functions import build_reviewers_matrix
+    >>> abstracts = [
+    ...:     {
+    ...:     'id' : 'A1',
+    ...:     'text' : We describe monocrystalline graphitic films, which are a few atoms thick but are nonetheless stable under ambient conditions,
+    ...: metallic, and of remarkably high quality. The films are found to be a two-dimensional semimetal with a tiny overlap between
+    ...: valence and conductance bands, and they exhibit a strong ambipolar electric field effect such that electrons and
+    ...: holes in concentrations up to 10 per square centimeter and with room-temperature mobilities of approximately 10,000 square
+    ...: centimeters per volt-second can be induced by applying gate voltage."
+    ...:     },
+    ...:     {
+    ...:     'id' : "A2",
+    ...:     'text' : ""The physicochemical properties of a molecule-metal interface, in principle, can play a significant role in tuning the electronic properties
+    ...: of organic devices. In this report, we demonstrate an electrode engineering approach in a robust, reproducible molecular memristor that
+    ...: enables a colossal tunability in both switching voltage (from 130 mV to 4 V i.e. >2500% variation) and current (by ~6 orders of magnitude).
+    ...: This provides a spectrum of device design parameters that can be “dialed-in” to create fast, scalable and ultralow energy organic
+    ...: memristors optimal for applications spanning digital memory, logic circuits and brain-inspired computing."
+    ...:     }
+    ...: ]
+    ...:
+    >>> candidates = ["ur.01146544531.57", "ur.011535264111.51", "ur.0767105504.29",
+    ...:               "ur.011513332561.53", "ur.01055006635.53"]
+    >>> build_reviewers_matrix(abstracts, candidates)
+               researcher         A1        A2
+    0   ur.01146544531.57   8.185277  0.000000
+    1  ur.011535264111.51   8.203130  0.000000
+    2    ur.0767105504.29   8.686363  2.626348
+    3  ur.011513332561.53  12.920304  1.551920
+    4   ur.01055006635.53   6.756862  1.797738
+    """    
+
+
+    if type(abstracts) == list and type(abstracts[0]) == str:
+        abstracts = [{'id' : x+1, 'text' : y} for x,y in enumerate(abstracts)]
+    elif type(abstracts) == list and type(abstracts[0]) == dict and 'id' in abstracts[0]:
+        pass
+    else:
+        raise Exception("Invalid abstracts data: must be either a list of strings, or a list of dictionaries.") 
+
+
+    if type(candidates) == list and candidates[0].startswith("ur."):
+        pass
+    else:
+        raise Exception("Invalid candidates data: must be a list of Dimensions researchers IDs.") 
+
+    
+    # boostrap matrix table
+    matrix = pd.DataFrame(columns=["researcher"])
+    matrix["researcher"] = candidates
+
+    # helper method: get score from candidates dataframe 
+    def _get_score(experts_df, resid):
+        try:
+            return experts_df.query(f"id=='{resid}'").iloc[0]['score']
+        except:
+            return 0
+
+    # finally..
+    for abstract in tqdm(abstracts):
+        results = identify_experts(abstract['text'], 
+                                   max_concepts = max_concepts,
+                                   connector = connector,
+                                   source=source,
+                                   extra_dsl=f"where researchers in {json.dumps(candidates)}", 
+                                   verbose=verbose)
+        if len(results):
+            matrix[abstract['id']] = matrix["researcher"].apply(lambda x: _get_score(results, x))
+        time.sleep(1)
+
+    return matrix

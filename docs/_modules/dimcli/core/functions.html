@@ -151,7 +151,6 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Python wrappers for the DSL functions.</span>
 <span class="sd">See also: https://docs.dimensions.ai/dsl/functions.html</span>
-
 <span class="sd">NOTE: these objects are attached to the top level ``dimcli.functions`` module. So you can load them as follows:</span>
 
 <span class="sd">&gt;&gt;&gt; from dimcli.functions import *</span>
@@ -160,6 +159,8 @@
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">click</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span> <span class="nn">time</span>
 
 <span class="kn">from</span> <span class="nn">.api</span> <span class="kn">import</span> <span class="n">Dsl</span>
 <span class="kn">from</span> <span class="nn">.auth</span> <span class="kn">import</span> <span class="n">is_logged_in</span>
@@ -296,13 +297,14 @@
 <span class="s2">                                        abstract=&quot;</span><span class="si">{</span><span class="n">dsl_escape</span><span class="p">(</span><span class="n">abstract</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;, </span>
 <span class="s2">                                        system=&quot;</span><span class="si">{</span><span class="n">system</span><span class="si">}</span><span class="s2">&quot;)&quot;&quot;&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;No system provided, using all known systems (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">classifications</span><span class="p">)</span><span class="si">}</span><span class="s2"> queries). Warning: This may lead to &#39;too many API queries&#39; errors.&quot;&quot;&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;No system provided, using all known systems (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">classifications</span><span class="p">)</span><span class="si">}</span><span class="s2"> queries).&quot;&quot;&quot;</span><span class="p">)</span>
             <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="k">for</span> <span class="n">classifier</span> <span class="ow">in</span> <span class="n">classifications</span><span class="p">:</span>
                 <span class="n">new</span> <span class="o">=</span> <span class="n">dsl</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;classify(title=&quot;</span><span class="si">{</span><span class="n">dsl_escape</span><span class="p">(</span><span class="n">title</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;, </span>
 <span class="s2">                                        abstract=&quot;</span><span class="si">{</span><span class="n">dsl_escape</span><span class="p">(</span><span class="n">abstract</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;, </span>
 <span class="s2">                                        system=&quot;</span><span class="si">{</span><span class="n">classifier</span><span class="si">}</span><span class="s2">&quot;)&quot;&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
                 <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">new</span><span class="p">)</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">d</span></div>
 
 
@@ -535,7 +537,7 @@
 <span class="sd">    abstract : str</span>
 <span class="sd">        The abstract text used to identify experts. Concepts are automatically extracted from it.</span>
 <span class="sd">    max_concepts : int, optional</span>
-<span class="sd">        The maximum number of concepts to use for the identification. Concepts are ranked by relevance. By default, this is 15.</span>
+<span class="sd">        The maximum number of concepts to use for the identification. By default, this is 15. Concepts are ranked by relevance.</span>
 <span class="sd">    connector : str, optional</span>
 <span class="sd">        The logical connector used in the concepts query. Should be either &#39;AND&#39;, or &#39;OR&#39; (=default).</span>
 <span class="sd">    conflicts : list, optional</span>
@@ -562,9 +564,10 @@
 <span class="sd">    identify experts</span>
 <span class="sd">        from concepts &quot;\&quot;landing\&quot; OR \&quot;way\&quot; OR \&quot;mainstream\&quot; OR \&quot;moon landing\&quot; OR \&quot;supercomputers\&quot;&quot;</span>
 <span class="sd">        using publications where year &gt;= 2010</span>
-<span class="sd">    return experts[all+dimensions_url-obsolete]``` </span>
+<span class="sd">    return experts[all+dimensions_url-obsolete] </span>
 <span class="sd">    &quot;</span>
 <span class="sd">    Experts found: 20</span>
+<span class="sd">    [..experts list..]</span>
 <span class="sd">    &quot;&quot;&quot;</span>       
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">is_logged_in</span><span class="p">():</span> <span class="k">return</span>
@@ -589,7 +592,8 @@
     <span class="c1"># get concepts</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">extract_concepts</span><span class="p">(</span><span class="n">abstract</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Concepts extracted: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="k">return</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> 
+        <span class="k">return</span> <span class="p">[]</span>
     <span class="n">concepts_list</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">concept</span><span class="p">[:</span><span class="n">max_concepts</span><span class="p">]</span>
     <span class="n">concepts_list_query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">connector</span><span class="si">}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;&quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">concepts_list</span><span class="p">])</span>
     
@@ -613,6 +617,110 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Experts found: 0&quot;</span> <span class="p">)</span>
         <span class="k">return</span> <span class="p">[]</span></div>
+
+
+
+
+
+
+<div class="viewcode-block" id="build_reviewers_matrix"><a class="viewcode-back" href="../../../modules.html#dimcli.core.functions.build_reviewers_matrix">[docs]</a><span class="k">def</span> <span class="nf">build_reviewers_matrix</span><span class="p">(</span><span class="n">abstracts</span><span class="p">,</span> <span class="n">candidates</span><span class="p">,</span> <span class="n">max_concepts</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">connector</span><span class="o">=</span><span class="s2">&quot;OR&quot;</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="s2">&quot;publications&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generates a matrix of candidate reviewers for abstracts, using the expert identification workflow. See also https://docs.dimensions.ai/dsl/expert-identification.html</span>
+
+<span class="sd">    If the input abstracts include identifiers, then those are used in the resulting matrix. </span>
+<span class="sd">    Alternatively, a simple list of strings as input will result in a matrix where the identifiers are auto-generated from the abstracts order (first one is 1, etc..).</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    abstracts : list</span>
+<span class="sd">        The list of abstracts used for matching reviewers. Should be either a list of strings, or a list of dictionaries ``{&#39;id&#39; : &#39;{unique-ID}&#39;, &#39;text&#39; : &#39;{the-abstract}&#39;}`` including a unique identifier for each abstract.  </span>
+<span class="sd">    candidates : list</span>
+<span class="sd">        A list of Dimensions researchers IDs. </span>
+<span class="sd">    max_concepts : int, optional</span>
+<span class="sd">        The maximum number of concepts to use for the matching. By default, this is 15. Concepts are ranked by relevance.</span>
+<span class="sd">    connector : str, optional</span>
+<span class="sd">        The logical connector used in the concepts query. Should be either &#39;AND&#39;, or &#39;OR&#39; (=default).</span>
+<span class="sd">    source : str, optional</span>
+<span class="sd">        The DSL source to derive experts from. Either &#39;publications&#39; (default) or &#39;grants&#39;.  </span>
+<span class="sd">    verbose : bool, optional</span>
+<span class="sd">        Verbose mode, by default False</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas.Dataframe</span>
+<span class="sd">        A dataframe containing experts details, including the dimensions URL of the experts. </span>
+
+<span class="sd">    Example</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from dimcli.functions import build_reviewers_matrix</span>
+<span class="sd">    &gt;&gt;&gt; abstracts = [</span>
+<span class="sd">    ...:     {</span>
+<span class="sd">    ...:     &#39;id&#39; : &#39;A1&#39;,</span>
+<span class="sd">    ...:     &#39;text&#39; : We describe monocrystalline graphitic films, which are a few atoms thick but are nonetheless stable under ambient conditions,</span>
+<span class="sd">    ...: metallic, and of remarkably high quality. The films are found to be a two-dimensional semimetal with a tiny overlap between</span>
+<span class="sd">    ...: valence and conductance bands, and they exhibit a strong ambipolar electric field effect such that electrons and</span>
+<span class="sd">    ...: holes in concentrations up to 10 per square centimeter and with room-temperature mobilities of approximately 10,000 square</span>
+<span class="sd">    ...: centimeters per volt-second can be induced by applying gate voltage.&quot;</span>
+<span class="sd">    ...:     },</span>
+<span class="sd">    ...:     {</span>
+<span class="sd">    ...:     &#39;id&#39; : &quot;A2&quot;,</span>
+<span class="sd">    ...:     &#39;text&#39; : &quot;&quot;The physicochemical properties of a molecule-metal interface, in principle, can play a significant role in tuning the electronic properties</span>
+<span class="sd">    ...: of organic devices. In this report, we demonstrate an electrode engineering approach in a robust, reproducible molecular memristor that</span>
+<span class="sd">    ...: enables a colossal tunability in both switching voltage (from 130 mV to 4 V i.e. &gt;2500% variation) and current (by ~6 orders of magnitude).</span>
+<span class="sd">    ...: This provides a spectrum of device design parameters that can be “dialed-in” to create fast, scalable and ultralow energy organic</span>
+<span class="sd">    ...: memristors optimal for applications spanning digital memory, logic circuits and brain-inspired computing.&quot;</span>
+<span class="sd">    ...:     }</span>
+<span class="sd">    ...: ]</span>
+<span class="sd">    ...:</span>
+<span class="sd">    &gt;&gt;&gt; candidates = [&quot;ur.01146544531.57&quot;, &quot;ur.011535264111.51&quot;, &quot;ur.0767105504.29&quot;,</span>
+<span class="sd">    ...:               &quot;ur.011513332561.53&quot;, &quot;ur.01055006635.53&quot;]</span>
+<span class="sd">    &gt;&gt;&gt; build_reviewers_matrix(abstracts, candidates)</span>
+<span class="sd">               researcher         A1        A2</span>
+<span class="sd">    0   ur.01146544531.57   8.185277  0.000000</span>
+<span class="sd">    1  ur.011535264111.51   8.203130  0.000000</span>
+<span class="sd">    2    ur.0767105504.29   8.686363  2.626348</span>
+<span class="sd">    3  ur.011513332561.53  12.920304  1.551920</span>
+<span class="sd">    4   ur.01055006635.53   6.756862  1.797738</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
+
+
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">abstracts</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">abstracts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">abstracts</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;id&#39;</span> <span class="p">:</span> <span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;text&#39;</span> <span class="p">:</span> <span class="n">y</span><span class="p">}</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">abstracts</span><span class="p">)]</span>
+    <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">abstracts</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">abstracts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="nb">dict</span> <span class="ow">and</span> <span class="s1">&#39;id&#39;</span> <span class="ow">in</span> <span class="n">abstracts</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="k">pass</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Invalid abstracts data: must be either a list of strings, or a list of dictionaries.&quot;</span><span class="p">)</span> 
+
+
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span> <span class="ow">and</span> <span class="n">candidates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;ur.&quot;</span><span class="p">):</span>
+        <span class="k">pass</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Invalid candidates data: must be a list of Dimensions researchers IDs.&quot;</span><span class="p">)</span> 
+
+    
+    <span class="c1"># boostrap matrix table</span>
+    <span class="n">matrix</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;researcher&quot;</span><span class="p">])</span>
+    <span class="n">matrix</span><span class="p">[</span><span class="s2">&quot;researcher&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">candidates</span>
+
+    <span class="c1"># helper method: get score from candidates dataframe </span>
+    <span class="k">def</span> <span class="nf">_get_score</span><span class="p">(</span><span class="n">experts_df</span><span class="p">,</span> <span class="n">resid</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">experts_df</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;id==&#39;</span><span class="si">{</span><span class="n">resid</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;score&#39;</span><span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+
+    <span class="c1"># finally..</span>
+    <span class="k">for</span> <span class="n">abstract</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">abstracts</span><span class="p">):</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">identify_experts</span><span class="p">(</span><span class="n">abstract</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">],</span> 
+                                   <span class="n">max_concepts</span> <span class="o">=</span> <span class="n">max_concepts</span><span class="p">,</span>
+                                   <span class="n">connector</span> <span class="o">=</span> <span class="n">connector</span><span class="p">,</span>
+                                   <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">,</span>
+                                   <span class="n">extra_dsl</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;where researchers in </span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> 
+                                   <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
+            <span class="n">matrix</span><span class="p">[</span><span class="n">abstract</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">[</span><span class="s2">&quot;researcher&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">_get_score</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">matrix</span></div>
 </pre></div>
 
            </div>
