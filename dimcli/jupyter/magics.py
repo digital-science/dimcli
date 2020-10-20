@@ -12,6 +12,7 @@ from IPython.core.magic import line_magic, cell_magic, line_cell_magic, Magics, 
 from ..VERSION import VERSION
 
 from ..core.api import Dsl
+from ..core.functions import *
 from ..core.auth import get_connection, is_logged_in
 from ..utils.all import *
 
@@ -83,8 +84,6 @@ class DslMagics(Magics):
 
     @line_cell_magic
     def dsldf(self, line, cell=None):
-        """Dimcli Magic method: query the Dimensions DSL API with the text passed - return a pandas dataframe.
-        """
         """Magic command to run a single DSL query, results are transformed to a Pandas DataFrame. 
 
         Can be used as a single-line (``%dsldf``) or multi-line (``%%dsldf``) command. Requires an authenticated API session. Results are saved to a variable called ``dsl_last_results``.
@@ -241,6 +240,38 @@ class DslMagics(Magics):
             data = self._handle_query(line, loop=True).as_dataframe()
             self.shell.user_ns[self.results_var] = data
             return export_as_gsheets(data, line)
+
+
+    @line_cell_magic
+    def extract_concepts(self, line, cell=None):
+        """Magic command to run the `extract_concepts` function. Results are transformed to a Pandas DataFrame. Score are included by default.
+        
+        Parameters
+        ----------
+        cell: str
+            Text to extract concepts from. 
+
+        Returns
+        -------
+        pandas.DataFrame
+            A pandas dataframe containing the concepts and scores.      
+
+        Example
+        -------
+        >>> %%extract_concepts 
+        ... <text>
+
+        """
+
+        if self._handle_login():
+            if cell:
+                line = cell
+            data = line.replace("\n", "")
+            data = extract_concepts(data, with_scores=True, as_df=True)
+            self.shell.user_ns[self.results_var] = data
+            return data
+
+
 
     @line_magic
     def dsldocs(self, line):
