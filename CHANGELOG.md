@@ -3,6 +3,8 @@
 
 ## v 0.8
 
+* Dimcli module level documentation vastly updated
+  * See https://digital-science.github.io/dimcli/modules.html
 * new `utils` module: misc utilities all grouped under `dimcli.utils`
   * `dimcli.shortcuts` is deprecated in favor of `dimcli.utils` 
   * the pyvis wrapper is now located at `dimcli.utils.networkviz`
@@ -15,10 +17,9 @@
   * `extract_affiliations`
   * `identify_experts`
   * `build_reviewers_matrix`
-* CLI improvements
-  * ID resolver improvements
-* Dimcli module level documentation vastly updated
-  * https://digital-science.github.io/dimcli/modules.html
+* CLI - command line tool options improved
+  * options `-w` for webapp search, `-i` for webapp object ID resolver
+  
 
 ## v 0.7.5
 

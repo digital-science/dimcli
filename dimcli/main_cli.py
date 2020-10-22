@@ -45,16 +45,16 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 @click.option(
     "--history", is_flag=True, help="Open query history file.")
 @click.option(
-    "--identifier", "-i", help="Open Dimensions homepage from an object ID.")
+    "--identifier", "-i", help="Open Dimensions webapp from an object ID.")
 @click.option(
-    "--websearch", "-w", help="Search Dimensions with a quoted string.")
+    "--websearch", "-w", help="Search Dimensions webapp from a quoted string.")
 @click.pass_context
 def main_cli(ctx, instance_name=None, init=False, settings=False, checkversion=False, history=False, identifier=None, websearch=None):
     """
     Python client for the Dimensions Analytics API.
     More info: https://github.com/digital-science/dimcli
     """
-    if not identifier or websearch:
+    if not (identifier or websearch):
         click.secho("Dimcli - Dimensions API Client (" + VERSION + ")", dim=True)
 
     if init:
@@ -68,13 +68,16 @@ def main_cli(ctx, instance_name=None, init=False, settings=False, checkversion=F
     if identifier:
         url = dimensions_url(identifier)
         if not url: 
-            print("Cannot resolve automatically. Can be a patent, dataset or clinical trial ID. Falling back to search ..")
+            click.secho("Cannot resolve automatically. Can be a patent, dataset or clinical trial ID. Falling back to search ..")
             url = dimensions_search_url(identifier)
+        else:
+            click.secho("Got a match: " + url)
         webbrowser.open(url)
         return 
 
     if websearch:
         url = dimensions_search_url(websearch)
+        click.secho("Opening url: " + url)
         webbrowser.open(url)
         return 
 
