@@ -1,11 +1,11 @@
 """
-[DEPRECATED]
-
-NOTE this module is deprecated and will be removed in future versions.
+**DEPRECATED** 
+NOTE This module is deprecated and will be removed in future versions.
 
 Use instead `dimcli.utils`
 """
 
+print("WARNING: this module is deprecated. Use instead ``from dimcli.utils import *``")
 
 from . import *
 

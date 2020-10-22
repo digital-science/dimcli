@@ -11,15 +11,14 @@
   * `%%dslloopgsheets`
   * `%%extract_concepts`
   * `%%identify_experts`
-* module documentation vastly updated
-  * https://digital-science.github.io/dimcli/modules.html
 * new DSL functions Python wrappers: 
   * `extract_affiliations`
   * `identify_experts`
   * `build_reviewers_matrix`
 * CLI improvements
   * ID resolver improvements
-
+* Dimcli module level documentation vastly updated
+  * https://digital-science.github.io/dimcli/modules.html
 
 ## v 0.7.5
 

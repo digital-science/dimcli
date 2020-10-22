@@ -1,8 +1,8 @@
 """
-NOTE this should be replaced with utils.networkviz
+**DEPRECATED** 
+NOTE This module is deprecated and will be removed in future versions.
 
-This .core module is deprecated and will be removed later.
-
+Use instead `utils.networkviz`
 """
 
 try:
@@ -14,6 +14,8 @@ except ImportError:
 import IPython
 import os
 from .. import COLAB_ENV
+
+print("WARNING: this module is deprecated. Use instead ``from utils.networkviz import *``")
 
 
 class NetworkViz(PyvisNetwork):

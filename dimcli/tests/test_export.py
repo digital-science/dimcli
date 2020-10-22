@@ -15,7 +15,7 @@ import configparser
 from .. import *
 from ..core.auth import USER_CONFIG_FILE_PATH
 from ..core.api import DslDataset
-from ..shortcuts import *
+from ..utils import *
 
 
 class TestOne(unittest.TestCase):

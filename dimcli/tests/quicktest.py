@@ -15,7 +15,7 @@ import os
 import requests
 
 from .. import *
-from ..shortcuts import *
+from ..utils import *
 from ..core.converters import *
 
 

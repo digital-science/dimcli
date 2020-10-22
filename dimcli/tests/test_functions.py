@@ -14,9 +14,8 @@ import configparser
 
 from .. import *
 from ..core.auth import USER_CONFIG_FILE_PATH
-from ..utils.dim_utils import dimensions_url
 from ..core.api import DslDataset
-from ..shortcuts import *
+from ..utils import *
 from ..functions import *
 
 
