@@ -15,7 +15,7 @@ import time
 from .api import Dsl
 from .auth import is_logged_in
 
-from ..utils.utils_dimensions import dsl_escape
+from ..utils.dim_utils import dsl_escape
 
 
 def extract_concepts(text, scores=True, as_df=True):

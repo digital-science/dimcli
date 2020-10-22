@@ -9,5 +9,5 @@ NOTE: these functions are attached to the top level ``dimcli.utils`` module. E.g
 
 """
 
-from .utils_general import *
-from .utils_dimensions import *
+from .misc_utils import *
+from .dim_utils import *

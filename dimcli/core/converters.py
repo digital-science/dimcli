@@ -1,4 +1,4 @@
-from ..utils.utils_dimensions import dimensions_url
+from ..utils.dim_utils import dimensions_url
 
 
 # ===========

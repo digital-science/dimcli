@@ -7,7 +7,7 @@ import time
 import json
 import click
 
-from ..utils.walkup import *
+from ..utils.misc_utils import walk_up
 
 
 USER_DIR = os.path.expanduser("~/.dimensions/")

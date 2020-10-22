@@ -31,7 +31,7 @@ dimcli.core.functions
 dimcli.utils.dimensions
 -------------------------------
 
-.. automodule:: dimcli.utils.utils_dimensions
+.. automodule:: dimcli.utils.dim_utils
     :members: 
     :show-inheritance:
 
@@ -40,7 +40,7 @@ dimcli.utils.dimensions
 dimcli.utils.general
 -------------------------------
 
-.. automodule:: dimcli.utils.utils_general
+.. automodule:: dimcli.utils.misc_utils
     :members: 
     :show-inheritance:
 

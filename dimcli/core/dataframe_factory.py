@@ -5,7 +5,7 @@ try:
 except:
     from pandas.io.json import json_normalize
 
-from ..utils.utils_general import normalize_key, exists_key_in_dicts_list
+from ..utils.misc_utils import normalize_key, exists_key_in_dicts_list
 
 
 

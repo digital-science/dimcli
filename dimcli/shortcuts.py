@@ -9,5 +9,5 @@ Use instead `dimcli.utils`
 
 from . import *
 
-from .utils.utils_general import *
-from .utils.utils_dimensions import *
+from .utils.misc_utils import *
+from .utils.dim_utils import *

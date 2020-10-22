@@ -6,9 +6,9 @@ Quick way to import all utils
 """
 
 
-from .utils_general import *
-from .utils_dimensions import *
-from .utils_repl import *
+from .misc_utils import *
+from .dim_utils import *
+from .repl_utils import *
 from .walkup import *
 
 
