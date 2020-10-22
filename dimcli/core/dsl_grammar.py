@@ -5,8 +5,8 @@
 # need a structure that contains desc / and possibly other lang metadata
 # then maybe we can have 'children' as a key for nested objects
 
-from .dsl_grammar_dimcli import *
-from .dsl_grammar_language import *
+from .dsl_grammar_extras import *
+from .dsl_grammar_core import *
 from .dsl_grammar_categories import *
 
 if True:

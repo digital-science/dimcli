@@ -4,16 +4,19 @@
 ## v 0.8
 
 * new `utils` module: misc utilities all grouped under `dimcli.utils`
-* `dimcli.shortcuts` is replaced with `dimcli.utils` 
-* the pyvis port is now located at `dimcli.utils.networkviz`
-* new magic command: 
+  * `dimcli.shortcuts` is deprecated in favor of `dimcli.utils` 
+  * the pyvis wrapper is now located at `dimcli.utils.networkviz`
+* new magic commands: 
   * `%%dslgsheets` 
   * `%%dslloopgsheets`
   * `%%extract_concepts`
   * `%%identify_experts`
-* module documentation greatly improved: https://digital-science.github.io/dimcli/modules.html
-* function wrapper: `extract_affiliations`
-* function wrapper: `identify_experts`
+* module documentation vastly updated
+  * https://digital-science.github.io/dimcli/modules.html
+* new DSL functions Python wrappers: 
+  * `extract_affiliations`
+  * `identify_experts`
+  * `build_reviewers_matrix`
 * CLI improvements
   * ID resolver improvements
 
