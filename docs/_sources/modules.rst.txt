@@ -31,18 +31,19 @@ dimcli.core.functions
 dimcli.utils.dimensions
 -------------------------------
 
-.. automodule:: dimcli.utils.utils_dimensions
+.. automodule:: dimcli.utils.dim_utils
     :members: 
     :show-inheritance:
 
 
 
-dimcli.utils.general
+dimcli.utils.miscellaneous
 -------------------------------
 
-.. automodule:: dimcli.utils.utils_general
+.. automodule:: dimcli.utils.misc_utils
     :members: 
     :show-inheritance:
+
 
 dimcli.jupyter.magics 
 ----------------------

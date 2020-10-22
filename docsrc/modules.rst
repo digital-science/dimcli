@@ -37,12 +37,13 @@ dimcli.utils.dimensions
 
 
 
-dimcli.utils.general
+dimcli.utils.miscellaneous
 -------------------------------
 
 .. automodule:: dimcli.utils.misc_utils
     :members: 
     :show-inheritance:
+
 
 dimcli.jupyter.magics 
 ----------------------

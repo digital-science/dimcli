@@ -88,8 +88,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-dimcli.__init__">dimcli.login</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-dimcli.core.api">dimcli.core.api</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-dimcli.core.functions">dimcli.core.functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-dimcli.utils.utils_dimensions">dimcli.utils.dimensions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-dimcli.utils.utils_general">dimcli.utils.general</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-dimcli.utils.dim_utils">dimcli.utils.dimensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-dimcli.utils.misc_utils">dimcli.utils.miscellaneous</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-dimcli.jupyter.magics">dimcli.jupyter.magics</a></li>
 </ul>
 </li>
@@ -1131,18 +1131,16 @@ Alternatively, a simple list of strings as input will result in a matrix where t
 </dd></dl>
 
 </div>
-<div class="section" id="module-dimcli.utils.utils_dimensions">
-<span id="dimcli-utils-dimensions"></span><h2>dimcli.utils.dimensions<a class="headerlink" href="#module-dimcli.utils.utils_dimensions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-dimcli.utils.dim_utils">
+<span id="dimcli-utils-dimensions"></span><h2>dimcli.utils.dimensions<a class="headerlink" href="#module-dimcli.utils.dim_utils" title="Permalink to this headline">¶</a></h2>
 <p>Dimcli utilities for querying and working with Dimensions data.
 NOTE: these functions are attached to the top level <code class="docutils literal notranslate"><span class="pre">dimcli.utils</span></code> module. So you can load them as follows:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dimcli.utils</span> <span class="kn">import</span> <span class="n">dimensions_url</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dimensions_url</span><span class="p">(</span><span class="s2">&quot;pub.1127419018&quot;</span><span class="p">)</span>
-<span class="go">&#39;https://app.dimensions.ai/details/publication/pub.1127419018&#39;</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dimcli.utils</span> <span class="kn">import</span> <span class="o">*</span>
 </pre></div>
 </div>
 <dl class="py function">
-<dt id="dimcli.utils.utils_dimensions.dimensions_search_url">
-<code class="sig-prename descclassname">dimcli.utils.utils_dimensions.</code><code class="sig-name descname">dimensions_search_url</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">keywords_list_as_string</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/utils_dimensions.html#dimensions_search_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.utils_dimensions.dimensions_search_url" title="Permalink to this definition">¶</a></dt>
+<dt id="dimcli.utils.dim_utils.dimensions_search_url">
+<code class="sig-prename descclassname">dimcli.utils.dim_utils.</code><code class="sig-name descname">dimensions_search_url</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">keywords_list_as_string</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/dim_utils.html#dimensions_search_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.dim_utils.dimensions_search_url" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate a valid keyword search URL for Dimensions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1164,8 +1162,8 @@ NOTE: these functions are attached to the top level <code class="docutils litera
 </dd></dl>
 
 <dl class="py function">
-<dt id="dimcli.utils.utils_dimensions.dimensions_url">
-<code class="sig-prename descclassname">dimcli.utils.utils_dimensions.</code><code class="sig-name descname">dimensions_url</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj_id</span></em>, <em class="sig-param"><span class="n">obj_type</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/utils_dimensions.html#dimensions_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.utils_dimensions.dimensions_url" title="Permalink to this definition">¶</a></dt>
+<dt id="dimcli.utils.dim_utils.dimensions_url">
+<code class="sig-prename descclassname">dimcli.utils.dim_utils.</code><code class="sig-name descname">dimensions_url</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj_id</span></em>, <em class="sig-param"><span class="n">obj_type</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/dim_utils.html#dimensions_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.dim_utils.dimensions_url" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate a valid Dimensions URL for one of the available sources.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1190,8 +1188,8 @@ NOTE: these functions are attached to the top level <code class="docutils litera
 </dd></dl>
 
 <dl class="py function">
-<dt id="dimcli.utils.utils_dimensions.dsl_escape">
-<code class="sig-prename descclassname">dimcli.utils.utils_dimensions.</code><code class="sig-name descname">dsl_escape</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">stringa</span></em>, <em class="sig-param"><span class="n">all</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/utils_dimensions.html#dsl_escape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.utils_dimensions.dsl_escape" title="Permalink to this definition">¶</a></dt>
+<dt id="dimcli.utils.dim_utils.dsl_escape">
+<code class="sig-prename descclassname">dimcli.utils.dim_utils.</code><code class="sig-name descname">dsl_escape</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">stringa</span></em>, <em class="sig-param"><span class="n">all</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/dim_utils.html#dsl_escape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.dim_utils.dsl_escape" title="Permalink to this definition">¶</a></dt>
 <dd><p>Helper for escaping the full-text inner query strings, when they includes quotes.</p>
 <p>EG with the query string:
 ‘“2019-nCoV” OR “COVID-19” OR “SARS-CoV-2” OR ((“coronavirus”  OR “corona virus”) AND (Wuhan OR China))’</p>
@@ -1214,8 +1212,8 @@ NOTE: these functions are attached to the top level <code class="docutils litera
 </dd></dl>
 
 <dl class="py function">
-<dt id="dimcli.utils.utils_dimensions.dslquery">
-<code class="sig-prename descclassname">dimcli.utils.utils_dimensions.</code><code class="sig-name descname">dslquery</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">query_string</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/utils_dimensions.html#dslquery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.utils_dimensions.dslquery" title="Permalink to this definition">¶</a></dt>
+<dt id="dimcli.utils.dim_utils.dslquery">
+<code class="sig-prename descclassname">dimcli.utils.dim_utils.</code><code class="sig-name descname">dslquery</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">query_string</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/dim_utils.html#dslquery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.dim_utils.dslquery" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shortcut for running a query without instantiating dimcli.Dsl().</p>
 <p>Added for backward compatibility with legacy API tutorials. Requires file-based credentials for logging in.</p>
 <dl class="field-list simple">
@@ -1232,8 +1230,8 @@ NOTE: these functions are attached to the top level <code class="docutils litera
 </dd></dl>
 
 <dl class="py function">
-<dt id="dimcli.utils.utils_dimensions.dslquery_json">
-<code class="sig-prename descclassname">dimcli.utils.utils_dimensions.</code><code class="sig-name descname">dslquery_json</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">query_string</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/utils_dimensions.html#dslquery_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.utils_dimensions.dslquery_json" title="Permalink to this definition">¶</a></dt>
+<dt id="dimcli.utils.dim_utils.dslquery_json">
+<code class="sig-prename descclassname">dimcli.utils.dim_utils.</code><code class="sig-name descname">dslquery_json</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">query_string</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/dim_utils.html#dslquery_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.dim_utils.dslquery_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shortcut for running a query without instantiating dimcli.Dsl(). Same as <code class="docutils literal notranslate"><span class="pre">dslquery</span></code> but returns raw JSON instead of Api.DslDataset object</p>
 <p>Added for backward compatibility with legacy API tutorials. Requires file-based credentials for logging in.</p>
 <dl class="field-list simple">
@@ -1250,8 +1248,8 @@ NOTE: these functions are attached to the top level <code class="docutils litera
 </dd></dl>
 
 <dl class="py function">
-<dt id="dimcli.utils.utils_dimensions.dslqueryall">
-<code class="sig-prename descclassname">dimcli.utils.utils_dimensions.</code><code class="sig-name descname">dslqueryall</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">query_string</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/utils_dimensions.html#dslqueryall"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.utils_dimensions.dslqueryall" title="Permalink to this definition">¶</a></dt>
+<dt id="dimcli.utils.dim_utils.dslqueryall">
+<code class="sig-prename descclassname">dimcli.utils.dim_utils.</code><code class="sig-name descname">dslqueryall</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">query_string</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/dim_utils.html#dslqueryall"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.dim_utils.dslqueryall" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shortcut for running a loop query without instantiating dimcli.Dsl().</p>
 <p>Added for backward compatibility with legacy API tutorials. Requires file-based credentials for logging in.</p>
 <dl class="field-list simple">
@@ -1268,18 +1266,16 @@ NOTE: these functions are attached to the top level <code class="docutils litera
 </dd></dl>
 
 </div>
-<div class="section" id="module-dimcli.utils.utils_general">
-<span id="dimcli-utils-general"></span><h2>dimcli.utils.general<a class="headerlink" href="#module-dimcli.utils.utils_general" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-dimcli.utils.misc_utils">
+<span id="dimcli-utils-miscellaneous"></span><h2>dimcli.utils.miscellaneous<a class="headerlink" href="#module-dimcli.utils.misc_utils" title="Permalink to this headline">¶</a></h2>
 <p>Dimcli general purpose utilities for working with data.
 NOTE: these functions are attached to the top level <code class="docutils literal notranslate"><span class="pre">dimcli.utils</span></code> module. So you can import them as follows:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dimcli.utils</span> <span class="kn">import</span> <span class="n">chunks_of</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">chunks_of</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-<span class="go">[[0, 1, 2, 3, 4], [5, 6, 7, 8, 9]]</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dimcli.utils</span> <span class="kn">import</span> <span class="o">*</span>
 </pre></div>
 </div>
 <dl class="py function">
-<dt id="dimcli.utils.utils_general.chunks_of">
-<code class="sig-prename descclassname">dimcli.utils.utils_general.</code><code class="sig-name descname">chunks_of</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">size</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/utils_general.html#chunks_of"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.utils_general.chunks_of" title="Permalink to this definition">¶</a></dt>
+<dt id="dimcli.utils.misc_utils.chunks_of">
+<code class="sig-prename descclassname">dimcli.utils.misc_utils.</code><code class="sig-name descname">chunks_of</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">size</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/misc_utils.html#chunks_of"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.misc_utils.chunks_of" title="Permalink to this definition">¶</a></dt>
 <dd><p>Splits up a list or sequence in to chunks of selected size.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1309,8 +1305,8 @@ NOTE: these functions are attached to the top level <code class="docutils litera
 </dd></dl>
 
 <dl class="py function">
-<dt id="dimcli.utils.utils_general.exists_key_in_dicts_list">
-<code class="sig-prename descclassname">dimcli.utils.utils_general.</code><code class="sig-name descname">exists_key_in_dicts_list</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dict_list</span></em>, <em class="sig-param"><span class="n">key</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/utils_general.html#exists_key_in_dicts_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.utils_general.exists_key_in_dicts_list" title="Permalink to this definition">¶</a></dt>
+<dt id="dimcli.utils.misc_utils.exists_key_in_dicts_list">
+<code class="sig-prename descclassname">dimcli.utils.misc_utils.</code><code class="sig-name descname">exists_key_in_dicts_list</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dict_list</span></em>, <em class="sig-param"><span class="n">key</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/misc_utils.html#exists_key_in_dicts_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.misc_utils.exists_key_in_dicts_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>From a list of dicts, checks if a certain key is in one of the dicts in the list.</p>
 <p>See also <a class="reference external" href="https://stackoverflow.com/questions/14790980/how-can-i-check-if-key-exists-in-list-of-dicts-in-python">https://stackoverflow.com/questions/14790980/how-can-i-check-if-key-exists-in-list-of-dicts-in-python</a></p>
 <dl class="field-list simple">
@@ -1330,8 +1326,8 @@ NOTE: these functions are attached to the top level <code class="docutils litera
 </dd></dl>
 
 <dl class="py function">
-<dt id="dimcli.utils.utils_general.export_as_gsheets">
-<code class="sig-prename descclassname">dimcli.utils.utils_general.</code><code class="sig-name descname">export_as_gsheets</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_data</span></em>, <em class="sig-param"><span class="n">query</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">title</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/utils_general.html#export_as_gsheets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.utils_general.export_as_gsheets" title="Permalink to this definition">¶</a></dt>
+<dt id="dimcli.utils.misc_utils.export_as_gsheets">
+<code class="sig-prename descclassname">dimcli.utils.misc_utils.</code><code class="sig-name descname">export_as_gsheets</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_data</span></em>, <em class="sig-param"><span class="n">query</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">title</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/misc_utils.html#export_as_gsheets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.misc_utils.export_as_gsheets" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save data to google sheets with one-line.</p>
 <p>Works with raw JSON (from API), or even a Dataframe.</p>
 <dl class="field-list simple">
@@ -1378,8 +1374,8 @@ These steps are described at <a class="reference external" href="https://gspread
 </dd></dl>
 
 <dl class="py function">
-<dt id="dimcli.utils.utils_general.google_url">
-<code class="sig-prename descclassname">dimcli.utils.utils_general.</code><code class="sig-name descname">google_url</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">stringa</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/utils_general.html#google_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.utils_general.google_url" title="Permalink to this definition">¶</a></dt>
+<dt id="dimcli.utils.misc_utils.google_url">
+<code class="sig-prename descclassname">dimcli.utils.misc_utils.</code><code class="sig-name descname">google_url</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">stringa</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/misc_utils.html#google_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.misc_utils.google_url" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate a valid google search URL from a string (URL quoting is applied).</p>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dimcli.utils</span> <span class="kn">import</span> <span class="n">google_url</span>
@@ -1390,8 +1386,8 @@ These steps are described at <a class="reference external" href="https://gspread
 </dd></dl>
 
 <dl class="py function">
-<dt id="dimcli.utils.utils_general.normalize_key">
-<code class="sig-prename descclassname">dimcli.utils.utils_general.</code><code class="sig-name descname">normalize_key</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">key_name</span></em>, <em class="sig-param"><span class="n">dict_list</span></em>, <em class="sig-param"><span class="n">new_val</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/utils_general.html#normalize_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.utils_general.normalize_key" title="Permalink to this definition">¶</a></dt>
+<dt id="dimcli.utils.misc_utils.normalize_key">
+<code class="sig-prename descclassname">dimcli.utils.misc_utils.</code><code class="sig-name descname">normalize_key</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">key_name</span></em>, <em class="sig-param"><span class="n">dict_list</span></em>, <em class="sig-param"><span class="n">new_val</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/misc_utils.html#normalize_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.misc_utils.normalize_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensures the key always appear in a JSON dict/objects list by adding it when missing.</p>
 <p>UPDATE 2019-11-28
 v0.6.1.2: normalizes also ‘None’ values (to address 1.21 DSL change)</p>
@@ -1423,15 +1419,15 @@ v0.6.1.2: normalizes also ‘None’ values (to address 1.21 DSL change)</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="dimcli.utils.utils_general.open_multi_platform">
-<code class="sig-prename descclassname">dimcli.utils.utils_general.</code><code class="sig-name descname">open_multi_platform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fpath</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/utils_general.html#open_multi_platform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.utils_general.open_multi_platform" title="Permalink to this definition">¶</a></dt>
+<dt id="dimcli.utils.misc_utils.open_multi_platform">
+<code class="sig-prename descclassname">dimcli.utils.misc_utils.</code><code class="sig-name descname">open_multi_platform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fpath</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/misc_utils.html#open_multi_platform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.misc_utils.open_multi_platform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Open a file using the native OS tools, taking care of platform differences.</p>
 <p>Supports win, macos and linux.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="dimcli.utils.utils_general.save2File">
-<code class="sig-prename descclassname">dimcli.utils.utils_general.</code><code class="sig-name descname">save2File</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">contents</span></em>, <em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/utils_general.html#save2File"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.utils_general.save2File" title="Permalink to this definition">¶</a></dt>
+<dt id="dimcli.utils.misc_utils.save2File">
+<code class="sig-prename descclassname">dimcli.utils.misc_utils.</code><code class="sig-name descname">save2File</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">contents</span></em>, <em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/misc_utils.html#save2File"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.misc_utils.save2File" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save string contents to a file, creating the file if it doesn’t exist.</p>
 <p>NOTE Not generalized much, so use at your own risk.</p>
 <dl class="field-list simple">
@@ -1451,12 +1447,18 @@ v0.6.1.2: normalizes also ‘None’ values (to address 1.21 DSL change)</p>
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt id="dimcli.utils.misc_utils.walk_up">
+<code class="sig-prename descclassname">dimcli.utils.misc_utils.</code><code class="sig-name descname">walk_up</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bottom</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/misc_utils.html#walk_up"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.misc_utils.walk_up" title="Permalink to this definition">¶</a></dt>
+<dd><p>mimic os.walk, but walk ‘up’
+instead of down the directory tree</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-dimcli.jupyter.magics">
 <span id="dimcli-jupyter-magics"></span><h2>dimcli.jupyter.magics<a class="headerlink" href="#module-dimcli.jupyter.magics" title="Permalink to this headline">¶</a></h2>
-<p>Dimcli magic commands used with iPython / Jupyter environments only.</p>
-<p>By default the results of magic command queries are saved to a variable called <code class="docutils literal notranslate"><span class="pre">dsl_last_results</span></code>.</p>
-<p>See also: <a class="reference external" href="https://api-lab.dimensions.ai/cookbooks/1-getting-started/4-Dimcli-magic-commands.html">https://api-lab.dimensions.ai/cookbooks/1-getting-started/4-Dimcli-magic-commands.html</a></p>
+<p>Dimcli magic commands used with iPython / Jupyter environments only. See also: <a class="reference external" href="https://api-lab.dimensions.ai/cookbooks/1-getting-started/4-Dimcli-magic-commands.html">https://api-lab.dimensions.ai/cookbooks/1-getting-started/4-Dimcli-magic-commands.html</a></p>
+<p>NOTE All magic commands results get saved automatically to a variable named <code class="docutils literal notranslate"><span class="pre">dsl_last_results</span></code>.</p>
 <dl class="py class">
 <dt id="dimcli.jupyter.magics.DslMagics">
 <em class="property">class </em><code class="sig-prename descclassname">dimcli.jupyter.magics.</code><code class="sig-name descname">DslMagics</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/jupyter/magics.html#DslMagics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.jupyter.magics.DslMagics" title="Permalink to this definition">¶</a></dt>

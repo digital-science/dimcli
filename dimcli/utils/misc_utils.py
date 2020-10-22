@@ -2,9 +2,7 @@
 Dimcli general purpose utilities for working with data. 
 NOTE: these functions are attached to the top level ``dimcli.utils`` module. So you can import them as follows:
 
->>> from dimcli.utils import chunks_of
->>> list(chunks_of(a, 5))
-[[0, 1, 2, 3, 4], [5, 6, 7, 8, 9]]
+>>> from dimcli.utils import *
 
 """
 

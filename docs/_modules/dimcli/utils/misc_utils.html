@@ -1,0 +1,564 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>dimcli.utils.misc_utils &mdash; DimCli  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> DimCli
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started.html">Getting Started with Dimcli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Modules Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DimCli</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>dimcli.utils.misc_utils</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for dimcli.utils.misc_utils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Dimcli general purpose utilities for working with data. </span>
+<span class="sd">NOTE: these functions are attached to the top level ``dimcli.utils`` module. So you can import them as follows:</span>
+
+<span class="sd">&gt;&gt;&gt; from dimcli.utils import *</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+
+<span class="kn">import</span> <span class="nn">click</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">webbrowser</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">islice</span>
+
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">json_normalize</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">pandas.io.json</span> <span class="kn">import</span> <span class="n">json_normalize</span>
+
+
+
+<div class="viewcode-block" id="chunks_of"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.misc_utils.chunks_of">[docs]</a><span class="k">def</span> <span class="nf">chunks_of</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Splits up a list or sequence in to chunks of selected size. </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data: sequence</span>
+<span class="sd">        A sequence eg a list that needs to be chunked.</span>
+<span class="sd">    size: int</span>
+<span class="sd">        The number of items in each group.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Iterator</span>
+<span class="sd">        An iterable</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from dimcli.utils import chunks_of</span>
+<span class="sd">    &gt;&gt;&gt; a = range(10)</span>
+<span class="sd">    &gt;&gt;&gt; for x in chunks_of(a, 5):</span>
+<span class="sd">            print(len(x))</span>
+<span class="sd">    5</span>
+<span class="sd">    5</span>
+<span class="sd">    &gt;&gt;&gt; list(chunks_of(a, 5))</span>
+<span class="sd">    [[0, 1, 2, 3, 4], [5, 6, 7, 8, 9]]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">it</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">chunk</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">islice</span><span class="p">(</span><span class="n">it</span><span class="p">,</span> <span class="n">size</span><span class="p">))</span>
+    <span class="k">while</span> <span class="n">chunk</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">chunk</span>
+        <span class="n">chunk</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">islice</span><span class="p">(</span><span class="n">it</span><span class="p">,</span> <span class="n">size</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="save2File"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.misc_utils.save2File">[docs]</a><span class="k">def</span> <span class="nf">save2File</span><span class="p">(</span><span class="n">contents</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Save string contents to a file, creating the file if it doesn&#39;t exist.</span>
+
+<span class="sd">    NOTE Not generalized much, so use at your own risk.</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    contents: str</span>
+<span class="sd">        File contents</span>
+<span class="sd">    filename: str</span>
+<span class="sd">        Name of the file.</span>
+<span class="sd">    path: str</span>
+<span class="sd">        Full path of the file to save. If not existing, it gets created.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        The file path with format  &quot;file://...&quot;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">contents</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>  <span class="c1"># python will convert \n to os.linesep</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>  <span class="c1"># you can omit in most cases as the destructor will call it</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;file://&quot;</span> <span class="o">+</span> <span class="n">filename</span>
+    <span class="k">return</span> <span class="n">url</span></div>
+
+
+
+
+
+<div class="viewcode-block" id="open_multi_platform"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.misc_utils.open_multi_platform">[docs]</a><span class="k">def</span> <span class="nf">open_multi_platform</span><span class="p">(</span><span class="n">fpath</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Open a file using the native OS tools, taking care of platform differences. </span>
+
+<span class="sd">    Supports win, macos and linux.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="s2">&quot;Opening `</span><span class="si">%s</span><span class="s2">` ...&quot;</span> <span class="o">%</span> <span class="n">fpath</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s1">&#39;win32&#39;</span><span class="p">:</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="n">fpath</span><span class="p">],</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s1">&#39;darwin&#39;</span><span class="p">:</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="s1">&#39;open&#39;</span><span class="p">,</span> <span class="n">fpath</span><span class="p">])</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="s1">&#39;xdg-open&#39;</span><span class="p">,</span> <span class="n">fpath</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Couldnt find suitable opener for </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">fpath</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="exists_key_in_dicts_list"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.misc_utils.exists_key_in_dicts_list">[docs]</a><span class="k">def</span> <span class="nf">exists_key_in_dicts_list</span><span class="p">(</span><span class="n">dict_list</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;From a list of dicts, checks if a certain key is in one of the dicts in the list.</span>
+
+<span class="sd">    See also https://stackoverflow.com/questions/14790980/how-can-i-check-if-key-exists-in-list-of-dicts-in-python</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dict_list: list </span>
+<span class="sd">        A list of dictionaries.</span>
+<span class="sd">    key: obj </span>
+<span class="sd">        The obj to be found in dict keys</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Dict or None</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># return next((i for i,d in enumerate(dict_list) if key in d), None)</span>
+    <span class="k">return</span> <span class="nb">next</span><span class="p">((</span><span class="n">d</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">d</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dict_list</span><span class="p">)</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">d</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="normalize_key"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.misc_utils.normalize_key">[docs]</a><span class="k">def</span> <span class="nf">normalize_key</span><span class="p">(</span><span class="n">key_name</span><span class="p">,</span> <span class="n">dict_list</span><span class="p">,</span> <span class="n">new_val</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Ensures the key always appear in a JSON dict/objects list by adding it when missing.</span>
+
+<span class="sd">    UPDATE 2019-11-28</span>
+<span class="sd">    v0.6.1.2: normalizes also &#39;None&#39; values (to address 1.21 DSL change)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    key_name : obj</span>
+<span class="sd">        The dict key to normalize.</span>
+<span class="sd">    dict_list : list</span>
+<span class="sd">        List of dictionaries where to be processed.</span>
+<span class="sd">    new_val : obj, optional</span>
+<span class="sd">        Default value to add to the key, when not found. If `new_val` is not passed, it is inferred from first available non-empty value. </span>
+
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        Same dictionary being passed. Changes happen in-place.    </span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------------</span>
+<span class="sd">    &gt;&gt;&gt; for x in pubs_details.publications:</span>
+<span class="sd">            if not &#39;FOR&#39; in x:</span>
+<span class="sd">                x[&#39;FOR&#39;] = []</span>
+
+<span class="sd">    becomes simply:</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; normalize_key(&quot;FOR&quot;, pubs_details.publications)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">new_val</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">dict_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">key_name</span> <span class="ow">in</span> <span class="n">x</span><span class="p">:</span>
+                <span class="n">new_val</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">key_name</span><span class="p">])()</span> <span class="c1"># create empty object eg `list()`</span>
+                <span class="c1"># print(new_val)</span>
+                <span class="k">break</span> 
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">dict_list</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">key_name</span> <span class="ow">in</span> <span class="n">x</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">key_name</span><span class="p">]</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="n">x</span><span class="p">[</span><span class="n">key_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_val</span></div>
+
+
+
+
+<div class="viewcode-block" id="export_as_gsheets"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.misc_utils.export_as_gsheets">[docs]</a><span class="k">def</span> <span class="nf">export_as_gsheets</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Save data to google sheets with one-line. </span>
+
+<span class="sd">    Works with raw JSON (from API), or even a Dataframe. </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input_data: JSON or DataFrame </span>
+<span class="sd">        The data to be uploaded</span>
+<span class="sd">    query: str</span>
+<span class="sd">        The DSL query - this is neeeded only when raw API JSON is passed</span>
+<span class="sd">    title: str, optional </span>
+<span class="sd">        The spreadsheet title, if one wants to reuse an existing spreadsheet.</span>
+<span class="sd">    verbose: bool, default=True</span>
+<span class="sd">        Verbose mode</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This method assumes that the calling environment can provide valid Google authentication credentials.</span>
+<span class="sd">    There are two routes to make this work, depending on whether one is using Google Colab or a traditional Jupyter environment.</span>
+
+<span class="sd">    **Google Colab**</span>
+<span class="sd">    This is the easiest route. In Google Colab, all required libraries are already available. The `to_gsheets` method simply triggers the built-in authentication process via a pop up window. </span>
+<span class="sd">    </span>
+<span class="sd">    **Jupyter**</span>
+<span class="sd">    This route involves a few more steps. In Jupyter, it is necessary to install the ``gspread``, ``oauth2client`` and ``gspread_dataframe`` modules first. Secondly, one needs to create Google Drive access credentials using OAUTH (which boils down to a JSON file). Note that the credentials file needs to be saved in: `~/.config/gspread/credentials.json` (for gpread to work correctly). </span>
+<span class="sd">    These steps are described at https://gspread.readthedocs.io/en/latest/oauth2.html#for-end-users-using-oauth-client-id.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        The google sheet URL as a string.   </span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; from dimcli.utils export_as_gsheets</span>
+<span class="sd">    &gt;&gt;&gt; cars = {&#39;Brand&#39;: [&#39;Honda Civic&#39;,&#39;Toyota Corolla&#39;,&#39;Ford Focus&#39;,&#39;Audi A4&#39;],</span>
+<span class="sd">                 &#39;Price&#39;: [22000,25000,27000,35000]</span>
+<span class="sd">                 }</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(cars, columns = [&#39;Brand&#39;, &#39;Price&#39;])</span>
+<span class="sd">    &gt;&gt;&gt; export_as_gsheets(df)</span>
+<span class="sd">    ..authorizing with google..</span>
+<span class="sd">    ..creating a google sheet..</span>
+<span class="sd">    ..uploading..</span>
+<span class="sd">    Saved:</span>
+<span class="sd">    https://docs.google.com/spreadsheets/d/1tsyRFDEsADltWDdqjuyDWDOg81sl9hN3Nu8MXVlqDDI</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="s1">&#39;google.colab&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">google.colab</span> <span class="kn">import</span> <span class="n">auth</span>
+        <span class="n">auth</span><span class="o">.</span><span class="n">authenticate_user</span><span class="p">()</span>
+
+        <span class="kn">import</span> <span class="nn">gspread</span>
+        <span class="kn">from</span> <span class="nn">gspread_dataframe</span> <span class="kn">import</span> <span class="n">set_with_dataframe</span>
+        <span class="kn">from</span> <span class="nn">oauth2client.client</span> <span class="kn">import</span> <span class="n">GoogleCredentials</span>
+        <span class="n">gc</span> <span class="o">=</span> <span class="n">gspread</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="n">GoogleCredentials</span><span class="o">.</span><span class="n">get_application_default</span><span class="p">())</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">gspread</span>
+            <span class="kn">from</span> <span class="nn">oauth2client.service_account</span> <span class="kn">import</span> <span class="n">ServiceAccountCredentials</span>
+            <span class="kn">from</span> <span class="nn">gspread_dataframe</span> <span class="kn">import</span> <span class="n">set_with_dataframe</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Missing libraries. Please install gspread, oauth2client and gspread_dataframe: `pip install gspread gspread_dataframe oauth2client -U`.&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="s2">&quot;..authorizing with google..&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">gc</span> <span class="o">=</span> <span class="n">gspread</span><span class="o">.</span><span class="n">oauth</span><span class="p">()</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Google authorization failed. Do you have all the required files? Please see the documentation for more information.&quot;</span><span class="p">)</span>
+
+
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span> <span class="o">==</span> <span class="nb">type</span><span class="p">({}):</span>
+        <span class="c1"># JSON</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">query</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;When passing raw JSON you also have to provide the DSL query, which is needed to determine the primary records key.&quot;</span><span class="p">)</span>            
+        <span class="n">return_object</span> <span class="o">=</span> <span class="n">line_search_return</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span>  <span class="n">json_normalize</span><span class="p">(</span><span class="n">jjson</span><span class="p">[</span><span class="n">return_object</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span>  <span class="n">json_normalize</span><span class="p">(</span><span class="n">jjson</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span> <span class="o">==</span> <span class="n">DataFrame</span><span class="p">:</span>
+        <span class="c1"># Dataframe</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">input_data</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input type &#39;</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">input_data</span><span class="p">))</span><span class="si">}</span><span class="s2">&#39; not supported.&quot;</span><span class="p">)</span>
+
+
+    <span class="k">if</span> <span class="n">title</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;..opening google sheet with title: </span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">gsheet</span> <span class="o">=</span> <span class="n">gc</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>  
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="s2">&quot;..creating a google sheet..&quot;</span><span class="p">)</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;dimcli-export-&quot;</span> <span class="o">+</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">-%H%M%S&quot;</span><span class="p">)</span>
+        <span class="n">gsheet</span> <span class="o">=</span> <span class="n">gc</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">title</span><span class="p">)</span> 
+
+
+    <span class="n">worksheet</span> <span class="o">=</span> <span class="n">gsheet</span><span class="o">.</span><span class="n">sheet1</span>
+    <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="s2">&quot;..uploading..&quot;</span><span class="p">)</span>
+    <span class="n">set_with_dataframe</span><span class="p">(</span><span class="n">worksheet</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span> 
+
+    <span class="c1"># https://gspread.readthedocs.io/en/latest/api.html#gspread.models.Spreadsheet.share</span>
+    <span class="n">gsheet</span><span class="o">.</span><span class="n">share</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">perm_type</span><span class="o">=</span><span class="s1">&#39;anyone&#39;</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="s1">&#39;reader&#39;</span><span class="p">)</span> <span class="c1"># anyone can see with url</span>
+    <span class="n">spreadsheet_url</span> <span class="o">=</span> <span class="s2">&quot;https://docs.google.com/spreadsheets/d/</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">gsheet</span><span class="o">.</span><span class="n">id</span>
+    <span class="c1"># if verbose: click.secho(f&quot;Saved:\n{spreadsheet_url}&quot;, bold=True)</span>
+    <span class="k">return</span> <span class="n">spreadsheet_url</span> </div>
+
+
+
+
+<div class="viewcode-block" id="google_url"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.misc_utils.google_url">[docs]</a><span class="k">def</span> <span class="nf">google_url</span><span class="p">(</span><span class="n">stringa</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generate a valid google search URL from a string (URL quoting is applied). </span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from dimcli.utils import google_url</span>
+<span class="sd">    &gt;&gt;&gt; google_url(&quot;malaria AND africa&quot;)</span>
+<span class="sd">    &#39;https://www.google.com/search?q=malaria%20AND%20africa&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="kn">import</span> <span class="n">quote</span>   
+    <span class="n">s</span> <span class="o">=</span> <span class="n">quote</span><span class="p">(</span><span class="n">stringa</span><span class="p">)</span>    
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;https://www.google.com/search?q=</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">&quot;</span></div>
+ 
+
+
+
+
+
+<span class="c1"># https://gist.github.com/zdavkeos/1098474</span>
+
+<div class="viewcode-block" id="walk_up"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.misc_utils.walk_up">[docs]</a><span class="k">def</span> <span class="nf">walk_up</span><span class="p">(</span><span class="n">bottom</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    mimic os.walk, but walk &#39;up&#39;</span>
+<span class="sd">    instead of down the directory tree</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">bottom</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">bottom</span><span class="p">)</span>
+
+    <span class="c1">#get files in current dir</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">bottom</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">return</span>
+
+
+    <span class="n">dirs</span><span class="p">,</span> <span class="n">nondirs</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">bottom</span><span class="p">,</span> <span class="n">name</span><span class="p">)):</span>
+            <span class="n">dirs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">nondirs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">yield</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">nondirs</span>
+
+    <span class="n">new_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">bottom</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">))</span>
+    
+    <span class="c1"># see if we are at the top</span>
+    <span class="k">if</span> <span class="n">new_path</span> <span class="o">==</span> <span class="n">bottom</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">walk_up</span><span class="p">(</span><span class="n">new_path</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">x</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="c1"># tests/demos</span>
+
+    <span class="c1">#print all files and directories</span>
+    <span class="c1"># directly above the current one</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">walk_up</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">curdir</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+    <span class="c1"># look for a TAGS file above the</span>
+    <span class="c1"># current directory</span>
+    <span class="k">for</span> <span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">f</span> <span class="ow">in</span> <span class="n">walk_up</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">curdir</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s1">&#39;TAGS&#39;</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+            <span class="k">break</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Digital Science
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

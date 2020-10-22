@@ -2,9 +2,7 @@
 Dimcli utilities for querying and working with Dimensions data.  
 NOTE: these functions are attached to the top level ``dimcli.utils`` module. So you can load them as follows:
 
->>> from dimcli.utils import dimensions_url
->>> dimensions_url("pub.1127419018")
-'https://app.dimensions.ai/details/publication/pub.1127419018'
+>>> from dimcli.utils import *
 
 """
 

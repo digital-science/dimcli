@@ -1,9 +1,8 @@
 """
-Dimcli magic commands used with iPython / Jupyter environments only. 
+Dimcli magic commands used with iPython / Jupyter environments only. See also: https://api-lab.dimensions.ai/cookbooks/1-getting-started/4-Dimcli-magic-commands.html
 
-By default the results of magic command queries are saved to a variable called ``dsl_last_results``.
+NOTE All magic commands results get saved automatically to a variable named ``dsl_last_results``.
 
-See also: https://api-lab.dimensions.ai/cookbooks/1-getting-started/4-Dimcli-magic-commands.html
 """
 
 from IPython.core import magic_arguments
