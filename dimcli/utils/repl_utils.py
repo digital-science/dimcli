@@ -18,9 +18,11 @@ try:
     from pandas import json_normalize
 except:
     from pandas.io.json import json_normalize
+
 from ..core.dsl_grammar import *
 from .html import html_template_interactive
 from .dim_utils import *
+from .misc_utils import *
 
 
 def listify_and_unify(*args):
@@ -553,7 +555,7 @@ def preview_results(jsondata, maxitems=10):
                             click.style(str(row)))
             if len(jsondata[key]) > maxitems:
                 click.secho("---", dim=True)
-                click.secho("Top 5 results shown. Tip: use '.show <number>' to view more.", dim=True)
+                click.secho(f"Note: {maxitems} of {len(jsondata[key])} results shown. Use '.show <number>' to view more.", dim=True)
 
 
 
