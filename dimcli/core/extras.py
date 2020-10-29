@@ -15,7 +15,7 @@ import IPython
 import os
 from .. import COLAB_ENV
 
-print("WARNING: this module is deprecated. Use instead ``from utils.networkviz import *``")
+print("WARNING: the `extras` module is deprecated. Use instead ``from dimcli.utils.networkviz import *``")
 
 
 class NetworkViz(PyvisNetwork):

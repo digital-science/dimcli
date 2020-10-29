@@ -1,6 +1,12 @@
 # Changelog
 
 
+## v 0.8.1
+
+* Improved warning for deprecated modules 
+
+
+
 ## v 0.8
 
 * Dimcli module level documentation vastly updated

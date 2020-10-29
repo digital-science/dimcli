@@ -5,7 +5,7 @@ NOTE This module is deprecated and will be removed in future versions.
 Use instead `dimcli.utils`
 """
 
-print("WARNING: this module is deprecated. Use instead ``from dimcli.utils import *``")
+print("WARNING: the `shortcuts` module is deprecated. Use instead ``from dimcli.utils import *``")
 
 from . import *
 
