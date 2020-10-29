@@ -89,6 +89,23 @@ class TestOne(unittest.TestCase):
         print(" ==> res['stats']: ", res['stats'])
         print(" ==> len(res['publications']): ", len(res['publications']))
         # ----
+        click.secho("\nTEST 001-D: Iterative querying with cumulative warnings", fg="green")
+        # ----
+        d = Dsl()
+        q = """search publications 
+        where research_orgs.name = "America" 
+        and year in [2010:2012]
+        return publications
+        """
+        res = d.query_iterative(q, limit=1000)
+        click.secho("Query results: ", fg="magenta")
+        print(" ==> len(res): ", len(res))
+        print(" ==> res['stats']: ", res['stats'])
+        print(" ==> len(res['publications']): ", len(res['publications']))
+        click.secho("Cumulative warnings: ", fg="magenta")
+        print("WARNINGS [{}]".format(len(res["_warnings"])))
+        print("\n".join([s for s in res["_warnings"]]))
+        # ----
         click.secho("Completed test succesfully", fg="green")
 
 

@@ -3,9 +3,9 @@
 
 ## v 0.8.1
 
-* Improved warning for deprecated modules 
-
-
+* Improve warning messages for deprecated modules 
+* Add cumulative warnings to `Dsl.query_iterative` 
+* Fix for dimcli CLI not showing records previews correctly 
 
 ## v 0.8
 

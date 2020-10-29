@@ -147,7 +147,7 @@ class Dsl():
             elapsed = end - start
             if verbose: print_json_stats(result, q, elapsed)
             print_json_errors(result) # ALWAYS print errors
-            if verbose: print_json_warnings(result)
+            if verbose: print_json_warnings(result) # DON'T print warnings unless verbose=True
             if show_results or (show_results is None and self._show_results):
                 IPython.display.display(result)
             return result
@@ -165,7 +165,7 @@ class Dsl():
 
 
 
-    def query_iterative(self, q, show_results=None, limit=1000, skip=0, pause=1.5, force=False, maxlimit=0, verbose=None, tot_count_prev_query=0):       
+    def query_iterative(self, q, show_results=None, limit=1000, skip=0, pause=1.5, force=False, maxlimit=0, verbose=None, _tot_count_prev_query=0, _warnings_tot=None):       
         """Runs a DSL query and then keep querying until all matching records have been extracted. 
         
         The API returns a maximum of 1000 records per call. If a DSL query results in more than 1000 matches, it is possible to use pagination to get more results. 
@@ -248,7 +248,7 @@ class Dsl():
                 limit = MAXLIMIT - skip
 
 
-        if not tot_count_prev_query:
+        if not _tot_count_prev_query:
             # first iteration
             # if verbose: print(f"{limit+skip} / ...")
             if verbose: print(f"Starting iteration with limit={limit} skip={skip} ...")
@@ -277,7 +277,7 @@ class Dsl():
         try:
             tot = int(res['stats']['total_count'])
         except:
-            tot =  tot_count_prev_query # when force=True, we have no current query stats
+            tot =  _tot_count_prev_query # when force=True, we have no current query stats
 
         new_skip = skip+limit
         if tot > 0 and new_skip > tot:
@@ -286,16 +286,22 @@ class Dsl():
             t = "%.2f" % elapsed
             print(f"{skip}-{new_skip} / {tot} ({t}s)")
 
+        if res["_warnings"]:
+            if _warnings_tot:
+                _warnings_tot += res["_warnings"]
+            else:
+                _warnings_tot = res["_warnings"]
+
         if flag_force:
-            output = self.query_iterative(q, show_results, limit, new_skip, pause, force, maxlimit, verbose, tot_count_prev_query)                    
+            output = self.query_iterative(q, show_results, limit, new_skip, pause, force, maxlimit, verbose, _tot_count_prev_query, _warnings_tot)                    
 
         elif not IS_UNNEST and len(res[sourcetype]) == limit and not flag_last_round:
-            output = res[sourcetype] + self.query_iterative(q, show_results, limit, new_skip, pause, force,maxlimit, verbose, tot)
+            output = res[sourcetype] + self.query_iterative(q, show_results, limit, new_skip, pause, force,maxlimit, verbose, tot, _warnings_tot)
 
         elif IS_UNNEST and len(res[sourcetype]) > 0 and not flag_last_round:
             # unnest returns a number of records that don't relate to actual data left
             # hence can't match the lenght of results to limit in this case
-            output = res[sourcetype] + self.query_iterative(q, show_results, limit, new_skip, pause, force, maxlimit, verbose, tot)
+            output = res[sourcetype] + self.query_iterative(q, show_results, limit, new_skip, pause, force, maxlimit, verbose, tot, _warnings_tot)
 
         else:
             output = res[sourcetype]
@@ -314,6 +320,8 @@ class Dsl():
                     },
                 sourcetype: output
             }
+            if _warnings_tot:
+                response_simulation["_warnings"] = _warnings_tot
             result = DslDataset(response_simulation)
             if show_results or (show_results is None and self._show_results):
                 IPython.display.display(result)

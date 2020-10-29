@@ -80,10 +80,24 @@ def main(test_number=1):
         res.to_csv("test.csv", index=False)
 
     if test_number == 2:
-        # GSHEET EXPORT TEST
-        #         
-        q = dsl.query_iterative("""search publications where journal.title="nature medicine" and year>2017 return publications[id+title+year+unnest(concepts)]""")
-        q.to_gsheets()
+
+        click.secho("\nTEST 001-C: Iterative querying with warnings", fg="green")
+        # ----
+        d = Dsl()
+        q = """search publications 
+        where research_orgs.name = "America" 
+        and year in [2010:2012]
+        return publications
+        """
+        res = d.query_iterative(q, limit=1000)
+        click.secho("Query results: ", fg="magenta")
+        print(" ==> len(res): ", len(res))
+        print(" ==> res['stats']: ", res['stats'])
+        print(" ==> len(res['publications']): ", len(res['publications']))
+        click.secho("Cumulative warnings: ", fg="magenta")
+        print("WARNINGS [{}]".format(len(res["_warnings"])))
+        print("\n".join([s for s in res["_warnings"]]))
+        # ----
 
 
 
