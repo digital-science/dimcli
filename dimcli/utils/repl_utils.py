@@ -20,7 +20,7 @@ except:
     from pandas.io.json import json_normalize
 from ..core.dsl_grammar import *
 from .html import html_template_interactive
-
+from .dim_utils import *
 
 
 def listify_and_unify(*args):
@@ -551,9 +551,9 @@ def preview_results(jsondata, maxitems=10):
                         click.echo(
                             click.style("[" + str(counter) + "] ", dim=True) +
                             click.style(str(row)))
-            if False:
+            if len(jsondata[key]) > maxitems:
                 click.secho("---", dim=True)
-                click.secho("Tip: use 'show <number>' or show+Tab to see more options", dim=True)
+                click.secho("Top 5 results shown. Tip: use '.show <number>' to view more.", dim=True)
 
 
 
