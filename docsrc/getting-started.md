@@ -191,13 +191,13 @@ A settings file can be stored alongside the authentication details file, in orde
 This file must be called `settings` and it has to be located in your user directory, in the `.dimensions` folder. This is what you'd do on unix systems:
 
 ```
-$ touch ~/.dimensions/dimcli_settings
+$ touch ~/.dimensions/settings
 ```
 
 
 ### Github Gists Token
 
-By adding a github authentication [token](https://github.com/settings/tokens), it is possible to save API query results to https://gist.github.com/. 
+By adding a github authentication [token](https://github.com/settings/tokens) to the settings file, it is possible to save API query results to [https://gist.github.com/](https://gist.github.com/). 
 
 See this guide on [how to create a new token](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token). Ensure that the token has the 'gists' scope from the available options. 
 
@@ -210,7 +210,7 @@ token: d5047fASAD889912HHBAJVSAD8e8bae17e2
 
 This will allow to export/create gists from DSL queries when using the Dimcli CLI. 
 
-> NOTE: all gists created by Dimcli are not public (unlisted) by default
+> NOTE: all gists created by Dimcli are not private to your Github account (=unlisted)
 
 
 

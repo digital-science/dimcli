@@ -304,7 +304,7 @@ NOTE: these objects are attached to the top level <code class="docutils literal 
 
 <dl class="py method">
 <dt id="dimcli.core.api.Dsl.query_iterative">
-<code class="sig-name descname">query_iterative</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q</span></em>, <em class="sig-param"><span class="n">show_results</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limit</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">skip</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">pause</span><span class="o">=</span><span class="default_value">1.5</span></em>, <em class="sig-param"><span class="n">force</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">maxlimit</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tot_count_prev_query</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/api.html#Dsl.query_iterative"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.core.api.Dsl.query_iterative" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">query_iterative</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q</span></em>, <em class="sig-param"><span class="n">show_results</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limit</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">skip</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">pause</span><span class="o">=</span><span class="default_value">1.5</span></em>, <em class="sig-param"><span class="n">force</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">maxlimit</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">_tot_count_prev_query</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">_warnings_tot</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/api.html#Dsl.query_iterative"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.core.api.Dsl.query_iterative" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs a DSL query and then keep querying until all matching records have been extracted.</p>
 <p>The API returns a maximum of 1000 records per call. If a DSL query results in more than 1000 matches, it is possible to use pagination to get more results.</p>
 <p>Iterative querying works by automatically paginating through all records available for a result set. The original query gets turned into a loop that uses the <cite>limit</cite> / <cite>skip</cite> operators until all the results available have been extracted.</p>
@@ -1450,8 +1450,18 @@ v0.6.1.2: normalizes also ‘None’ values (to address 1.21 DSL change)</p>
 <dl class="py function">
 <dt id="dimcli.utils.misc_utils.walk_up">
 <code class="sig-prename descclassname">dimcli.utils.misc_utils.</code><code class="sig-name descname">walk_up</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bottom</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/misc_utils.html#walk_up"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.misc_utils.walk_up" title="Permalink to this definition">¶</a></dt>
-<dd><p>mimic os.walk, but walk ‘up’
-instead of down the directory tree</p>
+<dd><p>Mimic os.walk, but walk ‘up’ instead of down the directory tree</p>
+<p class="rubric">Example</p>
+<p>#print all files and directories
+# directly above the current one
+&gt;&gt;&gt; for i in walk_up(os.curdir):
+&gt;&gt;&gt;    print(i)</p>
+<p># look for a TAGS file above the
+# current directory
+&gt;&gt;&gt; for c,d,f in walk_up(os.curdir):
+&gt;&gt;&gt;    if ‘TAGS’ in f:
+&gt;&gt;&gt;        print(c)
+&gt;&gt;&gt;        break</p>
 </dd></dl>
 
 </div>

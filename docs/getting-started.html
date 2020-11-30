@@ -100,6 +100,10 @@
 <li class="toctree-l3"><a class="reference internal" href="#using-multiple-api-endpoints-for-advanced-users">Using multiple API endpoints (for advanced users)</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#settings">Settings</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#github-gists-token">Github Gists Token</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#dimcli-as-a-python-module">Dimcli as a Python module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dimcli-as-a-command-line-interface">Dimcli as a Command Line Interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dimcli-with-jupyter-notebooks">Dimcli with Jupyter Notebooks</a></li>
@@ -316,6 +320,28 @@ $ touch ~/.dimensions/dsl.ini
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ dimcli private
 </pre></div>
 </div>
+</div>
+</div>
+<div class="section" id="settings">
+<h2>Settings<a class="headerlink" href="#settings" title="Permalink to this headline">¶</a></h2>
+<p>A settings file can be stored alongside the authentication details file, in order to enable other functionalities.</p>
+<p>This file must be called <code class="docutils literal notranslate"><span class="pre">settings</span></code> and it has to be located in your user directory, in the <code class="docutils literal notranslate"><span class="pre">.dimensions</span></code> folder. This is what you’d do on unix systems:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ touch ~/.dimensions/settings
+</pre></div>
+</div>
+<div class="section" id="github-gists-token">
+<h3>Github Gists Token<a class="headerlink" href="#github-gists-token" title="Permalink to this headline">¶</a></h3>
+<p>By adding a github authentication <a class="reference external" href="https://github.com/settings/tokens">token</a> to the settings file, it is possible to save API query results to <a class="reference external" href="https://gist.github.com/">https://gist.github.com/</a>.</p>
+<p>See this guide on <a class="reference external" href="https://docs.github.com/en/free-pro-team&#64;latest/github/authenticating-to-github/creating-a-personal-access-token">how to create a new token</a>. Ensure that the token has the ‘gists’ scope from the available options.</p>
+<p>One you have the token, add the following section to the <code class="docutils literal notranslate"><span class="pre">settings</span></code> file (of course replacing the token value with your token):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">gist</span><span class="p">]</span>
+<span class="n">token</span><span class="p">:</span> <span class="n">d5047fASAD889912HHBAJVSAD8e8bae17e2</span>
+</pre></div>
+</div>
+<p>This will allow to export/create gists from DSL queries when using the Dimcli CLI.</p>
+<blockquote>
+<div><p>NOTE: all gists created by Dimcli are not private to your Github account (=unlisted)</p>
+</div></blockquote>
 </div>
 </div>
 <div class="section" id="dimcli-as-a-python-module">

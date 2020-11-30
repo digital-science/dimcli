@@ -465,12 +465,24 @@
 <span class="c1"># https://gist.github.com/zdavkeos/1098474</span>
 
 <div class="viewcode-block" id="walk_up"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.misc_utils.walk_up">[docs]</a><span class="k">def</span> <span class="nf">walk_up</span><span class="p">(</span><span class="n">bottom</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; </span>
-<span class="sd">    mimic os.walk, but walk &#39;up&#39;</span>
-<span class="sd">    instead of down the directory tree</span>
+    <span class="sd">&quot;&quot;&quot;Mimic os.walk, but walk &#39;up&#39; instead of down the directory tree</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    #print all files and directories</span>
+<span class="sd">    # directly above the current one</span>
+<span class="sd">    &gt;&gt;&gt; for i in walk_up(os.curdir):</span>
+<span class="sd">    &gt;&gt;&gt;    print(i)</span>
+
+<span class="sd">    # look for a TAGS file above the</span>
+<span class="sd">    # current directory</span>
+<span class="sd">    &gt;&gt;&gt; for c,d,f in walk_up(os.curdir):</span>
+<span class="sd">    &gt;&gt;&gt;    if &#39;TAGS&#39; in f:</span>
+<span class="sd">    &gt;&gt;&gt;        print(c)</span>
+<span class="sd">    &gt;&gt;&gt;        break</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">bottom</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">bottom</span><span class="p">)</span>
+    <span class="n">bottom</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">bottom</span><span class="p">)</span>
 
     <span class="c1">#get files in current dir</span>
     <span class="k">try</span><span class="p">:</span>
@@ -489,7 +501,7 @@
 
     <span class="k">yield</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">nondirs</span>
 
-    <span class="n">new_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">bottom</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">))</span>
+    <span class="n">new_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">bottom</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">))</span>
     
     <span class="c1"># see if we are at the top</span>
     <span class="k">if</span> <span class="n">new_path</span> <span class="o">==</span> <span class="n">bottom</span><span class="p">:</span>
