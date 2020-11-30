@@ -111,3 +111,4 @@ ENV/
 /dimcli/tests/apitest*
 
 README_PRIVATE.md
+README_DOCUMENTATION.md
