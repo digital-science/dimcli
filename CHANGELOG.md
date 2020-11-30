@@ -2,6 +2,8 @@
 
 ## v 0.8.2
 
+* CLI - command to export query as a Github Gist
+
 
 ## v 0.8.1
 
