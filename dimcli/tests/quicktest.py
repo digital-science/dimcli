@@ -18,6 +18,9 @@ from .. import *
 from ..utils import *
 from ..core.converters import *
 
+from ..utils.gists_utils import *
+
+
 
 @click.command()
 @click.argument('test_number', nargs=1)
@@ -81,24 +84,15 @@ def main(test_number=1):
 
     if test_number == 2:
 
-        click.secho("\nTEST 001-C: Iterative querying with warnings", fg="green")
-        # ----
-        d = Dsl()
-        q = """search publications 
-        where research_orgs.name = "America" 
-        and year in [2010:2012]
-        return publications
-        """
-        res = d.query_iterative(q, limit=1000)
-        click.secho("Query results: ", fg="magenta")
-        print(" ==> len(res): ", len(res))
-        print(" ==> res['stats']: ", res['stats'])
-        print(" ==> len(res['publications']): ", len(res['publications']))
-        click.secho("Cumulative warnings: ", fg="magenta")
-        print("WARNINGS [{}]".format(len(res["_warnings"])))
-        print("\n".join([s for s in res["_warnings"]]))
-        # ----
+        files_details =  {"gist_readme_filename.md": {
+                            "content": "gist_readme_contents"   },
+                        "formatted_json_filename.json" : {
+                            "content": "formatted_json_contents"   
+                        }
+                        } 
 
+        gg = GistsHelper()
+        gg.save_gist("some desc", files_details)
 
 
 if __name__ == '__main__':

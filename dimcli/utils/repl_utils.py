@@ -20,9 +20,11 @@ except:
     from pandas.io.json import json_normalize
 
 from ..core.dsl_grammar import *
+from ..VERSION import VERSION
 from .html import html_template_interactive
 from .dim_utils import *
 from .misc_utils import *
+from .gists_utils import GistsHelper
 
 
 def listify_and_unify(*args):
@@ -379,6 +381,73 @@ def export_json_json(jjson, query, USER_EXPORTS_DIR):
     webbrowser.open(url)
     # df.to_csv(USER_EXPORTS_DIR + filename)
     print("Exported: ", "%s%s" % (USER_EXPORTS_DIR, filename))
+
+
+
+def export_gist(jjson, query, api_endpoint):
+    """Export as a github gist
+
+    This generated a header file in markdown, a JSON file and also a CSV export.
+    """
+
+
+    ttime = time.strftime("%Y-%m-%d  at %H:%M:%S")
+    gist_desc = time.strftime(f"A Dimensions API export generated on {ttime}")
+
+    filestamp = time.strftime("dimcli_export_%Y%m%d-%H%M%S")
+    gist_readme_filename = "1-"+filestamp+".md"
+    csv_filename = "2-"+filestamp+".csv"
+    formatted_json_filename = "3-"+filestamp+".json"
+
+
+
+    return_object = line_search_return(query)
+    try:
+        df =  json_normalize(jjson[return_object], errors="ignore")
+    except:
+        df =  json_normalize(jjson, errors="ignore")
+
+    gist_readme_contents = f"""# {query}
+    \nA Dimensions [API](https://docs.dimensions.ai/dsl) export\n\n* Created on: {ttime} with [Dimcli](https://github.com/digital-science/dimcli) {VERSION}\n* API endpoint: `{api_endpoint}` \n* DSL Query
+    \n```
+    \n{query}
+    \n```
+    \n 
+    """
+
+    # create JSON
+    formatted_json_contents = json.dumps(jjson, indent=4, sort_keys=True)
+
+    # create CSV
+    return_object = line_search_return(query)
+    try:
+        df =  json_normalize(jjson[return_object], errors="ignore")
+    except:
+        df =  json_normalize(jjson, errors="ignore")
+    csv_contents = df.to_csv()
+
+
+    files_details =  {gist_readme_filename: {
+                        "content": gist_readme_contents   
+                        },
+                      formatted_json_filename : {
+                        "content": formatted_json_contents   
+                        },
+                      csv_filename : {
+                        "content": csv_contents   
+                        }
+                      }  
+
+    g = GistsHelper()
+    url = g.save_gist(gist_desc, files_details)
+
+    webbrowser.open(url)
+
+    print("Exported: " + url)
+
+
+
+
 
 
 

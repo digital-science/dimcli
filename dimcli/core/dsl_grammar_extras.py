@@ -18,6 +18,7 @@ SYNTAX_DICT = {
         '.json_full' : [],
         '.export_as_html' : [],
         '.export_as_csv' : [],
+        '.export_as_gist' : [],
         '.export_as_json' : [],
         '.export_as_bar_chart' : [],
         '.export_as_jupyter' : [],

@@ -315,12 +315,24 @@ def google_url(stringa):
 # https://gist.github.com/zdavkeos/1098474
 
 def walk_up(bottom):
-    """ 
-    mimic os.walk, but walk 'up'
-    instead of down the directory tree
+    """Mimic os.walk, but walk 'up' instead of down the directory tree
+
+    Example
+    -------
+    #print all files and directories
+    # directly above the current one
+    >>> for i in walk_up(os.curdir):
+    >>>    print(i)
+
+    # look for a TAGS file above the
+    # current directory
+    >>> for c,d,f in walk_up(os.curdir):
+    >>>    if 'TAGS' in f:
+    >>>        print(c)
+    >>>        break
     """
 
-    bottom = path.realpath(bottom)
+    bottom = os.path.realpath(bottom)
 
     #get files in current dir
     try:
@@ -339,7 +351,7 @@ def walk_up(bottom):
 
     yield bottom, dirs, nondirs
 
-    new_path = os.path.realpath(path.join(bottom, '..'))
+    new_path = os.path.realpath(os.path.join(bottom, '..'))
     
     # see if we are at the top
     if new_path == bottom:

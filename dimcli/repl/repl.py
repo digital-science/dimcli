@@ -52,6 +52,7 @@ All special commands start with '.'
 >>> .docs: print out documentation for DSL data objects.  
 >>> .export_as_json: save results from last query as JSON file.  
 >>> .export_as_csv: save results from last query as CSV file.  
+>>> .export_as_gist: save results from last query as Github GIST.  
 >>> .export_as_html: save results from last query as HTML file. 
 >>> .export_as_bar_chart: save results from last query as Plotly bar chart. 
 >>> .export_as_jupyter: save results from last query as Jupyter notebook. 
@@ -267,6 +268,9 @@ class CommandsManager(object):
         # cases
         if text == ".export_as_html":
             export_json_html(jsondata, query, api_endpoint, USER_EXPORTS_DIR)
+
+        elif text == ".export_as_gist":
+            export_gist(jsondata, query, api_endpoint)
 
         elif text == ".export_as_csv":
             export_json_csv(jsondata, query, USER_EXPORTS_DIR)

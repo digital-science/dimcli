@@ -11,16 +11,21 @@ from ..utils.misc_utils import walk_up
 
 
 USER_DIR = os.path.expanduser("~/.dimensions/")
+
+# for API credentials
 USER_CONFIG_FILE_NAME = "dsl.ini"
 USER_CONFIG_FILE_PATH = os.path.expanduser(USER_DIR + USER_CONFIG_FILE_NAME)
 USER_HISTORY_FILE = os.path.expanduser(USER_DIR + "history.txt")
+
 #
 USER_EXPORTS_DIR = os.path.expanduser("~/dimcli-exports/")
-# _USER_JSON_OUTPUTS_DIR = os.path.expanduser(USER_EXPORTS_DIR + "json/")
+
+# for other settings
+USER_SETTINGS_FILE_NAME = "settings"
+USER_SETTINGS_FILE_PATH = os.path.expanduser(USER_DIR + USER_SETTINGS_FILE_NAME)
 
 
-
-
+# global connection object
 CONNECTION = {'instance': None, 'url': None, 'username': None, 'password': None, 'key': None,  'token' : None}
 
 
@@ -137,7 +142,7 @@ def read_init_file(fpath, instance_name):
         config.read(fpath)
     except:
         click.secho(f"ERROR: `{USER_CONFIG_FILE_NAME}` credentials file not found." , fg="red")
-        click.secho("HowTo: https://github.com/digital-science/dimcli#credentials-file", fg="red")
+        click.secho("HowTo: https://digital-science.github.io/dimcli/getting-started.html#authentication", fg="red")
         sys.exit(0)
     # we have a good config file
     try:
@@ -147,7 +152,49 @@ def read_init_file(fpath, instance_name):
         click.secho(f"Available instances are:")
         for x in config.sections():
             click.secho("'%s'" % x)
-        click.secho("---\nSee Also: https://github.com/digital-science/dimcli#credentials-file")
+        click.secho("---\nSee Also: https://digital-science.github.io/dimcli/getting-started.html#authentication")
+        config.sections()
+        sys.exit(0)
+    return section
+
+
+
+
+
+
+
+def get_settings_file():
+    """Get the global settings file. 
+    This does not include any authentication info, only other settings eg github keys etc..
+    It'll be extended in the future as new integrations/functionalities become available.
+    """
+    if os.path.exists(os.getcwd() + "/" + USER_SETTINGS_FILE_NAME):
+        return os.getcwd() + "/" + USER_SETTINGS_FILE_NAME
+    elif os.path.exists(os.path.expanduser(USER_SETTINGS_FILE_PATH )):
+        return os.path.expanduser(USER_SETTINGS_FILE_PATH )
+    else:
+        for c,d,f in walk_up(os.getcwd()):
+            if os.path.exists(c + "/" + USER_SETTINGS_FILE_NAME):
+                return c + "/" + USER_SETTINGS_FILE_NAME
+    return None
+
+def read_settings_file(fpath, section_name):
+    """
+    parse the settings file for sections like 'gist' key etc..
+    """
+    config = configparser.ConfigParser()
+    try:
+        config.read(fpath)
+    except:
+        click.secho(f"ERROR: `{USER_SETTINGS_FILE_NAME}` settings file not found." , fg="red")
+        click.secho("HowTo: https://digital-science.github.io/dimcli/getting-started.html#github-gists-token", fg="red")
+        sys.exit(0)
+    # we have a good config file
+    try:
+        section = config[section_name]
+    except:
+        click.secho(f"ERROR: Settings file `{fpath}` does not contain settings for: '{section_name}''", fg="red")
+        click.secho("---\nPlease review the file contents, or see https://digital-science.github.io/dimcli/getting-started.html#github-gists-token")
         config.sections()
         sys.exit(0)
     return section
