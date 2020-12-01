@@ -2,7 +2,8 @@
 
 ## v 0.8.2
 
-* CLI - command to export query as a Github Gist
+* CLI - new `export_gist` command to export query as a Github Gist
+* Fix for `extract_affiliations` UTF-8 bug
 
 
 ## v 0.8.1
