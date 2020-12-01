@@ -83,16 +83,13 @@ def main(test_number=1):
         res.to_csv("test.csv", index=False)
 
     if test_number == 2:
-
-        files_details =  {"gist_readme_filename.md": {
-                            "content": "gist_readme_contents"   },
-                        "formatted_json_filename.json" : {
-                            "content": "formatted_json_contents"   
-                        }
-                        } 
-
-        gg = GistsHelper()
-        gg.save_gist("some desc", files_details)
+        from dimcli.functions import extract_affiliations
+        bad_data=[{'name': 'Universidad Central de Bayamon',
+        'city': 'Bayamón',
+        'state': 'Puerto Rico',
+        'country': 'United States'}]
+        print(extract_affiliations(bad_data))
+        
 
 
 if __name__ == '__main__':
