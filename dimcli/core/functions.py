@@ -244,11 +244,13 @@ def extract_affiliations(affiliations, as_json=False):
     #        
     # == main DSL query == 
     #        
-    output = dsl.query(f"""extract_affiliations(json={json.dumps(input_data)}, results="basic")""")  # same query for both struct and unstruct
+    # Saving utf-8 texts in json.dumps as UTF8, not as \u escape sequence
+    # https://stackoverflow.com/questions/18337407/saving-utf-8-texts-in-json-dumps-as-utf8-not-as-u-escape-sequence
+    output = dsl.query(f"""extract_affiliations(json={json.dumps(input_data, ensure_ascii=False)}, results="basic")""")  # same query for both struct and unstruct
     
     if as_json:
         return output.json
-    else: # return DF
+    elif "results" in output.json: # return DF
         if affiliation_type == "STRUCTURED":
             temp = pd.json_normalize(output.json['results'],  errors='ignore')
         if affiliation_type == "UNSTRUCTURED": 
