@@ -89,7 +89,12 @@ def main(test_number=1):
         'state': 'Puerto Rico',
         'country': 'United States'}]
         print(extract_affiliations(bad_data))
-        
+
+    if test_number == 3:
+        from dimcli.utils.repl_utils import export_gist
+        q = "search publications return category_for limit 100"
+        data = dsl.query(q)
+        export_gist(data.json, q, dsl._url)
 
 
 if __name__ == '__main__':

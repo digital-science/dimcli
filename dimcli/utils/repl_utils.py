@@ -12,6 +12,7 @@ import subprocess
 import os
 import re
 import webbrowser
+import textwrap
 from itertools import islice
 from pandas import DataFrame
 try:
@@ -391,15 +392,15 @@ def export_gist(jjson, query, api_endpoint):
     """
 
 
-    ttime = time.strftime("%Y-%m-%d  at %H:%M:%S")
-    gist_desc = time.strftime(f"A Dimensions API export generated on {ttime}")
+    nicetime = time.strftime("%Y-%m-%d %H:%M:%S")
+    f1 = time.strftime("dimcli_export_%Y%m%d-%H%M%S")
+    f2 = time.strftime("dimcli_results_%Y%m%d-%H%M%S")
 
-    filestamp = time.strftime("dimcli_export_%Y%m%d-%H%M%S")
-    gist_readme_filename = "1-"+filestamp+".md"
-    csv_filename = "2-"+filestamp+".csv"
-    formatted_json_filename = "3-"+filestamp+".json"
+    gist_desc = time.strftime(f"Dimensions API export {nicetime}")
 
-
+    gist_readme_filename = "1-"+f1+".md"
+    csv_filename = "2-"+f2+".csv"
+    formatted_json_filename = "3-"+f2+".json"
 
     return_object = line_search_return(query)
     try:
@@ -407,12 +408,13 @@ def export_gist(jjson, query, api_endpoint):
     except:
         df =  json_normalize(jjson, errors="ignore")
 
-    gist_readme_contents = f"""# {query}
-    \nA Dimensions [API](https://docs.dimensions.ai/dsl) export\n\n* Created on: {ttime} with [Dimcli](https://github.com/digital-science/dimcli) {VERSION}\n* API endpoint: `{api_endpoint}` \n* DSL Query
+    gist_readme_contents = f"""## DSL: {textwrap.shorten(query, 70)}
+    \nA Dimensions API export\n\n* Created on: {nicetime} with [Dimcli](https://github.com/digital-science/dimcli) {VERSION}\n* API endpoint: `{api_endpoint}` \n* [DSL](https://docs.dimensions.ai/dsl) query:
     \n```
     \n{query}
     \n```
     \n 
+    \n=> records returned: {jjson['_stats']['limit']}
     """
 
     # create JSON
