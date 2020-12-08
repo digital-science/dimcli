@@ -382,6 +382,8 @@ def run(instance="live"):
             elif text == "help":
                 click.secho(HELP_MESSAGE, dim=True)
                 continue
+            # cm = CommandsManager(CLIENT,databuffer)
+            # cm.handle(text)
             try:
                 cm = CommandsManager(CLIENT,databuffer)
                 cm.handle(text)

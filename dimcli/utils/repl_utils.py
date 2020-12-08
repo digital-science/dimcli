@@ -405,16 +405,23 @@ def export_gist(jjson, query, api_endpoint):
     return_object = line_search_return(query)
     try:
         df =  json_normalize(jjson[return_object], errors="ignore")
+        df_size = f"""=> records returned: {len(df)}"""
     except:
         df =  json_normalize(jjson, errors="ignore")
+        df_size = ""  # fail silently if multiple return statemets
 
     gist_readme_contents = f"""## DSL: {textwrap.shorten(query, 70)}
-    \nA Dimensions API export\n\n* Created on: {nicetime} with [Dimcli](https://github.com/digital-science/dimcli) {VERSION}\n* API endpoint: `{api_endpoint}` \n* [DSL](https://docs.dimensions.ai/dsl) query:
+    \nFull [DSL](https://docs.dimensions.ai/dsl) query:
     \n```
     \n{query}
     \n```
     \n 
-    \n=> records returned: {jjson['_stats']['limit']}
+    \n{df_size}
+    \n
+    \n
+    \n---
+    \nExport created on `{nicetime}` with [Dimcli](https://digital-science.github.io/dimcli/index.html) `{VERSION}`. 
+    \nDimensions [API](https://www.dimensions.ai/dimensions-apis/) endpoint: `{api_endpoint}`.
     """
 
     # create JSON

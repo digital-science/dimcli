@@ -577,7 +577,7 @@ class DslDataset(IPython.display.JSON):
             return [] # empty list so to support iteration tests / previously: False
 
     def __len__(self):
-        "Return length of first object in JSON (skipping '_stats'"
+        "Return length of first object in JSON"
         k = self.good_data_keys()
         try:
             return len(self.json[k[0]])
