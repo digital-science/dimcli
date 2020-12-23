@@ -1,6 +1,6 @@
 #!/bin/bash
-# simple script to automate the steps involved in releasing ontospy in PiPy
-# prerequisites: chmod u+x release.sh
+# simple script to automate the steps involved in releasing to PiPy
+# prerequisites: chmod u+x this file
 
 clear
 
