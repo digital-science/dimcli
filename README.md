@@ -8,6 +8,7 @@ For more information see the [Getting Started with Dimcli](https://digital-scien
 
 Current version: see [pypi homepage](https://pypi.org/project/dimcli/). Source code hosted on [github](https://github.com/digital-science/dimcli). 
 
+[![Downloads](https://pepy.tech/badge/dimcli)](https://pepy.tech/project/dimcli)
 
 
 ## Comments, bug reports
