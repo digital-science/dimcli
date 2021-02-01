@@ -109,6 +109,7 @@ ENV/
 
 /tools/apitest*
 /dimcli/tests/apitest*
+/dimcli/tests/test_cris*
 
 README_PRIVATE.md
 README_DOCUMENTATION.md
