@@ -352,11 +352,14 @@ $ touch ~/.dimensions/dsl.ini
 <span class="go"># if you have already set up the credentials file (see above), no need to pass log in details</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
 
-<span class="go"># otherwise you can authenticate by passing your login details as arguments</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="s2">&quot;mary.poppins&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;chimneysweeper&quot;</span><span class="p">)</span>
+<span class="go"># you can pass explicitly your login details as arguments</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;my-super-secret-key&quot;</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="s2">&quot;https://app.dimensions.ai&quot;</span><span class="p">)</span>
 
-<span class="go"># you can specify endpoint, which by default is set to &quot;https://app.dimensions.ai&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="s2">&quot;mary.poppins&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;chimneysweeper&quot;</span><span class="p">,</span> <span class="n">ednpoint</span><span class="o">=</span><span class="s2">&quot;https://nannies-research.dimensions.ai&quot;</span><span class="p">)</span>
+<span class="go"># works also with the legacy authentication method</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;mary.poppins&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;chimneysweeper&quot;</span><span class="p">)</span>
+
+<span class="go"># if your account uses a different endpoint, you can specify that </span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;mary.poppins&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;chimneysweeper&quot;</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="s2">&quot;https://nannies-research.dimensions.ai&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Once logged in, you can get a query object and try some queries:</p>

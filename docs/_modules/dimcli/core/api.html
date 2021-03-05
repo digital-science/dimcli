@@ -727,7 +727,7 @@
             <span class="k">return</span> <span class="p">[]</span> <span class="c1"># empty list so to support iteration tests / previously: False</span>
 
     <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="s2">&quot;Return length of first object in JSON (skipping &#39;_stats&#39;&quot;</span>
+        <span class="s2">&quot;Return length of first object in JSON&quot;</span>
         <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">good_data_keys</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>

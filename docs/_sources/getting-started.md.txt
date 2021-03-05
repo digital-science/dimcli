@@ -224,11 +224,14 @@ Dimcli can be used as a wrapper around the Dimensions API within a Python progra
 # if you have already set up the credentials file (see above), no need to pass log in details
 >>> dimcli.login()
 
-# otherwise you can authenticate by passing your login details as arguments
->>> dimcli.login(user="mary.poppins", password="chimneysweeper")
+# you can pass explicitly your login details as arguments
+>>> dimcli.login(key="my-super-secret-key", endpoint="https://app.dimensions.ai")
 
-# you can specify endpoint, which by default is set to "https://app.dimensions.ai"
->>> dimcli.login(user="mary.poppins", password="chimneysweeper", ednpoint="https://nannies-research.dimensions.ai")
+# works also with the legacy authentication method
+>>> dimcli.login(username="mary.poppins", password="chimneysweeper")
+
+# if your account uses a different endpoint, you can specify that 
+>>> dimcli.login(username="mary.poppins", password="chimneysweeper", endpoint="https://nannies-research.dimensions.ai")
 
 ```
 

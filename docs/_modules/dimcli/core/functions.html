@@ -394,11 +394,13 @@
     <span class="c1">#        </span>
     <span class="c1"># == main DSL query == </span>
     <span class="c1">#        </span>
-    <span class="n">output</span> <span class="o">=</span> <span class="n">dsl</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;extract_affiliations(json=</span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span><span class="si">}</span><span class="s2">, results=&quot;basic&quot;)&quot;&quot;&quot;</span><span class="p">)</span>  <span class="c1"># same query for both struct and unstruct</span>
+    <span class="c1"># Saving utf-8 texts in json.dumps as UTF8, not as \u escape sequence</span>
+    <span class="c1"># https://stackoverflow.com/questions/18337407/saving-utf-8-texts-in-json-dumps-as-utf8-not-as-u-escape-sequence</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">dsl</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;extract_affiliations(json=</span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="si">}</span><span class="s2">, results=&quot;basic&quot;)&quot;&quot;&quot;</span><span class="p">)</span>  <span class="c1"># same query for both struct and unstruct</span>
     
     <span class="k">if</span> <span class="n">as_json</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">output</span><span class="o">.</span><span class="n">json</span>
-    <span class="k">else</span><span class="p">:</span> <span class="c1"># return DF</span>
+    <span class="k">elif</span> <span class="s2">&quot;results&quot;</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">json</span><span class="p">:</span> <span class="c1"># return DF</span>
         <span class="k">if</span> <span class="n">affiliation_type</span> <span class="o">==</span> <span class="s2">&quot;STRUCTURED&quot;</span><span class="p">:</span>
             <span class="n">temp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">json_normalize</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">],</span>  <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">affiliation_type</span> <span class="o">==</span> <span class="s2">&quot;UNSTRUCTURED&quot;</span><span class="p">:</span> 
