@@ -290,12 +290,13 @@ def print_warning_prompt_version():
 
 
 def preview_contents(fpath):
-    click.secho("File: {}".format(fpath), bold=True)
+    """print out the contents of the local settings file in the terminal """
     try:
         with open(fpath) as f:
             print(f.read())
     except:
         print("An unknown error occured..")
+    click.secho("---\nFile: {}".format(fpath), bold=True)
 
 
 def init_config_folder(user_dir, user_config_file):
