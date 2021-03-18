@@ -325,7 +325,11 @@ For example, it contains a few [magic commands](https://github.com/digital-scien
 * `%dslloopdf` can be used to run a paginated API query and transform the JSON data to a dataframe
 * `%dsldocs` can be used to programmatically extract API schema information
 
-For more information and examples see the [The Dimcli Python library: Magic Commands](https://api-lab.dimensions.ai/cookbooks/1-getting-started/4-Dimcli-magic-commands.html) notebook available in the [Dimensions API Lab](https://api-lab.dimensions.ai/).
+For more information and examples see the [The Dimcli Python library: Magic Commands](https://api-lab.dimensions.ai/cookbooks/1-getting-started/4-Dimcli-magic-commands.html) notebook and the [jupyter.magics module](https://digital-science.github.io/dimcli/modules.html#module-dimcli.jupyter.magics).
+
+## Changelog
+
+See [CHANGELOG.md](https://github.com/digital-science/dimcli/blob/master/CHANGELOG.md) on Github.
 
 
 ## Comments, bug reports
