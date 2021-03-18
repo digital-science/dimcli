@@ -53,9 +53,14 @@ class TestOne(unittest.TestCase):
         config = configparser.ConfigParser()
         config.read(os.path.expanduser(USER_CONFIG_FILE_PATH))
         section = config['instance.live' ]
-        USER = section['login']
-        PSW = section['password']
-        login(USER, PSW)
+        try:
+            # 2021-03-18 / old method
+            USER = section['login']
+            PSW = section['password']
+            login(USER, PSW)
+        except:
+            KEY = section['key']
+            login(key=KEY)
         d = Dsl()
         res = d.query("search publications where year=2018 return publications")
         # print("Query results: ", res.keys_and_count())
