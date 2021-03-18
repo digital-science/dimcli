@@ -45,6 +45,8 @@ SYNTAX_DICT = {
         'datasets' : 'https://app.dimensions.ai/details/data_set/',
         'researchers' : 'https://app.dimensions.ai/discover/publication?and_facet_researcher=',
         'organizations' : 'https://app.dimensions.ai/discover/publication?and_facet_research_org=',
+        'reports' : '',
+        'source_titles' : 'https://app.dimensions.ai/discover/publication?and_facet_source_title=',
     },
     'dimensions_object_id_patterns' : {
         'publications' : 'pub.',
@@ -55,6 +57,8 @@ SYNTAX_DICT = {
         'datasets' : ' ',
         'researchers' : 'ur.',
         'organizations' : 'grid.',
+        'reports' : '',
+        'source_titles' : 'jour.',
     },
     'lang_all': [
         'search',
