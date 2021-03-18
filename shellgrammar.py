@@ -11,6 +11,6 @@ dsl = dimcli.Dsl()
 
 data = dsl.query("describe schema").json
 
-with open("dimcli/core/dsl_grammar_language_NEW.py", "w") as f:
+with open("dimcli/core/dsl_grammar_core_NEW.py", "w") as f:
     f.write("GRAMMAR_DICT = " + str(data))
 

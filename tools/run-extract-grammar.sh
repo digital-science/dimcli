@@ -10,7 +10,7 @@ echo "import dimcli"
 echo "dimcli.login('test')"
 echo "dsl = dimcli.Dsl()"
 echo "data = dsl.query('describe schema').json"
-echo "with open('dimcli/core/dsl_grammar_language_NEW.py', 'w') as f:"
+echo "with open('dimcli/core/dsl_grammar_core_NEW.py', 'w') as f:"
 echo "    f.write('GRAMMAR_DICT = ' + str(data))"
 echo "=================="
 
