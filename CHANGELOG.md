@@ -1,5 +1,11 @@
 # Changelog
 
+
+## v 0.9
+
+* DSL grammar updated for version 1.30 (2021-03 release)
+
+
 ## v 0.8.2
 
 * CLI - new `export_gist` command to export query as a Github Gist
