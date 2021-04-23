@@ -329,7 +329,7 @@ For more information and examples see the [The Dimcli Python library: Magic Comm
 
 ## Changelog
 
-See the file `CHANGELOG.md` on [Github](https://github.com/digital-science/dimcli) - [https://github.com/digital-science/dimcli/blob/master/CHANGELOG.md](https://github.com/digital-science/dimcli/blob/master/CHANGELOG.md)
+See the file `CHANGELOG.md` on [Github](https://github.com/digital-science/dimcli).
 
 
 ## Comments, bug reports
