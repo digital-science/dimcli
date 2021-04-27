@@ -210,7 +210,7 @@ token: d5047fASAD889912HHBAJVSAD8e8bae17e2
 
 This will allow to export/create gists from DSL queries when using the Dimcli CLI. 
 
-> NOTE: all gists created by Dimcli are not private to your Github account (=unlisted)
+> NOTE: this method by default generates [secret gists](https://docs.github.com/en/github/writing-on-github/creating-gists#about-gists) - they are not searchable, but if you send the URL of a secret gist to a friend, they'll be able to see it.
 
 
 
