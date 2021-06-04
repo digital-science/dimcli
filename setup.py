@@ -45,6 +45,8 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/digital-science/dimcli",
+    author="Michele Pasin @lambdaman",
+    license="MIT License",
     packages=find_packages(),
     include_package_data=True,
     package_data = {
