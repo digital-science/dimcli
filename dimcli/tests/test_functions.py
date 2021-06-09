@@ -18,6 +18,8 @@ from ..core.api import DslDataset
 from ..utils import *
 from ..functions import *
 
+from .settings import API_INSTANCE
+
 
 class TestOne(unittest.TestCase):
 
@@ -26,7 +28,7 @@ class TestOne(unittest.TestCase):
     """
 
     click.secho("**TESTS**", fg="red")
-    login(instance="live")
+    login(instance=API_INSTANCE)
     d = Dsl()
 
     def test_001(self):

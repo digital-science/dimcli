@@ -17,6 +17,8 @@ from ..core.auth import USER_CONFIG_FILE_PATH
 from ..core.api import DslDataset
 from ..utils import *
 
+from .settings import API_INSTANCE
+
 
 class TestOne(unittest.TestCase):
 
@@ -25,7 +27,7 @@ class TestOne(unittest.TestCase):
     """
 
     click.secho("**TESTS**", fg="red")
-    login(instance="live")
+    login(instance=API_INSTANCE)
     d = Dsl()
 
 

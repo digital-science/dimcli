@@ -17,6 +17,9 @@ from ..core.auth import USER_CONFIG_FILE_PATH
 from ..utils import *
 
 
+from .settings import API_INSTANCE
+
+
 class TestOne(unittest.TestCase):
 
     """
@@ -29,7 +32,7 @@ class TestOne(unittest.TestCase):
         click.secho("\nTEST 001: load Dimcli using file-based credentials and verbose mode", fg="green")
         # ----
         click.secho("Login... verbose=True", fg="magenta")
-        login()
+        login(instance=API_INSTANCE)
         d = Dsl()
         res = d.query("search publications where year=2018 return publications")
         print("Query BATCH results: ", res.count_batch)
@@ -37,7 +40,7 @@ class TestOne(unittest.TestCase):
         logout()
         # ----
         click.secho("Login... verbose=False", fg="magenta")
-        login(verbose=False)
+        login(instance=API_INSTANCE, verbose=False)
         d = Dsl()
         res = d.query("search publications where year=2018 return publications")
         print("Query BATCH results: ", res.count_batch)
@@ -71,9 +74,9 @@ class TestOne(unittest.TestCase):
     def test_002_1(self):
         click.secho("\nTEST 002-1: Retain login info and force new login.", fg="green")
         # ----
-        login(instance="live")
+        login(instance=API_INSTANCE)
         d = Dsl()
-        click.secho(""" Dsl(instance="live"): ==> url=""" + d._url, fg="magenta")
+        click.secho(f""" Dsl(instance="{API_INSTANCE}"): ==> url=""" + d._url, fg="magenta")
         res = d.query("""search publications where authors="Pasin" return publications""")
         print(" ==> res.json.keys(): ", res.json.keys())
         logout()

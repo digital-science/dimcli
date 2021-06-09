@@ -15,6 +15,8 @@ from .. import *
 from ..core.auth import USER_CONFIG_FILE_PATH
 from ..utils import *
 
+from .settings import API_INSTANCE
+
 
 class TestOne(unittest.TestCase):
 
@@ -88,7 +90,7 @@ class TestOne(unittest.TestCase):
 
     def test_003(self):
         click.secho("\nTEST 003: Language utils: DSL escape.", fg="green")
-        login()
+        login(instance=API_INSTANCE)
         d = Dsl()
         # ----
         covid_q = '"2019-nCoV" OR "COVID-19" OR "SARS-CoV-2" OR (("coronavirus"  OR "corona virus") AND (Wuhan OR China))'

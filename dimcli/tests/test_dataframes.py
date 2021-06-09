@@ -16,6 +16,8 @@ from .. import *
 from ..core.auth import USER_CONFIG_FILE_PATH
 from ..utils import *
 
+from .settings import API_INSTANCE
+
 
 class TestDataframes(unittest.TestCase):
 
@@ -24,7 +26,7 @@ class TestDataframes(unittest.TestCase):
     """
 
     click.secho("**TESTS**", fg="red")
-    login(instance="live")
+    login(instance=API_INSTANCE)
     d = Dsl()
 
     def test_001(self):

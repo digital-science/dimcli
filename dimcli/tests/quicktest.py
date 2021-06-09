@@ -20,13 +20,14 @@ from ..core.converters import *
 
 from ..utils.gists_utils import *
 
+from .settings import API_INSTANCE
 
 
 @click.command()
 @click.argument('test_number', nargs=1)
 def main(test_number=1):
     
-    login()
+    login(instance=API_INSTANCE)
     dsl = Dsl()
     test_number = int(test_number)
 
