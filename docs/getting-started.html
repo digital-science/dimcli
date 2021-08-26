@@ -184,7 +184,7 @@
 <p>Dimcli is a Python client for accessing the <a class="reference external" href="https://www.dimensions.ai/">Dimensions Analytics API</a>. It makes it easier to authenticate against the API, send queries to it and process the JSON data being returned. E.g.:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">dimcli</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="s2">&quot;mary.poppins&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;chimneysweeper&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;mary.poppins&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;chimneysweeper&quot;</span><span class="p">)</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dsl</span> <span class="o">=</span> <span class="n">dimcli</span><span class="o">.</span><span class="n">Dsl</span><span class="p">()</span>
 
@@ -241,7 +241,7 @@ See also an older animated video on <a class="reference external" href="https://
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">dimcli</span>
 
 <span class="go"># you can specify endpoint, which by default is set to &quot;https://app.dimensions.ai&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="s2">&quot;mary.poppins&quot;</span><span class="p">,</span> 
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;mary.poppins&quot;</span><span class="p">,</span> 
 <span class="go">                 password=&quot;chimneysweeper&quot;, </span>
 <span class="go">                 endpoint=&quot;https://app.dimensions.ai&quot;)</span>
 </pre></div>

@@ -9,7 +9,7 @@ Dimcli is a Python client for accessing the [Dimensions Analytics API](https://w
 ```
 >>> import dimcli
 
->>> dimcli.login(user="mary.poppins", password="chimneysweeper")
+>>> dimcli.login(username="mary.poppins", password="chimneysweeper")
 
 >>> dsl = dimcli.Dsl()
 
@@ -79,7 +79,7 @@ If you can't create a configuration file you can explicitly provide log in crede
 >>> import dimcli
 
 # you can specify endpoint, which by default is set to "https://app.dimensions.ai"
->>> dimcli.login(user="mary.poppins", 
+>>> dimcli.login(username="mary.poppins", 
                  password="chimneysweeper", 
                  endpoint="https://app.dimensions.ai")
 

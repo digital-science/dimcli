@@ -72,11 +72,11 @@ def login(username="", password="", endpoint="https://app.dimensions.ai", instan
 
     Otherwise you can authenticate by passing your login details as arguments
     
-    >>> dimcli.login(user="mary.poppins", password="chimneysweeper")
+    >>> dimcli.login(username="mary.poppins", password="chimneysweeper")
 
     You can specify endpoint, which by default is set to "https://app.dimensions.ai"
     
-    >>> dimcli.login(user="mary.poppins", password="chimneysweeper", ednpoint="https://nannies-research.dimensions.ai")
+    >>> dimcli.login(username="mary.poppins", password="chimneysweeper", ednpoint="https://nannies-research.dimensions.ai")
 
     If you use key based authentication, then do
     

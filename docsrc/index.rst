@@ -9,7 +9,7 @@ Dimcli lives on `Github <https://github.com/digital-science/dimcli/>`_. Suggesti
 
       >>> import dimcli
 
-      >>> dimcli.login(user="mary.poppins", password="chimneysweeper")
+      >>> dimcli.login(username="mary.poppins", password="chimneysweeper")
 
       >>> dsl = dimcli.Dsl()
 
