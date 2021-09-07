@@ -216,9 +216,9 @@ def line_is_search_query(line):
 
 
 def line_search_subject(line):
-    "get the source one searches for"
+    "get the source name being searched for"
     l = line.split()
-    if len(l) > 1 and "search" in l:
+    if len(l) > 1 and "search" in l[:4]:
         i = l.index("search")
         return l[i + 1]
     else:
@@ -558,7 +558,7 @@ def export_as_jupyter(jjson, query, USER_EXPORTS_DIR):
 def print_json_stats(res, query="", elapsed=""):
     """
     from a dimcli.DslDataset object, print out basic stats
-    * works primarily for 'search' types of query
+    * works only for 'search' types of query
     """
     # what is searched for
     source, tot = line_search_subject(query), None
