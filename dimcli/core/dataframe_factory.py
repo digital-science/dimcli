@@ -172,7 +172,7 @@ class DfFactory(object):
             df.dropna(subset=[FIELD_NAME_SCORES], inplace=True)  # remove rows if there is no concept
             df.reset_index(inplace=True, drop=True)
             original_cols = [x for x in df.columns.to_list() if x != FIELD_NAME_SCORES]
-            df = df.drop(FIELD_NAME_SCORES, 1).assign(**pd.json_normalize(df[FIELD_NAME_SCORES]))  # unpack dict with new columns
+            df = df.drop(FIELD_NAME_SCORES, axis=1).assign(**pd.json_normalize(df[FIELD_NAME_SCORES]))  # unpack dict with new columns
             df = df[df.relevance != 0]  # remove 0-relevance scores
             df['relevance'] = df['relevance'].round(ROUNDING)
             df.rename(columns={"relevance": "score"}, inplace=True) 
