@@ -31,7 +31,7 @@ CONNECTION = {'instance': None, 'url': None, 'username': None, 'password': None,
 
 
 
-def do_global_login(instance="live", username="", password="", key="", url="https://app.dimensions.ai"):
+def do_global_login(instance="live", username="", password="", key="", url="https://app.dimensions.ai", version="v1"):
     "Login into DSL and set the connection object with token"
     
     global CONNECTION
@@ -50,7 +50,10 @@ def do_global_login(instance="live", username="", password="", key="", url="http
             key = config_section['key']
         except:
             key = ""
-
+        try:
+            version = config_section['version']
+        except:
+            version = "v1"
 
     login_data = {'username': username, 'password': password, 'key': key}
     response = requests.post(
@@ -61,6 +64,7 @@ def do_global_login(instance="live", username="", password="", key="", url="http
 
     CONNECTION['instance'] = instance
     CONNECTION['url'] = url
+    CONNECTION['version'] = version
     CONNECTION['username'] = username
     CONNECTION['password'] = password
     CONNECTION['key'] = key
@@ -72,13 +76,13 @@ def refresh_login():
     """
     Method used to login again if the TOKEN has expired - using previously entered credentials
     """
-    do_global_login(CONNECTION['instance'], CONNECTION['username'], CONNECTION['password'], CONNECTION['key'], CONNECTION['url'])
+    do_global_login(CONNECTION['instance'], CONNECTION['username'], CONNECTION['password'], CONNECTION['key'], CONNECTION['url'], CONNECTION['version'])
 
 
 def reset_login():
     ""
     global CONNECTION
-    CONNECTION = {'instance': None, 'url': None, 'username': None, 'password': None,  'key': None,  'token' : None}
+    CONNECTION = {'instance': None, 'url': None, 'username': None, 'password': None,  'key': None,  'token' : None, 'version': None}
 
 
 def get_connection():
@@ -113,6 +117,7 @@ def get_init_file():
 
     [instance.live]
     url=https://app.dimensions.ai
+    version=v1
     login=your_username
     password=your_password
     key=your_key

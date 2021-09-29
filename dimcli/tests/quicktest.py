@@ -97,6 +97,12 @@ def main(test_number=1):
         data = dsl.query(q)
         export_gist(data.json, q, dsl._url)
 
+    if test_number == 4:
+        q = "search publications return research_orgs limit 100"
+        data = dsl.query(q, verbose=True)
+        print(len(data))
+
+
 
 if __name__ == '__main__':
     main()

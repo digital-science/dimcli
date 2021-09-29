@@ -39,7 +39,12 @@ except:
 
 
 
-def login(username="", password="", endpoint="https://app.dimensions.ai", instance="live", key="", verbose=True):
+def login(username="", password="", 
+            endpoint="https://app.dimensions.ai", 
+            instance="live", 
+            key="", 
+            version="v1", 
+            verbose=True):
     """Login into the Dimensions API and store the query token in memory. 
 
     Two cases:
@@ -56,6 +61,8 @@ def login(username="", password="", endpoint="https://app.dimensions.ai", instan
         The API password
     endpoint: str, optional
         The API endpoint - default is "https://app.dimensions.ai"
+    version: str, optional
+        The API version, either 'v1' or 'v2' - default is 'v1' (latest version)
     instance: str, optional
         The instance name, from the local dsl.ini credentials file. Default: 'live'
     key: str, optional
@@ -88,7 +95,7 @@ def login(username="", password="", endpoint="https://app.dimensions.ai", instan
     from .core.auth import do_global_login, get_connection
 
     try:
-        do_global_login(instance, username, password, key, endpoint)
+        do_global_login(instance, username, password, key, endpoint, version)
     except Exception as e:
         print("Login failed: please ensure your credentials are correct.")
         raise(e)
@@ -114,7 +121,7 @@ def _print_login_success(CONNECTION, username, password, key):
         _method = "manual login"
     else:
         _method = "dsl.ini file"
-    click.secho(f"Connected to: {CLIENT._url} - DSL v{_info}", dim=True)
+    click.secho(f"Connected to: <{CLIENT._endpoint}> - DSL v{_info}", dim=True)
     click.secho(f"Method: {_method}", dim=True)
 
 

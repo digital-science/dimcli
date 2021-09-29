@@ -62,12 +62,14 @@ class Dsl():
         self._show_results = show_results
         self._verbose = verbose
         self._url = None
+        self._endpoint = None
         self._headers = None
         self._CONNECTION = get_connection()
 
         if self._CONNECTION['token']:
             # if already logged in, reuse connection          
             self._url = self._CONNECTION['url']
+            self._endpoint = self._CONNECTION['url'] + "/api/dsl/" + self._CONNECTION['version']
             self._headers = {'Authorization': "JWT " + self._CONNECTION['token']}
         else:
             self._print_please_login()
@@ -116,8 +118,7 @@ class Dsl():
         
         #   Execute DSL query.
         start = time.time()
-        response = requests.post(
-            '{}/api/dsl.json'.format(self._url), data=q.encode(), headers=self._headers)
+        response = requests.post(self._endpoint, data=q.encode(), headers=self._headers)
         if response.status_code == 429:  
             # Too Many Requests
             print(
@@ -332,7 +333,7 @@ class Dsl():
 
 
     def __repr__(self):
-        return f"<dimcli.Dsl #{id(self)}. API endpoint: {self._url}>"
+        return f"<dimcli.Dsl #{id(self)}. API endpoint: {self._endpoint}>"
 
 
 
