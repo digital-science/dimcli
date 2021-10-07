@@ -23,7 +23,6 @@ SYNTAX_DICT = {
         '.export_as_bar_chart' : [],
         '.export_as_jupyter' : [],
         '.export_as_gsheets' : [],
-        '.record_notebook' : [],
         '.url' : [],
     },
     'allowed_starts_dsl_query': {
