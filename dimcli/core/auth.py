@@ -26,12 +26,56 @@ USER_SETTINGS_FILE_PATH = os.path.expanduser(USER_DIR + USER_SETTINGS_FILE_NAME)
 
 
 # global connection object
-CONNECTION = {'instance': None, 'url': None, 'username': None, 'password': None, 'key': None,  'token' : None}
+CONNECTION = {'instance': None, 
+              'url': None, 
+              'username': None, 
+              'password': None, 
+              'key': None,  
+              'token' : None
+              }
 
 
 
+def _get_endpoint_urls(user_url):
+    """Infer the proper API endpoints URLs from the (possibly incomplete) URL the use is sending. 
+    
+    CASE 1
+    User provides a domain URL eg https://app.dimensions.ai. 
+    => Then the Query URL defaults to `/api/dsl`
 
-def do_global_login(instance="live", username="", password="", key="", url="https://app.dimensions.ai", version="v1"):
+    CASE 1
+    User provides a full query URL eg https://app.dimensions.ai/api/dsl/v2. 
+    => Then no action is needed
+
+    Query Endpoints:
+    * /api/dsl/v1
+    * /api/dsl/v2
+    * /api/dsl
+    * /api/dsl.json
+
+    Auth endpoint (always inferred)
+    * /api/auth.json
+
+    https://docs.dimensions.ai/dsl/2.0.0/api.html#endpoints
+
+    NOTE 
+    We never try to validate URLs provided by users.
+
+    """
+    url_auth, url_query = None, None
+    if "/api/" in user_url:
+        # savy user passing the full QUERY URL
+        domain = user_url.split("/api/")[0]
+        url_auth = domain + "/api/auth.json"
+        url_query = user_url
+    else:
+        domain = user_url
+        url_auth = domain + "/api/auth.json"
+        url_query = domain + "/api/dsl"
+    return url_auth, url_query
+
+
+def do_global_login(instance="live", username="", password="", key="", url="https://app.dimensions.ai"):
     "Login into DSL and set the connection object with token"
     
     global CONNECTION
@@ -41,6 +85,8 @@ def do_global_login(instance="live", username="", password="", key="", url="http
         fpath = get_init_file()
         config_section = read_init_file(fpath, instance)
         url = config_section['url']
+        URL_AUTH, URL_QUERY = _get_endpoint_urls(url)
+        print(URL_AUTH, URL_QUERY )
         try:
             username = config_section['login']
             password = config_section['password']
@@ -50,21 +96,15 @@ def do_global_login(instance="live", username="", password="", key="", url="http
             key = config_section['key']
         except:
             key = ""
-        try:
-            version = config_section['version']
-        except:
-            version = "v1"
 
     login_data = {'username': username, 'password': password, 'key': key}
-    response = requests.post(
-        '{}/api/auth.json'.format(url), json=login_data)
+    response = requests.post(URL_AUTH, json=login_data)
     response.raise_for_status()
 
     token = response.json()['token']
 
     CONNECTION['instance'] = instance
-    CONNECTION['url'] = url
-    CONNECTION['version'] = version
+    CONNECTION['url'] = URL_QUERY
     CONNECTION['username'] = username
     CONNECTION['password'] = password
     CONNECTION['key'] = key
@@ -76,13 +116,23 @@ def refresh_login():
     """
     Method used to login again if the TOKEN has expired - using previously entered credentials
     """
-    do_global_login(CONNECTION['instance'], CONNECTION['username'], CONNECTION['password'], CONNECTION['key'], CONNECTION['url'], CONNECTION['version'])
+    do_global_login(CONNECTION['instance'], 
+                    CONNECTION['url'], 
+                    CONNECTION['username'], 
+                    CONNECTION['password'], 
+                    CONNECTION['key'], 
+                    )
 
 
 def reset_login():
     ""
     global CONNECTION
-    CONNECTION = {'instance': None, 'url': None, 'username': None, 'password': None,  'key': None,  'token' : None, 'version': None}
+    CONNECTION = {'instance': None, 
+                  'url': None, 
+                  'username': None, 
+                  'password': None,  
+                  'token' : None, 
+                  'key': None}
 
 
 def get_connection():
@@ -117,7 +167,6 @@ def get_init_file():
 
     [instance.live]
     url=https://app.dimensions.ai
-    version=v1
     login=your_username
     password=your_password
     key=your_key
@@ -165,7 +214,9 @@ def read_init_file(fpath, instance_name):
 
 
 
-
+# 
+# NEW settings eg gists key etcc
+# 
 
 
 def get_settings_file():

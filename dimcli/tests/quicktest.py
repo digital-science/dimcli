@@ -27,7 +27,7 @@ from .settings import API_INSTANCE
 @click.argument('test_number', nargs=1)
 def main(test_number=1):
     
-    login(instance=API_INSTANCE)
+    login(instance="live2")
     dsl = Dsl()
     test_number = int(test_number)
 
@@ -37,7 +37,7 @@ def main(test_number=1):
         q = f"""search publications 
                 in full_data for "{dsl_escape(covid_q)}" 
                 where year=2020 
-            return publications[id+doi+pmid+pmcid+title+journal+publisher+mesh_terms+date+year+volume+issue+pages+open_access_categories+type+authors+research_orgs+funders+supporting_grant_ids+times_cited+altmetric+linkout] limit 1000"""
+            return publications[id+doi+pmid+pmcid+title+journal+publisher+mesh_terms+date+year+volume+issue+pages+open_access+type+authors+research_orgs+funders+supporting_grant_ids+times_cited+altmetric+linkout] limit 1000"""
 
         q1 = """search publications for "malaria" return publications[id+authors]"""
 
@@ -95,7 +95,7 @@ def main(test_number=1):
         from dimcli.utils.repl_utils import export_gist
         q = "search publications return category_for limit 100"
         data = dsl.query(q)
-        export_gist(data.json, q, dsl._url)
+        print(data.errors)
 
     if test_number == 4:
         q = "search publications return research_orgs limit 100"

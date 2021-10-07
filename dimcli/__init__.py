@@ -43,7 +43,6 @@ def login(username="", password="",
             endpoint="https://app.dimensions.ai", 
             instance="live", 
             key="", 
-            version="v1", 
             verbose=True):
     """Login into the Dimensions API and store the query token in memory. 
 
@@ -61,8 +60,6 @@ def login(username="", password="",
         The API password
     endpoint: str, optional
         The API endpoint - default is "https://app.dimensions.ai"
-    version: str, optional
-        The API version, either 'v1' or 'v2' - default is 'v1' (latest version)
     instance: str, optional
         The instance name, from the local dsl.ini credentials file. Default: 'live'
     key: str, optional
@@ -95,7 +92,7 @@ def login(username="", password="",
     from .core.auth import do_global_login, get_connection
 
     try:
-        do_global_login(instance, username, password, key, endpoint, version)
+        do_global_login(instance, username, password, key, endpoint)
     except Exception as e:
         print("Login failed: please ensure your credentials are correct.")
         raise(e)
@@ -113,15 +110,15 @@ def _print_login_success(CONNECTION, username, password, key):
     CLIENT = Dsl(verbose=False)
     # dynamically retrieve dsl version 
     try:
-        _info = CLIENT.query("describe version")['release']
+        _info = "v" + CLIENT.query("describe version")['release']
     except:
-        _info = "not available"
+        _info = "[failed to retrieve version information]"
 
     if (username and password) or key:
         _method = "manual login"
     else:
         _method = "dsl.ini file"
-    click.secho(f"Connected to: <{CLIENT._endpoint}> - DSL v{_info}", dim=True)
+    click.secho(f"Connected to: <{CLIENT._url}> - DSL {_info}", dim=True)
     click.secho(f"Method: {_method}", dim=True)
 
 
