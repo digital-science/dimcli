@@ -2,6 +2,12 @@
 
 
 
+## v 0.9.2
+
+* CLI: `.record_notebook` utility removed. Use instead `.export_as_jupyter`
+* Added support for new V2 API endpoints
+
+
 ## v 0.9.1
 
 * DSL grammar updated for version 1.31 (2021-05 release)

@@ -79,14 +79,17 @@ def do_global_login(instance="live", username="", password="", key="", url="http
     "Login into DSL and set the connection object with token"
     
     global CONNECTION
+    URL_AUTH, URL_QUERY = _get_endpoint_urls(url)
 
     if not (username and password) and not key:
-        # then use 'instance' shortcut to get local credentials
+        
+        # GET LOCAL CONFIG FILE SECTION USING THE 'INSTANCE' ARGUMENT
+        
         fpath = get_init_file()
         config_section = read_init_file(fpath, instance)
-        url = config_section['url']
+        url = config_section['url'] # OVERRIDE URL USING LOCAL CONFIG
         URL_AUTH, URL_QUERY = _get_endpoint_urls(url)
-        print(URL_AUTH, URL_QUERY )
+        # print(URL_AUTH, URL_QUERY )
         try:
             username = config_section['login']
             password = config_section['password']
