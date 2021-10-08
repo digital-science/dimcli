@@ -33,7 +33,7 @@ import time
 import requests
 
 from ..core.api import Dsl
-from ..core.auth import USER_HISTORY_FILE, USER_EXPORTS_DIR, do_global_login, get_connection
+from ..core.auth import USER_HISTORY_FILE, USER_EXPORTS_DIR, do_global_login, get_global_connection
 from ..core.dsl_grammar import *
 from ..utils.all import *
 
@@ -116,9 +116,6 @@ class CommandsManager(object):
 
         elif text.replace("\n", "").strip().startswith(".url"):
             self.url_resolver(text.replace("\n", "").strip())
-
-        elif text.replace("\n", "").strip().startswith(".record"):
-            self.record_notebook(text.replace("\n", "").strip())
 
         else:
             return self.query(text)
@@ -208,48 +205,6 @@ class CommandsManager(object):
         else:
             print("Please specify a source or entity.")
 
-    def record_notebook(self, text, rows=10):
-        """
-        2020-06-01: DEPRECATED TODO remove 
-        Sustituted with .export function
-        
-        Take the last 10 (default) rows from the history, and create a new python notebook with them. 
-        Saves in usual location.
-
-        Based on https://gist.github.com/fperez/9716279
-
-        @TODO handle is history rows are not enough! 
-        @ TODO Move imports
-        """
-        from itertools import islice
-        import nbformat as nbf
-        init_exports_folder(USER_EXPORTS_DIR)
-        history=SelectiveFileHistory(USER_HISTORY_FILE)
-
-        rows_data = []
-        for item in islice(history.load_history_strings(), rows):
-            rows_data += [item]
-        rows_data.reverse()
-
-        nb = nbf.v4.new_notebook()
-        this_time = time.strftime("%Y.%m.%d h%H:%M:%S")
-
-        text = f"""# Dimensions API Queries Export\n### {this_time} \nThis notebook was generated using [Dimcli](https://github.com/digital-science/dimcli/) - the Dimensions API CLI."""
-    
-        nb['cells'] = [nbf.v4.new_markdown_cell(text)]
-
-        setup = """import dimcli\ndimcli.login()"""
-        nb['cells'] += [nbf.v4.new_code_cell(setup)]
-
-        for code in rows_data:
-            nb['cells'] += [nbf.v4.new_code_cell("%dsldf " + code)]
-
-        filename = time.strftime(f"dsl_export_%Y-%m-%d_%H-%M-%S.ipynb")
-        nbf.write(nb, USER_EXPORTS_DIR + filename)
-        import subprocess
-        subprocess.run(['open', USER_EXPORTS_DIR + filename], check=True)
-        print("Exported: ", "%s%s" % (USER_EXPORTS_DIR, filename))
-
 
     def export(self, text):
         """
@@ -263,8 +218,8 @@ class CommandsManager(object):
         if not jsondata:
             print("Nothing to export - please run a search first.")
             return
-        CONNECTION = get_connection()
-        api_endpoint = CONNECTION['url']
+        CONNECTION = get_global_connection()
+        api_endpoint = CONNECTION.url
         # cases
         if text == ".export_as_html":
             export_json_html(jsondata, query, api_endpoint, USER_EXPORTS_DIR)

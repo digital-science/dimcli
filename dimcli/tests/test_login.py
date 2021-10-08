@@ -26,10 +26,10 @@ class TestOne(unittest.TestCase):
     Tests  
     """
 
-    click.secho("**TESTS**", fg="red")
+    click.secho("**test_login.py**", fg="red")
 
     def test_001(self):
-        click.secho("\nTEST 001: load Dimcli using file-based credentials and verbose mode", fg="green")
+        click.secho("\nTEST 001: GLOBAL login/logout using file-based credentials and verbose mode", bg="green")
         # ----
         click.secho("Login... verbose=True", fg="magenta")
         login(instance=API_INSTANCE)
@@ -47,10 +47,10 @@ class TestOne(unittest.TestCase):
         click.secho("Logout... verbose=False", fg="magenta")
         logout()
         # ----
-        click.secho("Completed test succesfully", fg="green")
+        click.secho("\n--------\nCOMPLETED", fg="green")
 
     def test_002(self):
-        click.secho("\nTEST 002: load Dimcli by passing credentials explicitly.", fg="green")
+        click.secho("\nTEST 002: GLOBAL login/logout by passing credentials explicitly.", bg="green")
         # ----
         # get credentials from file as strings
         config = configparser.ConfigParser()
@@ -69,10 +69,10 @@ class TestOne(unittest.TestCase):
         # print("Query results: ", res.keys_and_count())
         # ----
         logout()
-        click.secho("\n--------\nCompleted test succesfully", fg="green")
+        click.secho("\n--------\nCOMPLETED", fg="green")
 
     def test_002_1(self):
-        click.secho("\nTEST 002-1: Retain login info and force new login.", fg="green")
+        click.secho("\nTEST 002-1: GLOBAL login/logout on different Dimension instances.", bg="green")
         # ----
         login(instance=API_INSTANCE)
         d = Dsl()
@@ -87,11 +87,11 @@ class TestOne(unittest.TestCase):
         print(" ==> res.json.keys(): ", res.json.keys())
         logout()
         # ----
-        click.secho("\n--------\nCompleted test succesfully", fg="green")
+        click.secho("\n--------\nCOMPLETED", fg="green")
 
 
     def test_003(self):
-        click.secho("\nTEST 003: Login using key-based authentication.", fg="green")
+        click.secho("\nTEST 003: GLOBAL login/logout using key-based authentication.", bg="green")
         # ----
         logout()
         login(instance="key-test")
@@ -101,7 +101,38 @@ class TestOne(unittest.TestCase):
         print(" ==> res.json.keys(): ", res.json.keys())
         logout()
         # ----
-        click.secho("\n--------\nCompleted test succesfully", fg="green")
+        click.secho("\n--------\nCOMPLETED", fg="green")
+
+
+    def test_004(self):
+        click.secho("\nTEST 004: LOCAL Login/logout using APISession object.", bg="green")
+        # ----
+        logout()
+        from ..core.auth import APISession
+
+        mysession1 = APISession()
+        mysession1.login(instance="key-test")
+        d1 = Dsl(auth_session=mysession1)
+        click.secho(""" Dsl1(instance="key-test"): ==> url="""+ d1._url, fg="magenta")
+        res1 = d1.query("""search publications where authors="Pasin" return publications""")
+        print(" ==> res.json.keys(): ", res1.json.keys())
+        
+        mysession2 = APISession()
+        mysession2.login(instance="live")
+        d2 = Dsl(auth_session=mysession2)
+        click.secho(""" Dsl2(instance="live"): ==> url="""+ d2._url, fg="magenta")
+        res2 = d2.query("""search publications where authors="Pasin" return publications""")
+        print(" ==> res.json.keys(): ", res2.json.keys())
+        
+        # ----
+        click.secho("\n--------\nCOMPLETED", fg="green")
+
+
+
+
+
+
+
 
 
 if __name__ == "__main__":

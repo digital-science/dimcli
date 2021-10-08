@@ -13,7 +13,7 @@ from tqdm import tqdm
 import time
 
 from .api import Dsl
-from .auth import is_logged_in
+from .auth import is_logged_in_globally as is_logged_in
 
 from ..utils.dim_utils import dsl_escape
 

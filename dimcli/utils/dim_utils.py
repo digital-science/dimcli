@@ -31,7 +31,7 @@ def dslquery(query_string):
         A Dimcli wrapper object containing JSON data. 
 
     """
-    from ..core.auth import is_logged_in
+    from ..core.auth import is_logged_in_globally as is_logged_in
     from ..core.api import Dsl
     if is_logged_in():
         dsl = Dsl()
@@ -55,7 +55,7 @@ def dslquery_json(query_string):
         API JSON data, represented as a dict object.
 
     """
-    from ..core.auth import is_logged_in
+    from ..core.auth import is_logged_in_globally as is_logged_in
     from ..core.api import Dsl
     if is_logged_in():
         dsl = Dsl()
@@ -78,7 +78,7 @@ def dslqueryall(query_string):
         A Dimcli wrapper object containing JSON data.
 
     """
-    from ..core.auth import is_logged_in
+    from ..core.auth import is_logged_in_globally as is_logged_in
     from ..core.api import Dsl
     if is_logged_in():
         dsl = Dsl()

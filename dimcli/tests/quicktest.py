@@ -27,7 +27,7 @@ from .settings import API_INSTANCE
 @click.argument('test_number', nargs=1)
 def main(test_number=1):
     
-    login(instance=API_INSTANCE)
+    login(instance="live")
     dsl = Dsl()
     test_number = int(test_number)
 
@@ -37,7 +37,7 @@ def main(test_number=1):
         q = f"""search publications 
                 in full_data for "{dsl_escape(covid_q)}" 
                 where year=2020 
-            return publications[id+doi+pmid+pmcid+title+journal+publisher+mesh_terms+date+year+volume+issue+pages+open_access_categories+type+authors+research_orgs+funders+supporting_grant_ids+times_cited+altmetric+linkout] limit 1000"""
+            return publications[id+doi+pmid+pmcid+title+journal+publisher+mesh_terms+date+year+volume+issue+pages+open_access+type+authors+research_orgs+funders+supporting_grant_ids+times_cited+altmetric+linkout] limit 1000"""
 
         q1 = """search publications for "malaria" return publications[id+authors]"""
 
@@ -95,7 +95,63 @@ def main(test_number=1):
         from dimcli.utils.repl_utils import export_gist
         q = "search publications return category_for limit 100"
         data = dsl.query(q)
-        export_gist(data.json, q, dsl._url)
+        print(data.errors)
+
+    if test_number == 4:
+        q = "search publications return research_orgs limit 100"
+        data = dsl.query(q, verbose=True)
+        print(len(data))
+
+    if test_number == 5:
+
+        # TESTING LOCAL LOGIN LOGIC 
+
+        logout()
+        from ..core.auth import APISession
+        
+        mysession1 = APISession()
+        mysession1.login(instance="key-test")
+
+        d1 = Dsl(auth_session=mysession1)
+        click.secho(""" Dsl1(instance="key-test"): ==> url="""+ d1._url, fg="magenta")
+        res1 = d1.query("""search publications where authors="Pasin" return publications""")
+        print(" ==> res.json.keys(): ", res1.json.keys())
+        
+        mysession2 = APISession()
+        mysession2.login(instance="live")
+
+        d2 = Dsl(auth_session=mysession2)
+        click.secho(""" Dsl2(instance="live"): ==> url="""+ d2._url, fg="magenta")
+        res2 = d2.query("""search publications where authors="Pasin" return publications""")
+        print(" ==> res.json.keys(): ", res2.json.keys())
+        
+        mysession3 = APISession()
+        mysession3.login(instance="live2")
+
+        d3 = Dsl(auth_session=mysession3)
+        click.secho(""" Dsl3(instance="liveV2"): ==> url="""+ d3._url, fg="magenta")
+        res3 = d3.query("""search publications where authors="Pasin" return publications""")
+        print(" ==> res.json.keys(): ", res3.json.keys())
+        
+
+    if test_number == 6:
+
+        # TESTING RETRY LOGIC 
+
+        logout()
+        from ..core.auth import APISession
+        
+        mysession1 = APISession()
+        mysession1.login(instance="key-test")
+
+        d1 = Dsl(auth_session=mysession1)
+
+        for x in range(1990, 2020):
+            q = f"""search publications where year={x} return research_orgs"""
+            d1.query(q)
+            print(q)
+
+        # logout()
 
 
 if __name__ == '__main__':

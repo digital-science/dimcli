@@ -91,8 +91,8 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#authentication">Authentication</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#creating-a-credentials-file-using-the-helper-script-recommended">Creating a credentials file using the helper script (recommended)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#creating-a-credentials-file-manually">Creating a credentials file manually</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#creating-a-configuration-file-using-the-helper-script-recommended">Creating a configuration file using the helper script (recommended)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creating-a-configuration-file-manually">Creating a configuration file manually</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#important">Important</a></li>
 </ul>
 </li>
@@ -232,7 +232,7 @@ See also an older animated video on <a class="reference external" href="https://
 </div>
 <div class="section" id="authentication">
 <h2>Authentication<a class="headerlink" href="#authentication" title="Permalink to this headline">¶</a></h2>
-<p>After installation it’s <strong>strongly advised to create a configuration file</strong> containing your Dimensions account credentials. This can be done only once and it’ll save you from having to type in credentials each time you use Dimcli. E.g.</p>
+<p>After installation it’s <strong>strongly advised to create a configuration file</strong> containing your Dimensions account credentials (see below). This can be done only once and it’ll save you from having to type in credentials each time you use Dimcli. E.g.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">dimcli</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">()</span> <span class="c1"># config file is picked up automatically </span>
 </pre></div>
@@ -250,21 +250,21 @@ See also an older animated video on <a class="reference external" href="https://
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">dimcli</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;123456789qwertyuiop&quot;</span><span class="p">,</span>  
-<span class="go">                 endpoint=&quot;https://https://my.instance.of.dimensions.ai&quot;)</span>
+<span class="go">                 endpoint=&quot;https://my.instance.of.dimensions.ai&quot;)</span>
 </pre></div>
 </div>
-<div class="section" id="creating-a-credentials-file-using-the-helper-script-recommended">
-<h3>Creating a credentials file using the helper script (recommended)<a class="headerlink" href="#creating-a-credentials-file-using-the-helper-script-recommended" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="creating-a-configuration-file-using-the-helper-script-recommended">
+<h3>Creating a configuration file using the helper script (recommended)<a class="headerlink" href="#creating-a-configuration-file-using-the-helper-script-recommended" title="Permalink to this headline">¶</a></h3>
 <p>The easiest way to set up the authentication file is to use the command line helper:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ dimcli --init
 </pre></div>
 </div>
 <p>The helper will guide you through the process of creating this file, which will be safely stored in your computer home folder. That’s it - you’re ready to hit the API! See below for more info on how to do that.</p>
 </div>
-<div class="section" id="creating-a-credentials-file-manually">
-<h3>Creating a credentials file manually<a class="headerlink" href="#creating-a-credentials-file-manually" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="creating-a-configuration-file-manually">
+<h3>Creating a configuration file manually<a class="headerlink" href="#creating-a-configuration-file-manually" title="Permalink to this headline">¶</a></h3>
 <p>This section provides more details about where Dimcli expects credentials data to be found, in case you want to set this up manually.</p>
-<p>The credentials file must be called <code class="docutils literal notranslate"><span class="pre">dsl.ini</span></code> and located in your user directory in the <code class="docutils literal notranslate"><span class="pre">.dimensions</span></code> folder. If you want to set this up manually, this is what you’d do on unix systems:</p>
+<p>The configuration file must be called <code class="docutils literal notranslate"><span class="pre">dsl.ini</span></code> and located in your user directory in the <code class="docutils literal notranslate"><span class="pre">.dimensions</span></code> folder. If you want to set this up manually, this is what you’d do on unix systems:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mkdir ~/.dimensions
 $ touch ~/.dimensions/dsl.ini
 </pre></div>
@@ -272,23 +272,36 @@ $ touch ~/.dimensions/dsl.ini
 <p>Then open <code class="docutils literal notranslate"><span class="pre">dsl.ini</span></code> with a text editor. Its contents should look like this:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">instance</span><span class="o">.</span><span class="n">live</span><span class="p">]</span>
 <span class="n">url</span><span class="o">=</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">app</span><span class="o">.</span><span class="n">dimensions</span><span class="o">.</span><span class="n">ai</span>
-<span class="n">login</span><span class="o">=</span><span class="n">user</span><span class="nd">@mail</span><span class="o">.</span><span class="n">com</span>
-<span class="n">password</span><span class="o">=</span><span class="n">yourpasswordhere</span>
 <span class="n">key</span><span class="o">=</span><span class="n">yourkeyhere</span>
 </pre></div>
 </div>
 <p>In most situations you can simply copy/paste the text above and update its contents as needed.</p>
+<p>NOTE if your Dimensions instance still supports the legacy authentication method via username and password, you can provide that in the init file too:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">instance</span><span class="o">.</span><span class="n">live</span><span class="p">]</span>
+<span class="n">url</span><span class="o">=</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">app</span><span class="o">.</span><span class="n">dimensions</span><span class="o">.</span><span class="n">ai</span>
+<span class="n">login</span><span class="o">=</span><span class="n">user</span><span class="nd">@mail</span><span class="o">.</span><span class="n">com</span>
+<span class="n">password</span><span class="o">=</span><span class="n">yourpasswordhere</span>
+</pre></div>
+</div>
 <div class="section" id="important">
 <h4>Important<a class="headerlink" href="#important" title="Permalink to this headline">¶</a></h4>
 <ul class="simple">
-<li><p>you must always have an entry in the credentials file called <code class="docutils literal notranslate"><span class="pre">[instance.live]</span></code></p></li>
-<li><p>depending on whether you authenticate using an API key or username &amp; password, fill in the relevant details and just leave the other stuff blank. Eg this is a valid config snippet if you authenticate using a key:</p></li>
+<li><p>You always need to have an entry in the configuration file called <code class="docutils literal notranslate"><span class="pre">[instance.live]</span></code></p></li>
+<li><p>Depending on whether you authenticate using an API key or username &amp; password, fill in the relevant details and just leave the other stuff blank. Eg this is a valid config snippet if you authenticate using a key:</p></li>
 </ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">instance</span><span class="o">.</span><span class="n">live</span><span class="p">]</span>
 <span class="n">url</span><span class="o">=</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">app</span><span class="o">.</span><span class="n">dimensions</span><span class="o">.</span><span class="n">ai</span>
+<span class="n">key</span><span class="o">=</span><span class="n">yourkeyhere</span>
 <span class="n">login</span><span class="o">=</span>
 <span class="n">password</span><span class="o">=</span>
-<span class="n">key</span><span class="o">=</span><span class="n">yourkeyhere</span>
+</pre></div>
+</div>
+<p>The ‘live’ configuration directive is used by default. Eg with Python:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">dimcli</span>
+
+<span class="go"># The two lines below are equivalent</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="s2">&quot;live&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -317,8 +330,14 @@ $ touch ~/.dimensions/dsl.ini
 <span class="n">key</span><span class="o">=</span><span class="n">yourkeyhere</span>
 </pre></div>
 </div>
-<p>Then when running the CLI you can select which instance to use just by passing its name as argument eg</p>
+<p>When running the shell CLI you can select which instance to use just by passing its name as argument eg</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ dimcli private
+</pre></div>
+</div>
+<p>Or from Python:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">dimcli</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="s2">&quot;private&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

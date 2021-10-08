@@ -8,20 +8,16 @@ NOTE: these objects are attached to the top level ``dimcli`` module. So you can 
 """
 
 
-import configparser
 import requests
-import os.path
-import os
 import time
 import json
-import click
 import IPython.display
 from itertools import islice
 import urllib.parse
 
 import pandas as pd
 
-from .auth import do_global_login, get_connection, refresh_login
+from .auth import get_global_connection # , refresh_login, do_global_login, 
 from .dsl_grammar import G
 from .dataframe_factory import DfFactory
 
@@ -37,6 +33,8 @@ class Dsl():
     ----------
     show_results : bool, default=False
         Set a global setting that determines whether query JSON results get printed out. Note that in Jupyter environments this is not needed, because iPython rich widgets are used by default.
+    auth_session : APISession, default=False
+        Set an authenticated session object that should be used for querying. Used only in special situations, as an alternative to the dimcli.login() utility method. 
     verbose : bool, default=True
         Verbose mode.
 
@@ -53,9 +51,27 @@ class Dsl():
             'last_name': 'White',
             'first_name': 'Nicholas J'},
         "... JSON data continues ... "
+
+    In some special situations, you'd want to query two separate Dimensions servers 
+    in parallel. To that end, it is possible to pass an `APISession` instance to the `Dsl()` constructor
+    using the `auth_session` parameter, IE:
+
+    >>> import dimcli
+    >>> from dimcli.core.auth import APISession 
+    # set up first authentication backend
+    >>> mysession1 = APISession()
+    >>> mysession1.login(instance="app.dimensions.ai")
+    >>> d1 = Dsl(auth_session=mysession1)
+    >>> d1.query("search publications return research_orgs")
+    # set up second authentication backend
+    >>> mysession2 = APISession()
+    >>> mysession2.login(instance="another-app.dimensions.ai")
+    >>> d2 = Dsl(auth_session=mysession2)
+    >>> d2.query("search publications return research_orgs")
+
     """
 
-    def __init__(self, show_results=False, verbose=True):
+    def __init__(self, show_results=False, verbose=True, auth_session=False):
         """Initialises a Dsl object.
 
         """
@@ -63,12 +79,15 @@ class Dsl():
         self._verbose = verbose
         self._url = None
         self._headers = None
-        self._CONNECTION = get_connection()
+        if auth_session:
+            self._CONNECTION = auth_session 
+        else:
+            self._CONNECTION = get_global_connection()
 
-        if self._CONNECTION['token']:
+        if self._CONNECTION.token:
             # if already logged in, reuse connection          
-            self._url = self._CONNECTION['url']
-            self._headers = {'Authorization': "JWT " + self._CONNECTION['token']}
+            self._url = self._CONNECTION.url
+            self._headers = {'Authorization': "JWT " + self._CONNECTION.token}
         else:
             self._print_please_login()
 
@@ -78,7 +97,7 @@ class Dsl():
         else: return False
 
     def _print_please_login(self):
-        print("Warning: you are not logged in. Please use `dimcli.login(username, password)` before querying.")
+        printDebug("Warning: you are not logged in. Please use `dimcli.login(key, endpoint)` before querying.")
 
     def query(self, q, show_results=None, retry=0, verbose=None):
         """Execute a single DSL query.
@@ -116,22 +135,22 @@ class Dsl():
         
         #   Execute DSL query.
         start = time.time()
-        response = requests.post(
-            '{}/api/dsl.json'.format(self._url), data=q.encode(), headers=self._headers)
+        response = requests.post(self._url, data=q.encode(), headers=self._headers)
         if response.status_code == 429:  
             # Too Many Requests
-            print(
+            printDebug(
                 'Too Many Requests for the Server. Sleeping for 30 seconds and then retrying.'
             )
             time.sleep(30)
             return self.query(q, show_results, retry, verbose)
         elif response.status_code == 403:  
             # Forbidden:
-            print('Login token expired. Logging in again.')
-            refresh_login()
-            self._CONNECTION = get_connection()
-            self._url = self._CONNECTION['url']
-            self._headers = {'Authorization': "JWT " + self._CONNECTION['token']}
+            printDebug('Login token expired. Logging in again.')
+            # refresh_login()
+            self._CONNECTION.refresh_login()
+            # self._CONNECTION = get_global_connection()
+            self._url = self._CONNECTION.url
+            self._headers = {'Authorization': "JWT " + self._CONNECTION.token}
             return self.query(q, show_results, retry, verbose)
         elif response.status_code in [200, 400, 500]:  
             ###  
@@ -140,7 +159,7 @@ class Dsl():
             try:
                 res_json = response.json()
             except:
-                print('Unexpected error. JSON could not be parsed.')
+                printDebug('Unexpected error. JSON could not be parsed.')
                 return response
             result = DslDataset(res_json)
             end = time.time()
@@ -153,7 +172,7 @@ class Dsl():
             return result
         else:
             if retry > 0:
-                print('Retrying in 30 secs')
+                printDebug('Retrying in 30 secs')
                 time.sleep(30)
                 return self.query(
                     q,
@@ -250,8 +269,8 @@ class Dsl():
 
         if not _tot_count_prev_query:
             # first iteration
-            # if verbose: print(f"{limit+skip} / ...")
-            if verbose: print(f"Starting iteration with limit={limit} skip={skip} ...")
+            # if verbose: printDebug(f"{limit+skip} / ...")
+            if verbose: printDebug(f"Starting iteration with limit={limit} skip={skip} ...")
             
         output, flag_force = [], False
         q2 = q + " limit %d skip %d" % (limit, skip)
@@ -262,14 +281,14 @@ class Dsl():
         elapsed = end - start
 
         if (end - start) < 2:
-            # print("sleeping")
+            # printDebug("sleeping")
             time.sleep(pause)
 
         if res['errors'] and not force:
-            print(f"\n>>>[Dimcli tip] An error occurred with the batch '{skip}-{limit+skip}'. Consider using the 'limit' argument to retrieve fewer records per iteration, or use 'force=True' to ignore errors and continue the extraction.")
+            printDebug(f"\n>>>[Dimcli tip] An error occurred with the batch '{skip}-{limit+skip}'. Consider using the 'limit' argument to retrieve fewer records per iteration, or use 'force=True' to ignore errors and continue the extraction.")
             return res
         elif res['errors'] and force:
-            print(f"\n>>>[Dimcli log] An error occurred with the batch '{skip}-{limit+skip}'. Skipping this batch and continuing iteration.. ")
+            printDebug(f"\n>>>[Dimcli log] An error occurred with the batch '{skip}-{limit+skip}'. Skipping this batch and continuing iteration.. ")
             flag_force = True
 
         # RECURSION 
@@ -284,7 +303,7 @@ class Dsl():
             new_skip = tot
         if verbose and tot:  # if not first iteration
             t = "%.2f" % elapsed
-            print(f"{skip}-{new_skip} / {tot} ({t}s)")
+            printDebug(f"{skip}-{new_skip} / {tot} ({t}s)")
 
         if res["_warnings"]:
             if _warnings_tot:
@@ -325,7 +344,7 @@ class Dsl():
             result = DslDataset(response_simulation)
             if show_results or (show_results is None and self._show_results):
                 IPython.display.display(result)
-            if verbose: print(f"===\nRecords extracted: {len(output)}")
+            if verbose: printDebug(f"===\nRecords extracted: {len(output)}")
             return result
         else:
             return output
@@ -550,7 +569,7 @@ class DslDataset(IPython.display.JSON):
         """
         with open(filename) as json_file:
             jsondata = json.load(json_file)
-        if verbose: print("Loaded file: ", filename)
+        if verbose: printDebug("Loaded file: ", filename)
         return cls(jsondata)
 
 
@@ -568,7 +587,7 @@ class DslDataset(IPython.display.JSON):
 
     def __getitem__(self, key):
         "Trick to return any dict key as a property"
-        # print(key, "==========")
+        # printDebug(key, "==========")
         if key == "stats":
             key = "_stats" # syntactic sugar
         if key in self.json:
@@ -678,12 +697,12 @@ class DslDataset(IPython.display.JSON):
 
         if not key:
             if len(self.good_data_keys()) > 1:
-                print(f"Please specify a key from {self.good_data_keys()}")
+                printDebug(f"Please specify a key from {self.good_data_keys()}")
                 return
             else:
                 key = self.good_data_keys()[0]
         elif key not in self.good_data_keys():
-            print(f"Invalid key: should be one of {self.good_data_keys()}")
+            printDebug(f"Invalid key: should be one of {self.good_data_keys()}")
             return 
 
         it = iter(self.json[key])
@@ -832,7 +851,7 @@ class DslDataset(IPython.display.JSON):
         'https://app.dimensions.ai/discover/publication?search_text=id%3A+%28pub.1120975084+OR+pub.1120715293+OR+pub.1120602308%29'
         """
         
-        if verbose: print("Warning: this is an experimental and unsupported feature.")
+        if verbose: printDebug("Warning: this is an experimental and unsupported feature.")
 
 
         # General query structure for IDs: 
@@ -909,7 +928,7 @@ class DslDataset(IPython.display.JSON):
                 filename = time.strftime(f"dimensions_data_%Y-%m-%d_%H-%M-%S.json")
             with open(filename, 'w') as outfile:
                 json.dump(self.json, outfile)
-                if verbose: print("Saved to file: ", filename)
+                if verbose: printDebug("Saved to file: ", filename)
                 return filename
 
 

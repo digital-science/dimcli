@@ -2,6 +2,13 @@
 
 
 
+## v 0.9.2
+
+* Support for multiple API endpoints (V1 / V2)
+* Support for parallel querying of distinct Dimensions servers
+* CLI: `.record_notebook` utility removed. Use instead `.export_as_jupyter`
+
+
 ## v 0.9.1
 
 * DSL grammar updated for version 1.31 (2021-05 release)

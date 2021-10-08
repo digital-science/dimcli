@@ -12,7 +12,7 @@ from ..VERSION import VERSION
 
 from ..core.api import Dsl
 from ..core.functions import *
-from ..core.auth import get_connection, is_logged_in
+from ..core.auth import get_global_connection, is_logged_in_globally as is_logged_in
 from ..utils.all import *
 
 

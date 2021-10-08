@@ -25,12 +25,12 @@ class TestDataframes(unittest.TestCase):
     Tests  
     """
 
-    click.secho("**TESTS**", fg="red")
+    click.secho("**test_dataframes.py**", fg="red")
     login(instance=API_INSTANCE)
     d = Dsl()
 
     def test_001(self):
-        click.secho("\nTEST 001: Generic Dataframes.", fg="green")
+        click.secho("\nTEST 001: Generic Dataframes.", bg="green")
         # ----
         click.secho("search publications for \"mercedes\" return year", fg="green")
         res = dslquery("""search publications for \"mercedes\" return year""")
@@ -44,7 +44,7 @@ class TestDataframes(unittest.TestCase):
 
 
     def test_002(self):
-        click.secho("\nTEST 002: Authors and Affiliations Dataframes.", fg="green")
+        click.secho("\nTEST 002: Authors and Affiliations Dataframes.", bg="green")
         # ----
         click.secho("Testing as_dataframe_authors with legacy `author_affiliations` field: ", fg="magenta")
         res = dslquery("""search publications for \"CRISPR\" return publications limit 5""")
@@ -71,7 +71,7 @@ class TestDataframes(unittest.TestCase):
         print(" ==> res.as_dataframe_authors_affiliations(): [=>fails and issue a warning]", res.as_dataframe_authors_affiliations())
 
     def test_003(self):
-        click.secho("\nTEST 003: Grants: funders and investigators Dataframes.", fg="green")
+        click.secho("\nTEST 003: Grants: funders and investigators Dataframes.", bg="green")
         # ----
         click.secho("Testing as_dataframe_funders on Grants data: ", fg="magenta")
         res= dslquery("""search grants return grants[basics+investigator_details]""")
@@ -81,7 +81,7 @@ class TestDataframes(unittest.TestCase):
 
 
     def test_004(self):
-        click.secho("\nTEST 004: UTILS: normalize_key", fg="green")
+        click.secho("\nTEST 004: UTILS: normalize_key", bg="green")
         
         # ----
         res = dslquery("""search publications where category_for is empty and journal is empty return publications[doi+category_for+journal] limit 1000""")
@@ -102,7 +102,7 @@ class TestDataframes(unittest.TestCase):
 
     def test_005(self):
         # ----
-        click.secho("\nTEST 005: Concepts extraction.", fg="green")
+        click.secho("\nTEST 005: Concepts extraction.", bg="green")
         # ----
         click.secho("Testing as_dataframe_concepts on Publications data: ", fg="magenta")
         res= dslquery("""search publications for "graphene" where year=2019 return publications[id+concepts+year+title+doi+journal] limit 1000""")

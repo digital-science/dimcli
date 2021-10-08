@@ -24,10 +24,10 @@ class TestOne(unittest.TestCase):
     Tests  
     """
 
-    click.secho("**TESTS**", fg="red")
+    click.secho("**test_grammar.py**", fg="red")
 
     def test_001(self):
-        click.secho("\nTEST 001: checking that grammar data is valid.", fg="green")
+        click.secho("\nTEST 001: checking that grammar data is valid.", bg="green")
         # ----
         g = G
         print(g)
@@ -53,7 +53,7 @@ class TestOne(unittest.TestCase):
 
 
     def test_002(self):
-        click.secho("\nTEST 002: dimensions URL generation.", fg="green")
+        click.secho("\nTEST 002: dimensions URL generation.", bg="green")
         # ----
         click.secho("""....Testing dimensions_url.... dimensions_url("01", "stff")""",  fg="magenta")
         try:
@@ -89,7 +89,7 @@ class TestOne(unittest.TestCase):
 
 
     def test_003(self):
-        click.secho("\nTEST 003: Language utils: DSL escape.", fg="green")
+        click.secho("\nTEST 003: Language utils: DSL escape.", bg="green")
         login(instance=API_INSTANCE)
         d = Dsl()
         # ----

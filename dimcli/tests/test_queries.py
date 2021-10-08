@@ -26,12 +26,12 @@ class TestOne(unittest.TestCase):
     Tests - iterative queries and other related features 
     """
 
-    click.secho("**TESTS**", fg="red")
+    click.secho("**test_queries.py**", fg="red")
     login(instance=API_INSTANCE)
     d = Dsl()
 
     def test_001(self):
-        click.secho("\nTEST 001-A: Iterative querying.", fg="green")
+        click.secho("\nTEST 001-A: Iterative querying.", bg="green")
         # ----
         d = Dsl()
         res = d.query_iterative("""search publications where journal.title="nature medicine" and year>2007 return publications""")
@@ -40,7 +40,7 @@ class TestOne(unittest.TestCase):
         print(" ==> res['stats']: ", res['stats'])
         print(" ==> len(res['publications']): ", len(res['publications']))
         # ----
-        click.secho("\nTEST 001-B: Iterative querying with custom pause: 5 seconds.", fg="green")
+        click.secho("\nTEST 001-B: Iterative querying with custom pause: 5 seconds.", bg="green")
         # ----
         d = Dsl()
         res = d.query_iterative("""search publications where journal.title="nature medicine" and year>2015 return publications""", pause=5)
@@ -49,7 +49,7 @@ class TestOne(unittest.TestCase):
         print(" ==> res['stats']: ", res['stats'])
         print(" ==> len(res['publications']): ", len(res['publications']))
         # ----
-        click.secho("\nTEST 001-C: Iterative querying with force=True", fg="green")
+        click.secho("\nTEST 001-C: Iterative querying with force=True", bg="green")
         # ----
         d = Dsl()
         q = """search publications 
@@ -63,7 +63,7 @@ class TestOne(unittest.TestCase):
         print(" ==> res['stats']: ", res['stats'])
         print(" ==> len(res['publications']): ", len(res['publications']))
         # ----
-        click.secho("\nTEST 001-D: Iterative querying with 'unnest' operator", fg="green")
+        click.secho("\nTEST 001-D: Iterative querying with 'unnest' operator", bg="green")
         # ----
         d = Dsl()
         q = """search publications 
@@ -77,7 +77,7 @@ class TestOne(unittest.TestCase):
         print(" ==> res['stats']: ", res['stats'])
         print(" ==> len(res['publications']): ", len(res['publications']))
         # ----
-        click.secho("\nTEST 001-E: Iterative querying with maxlimit=3000", fg="green")
+        click.secho("\nTEST 001-E: Iterative querying with maxlimit=3000", bg="green")
         # ----
         d = Dsl()
         q = """search publications 
@@ -91,7 +91,7 @@ class TestOne(unittest.TestCase):
         print(" ==> res['stats']: ", res['stats'])
         print(" ==> len(res['publications']): ", len(res['publications']))
         # ----
-        click.secho("\nTEST 001-D: Iterative querying with cumulative warnings", fg="green")
+        click.secho("\nTEST 001-D: Iterative querying with cumulative warnings", bg="green")
         # ----
         d = Dsl()
         q = """search publications 
@@ -112,7 +112,7 @@ class TestOne(unittest.TestCase):
 
 
     def test_002(self):
-        click.secho("\nTEST 002: Query Shortcuts", fg="green")
+        click.secho("\nTEST 002: Query Shortcuts", bg="green")
         
         # ----
         res = dslquery("""search publications where journal.title="nature medicine" return publications limit 10""")
@@ -131,7 +131,7 @@ class TestOne(unittest.TestCase):
         click.secho("Completed test succesfully", fg="green")
 
     def test_003(self):
-        click.secho("\nTEST 003: Non-search queries.", fg="green")
+        click.secho("\nTEST 003: Non-search queries.", bg="green")
         # ----
         res= dslquery("""extract_grants(grant_number="185247", funder_name="Swiss National Science Foundation")""")
         click.secho("Query results: ", fg="magenta")
@@ -142,7 +142,7 @@ class TestOne(unittest.TestCase):
 
 
     def test_004(self):
-        click.secho("\nTEST 004: Try magic methods on DslDataset object.", fg="green")
+        click.secho("\nTEST 004: Try magic methods on DslDataset object.", bg="green")
         # ----
         login(instance="live")
         d = Dsl()
@@ -171,7 +171,7 @@ class TestOne(unittest.TestCase):
 
 
     def test_005(self):
-        click.secho("\nTEST 005: Chunking Results", fg="green")
+        click.secho("\nTEST 005: Chunking Results", bg="green")
         
         # ----
         res = dslquery("""search publications where journal.title="nature medicine" return publications limit 1000""")
@@ -189,7 +189,7 @@ class TestOne(unittest.TestCase):
         # ----
 
     def test_006(self):
-        click.secho("\nTEST 006: Building dimcli.DslDataset objects from data.", fg="green")
+        click.secho("\nTEST 006: Building dimcli.DslDataset objects from data.", bg="green")
         # ----
         data = dslquery("""search publications for "malaria" return publications""")
         res = DslDataset.from_publications_list(data.publications)
@@ -213,7 +213,7 @@ class TestOne(unittest.TestCase):
         click.secho("Completed test succesfully", fg="green")
 
     def test_007(self):
-        click.secho("\nTEST 007: Save to a JSON file and construct a dimcli.DslDataset objects from JSON file.", fg="green")
+        click.secho("\nTEST 007: Save to a JSON file and construct a dimcli.DslDataset objects from JSON file.", bg="green")
         # ----
         FILENAME = "test-api-save.json"
         d = Dsl()

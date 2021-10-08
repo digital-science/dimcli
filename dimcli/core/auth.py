@@ -25,74 +25,217 @@ USER_SETTINGS_FILE_NAME = "settings"
 USER_SETTINGS_FILE_PATH = os.path.expanduser(USER_DIR + USER_SETTINGS_FILE_NAME)
 
 
-# global connection object
-CONNECTION = {'instance': None, 'url': None, 'username': None, 'password': None, 'key': None,  'token' : None}
 
+###
+#
+# class that encapsulates the login/token logic for the API
+#
+#
+###
+
+
+
+class APISession():
+
+    """Dimensions API Authentication logic
+    """
+
+    def __init__(self, verbose=True):
+        """Initialises a Dsl Authentication Session object.
+
+        Normally it is not needed to instantiate directly this object, instead it's 
+        quicker to use the `dimcli.login()` utility method, which create a global
+        authentication session. 
+
+        In some situations though, you'd want to query two separate Dimensions instances 
+        in parallel. To that end, pass an APISession instance to the Dsl() constructor
+        using the `auth_session` parameter, IE:  
+
+        ```
+        from dimcli.core.auth import APISession
+
+        mysession1 = APISession()
+        mysession1.login(instance="key-test")
+        d1 = Dsl(auth_session=mysession1)
+        d1.query("search publications return research_orgs")
+        
+        mysession2 = APISession()
+        mysession2.login(instance="live")
+        d2 = Dsl(auth_session=mysession2)
+        d2.query("search publications return research_orgs")
+        ```
+
+        """
+        self.instance = None
+        self.url = None
+        self.url_auth = None
+        self.url_query = None
+        self.username = None
+        self.password = None
+        self.key = None
+        self.token = None
+        self._verbose = verbose
+
+
+    def login(self, 
+                instance="live", 
+                username="", 
+                password="", 
+                key="", 
+                url="https://app.dimensions.ai"):
+        """Login into Dimensions API endpoint and get a query token.
+        
+        """
+        URL_AUTH, URL_QUERY = self._get_endpoint_urls(url)
+
+        if not (username and password) and not key:
+            
+            # GET LOCAL CONFIG FILE SECTION USING THE 'INSTANCE' ARGUMENT
+            
+            fpath = get_init_file()
+            config_section = read_init_file(fpath, instance)
+            url = config_section['url'] # OVERRIDE URL USING LOCAL CONFIG
+            URL_AUTH, URL_QUERY = self._get_endpoint_urls(url)
+            # print(URL_AUTH, URL_QUERY )
+            try:
+                username = config_section['login']
+                password = config_section['password']
+            except:
+                username, password = "", ""
+            try:
+                key = config_section['key']
+            except:
+                key = ""
+
+        login_data = {'username': username, 'password': password, 'key': key}
+        
+        # POST AUTH REQUEST
+        response = requests.post(URL_AUTH, json=login_data)
+        response.raise_for_status()
+
+        token = response.json()['token']
+
+        self.instance = instance
+        self.url = URL_QUERY
+        self.username = username
+        self.password = password
+        self.key = key
+        self.token = token
+
+
+    def _get_endpoint_urls(self, user_url):
+        """Infer the proper API endpoints URLs from the (possibly incomplete) URL the use is sending. 
+        
+        CASE 1
+        User provides a domain URL eg https://app.dimensions.ai. 
+        => Then the Query URL defaults to `/api/dsl`
+
+        CASE 1
+        User provides a full query URL eg https://app.dimensions.ai/api/dsl/v2. 
+        => Then no action is needed
+
+        Query Endpoints:
+        * /api/dsl/v1
+        * /api/dsl/v2
+        * /api/dsl
+        * /api/dsl.json
+
+        Auth endpoint (always inferred)
+        * /api/auth.json
+
+        https://docs.dimensions.ai/dsl/2.0.0/api.html#endpoints
+
+        NOTE 
+        We never try to validate URLs provided by users.
+
+        """
+        url_auth, url_query = None, None
+        if "/api/" in user_url:
+            # savy user passing the full QUERY URL
+            domain = user_url.split("/api/")[0]
+            url_auth = domain + "/api/auth.json"
+            url_query = user_url
+        else:
+            domain = user_url
+            url_auth = domain + "/api/auth.json"
+            url_query = domain + "/api/dsl"
+        self.url_auth, self.url_query = url_auth, url_query
+        return url_auth, url_query
+
+
+
+    def refresh_login(self):
+        """
+        Method used to login again if the TOKEN has expired - using previously entered credentials
+        """
+        self.login(  self.instance, 
+                        self.url, 
+                        self.username, 
+                        self.password, 
+                        self.key, 
+                        )
+
+
+    def reset_login(self):
+        ""
+        self.instance = None
+        self.url = None
+        self.username = None
+        self.password = None
+        self.key = None
+        self.token = None
+
+
+    def is_logged_in(self):
+        if self.token:
+            return True
+        else:
+            print("Warning: you are not logged in. Please use `dimcli.login()` before querying.")
+            return False
+
+
+
+###
+#
+# global connection object and helper methods
+#
+#
+###
+
+
+CONNECTION = APISession()
 
 
 
 def do_global_login(instance="live", username="", password="", key="", url="https://app.dimensions.ai"):
     "Login into DSL and set the connection object with token"
+    global CONNECTION
+    CONNECTION.login(instance, username, password, key, url)
     
-    global CONNECTION
-
-    if not (username and password) and not key:
-        # then use 'instance' shortcut to get local credentials
-        fpath = get_init_file()
-        config_section = read_init_file(fpath, instance)
-        url = config_section['url']
-        try:
-            username = config_section['login']
-            password = config_section['password']
-        except:
-            username, password = "", ""
-        try:
-            key = config_section['key']
-        except:
-            key = ""
 
 
-    login_data = {'username': username, 'password': password, 'key': key}
-    response = requests.post(
-        '{}/api/auth.json'.format(url), json=login_data)
-    response.raise_for_status()
-
-    token = response.json()['token']
-
-    CONNECTION['instance'] = instance
-    CONNECTION['url'] = url
-    CONNECTION['username'] = username
-    CONNECTION['password'] = password
-    CONNECTION['key'] = key
-    CONNECTION['token'] = token
-
-
-
-def refresh_login():
-    """
-    Method used to login again if the TOKEN has expired - using previously entered credentials
-    """
-    do_global_login(CONNECTION['instance'], CONNECTION['username'], CONNECTION['password'], CONNECTION['key'], CONNECTION['url'])
-
-
-def reset_login():
-    ""
-    global CONNECTION
-    CONNECTION = {'instance': None, 'url': None, 'username': None, 'password': None,  'key': None,  'token' : None}
-
-
-def get_connection():
+def get_global_connection():
     global CONNECTION
     return CONNECTION
 
 
-def is_logged_in():
-    if CONNECTION['token']:
+def is_logged_in_globally():
+    "used only internally for magic commands and function wrappers, which always expect a global login"
+    global CONNECTION
+    if CONNECTION.token:
         return True
     else:
         print("Warning: you are not logged in. Please use `dimcli.login(username, password)` before querying.")
         return False
 
+
+
+###
+#
+# INIT file helpers 
+#
+#
+###
 
 def get_init_file():
     """
@@ -160,7 +303,12 @@ def read_init_file(fpath, instance_name):
 
 
 
-
+###
+#
+# settings file helper eg gists key etcc
+#
+#
+###
 
 
 def get_settings_file():

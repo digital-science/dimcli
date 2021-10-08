@@ -21,12 +21,13 @@ except:
     from pandas.io.json import json_normalize
 
 from ..core.dsl_grammar import *
+from ..core.auth import USER_HISTORY_FILE
 from ..VERSION import VERSION
 from .html import html_template_interactive
 from .dim_utils import *
 from .misc_utils import *
 from .gists_utils import GistsHelper
-
+from ..repl.history import *
 
 def listify_and_unify(*args):
     "util to handle listing together dict.keys() sequences"
@@ -513,12 +514,16 @@ def export_as_bar_chart(jjson, query, USER_EXPORTS_DIR):
 
 
 
-def export_as_jupyter(jjson, query, USER_EXPORTS_DIR):
-    """
-    Take the last 10 (default) rows from the history, and create a new python notebook with them. 
+def export_as_jupyter(jjson, query, USER_EXPORTS_DIR, num_rows_history=5):
+    """EXPERIMENTAL FEATURE
+    Take the last 5 rows from the history, and create a new python notebook with them. 
     Saves in usual location.
 
+    For the most recent query, the data results are also saved as a static JSON cell.
+
     Based on https://gist.github.com/fperez/9716279
+
+    TODO: expand so that more than one row is taken
     """
 
     try:
@@ -529,6 +534,19 @@ def export_as_jupyter(jjson, query, USER_EXPORTS_DIR):
         click.secho("This feature requires the nbformat library (`pip install nbformat` from the terminal)", fg="red")
         return
 
+    history=SelectiveFileHistory(USER_HISTORY_FILE)
+
+    rows_data = []
+    try:
+        for item in islice(history.load_history_strings(), num_rows_history+1):
+            # remove latest query cause we deal with it below
+            if item != query:
+                rows_data += [item]
+        rows_data.reverse()
+    except:
+        # if history is not available, fail silently
+        pass
+    
     nb = nbf.v4.new_notebook()
     this_time = time.strftime("%Y.%m.%d h%H:%M:%S")
 
@@ -539,12 +557,17 @@ def export_as_jupyter(jjson, query, USER_EXPORTS_DIR):
     setup = """!pip install dimcli -U --quiet\nimport dimcli\ndimcli.login()"""
     nb['cells'] += [nbf.v4.new_code_cell(setup)]
 
-    nb['cells'] += [nbf.v4.new_code_cell("%%dsl\n" + query)]
+    # add history
+    for code in rows_data:
+        nb['cells'] += [nbf.v4.new_code_cell("%%dsl\n" + code)]
 
+    # the very last query
+    nb['cells'] += [nbf.v4.new_code_cell("%%dsl\n" + query)]
     formatted_json = json.dumps(jjson, indent=4, sort_keys=True)
     results_preview = f"""### Precomputed Query Results: \n```\n{formatted_json}\n```"""
     nb['cells'] += [nbf.v4.new_markdown_cell(results_preview)]
 
+    # save file now
     filename = time.strftime(f"dsl_export_%Y-%m-%d_%H-%M-%S.ipynb")
     nbf.write(nb, USER_EXPORTS_DIR + filename)
     

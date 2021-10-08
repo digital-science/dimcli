@@ -189,22 +189,35 @@ NOTE: these functions are attached to the top level <code class="docutils litera
 </ul>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>The endpoint value can either be simply the Dimensions server hostname or the full API endpoint path. All the options below are valid endpoints:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>https://app.dimensions.ai</cite></p></li>
+<li><p><cite>https://app.dimensions.ai/api/dsl/v1</cite></p></li>
+<li><p><cite>https://app.dimensions.ai/api/dsl/v2</cite></p></li>
+</ul>
+</div></blockquote>
 <p class="rubric">Example</p>
 <p>If you have already set up the credentials file (see above), no need to pass log in details</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Otherwise you can authenticate by passing your login details as arguments</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="s2">&quot;mary.poppins&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;chimneysweeper&quot;</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;mary.poppins&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;chimneysweeper&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>You can specify endpoint, which by default is set to “<a class="reference external" href="https://app.dimensions.ai">https://app.dimensions.ai</a>”</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="s2">&quot;mary.poppins&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;chimneysweeper&quot;</span><span class="p">,</span> <span class="n">ednpoint</span><span class="o">=</span><span class="s2">&quot;https://nannies-research.dimensions.ai&quot;</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;mary.poppins&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;chimneysweeper&quot;</span><span class="p">,</span> <span class="n">ednpoint</span><span class="o">=</span><span class="s2">&quot;https://nannies-research.dimensions.ai&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>If you use key based authentication, then do</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;my-secret-key&quot;</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="s2">&quot;https://your-url.dimensions.ai&quot;</span><span class="p">)</span>
 </pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#dimcli.core.api.Dsl" title="dimcli.core.api.Dsl"><code class="xref py py-func docutils literal notranslate"><span class="pre">dimcli.core.api.Dsl()</span></code></a></p>
 </div>
 </dd></dl>
 
@@ -249,13 +262,14 @@ NOTE: these objects are attached to the top level <code class="docutils literal 
 </div>
 <dl class="py class">
 <dt id="dimcli.core.api.Dsl">
-<em class="property">class </em><code class="sig-prename descclassname">dimcli.core.api.</code><code class="sig-name descname">Dsl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">show_results</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/api.html#Dsl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.core.api.Dsl" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dimcli.core.api.</code><code class="sig-name descname">Dsl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">show_results</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">auth_session</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/api.html#Dsl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.core.api.Dsl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>The Dsl object is the main interface for interacting with the Dimensions API.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>show_results</strong> (<em>bool</em><em>, </em><em>default=False</em>) – Set a global setting that determines whether query JSON results get printed out. Note that in Jupyter environments this is not needed, because iPython rich widgets are used by default.</p></li>
+<li><p><strong>auth_session</strong> (<em>APISession</em><em>, </em><em>default=False</em>) – Set an authenticated session object that should be used for querying. Used only in special situations, as an alternative to the dimcli.login() utility method.</p></li>
 <li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>default=True</em>) – Verbose mode.</p></li>
 </ul>
 </dd>
@@ -272,6 +286,23 @@ NOTE: these objects are attached to the top level <code class="docutils literal 
 <span class="go">        &#39;last_name&#39;: &#39;White&#39;,</span>
 <span class="go">        &#39;first_name&#39;: &#39;Nicholas J&#39;},</span>
 <span class="go">    &quot;... JSON data continues ... &quot;</span>
+</pre></div>
+</div>
+<p>In some special situations, you’d want to query two separate Dimensions servers
+in parallel. To that end, it is possible to pass an <cite>APISession</cite> instance to the <cite>Dsl()</cite> constructor
+using the <cite>auth_session</cite> parameter, IE:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">dimcli</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dimcli.core.auth</span> <span class="kn">import</span> <span class="n">APISession</span>
+<span class="go"># set up first authentication backend</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mysession1</span> <span class="o">=</span> <span class="n">APISession</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mysession1</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="s2">&quot;app.dimensions.ai&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d1</span> <span class="o">=</span> <span class="n">Dsl</span><span class="p">(</span><span class="n">auth_session</span><span class="o">=</span><span class="n">mysession1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d1</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;search publications return research_orgs&quot;</span><span class="p">)</span>
+<span class="go"># set up second authentication backend</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mysession2</span> <span class="o">=</span> <span class="n">APISession</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mysession2</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="s2">&quot;another-app.dimensions.ai&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d2</span> <span class="o">=</span> <span class="n">Dsl</span><span class="p">(</span><span class="n">auth_session</span><span class="o">=</span><span class="n">mysession2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d2</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;search publications return research_orgs&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <dl class="py method">
@@ -1194,7 +1225,7 @@ NOTE: these functions are attached to the top level <code class="docutils litera
 <p>EG with the query string:
 ‘“2019-nCoV” OR “COVID-19” OR “SARS-CoV-2” OR ((“coronavirus”  OR “corona virus”) AND (Wuhan OR China))’</p>
 <p>In Python, if you want to embed it into a DSL query, it has to become:
-‘“2019-nCoV” OR “COVID-19” OR “SARS-CoV-2” OR ((“coronavirus”  OR “corona virus”) AND (Wuhan OR China))’</p>
+‘&quot;2019-nCoV&quot; OR &quot;COVID-19&quot; OR &quot;SARS-CoV-2&quot; OR ((&quot;coronavirus&quot;  OR &quot;corona virus&quot;) AND (Wuhan OR China))’</p>
 <p>See also: <a class="reference external" href="https://docs.dimensions.ai/dsl/language.html#for-search-term">https://docs.dimensions.ai/dsl/language.html#for-search-term</a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1423,6 +1454,71 @@ v0.6.1.2: normalizes also ‘None’ values (to address 1.21 DSL change)</p>
 <code class="sig-prename descclassname">dimcli.utils.misc_utils.</code><code class="sig-name descname">open_multi_platform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fpath</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/misc_utils.html#open_multi_platform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.misc_utils.open_multi_platform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Open a file using the native OS tools, taking care of platform differences.</p>
 <p>Supports win, macos and linux.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dimcli.utils.misc_utils.printDebug">
+<code class="sig-prename descclassname">dimcli.utils.misc_utils.</code><code class="sig-name descname">printDebug</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span></em>, <em class="sig-param"><span class="n">mystyle</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">err</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/misc_utils.html#printDebug"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.misc_utils.printDebug" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper around click.secho() for printing in colors with various defaults.</p>
+<p>:kwargs = you can do printDebug(“s”, bold=True)</p>
+<p>2018-12-06: by default print to standard error stderr (err=True)
+<a class="reference external" href="https://click.palletsprojects.com/en/5.x/api/#click.echo">https://click.palletsprojects.com/en/5.x/api/#click.echo</a>
+This means that the output is ok with <cite>less</cite> and when piped to other commands (or files)</p>
+<p>Styling output:
+&lt;<a class="reference external" href="http://click.pocoo.org/5/api/#click.style">http://click.pocoo.org/5/api/#click.style</a>&gt;
+Styles a text with ANSI styles and returns the new string. By default the styling is self contained which means that at the end of the string a reset code is issued. This can be prevented by passing reset=False.</p>
+<p>This works also with inner click styles eg</p>
+<p><a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a>python
+uri, title = “<a class="reference external" href="http://example.com">http://example.com</a>”, “My ontology”
+printDebug(click.style(“[%d]” % 1, fg=’blue’) +</p>
+<blockquote>
+<div><p>click.style(uri + ” ==&gt; “, fg=’black’) +
+click.style(title, fg=’red’))</p>
+</div></blockquote>
+<p><a href="#id5"><span class="problematic" id="id6">``</span></a><a href="#id7"><span class="problematic" id="id8">`</span></a></p>
+<p>Or even with Colorama</p>
+<p><a href="#id9"><span class="problematic" id="id10">``</span></a>`
+from colorama import Fore, Style</p>
+<dl class="simple">
+<dt>printDebug(Fore.BLUE + Style.BRIGHT + “[%d]” % 1 +</dt><dd><p>Style.RESET_ALL + uri + ” ==&gt; ” + Fore.RED + title +
+Style.RESET_ALL)</p>
+</dd>
+</dl>
+<p><a href="#id11"><span class="problematic" id="id12">``</span></a><a href="#id13"><span class="problematic" id="id14">`</span></a></p>
+<p>Examples:</p>
+<p>click.echo(click.style(‘Hello World!’, fg=’green’))
+click.echo(click.style(‘ATTENTION!’, blink=True))
+click.echo(click.style(‘Some things’, reverse=True, fg=’cyan’))
+Supported color names:</p>
+<p>black (might be a gray)
+red
+green
+yellow (might be an orange)
+blue
+magenta
+cyan
+white (might be light gray)
+reset (reset the color code only)
+New in version 2.0.</p>
+<p>Parameters:
+text – the string to style with ansi codes.
+fg – if provided this will become the foreground color.
+bg – if provided this will become the background color.
+bold – if provided this will enable or disable bold mode.
+dim – if provided this will enable or disable dim mode. This is badly supported.
+underline – if provided this will enable or disable underline.
+blink – if provided this will enable or disable blinking.
+reverse – if provided this will enable or disable inverse rendering (foreground becomes background and the other way round).
+reset – by default a reset-all code is added at the end of the string which means that styles do not carry over. This can be disabled to compose styles.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="dimcli.utils.misc_utils.printInfo">
+<code class="sig-prename descclassname">dimcli.utils.misc_utils.</code><code class="sig-name descname">printInfo</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span></em>, <em class="sig-param"><span class="n">mystyle</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/misc_utils.html#printInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.utils.misc_utils.printInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper around printDebug for printing ALWAYS to stdout
+This means that the output can be grepped etc..
+NOTE this output will be picked up by pipes etc..</p>
+<p>Fixes <a class="reference external" href="https://github.com/lambdamusic/Ontospy/issues/76">https://github.com/lambdamusic/Ontospy/issues/76</a></p>
 </dd></dl>
 
 <dl class="py function">

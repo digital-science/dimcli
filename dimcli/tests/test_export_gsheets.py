@@ -26,13 +26,13 @@ class TestOne(unittest.TestCase):
     Tests - export functions 
     """
 
-    click.secho("**TESTS**", fg="red")
+    click.secho("**test_export_gsheets.py**", fg="red")
     login(instance=API_INSTANCE)
     d = Dsl()
 
 
     def test_001(self):
-        click.secho("\nTEST 001: Save a DslDataset to the 'dimcli-qa-export-live' google sheet.", fg="green")
+        click.secho("\nTEST 001: Save a DslDataset to the 'dimcli-qa-export-live' google sheet.", bg="green")
         click.secho("\nPS ignore the warnings deriving from Unittest & SSLSockets not being closed", fg="green")
         # ----
         d = Dsl()
@@ -41,7 +41,7 @@ class TestOne(unittest.TestCase):
         click.secho("Completed test succesfully", fg="green")
         
     def test_002(self):
-        click.secho("\nTEST 002: Save a pd.DataFrame to the 'dimcli-qa-export-live' google sheet.", fg="green")
+        click.secho("\nTEST 002: Save a pd.DataFrame to the 'dimcli-qa-export-live' google sheet.", bg="green")
         click.secho("\nPS ignore the warnings deriving from Unittest & SSLSockets not being closed", fg="green")
         # ----
         d = Dsl()
