@@ -4,8 +4,9 @@
 
 ## v 0.9.2
 
+* Support for multiple API endpoints (V1 / V2)
+* Support for parallel querying of distinct Dimensions servers
 * CLI: `.record_notebook` utility removed. Use instead `.export_as_jupyter`
-* Added support for new V2 API endpoints
 
 
 ## v 0.9.1

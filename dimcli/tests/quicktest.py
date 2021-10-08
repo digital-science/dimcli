@@ -104,6 +104,8 @@ def main(test_number=1):
 
     if test_number == 5:
 
+        # TESTING LOCAL LOGIN LOGIC 
+
         logout()
         from ..core.auth import APISession
         
@@ -134,7 +136,7 @@ def main(test_number=1):
 
     if test_number == 6:
 
-        # testing retry logic 
+        # TESTING RETRY LOGIC 
 
         logout()
         from ..core.auth import APISession

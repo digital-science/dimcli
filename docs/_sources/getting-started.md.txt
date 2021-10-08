@@ -66,7 +66,7 @@ There's been [reports](https://github.com/digital-science/dimcli/issues/21) of D
 ## Authentication 
 
 
-After installation it's **strongly advised to create a configuration file** containing your Dimensions account credentials. This can be done only once and it'll save you from having to type in credentials each time you use Dimcli. E.g. 
+After installation it's **strongly advised to create a configuration file** containing your Dimensions account credentials (see below). This can be done only once and it'll save you from having to type in credentials each time you use Dimcli. E.g. 
 
 ```
 >>> import dimcli
@@ -91,12 +91,12 @@ Or if you are using **key-based** authentication:
 >>> import dimcli
 
 >>> dimcli.login(key="123456789qwertyuiop",  
-                 endpoint="https://https://my.instance.of.dimensions.ai")
+                 endpoint="https://my.instance.of.dimensions.ai")
 
 ```
 
 
-### Creating a credentials file using the helper script (recommended)
+### Creating a configuration file using the helper script (recommended)
 
 The easiest way to set up the authentication file is to use the command line helper: 
 
@@ -107,11 +107,11 @@ $ dimcli --init
 The helper will guide you through the process of creating this file, which will be safely stored in your computer home folder. That's it - you're ready to hit the API! See below for more info on how to do that.
 
 
-### Creating a credentials file manually
+### Creating a configuration file manually
 
 This section provides more details about where Dimcli expects credentials data to be found, in case you want to set this up manually. 
 
-The credentials file must be called `dsl.ini` and located in your user directory in the `.dimensions` folder. If you want to set this up manually, this is what you'd do on unix systems:
+The configuration file must be called `dsl.ini` and located in your user directory in the `.dimensions` folder. If you want to set this up manually, this is what you'd do on unix systems:
 
 ```
 $ mkdir ~/.dimensions
@@ -123,26 +123,43 @@ Then open `dsl.ini` with a text editor. Its contents should look like this:
 ```
 [instance.live]
 url=https://app.dimensions.ai
-login=user@mail.com
-password=yourpasswordhere
 key=yourkeyhere
 ```
 
 In most situations you can simply copy/paste the text above and update its contents as needed. 
 
-#### Important
-
-* you must always have an entry in the credentials file called `[instance.live]`
-* depending on whether you authenticate using an API key or username & password, fill in the relevant details and just leave the other stuff blank. Eg this is a valid config snippet if you authenticate using a key:
+NOTE if your Dimensions instance still supports the legacy authentication method via username and password, you can provide that in the init file too:  
 
 ```
 [instance.live]
 url=https://app.dimensions.ai
-login=
-password=
-key=yourkeyhere
+login=user@mail.com
+password=yourpasswordhere
 ```
 
+
+#### Important
+
+* You always need to have an entry in the configuration file called `[instance.live]`
+* Depending on whether you authenticate using an API key or username & password, fill in the relevant details and just leave the other stuff blank. Eg this is a valid config snippet if you authenticate using a key:
+
+```
+[instance.live]
+url=https://app.dimensions.ai
+key=yourkeyhere
+login=
+password=
+```
+
+The 'live' configuration directive is used by default. Eg with Python:
+
+```
+>>> import dimcli
+
+# The two lines below are equivalent
+>>> dimcli.login()
+>>> dimcli.login(instance="live")
+```
 
 
 
@@ -177,11 +194,20 @@ password=yourpasswordhere
 key=yourkeyhere
 ```
 
-Then when running the CLI you can select which instance to use just by passing its name as argument eg
+When running the shell CLI you can select which instance to use just by passing its name as argument eg
 
 ```
 $ dimcli private
 ```
+
+Or from Python:
+
+```
+>>> import dimcli
+
+>>> dimcli.login(instance="private")
+```
+
 
 
 ## Settings

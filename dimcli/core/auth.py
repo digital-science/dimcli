@@ -26,6 +26,14 @@ USER_SETTINGS_FILE_PATH = os.path.expanduser(USER_DIR + USER_SETTINGS_FILE_NAME)
 
 
 
+###
+#
+# class that encapsulates the login/token logic for the API
+#
+#
+###
+
+
 
 class APISession():
 
@@ -33,7 +41,29 @@ class APISession():
     """
 
     def __init__(self, verbose=True):
-        """Initialises a Dsl Auth object.
+        """Initialises a Dsl Authentication Session object.
+
+        Normally it is not needed to instantiate directly this object, instead it's 
+        quicker to use the `dimcli.login()` utility method, which create a global
+        authentication session. 
+
+        In some situations though, you'd want to query two separate Dimensions instances 
+        in parallel. To that end, pass an APISession instance to the Dsl() constructor
+        using the `auth_session` parameter, IE:  
+
+        ```
+        from dimcli.core.auth import APISession
+
+        mysession1 = APISession()
+        mysession1.login(instance="key-test")
+        d1 = Dsl(auth_session=mysession1)
+        d1.query("search publications return research_orgs")
+        
+        mysession2 = APISession()
+        mysession2.login(instance="live")
+        d2 = Dsl(auth_session=mysession2)
+        d2.query("search publications return research_orgs")
+        ```
 
         """
         self.instance = None
@@ -53,7 +83,7 @@ class APISession():
                 password="", 
                 key="", 
                 url="https://app.dimensions.ai"):
-        """Login into Dimensions API endpoint and get a query token
+        """Login into Dimensions API endpoint and get a query token.
         
         """
         URL_AUTH, URL_QUERY = self._get_endpoint_urls(url)
@@ -165,7 +195,14 @@ class APISession():
 
 
 
-# global connection object
+###
+#
+# global connection object and helper methods
+#
+#
+###
+
+
 CONNECTION = APISession()
 
 
@@ -193,9 +230,12 @@ def is_logged_in_globally():
 
 
 
-# 
+###
+#
 # INIT file helpers 
-# 
+#
+#
+###
 
 def get_init_file():
     """
@@ -263,9 +303,12 @@ def read_init_file(fpath, instance_name):
 
 
 
-# 
-# NEW settings eg gists key etcc
-# 
+###
+#
+# settings file helper eg gists key etcc
+#
+#
+###
 
 
 def get_settings_file():

@@ -158,20 +158,16 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 
-<span class="kn">import</span> <span class="nn">configparser</span>
 <span class="kn">import</span> <span class="nn">requests</span>
-<span class="kn">import</span> <span class="nn">os.path</span>
-<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">click</span>
 <span class="kn">import</span> <span class="nn">IPython.display</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">islice</span>
 <span class="kn">import</span> <span class="nn">urllib.parse</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="kn">from</span> <span class="nn">.auth</span> <span class="kn">import</span> <span class="n">do_global_login</span><span class="p">,</span> <span class="n">get_connection</span><span class="p">,</span> <span class="n">refresh_login</span>
+<span class="kn">from</span> <span class="nn">.auth</span> <span class="kn">import</span> <span class="n">get_global_connection</span> <span class="c1"># , refresh_login, do_global_login, </span>
 <span class="kn">from</span> <span class="nn">.dsl_grammar</span> <span class="kn">import</span> <span class="n">G</span>
 <span class="kn">from</span> <span class="nn">.dataframe_factory</span> <span class="kn">import</span> <span class="n">DfFactory</span>
 
@@ -187,6 +183,8 @@
 <span class="sd">    ----------</span>
 <span class="sd">    show_results : bool, default=False</span>
 <span class="sd">        Set a global setting that determines whether query JSON results get printed out. Note that in Jupyter environments this is not needed, because iPython rich widgets are used by default.</span>
+<span class="sd">    auth_session : APISession, default=False</span>
+<span class="sd">        Set an authenticated session object that should be used for querying. Used only in special situations, as an alternative to the dimcli.login() utility method. </span>
 <span class="sd">    verbose : bool, default=True</span>
 <span class="sd">        Verbose mode.</span>
 
@@ -203,9 +201,27 @@
 <span class="sd">            &#39;last_name&#39;: &#39;White&#39;,</span>
 <span class="sd">            &#39;first_name&#39;: &#39;Nicholas J&#39;},</span>
 <span class="sd">        &quot;... JSON data continues ... &quot;</span>
+
+<span class="sd">    In some special situations, you&#39;d want to query two separate Dimensions servers </span>
+<span class="sd">    in parallel. To that end, it is possible to pass an `APISession` instance to the `Dsl()` constructor</span>
+<span class="sd">    using the `auth_session` parameter, IE:</span>
+
+<span class="sd">    &gt;&gt;&gt; import dimcli</span>
+<span class="sd">    &gt;&gt;&gt; from dimcli.core.auth import APISession </span>
+<span class="sd">    # set up first authentication backend</span>
+<span class="sd">    &gt;&gt;&gt; mysession1 = APISession()</span>
+<span class="sd">    &gt;&gt;&gt; mysession1.login(instance=&quot;app.dimensions.ai&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; d1 = Dsl(auth_session=mysession1)</span>
+<span class="sd">    &gt;&gt;&gt; d1.query(&quot;search publications return research_orgs&quot;)</span>
+<span class="sd">    # set up second authentication backend</span>
+<span class="sd">    &gt;&gt;&gt; mysession2 = APISession()</span>
+<span class="sd">    &gt;&gt;&gt; mysession2.login(instance=&quot;another-app.dimensions.ai&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; d2 = Dsl(auth_session=mysession2)</span>
+<span class="sd">    &gt;&gt;&gt; d2.query(&quot;search publications return research_orgs&quot;)</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show_results</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show_results</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">auth_session</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialises a Dsl object.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -213,12 +229,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_verbose</span> <span class="o">=</span> <span class="n">verbose</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_url</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_headers</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_CONNECTION</span> <span class="o">=</span> <span class="n">get_connection</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">auth_session</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_CONNECTION</span> <span class="o">=</span> <span class="n">auth_session</span> 
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_CONNECTION</span> <span class="o">=</span> <span class="n">get_global_connection</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CONNECTION</span><span class="p">[</span><span class="s1">&#39;token&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CONNECTION</span><span class="o">.</span><span class="n">token</span><span class="p">:</span>
             <span class="c1"># if already logged in, reuse connection          </span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CONNECTION</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Authorization&#39;</span><span class="p">:</span> <span class="s2">&quot;JWT &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CONNECTION</span><span class="p">[</span><span class="s1">&#39;token&#39;</span><span class="p">]}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CONNECTION</span><span class="o">.</span><span class="n">url</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Authorization&#39;</span><span class="p">:</span> <span class="s2">&quot;JWT &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CONNECTION</span><span class="o">.</span><span class="n">token</span><span class="p">}</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_print_please_login</span><span class="p">()</span>
 
@@ -228,7 +247,7 @@
         <span class="k">else</span><span class="p">:</span> <span class="k">return</span> <span class="kc">False</span>
 
     <span class="k">def</span> <span class="nf">_print_please_login</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: you are not logged in. Please use `dimcli.login(username, password)` before querying.&quot;</span><span class="p">)</span>
+        <span class="n">printDebug</span><span class="p">(</span><span class="s2">&quot;Warning: you are not logged in. Please use `dimcli.login(key, endpoint)` before querying.&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Dsl.query"><a class="viewcode-back" href="../../../modules.html#dimcli.core.api.Dsl.query">[docs]</a>    <span class="k">def</span> <span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">show_results</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">retry</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Execute a single DSL query.</span>
@@ -266,22 +285,22 @@
         
         <span class="c1">#   Execute DSL query.</span>
         <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-            <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/api/dsl.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_url</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="n">q</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_headers</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">q</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_headers</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">429</span><span class="p">:</span>  
             <span class="c1"># Too Many Requests</span>
-            <span class="nb">print</span><span class="p">(</span>
+            <span class="n">printDebug</span><span class="p">(</span>
                 <span class="s1">&#39;Too Many Requests for the Server. Sleeping for 30 seconds and then retrying.&#39;</span>
             <span class="p">)</span>
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">show_results</span><span class="p">,</span> <span class="n">retry</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">403</span><span class="p">:</span>  
             <span class="c1"># Forbidden:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Login token expired. Logging in again.&#39;</span><span class="p">)</span>
-            <span class="n">refresh_login</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_CONNECTION</span> <span class="o">=</span> <span class="n">get_connection</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CONNECTION</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Authorization&#39;</span><span class="p">:</span> <span class="s2">&quot;JWT &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CONNECTION</span><span class="p">[</span><span class="s1">&#39;token&#39;</span><span class="p">]}</span>
+            <span class="n">printDebug</span><span class="p">(</span><span class="s1">&#39;Login token expired. Logging in again.&#39;</span><span class="p">)</span>
+            <span class="c1"># refresh_login()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_CONNECTION</span><span class="o">.</span><span class="n">refresh_login</span><span class="p">()</span>
+            <span class="c1"># self._CONNECTION = get_global_connection()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CONNECTION</span><span class="o">.</span><span class="n">url</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Authorization&#39;</span><span class="p">:</span> <span class="s2">&quot;JWT &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CONNECTION</span><span class="o">.</span><span class="n">token</span><span class="p">}</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">show_results</span><span class="p">,</span> <span class="n">retry</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">200</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">500</span><span class="p">]:</span>  
             <span class="c1">###  </span>
@@ -290,7 +309,7 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">res_json</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
             <span class="k">except</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Unexpected error. JSON could not be parsed.&#39;</span><span class="p">)</span>
+                <span class="n">printDebug</span><span class="p">(</span><span class="s1">&#39;Unexpected error. JSON could not be parsed.&#39;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">response</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">DslDataset</span><span class="p">(</span><span class="n">res_json</span><span class="p">)</span>
             <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
@@ -303,7 +322,7 @@
             <span class="k">return</span> <span class="n">result</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">retry</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Retrying in 30 secs&#39;</span><span class="p">)</span>
+                <span class="n">printDebug</span><span class="p">(</span><span class="s1">&#39;Retrying in 30 secs&#39;</span><span class="p">)</span>
                 <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
                     <span class="n">q</span><span class="p">,</span>
@@ -400,8 +419,8 @@
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">_tot_count_prev_query</span><span class="p">:</span>
             <span class="c1"># first iteration</span>
-            <span class="c1"># if verbose: print(f&quot;{limit+skip} / ...&quot;)</span>
-            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting iteration with limit=</span><span class="si">{</span><span class="n">limit</span><span class="si">}</span><span class="s2"> skip=</span><span class="si">{</span><span class="n">skip</span><span class="si">}</span><span class="s2"> ...&quot;</span><span class="p">)</span>
+            <span class="c1"># if verbose: printDebug(f&quot;{limit+skip} / ...&quot;)</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">printDebug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting iteration with limit=</span><span class="si">{</span><span class="n">limit</span><span class="si">}</span><span class="s2"> skip=</span><span class="si">{</span><span class="n">skip</span><span class="si">}</span><span class="s2"> ...&quot;</span><span class="p">)</span>
             
         <span class="n">output</span><span class="p">,</span> <span class="n">flag_force</span> <span class="o">=</span> <span class="p">[],</span> <span class="kc">False</span>
         <span class="n">q2</span> <span class="o">=</span> <span class="n">q</span> <span class="o">+</span> <span class="s2">&quot; limit </span><span class="si">%d</span><span class="s2"> skip </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">limit</span><span class="p">,</span> <span class="n">skip</span><span class="p">)</span>
@@ -412,14 +431,14 @@
         <span class="n">elapsed</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">start</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="c1"># print(&quot;sleeping&quot;)</span>
+            <span class="c1"># printDebug(&quot;sleeping&quot;)</span>
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">pause</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;errors&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">force</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&gt;&gt;&gt;[Dimcli tip] An error occurred with the batch &#39;</span><span class="si">{</span><span class="n">skip</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">limit</span><span class="o">+</span><span class="n">skip</span><span class="si">}</span><span class="s2">&#39;. Consider using the &#39;limit&#39; argument to retrieve fewer records per iteration, or use &#39;force=True&#39; to ignore errors and continue the extraction.&quot;</span><span class="p">)</span>
+            <span class="n">printDebug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&gt;&gt;&gt;[Dimcli tip] An error occurred with the batch &#39;</span><span class="si">{</span><span class="n">skip</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">limit</span><span class="o">+</span><span class="n">skip</span><span class="si">}</span><span class="s2">&#39;. Consider using the &#39;limit&#39; argument to retrieve fewer records per iteration, or use &#39;force=True&#39; to ignore errors and continue the extraction.&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">res</span>
         <span class="k">elif</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;errors&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">force</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&gt;&gt;&gt;[Dimcli log] An error occurred with the batch &#39;</span><span class="si">{</span><span class="n">skip</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">limit</span><span class="o">+</span><span class="n">skip</span><span class="si">}</span><span class="s2">&#39;. Skipping this batch and continuing iteration.. &quot;</span><span class="p">)</span>
+            <span class="n">printDebug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&gt;&gt;&gt;[Dimcli log] An error occurred with the batch &#39;</span><span class="si">{</span><span class="n">skip</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">limit</span><span class="o">+</span><span class="n">skip</span><span class="si">}</span><span class="s2">&#39;. Skipping this batch and continuing iteration.. &quot;</span><span class="p">)</span>
             <span class="n">flag_force</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="c1"># RECURSION </span>
@@ -434,7 +453,7 @@
             <span class="n">new_skip</span> <span class="o">=</span> <span class="n">tot</span>
         <span class="k">if</span> <span class="n">verbose</span> <span class="ow">and</span> <span class="n">tot</span><span class="p">:</span>  <span class="c1"># if not first iteration</span>
             <span class="n">t</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">elapsed</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">skip</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">new_skip</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="n">tot</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">s)&quot;</span><span class="p">)</span>
+            <span class="n">printDebug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">skip</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">new_skip</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="n">tot</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">s)&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;_warnings&quot;</span><span class="p">]:</span>
             <span class="k">if</span> <span class="n">_warnings_tot</span><span class="p">:</span>
@@ -475,7 +494,7 @@
             <span class="n">result</span> <span class="o">=</span> <span class="n">DslDataset</span><span class="p">(</span><span class="n">response_simulation</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">show_results</span> <span class="ow">or</span> <span class="p">(</span><span class="n">show_results</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_show_results</span><span class="p">):</span>
                 <span class="n">IPython</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;===</span><span class="se">\n</span><span class="s2">Records extracted: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">output</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">printDebug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;===</span><span class="se">\n</span><span class="s2">Records extracted: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">output</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">result</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">output</span></div>
@@ -700,7 +719,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span>
             <span class="n">jsondata</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">json_file</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loaded file: &quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">printDebug</span><span class="p">(</span><span class="s2">&quot;Loaded file: &quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">jsondata</span><span class="p">)</span></div>
 
 
@@ -718,7 +737,7 @@
 
     <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="s2">&quot;Trick to return any dict key as a property&quot;</span>
-        <span class="c1"># print(key, &quot;==========&quot;)</span>
+        <span class="c1"># printDebug(key, &quot;==========&quot;)</span>
         <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;stats&quot;</span><span class="p">:</span>
             <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;_stats&quot;</span> <span class="c1"># syntactic sugar</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">:</span>
@@ -828,12 +847,12 @@
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">good_data_keys</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Please specify a key from </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">good_data_keys</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">printDebug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Please specify a key from </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">good_data_keys</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="k">return</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">good_data_keys</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">elif</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">good_data_keys</span><span class="p">():</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid key: should be one of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">good_data_keys</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">printDebug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid key: should be one of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">good_data_keys</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">return</span> 
 
         <span class="n">it</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
@@ -982,7 +1001,7 @@
 <span class="sd">        &#39;https://app.dimensions.ai/discover/publication?search_text=id%3A+%28pub.1120975084+OR+pub.1120715293+OR+pub.1120602308%29&#39;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
-        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: this is an experimental and unsupported feature.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">printDebug</span><span class="p">(</span><span class="s2">&quot;Warning: this is an experimental and unsupported feature.&quot;</span><span class="p">)</span>
 
 
         <span class="c1"># General query structure for IDs: </span>
@@ -1059,7 +1078,7 @@
                 <span class="n">filename</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;dimensions_data_%Y-%m-%d_%H-%M-%S.json&quot;</span><span class="p">)</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
                 <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">,</span> <span class="n">outfile</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saved to file: &quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">printDebug</span><span class="p">(</span><span class="s2">&quot;Saved to file: &quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">filename</span></div>
 
 

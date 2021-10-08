@@ -66,7 +66,17 @@ def login(username="", password="",
         The API key (available to some users instead of username/password)
     verbose: bool, optional
         Verbose mode. Default: True.
-       
+
+
+    Notes
+    ---------------
+    The endpoint value can either be simply the Dimensions server hostname or the full API endpoint path. All the options below are valid endpoints: 
+
+        * `https://app.dimensions.ai`
+        * `https://app.dimensions.ai/api/dsl/v1` 
+        * `https://app.dimensions.ai/api/dsl/v2`
+
+
 
     Example
     -------
@@ -86,6 +96,9 @@ def login(username="", password="",
     
     >>> dimcli.login(key="my-secret-key", endpoint="https://your-url.dimensions.ai")
 
+    See Also
+    ---------------
+    dimcli.core.api.Dsl
 
     """
 

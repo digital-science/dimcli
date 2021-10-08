@@ -33,6 +33,8 @@ class Dsl():
     ----------
     show_results : bool, default=False
         Set a global setting that determines whether query JSON results get printed out. Note that in Jupyter environments this is not needed, because iPython rich widgets are used by default.
+    auth_session : APISession, default=False
+        Set an authenticated session object that should be used for querying. Used only in special situations, as an alternative to the dimcli.login() utility method. 
     verbose : bool, default=True
         Verbose mode.
 
@@ -49,6 +51,24 @@ class Dsl():
             'last_name': 'White',
             'first_name': 'Nicholas J'},
         "... JSON data continues ... "
+
+    In some special situations, you'd want to query two separate Dimensions servers 
+    in parallel. To that end, it is possible to pass an `APISession` instance to the `Dsl()` constructor
+    using the `auth_session` parameter, IE:
+
+    >>> import dimcli
+    >>> from dimcli.core.auth import APISession 
+    # set up first authentication backend
+    >>> mysession1 = APISession()
+    >>> mysession1.login(instance="app.dimensions.ai")
+    >>> d1 = Dsl(auth_session=mysession1)
+    >>> d1.query("search publications return research_orgs")
+    # set up second authentication backend
+    >>> mysession2 = APISession()
+    >>> mysession2.login(instance="another-app.dimensions.ai")
+    >>> d2 = Dsl(auth_session=mysession2)
+    >>> d2.query("search publications return research_orgs")
+
     """
 
     def __init__(self, show_results=False, verbose=True, auth_session=False):

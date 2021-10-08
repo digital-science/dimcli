@@ -29,7 +29,7 @@ class TestOne(unittest.TestCase):
     click.secho("**test_login.py**", fg="red")
 
     def test_001(self):
-        click.secho("\nTEST 001: Global login/logout using file-based credentials and verbose mode", bg="green")
+        click.secho("\nTEST 001: GLOBAL login/logout using file-based credentials and verbose mode", bg="green")
         # ----
         click.secho("Login... verbose=True", fg="magenta")
         login(instance=API_INSTANCE)
@@ -50,7 +50,7 @@ class TestOne(unittest.TestCase):
         click.secho("\n--------\nCOMPLETED", fg="green")
 
     def test_002(self):
-        click.secho("\nTEST 002: Global login/logout by passing credentials explicitly.", bg="green")
+        click.secho("\nTEST 002: GLOBAL login/logout by passing credentials explicitly.", bg="green")
         # ----
         # get credentials from file as strings
         config = configparser.ConfigParser()
@@ -72,7 +72,7 @@ class TestOne(unittest.TestCase):
         click.secho("\n--------\nCOMPLETED", fg="green")
 
     def test_002_1(self):
-        click.secho("\nTEST 002-1: Global login/logout on different Dimension instances.", bg="green")
+        click.secho("\nTEST 002-1: GLOBAL login/logout on different Dimension instances.", bg="green")
         # ----
         login(instance=API_INSTANCE)
         d = Dsl()
@@ -91,7 +91,7 @@ class TestOne(unittest.TestCase):
 
 
     def test_003(self):
-        click.secho("\nTEST 003: Global login/logout using key-based authentication.", bg="green")
+        click.secho("\nTEST 003: GLOBAL login/logout using key-based authentication.", bg="green")
         # ----
         logout()
         login(instance="key-test")
@@ -105,7 +105,7 @@ class TestOne(unittest.TestCase):
 
 
     def test_004(self):
-        click.secho("\nTEST 004: Login/logout using LOCAL APISession object.", bg="green")
+        click.secho("\nTEST 004: LOCAL Login/logout using APISession object.", bg="green")
         # ----
         logout()
         from ..core.auth import APISession

@@ -511,20 +511,95 @@
         <span class="k">yield</span> <span class="n">x</span></div>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="c1"># tests/demos</span>
 
-    <span class="c1">#print all files and directories</span>
-    <span class="c1"># directly above the current one</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">walk_up</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">curdir</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<div class="viewcode-block" id="printDebug"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.misc_utils.printDebug">[docs]</a><span class="k">def</span> <span class="nf">printDebug</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">mystyle</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Wrapper around click.secho() for printing in colors with various defaults.</span>
 
-    <span class="c1"># look for a TAGS file above the</span>
-    <span class="c1"># current directory</span>
-    <span class="k">for</span> <span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">f</span> <span class="ow">in</span> <span class="n">walk_up</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">curdir</span><span class="p">):</span>
-        <span class="k">if</span> <span class="s1">&#39;TAGS&#39;</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-            <span class="k">break</span>
+<span class="sd">    :kwargs = you can do printDebug(&quot;s&quot;, bold=True)</span>
+
+<span class="sd">    2018-12-06: by default print to standard error stderr (err=True)</span>
+<span class="sd">    https://click.palletsprojects.com/en/5.x/api/#click.echo</span>
+<span class="sd">    This means that the output is ok with `less` and when piped to other commands (or files)</span>
+
+<span class="sd">    Styling output:</span>
+<span class="sd">    &lt;http://click.pocoo.org/5/api/#click.style&gt;</span>
+<span class="sd">    Styles a text with ANSI styles and returns the new string. By default the styling is self contained which means that at the end of the string a reset code is issued. This can be prevented by passing reset=False.</span>
+
+<span class="sd">    This works also with inner click styles eg</span>
+
+<span class="sd">    ```python</span>
+<span class="sd">    uri, title = &quot;http://example.com&quot;, &quot;My ontology&quot;</span>
+<span class="sd">    printDebug(click.style(&quot;[%d]&quot; % 1, fg=&#39;blue&#39;) +</span>
+<span class="sd">               click.style(uri + &quot; ==&gt; &quot;, fg=&#39;black&#39;) +</span>
+<span class="sd">               click.style(title, fg=&#39;red&#39;))</span>
+<span class="sd">    ```</span>
+
+<span class="sd">    Or even with Colorama</span>
+
+<span class="sd">    ```</span>
+<span class="sd">    from colorama import Fore, Style</span>
+
+<span class="sd">    printDebug(Fore.BLUE + Style.BRIGHT + &quot;[%d]&quot; % 1 + </span>
+<span class="sd">            Style.RESET_ALL + uri + &quot; ==&gt; &quot; + Fore.RED + title + </span>
+<span class="sd">            Style.RESET_ALL)</span>
+<span class="sd">    ```</span>
+
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">    click.echo(click.style(&#39;Hello World!&#39;, fg=&#39;green&#39;))</span>
+<span class="sd">    click.echo(click.style(&#39;ATTENTION!&#39;, blink=True))</span>
+<span class="sd">    click.echo(click.style(&#39;Some things&#39;, reverse=True, fg=&#39;cyan&#39;))</span>
+<span class="sd">    Supported color names:</span>
+
+<span class="sd">    black (might be a gray)</span>
+<span class="sd">    red</span>
+<span class="sd">    green</span>
+<span class="sd">    yellow (might be an orange)</span>
+<span class="sd">    blue</span>
+<span class="sd">    magenta</span>
+<span class="sd">    cyan</span>
+<span class="sd">    white (might be light gray)</span>
+<span class="sd">    reset (reset the color code only)</span>
+<span class="sd">    New in version 2.0.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    text – the string to style with ansi codes.</span>
+<span class="sd">    fg – if provided this will become the foreground color.</span>
+<span class="sd">    bg – if provided this will become the background color.</span>
+<span class="sd">    bold – if provided this will enable or disable bold mode.</span>
+<span class="sd">    dim – if provided this will enable or disable dim mode. This is badly supported.</span>
+<span class="sd">    underline – if provided this will enable or disable underline.</span>
+<span class="sd">    blink – if provided this will enable or disable blinking.</span>
+<span class="sd">    reverse – if provided this will enable or disable inverse rendering (foreground becomes background and the other way round).</span>
+<span class="sd">    reset – by default a reset-all code is added at the end of the string which means that styles do not carry over. This can be disabled to compose styles.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">mystyle</span> <span class="o">==</span> <span class="s2">&quot;comment&quot;</span><span class="p">:</span>
+        <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="n">err</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">mystyle</span> <span class="o">==</span> <span class="s2">&quot;important&quot;</span><span class="p">:</span>
+        <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">bold</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="n">err</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">mystyle</span> <span class="o">==</span> <span class="s2">&quot;normal&quot;</span><span class="p">:</span>
+        <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="n">err</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">mystyle</span> <span class="o">==</span> <span class="s2">&quot;red&quot;</span> <span class="ow">or</span> <span class="n">mystyle</span> <span class="o">==</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span>
+        <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="n">err</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">mystyle</span> <span class="o">==</span> <span class="s2">&quot;green&quot;</span><span class="p">:</span>
+        <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="n">err</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="n">err</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+
+
+<div class="viewcode-block" id="printInfo"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.misc_utils.printInfo">[docs]</a><span class="k">def</span> <span class="nf">printInfo</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">mystyle</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Wrapper around printDebug for printing ALWAYS to stdout</span>
+<span class="sd">    This means that the output can be grepped etc..</span>
+<span class="sd">    NOTE this output will be picked up by pipes etc..</span>
+
+<span class="sd">    Fixes https://github.com/lambdamusic/Ontospy/issues/76</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">printDebug</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">mystyle</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

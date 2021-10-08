@@ -189,7 +189,11 @@
 
 
 
-<div class="viewcode-block" id="login"><a class="viewcode-back" href="../../modules.html#dimcli.__init__.login">[docs]</a><span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="s2">&quot;https://app.dimensions.ai&quot;</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="s2">&quot;live&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="login"><a class="viewcode-back" href="../../modules.html#dimcli.__init__.login">[docs]</a><span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> 
+            <span class="n">endpoint</span><span class="o">=</span><span class="s2">&quot;https://app.dimensions.ai&quot;</span><span class="p">,</span> 
+            <span class="n">instance</span><span class="o">=</span><span class="s2">&quot;live&quot;</span><span class="p">,</span> 
+            <span class="n">key</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> 
+            <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Login into the Dimensions API and store the query token in memory. </span>
 
 <span class="sd">    Two cases:</span>
@@ -212,7 +216,17 @@
 <span class="sd">        The API key (available to some users instead of username/password)</span>
 <span class="sd">    verbose: bool, optional</span>
 <span class="sd">        Verbose mode. Default: True.</span>
-<span class="sd">       </span>
+
+
+<span class="sd">    Notes</span>
+<span class="sd">    ---------------</span>
+<span class="sd">    The endpoint value can either be simply the Dimensions server hostname or the full API endpoint path. All the options below are valid endpoints: </span>
+
+<span class="sd">        * `https://app.dimensions.ai`</span>
+<span class="sd">        * `https://app.dimensions.ai/api/dsl/v1` </span>
+<span class="sd">        * `https://app.dimensions.ai/api/dsl/v2`</span>
+
+
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
@@ -222,20 +236,23 @@
 
 <span class="sd">    Otherwise you can authenticate by passing your login details as arguments</span>
 <span class="sd">    </span>
-<span class="sd">    &gt;&gt;&gt; dimcli.login(user=&quot;mary.poppins&quot;, password=&quot;chimneysweeper&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; dimcli.login(username=&quot;mary.poppins&quot;, password=&quot;chimneysweeper&quot;)</span>
 
 <span class="sd">    You can specify endpoint, which by default is set to &quot;https://app.dimensions.ai&quot;</span>
 <span class="sd">    </span>
-<span class="sd">    &gt;&gt;&gt; dimcli.login(user=&quot;mary.poppins&quot;, password=&quot;chimneysweeper&quot;, ednpoint=&quot;https://nannies-research.dimensions.ai&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; dimcli.login(username=&quot;mary.poppins&quot;, password=&quot;chimneysweeper&quot;, ednpoint=&quot;https://nannies-research.dimensions.ai&quot;)</span>
 
 <span class="sd">    If you use key based authentication, then do</span>
 <span class="sd">    </span>
 <span class="sd">    &gt;&gt;&gt; dimcli.login(key=&quot;my-secret-key&quot;, endpoint=&quot;https://your-url.dimensions.ai&quot;)</span>
 
+<span class="sd">    See Also</span>
+<span class="sd">    ---------------</span>
+<span class="sd">    dimcli.core.api.Dsl</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="kn">from</span> <span class="nn">.core.auth</span> <span class="kn">import</span> <span class="n">do_global_login</span><span class="p">,</span> <span class="n">get_connection</span>
+    <span class="kn">from</span> <span class="nn">.core.auth</span> <span class="kn">import</span> <span class="n">do_global_login</span><span class="p">,</span> <span class="n">get_global_connection</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">do_global_login</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">)</span>
@@ -243,28 +260,28 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Login failed: please ensure your credentials are correct.&quot;</span><span class="p">)</span>
         <span class="k">raise</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
-    <span class="n">CONNECTION</span> <span class="o">=</span> <span class="n">get_connection</span><span class="p">()</span>
+    <span class="n">CONNECTION</span> <span class="o">=</span> <span class="n">get_global_connection</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="n">CONNECTION</span><span class="p">[</span><span class="s1">&#39;token&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">verbose</span><span class="p">:</span>
-        <span class="n">_print_login_success</span><span class="p">(</span><span class="n">CONNECTION</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">CONNECTION</span><span class="o">.</span><span class="n">token</span> <span class="ow">and</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">_print_login_success</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
         <span class="n">print_dimcli_report_if_outdated</span><span class="p">()</span></div>
 
 
 
-<span class="k">def</span> <span class="nf">_print_login_success</span><span class="p">(</span><span class="n">CONNECTION</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_print_login_success</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
     <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="s2">&quot;Dimcli - Dimensions API Client (&quot;</span> <span class="o">+</span> <span class="n">VERSION</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">CLIENT</span> <span class="o">=</span> <span class="n">Dsl</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="c1"># dynamically retrieve dsl version </span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">_info</span> <span class="o">=</span> <span class="n">CLIENT</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;describe version&quot;</span><span class="p">)[</span><span class="s1">&#39;release&#39;</span><span class="p">]</span>
+        <span class="n">_info</span> <span class="o">=</span> <span class="s2">&quot;v&quot;</span> <span class="o">+</span> <span class="n">CLIENT</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;describe version&quot;</span><span class="p">)[</span><span class="s1">&#39;release&#39;</span><span class="p">]</span>
     <span class="k">except</span><span class="p">:</span>
-        <span class="n">_info</span> <span class="o">=</span> <span class="s2">&quot;not available&quot;</span>
+        <span class="n">_info</span> <span class="o">=</span> <span class="s2">&quot;[failed to retrieve version information]&quot;</span>
 
     <span class="k">if</span> <span class="p">(</span><span class="n">username</span> <span class="ow">and</span> <span class="n">password</span><span class="p">)</span> <span class="ow">or</span> <span class="n">key</span><span class="p">:</span>
         <span class="n">_method</span> <span class="o">=</span> <span class="s2">&quot;manual login&quot;</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">_method</span> <span class="o">=</span> <span class="s2">&quot;dsl.ini file&quot;</span>
-    <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Connected to: </span><span class="si">{</span><span class="n">CLIENT</span><span class="o">.</span><span class="n">_url</span><span class="si">}</span><span class="s2"> - DSL v</span><span class="si">{</span><span class="n">_info</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Connected to: &lt;</span><span class="si">{</span><span class="n">CLIENT</span><span class="o">.</span><span class="n">_url</span><span class="si">}</span><span class="s2">&gt; - DSL </span><span class="si">{</span><span class="n">_info</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Method: </span><span class="si">{</span><span class="n">_method</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 
@@ -281,10 +298,10 @@
 <span class="sd">    &gt;&gt;&gt; dimcli.logout()</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">.core.auth</span> <span class="kn">import</span> <span class="n">reset_login</span><span class="p">,</span> <span class="n">get_connection</span>
-    <span class="n">CONNECTION</span> <span class="o">=</span> <span class="n">get_connection</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">CONNECTION</span><span class="p">[</span><span class="s1">&#39;token&#39;</span><span class="p">]:</span>
-        <span class="n">reset_login</span><span class="p">()</span>
+    <span class="kn">from</span> <span class="nn">.core.auth</span> <span class="kn">import</span> <span class="n">get_global_connection</span>
+    <span class="n">CONNECTION</span> <span class="o">=</span> <span class="n">get_global_connection</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">CONNECTION</span><span class="o">.</span><span class="n">token</span><span class="p">:</span>
+        <span class="n">CONNECTION</span><span class="o">.</span><span class="n">reset_login</span><span class="p">()</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Logging out... done&quot;</span><span class="p">)</span> 
     <span class="k">else</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Please login first&quot;</span><span class="p">)</span> </div>
@@ -306,14 +323,15 @@
 <span class="sd">    False</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">.core.auth</span> <span class="kn">import</span> <span class="n">get_connection</span>
-    <span class="n">CONNECTION</span> <span class="o">=</span> <span class="n">get_connection</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">CONNECTION</span><span class="p">[</span><span class="s1">&#39;token&#39;</span><span class="p">]:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dimcli </span><span class="si">%s</span><span class="s2"> - Succesfully connected to &lt;</span><span class="si">%s</span><span class="s2">&gt;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">VERSION</span><span class="p">),</span> <span class="n">CONNECTION</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">]))</span> 
+    <span class="kn">from</span> <span class="nn">.core.auth</span> <span class="kn">import</span> <span class="n">get_global_connection</span>
+    <span class="n">CONNECTION</span> <span class="o">=</span> <span class="n">get_global_connection</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">CONNECTION</span><span class="o">.</span><span class="n">token</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dimcli </span><span class="si">%s</span><span class="s2"> - Succesfully connected to &lt;</span><span class="si">%s</span><span class="s2">&gt;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">VERSION</span><span class="p">),</span> <span class="n">CONNECTION</span><span class="o">.</span><span class="n">url</span><span class="p">))</span> 
         <span class="k">return</span> <span class="kc">True</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Status: not logged in&quot;</span><span class="p">)</span> 
         <span class="k">return</span> <span class="kc">False</span></div>
+
 </pre></div>
 
            </div>
