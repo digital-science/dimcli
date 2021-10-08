@@ -89,7 +89,7 @@ def login(username="", password="",
 
     """
 
-    from .core.auth import do_global_login, get_connection
+    from .core.auth import do_global_login, get_global_connection
 
     try:
         do_global_login(instance, username, password, key, endpoint)
@@ -97,15 +97,15 @@ def login(username="", password="",
         print("Login failed: please ensure your credentials are correct.")
         raise(e)
 
-    CONNECTION = get_connection()
+    CONNECTION = get_global_connection()
 
-    if CONNECTION['token'] and verbose:
-        _print_login_success(CONNECTION, username, password, key)
+    if CONNECTION.token and verbose:
+        _print_login_success(username, password, key)
         print_dimcli_report_if_outdated()
 
 
 
-def _print_login_success(CONNECTION, username, password, key):
+def _print_login_success(username, password, key):
     click.secho("Dimcli - Dimensions API Client (" + VERSION + ")", dim=True)
     CLIENT = Dsl(verbose=False)
     # dynamically retrieve dsl version 
@@ -135,10 +135,10 @@ def logout():
     >>> dimcli.logout()
 
     """
-    from .core.auth import reset_login, get_connection
-    CONNECTION = get_connection()
-    if CONNECTION['token']:
-        reset_login()
+    from .core.auth import get_global_connection
+    CONNECTION = get_global_connection()
+    if CONNECTION.token:
+        CONNECTION.reset_login()
         print("Logging out... done") 
     else:
         print("Please login first") 
@@ -160,11 +160,12 @@ def login_status():
     False
 
     """
-    from .core.auth import get_connection
-    CONNECTION = get_connection()
-    if CONNECTION['token']:
-        print("Dimcli %s - Succesfully connected to <%s>" % (str(VERSION), CONNECTION['url'])) 
+    from .core.auth import get_global_connection
+    CONNECTION = get_global_connection()
+    if CONNECTION.token:
+        print("Dimcli %s - Succesfully connected to <%s>" % (str(VERSION), CONNECTION.url)) 
         return True
     else:
         print("Status: not logged in") 
         return False
+

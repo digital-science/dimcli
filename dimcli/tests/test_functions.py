@@ -10,7 +10,6 @@ python -m dimcli.tests.test_functions
 from __future__ import print_function
 
 import unittest, os, sys, click
-import configparser
 
 from .. import *
 from ..core.auth import USER_CONFIG_FILE_PATH
@@ -27,12 +26,12 @@ class TestOne(unittest.TestCase):
     Tests - DSL function wrappers 
     """
 
-    click.secho("**TESTS**", fg="red")
+    click.secho("**test_functions.py**", fg="red")
     login(instance=API_INSTANCE)
     d = Dsl()
 
     def test_001(self):
-        click.secho("\nTEST 001: Extract concepts.", fg="green")
+        click.secho("\nTEST 001: Extract concepts.", bg="green")
         # ----
         a = """
 BACKGROUND: In order to make further gains in preventing newborn deaths, effective interventions are needed. Ultrasounds and newborn anthropometry are proven interventions to identify preterm birth complications, the leading cause of newborn deaths. The INTERGROWTH-21st global gestational dating and fetal and newborn growth standards prescribe optimal growth in any population. Jacaranda Health in Kenya was the first low-resource health facility to implement the standards and evaluate their feasibility and acceptability. OBJECTIVE: To capture patients' perceptions of ultrasound and newborn care before and during implementation of the INTERGROWTH-21st standards. METHODS: The study was conducted over two years before and during the introduction of the INTERGROWTH-21st standards. Fifty pregnant and/or newly delivered women were selected for in-depth interviews and focus group discussions using convenience and purposive sampling. Interviews were conducted by research assistants using semi-structured guides once in the pre-implementation phase and twice in the implementation phase. Interviews were transcribed, double-coded by two independent researchers and thematically analyzed together. Demographic information was obtained from hospital records. RESULTS: Patients reported being generally satisfied with ultrasound care when providers communicated effectively. Women reported a priority for ultrasound was that it allowed them to feel reassured. However, a clear need for better pre-screening information emerged consistently from patients. Women noted that factors facilitating their choosing to have an ultrasound included ensuring the well-being of the fetus and learning the sex. Barriers included wait times and financial constraints. Patients were generally satisfied with care using the newborn standards. CONCLUSIONS: As the INTERGROWTH-21st standards are implemented worldwide, understanding ways to facilitate implementation is critical. Increased and standardized communication about ultrasound should be provided before the procedure to increase satisfaction and uptake. Considering patient perspectives when integrating new standards or guidelines into routine clinical care will inform effective strategies in care provision, thus improving maternal and newborn health and survival."""
@@ -48,7 +47,7 @@ BACKGROUND: In order to make further gains in preventing newborn deaths, effecti
 
 
     def test_002(self):
-        click.secho("\nTEST 002: Extract grants.", fg="green")
+        click.secho("\nTEST 002: Extract grants.", bg="green")
         # ----
         click.secho("With fundref", fg="magenta")
         print(extract_grants("R01HL117329",  fundref="100000050"))
@@ -62,7 +61,7 @@ BACKGROUND: In order to make further gains in preventing newborn deaths, effecti
 
 
     def test_003(self):
-        click.secho("\nTEST 003: Extract classifications.", fg="green")
+        click.secho("\nTEST 003: Extract classifications.", bg="green")
         # ----
         title="""Burnout and intentions to quit the practice among community pediatricians: 
         associations with specific professional activities"""
@@ -80,7 +79,7 @@ BACKGROUND: In order to make further gains in preventing newborn deaths, effecti
 
 
     def test_004(self):
-        click.secho("\nTEST 004: Extract affiliations.", fg="green")
+        click.secho("\nTEST 004: Extract affiliations.", bg="green")
         # ----
         click.secho("Return json, no results", fg="magenta")
         print(extract_affiliations("nothing", as_json=True))
@@ -122,7 +121,7 @@ BACKGROUND: In order to make further gains in preventing newborn deaths, effecti
 
 
     def test_005(self):
-        click.secho("\nTEST 005: Identify experts.", fg="green")
+        click.secho("\nTEST 005: Identify experts.", bg="green")
         # ----
 
         click.secho("No text, no results", fg="magenta")
@@ -146,7 +145,7 @@ BACKGROUND: In order to make further gains in preventing newborn deaths, effecti
 
 
     def test_006(self):
-        click.secho("\nTEST 006: Build reviewers matrix.", fg="green")
+        click.secho("\nTEST 006: Build reviewers matrix.", bg="green")
         # ----
 
         click.secho("No text, no results", fg="magenta")

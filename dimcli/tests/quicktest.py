@@ -27,7 +27,7 @@ from .settings import API_INSTANCE
 @click.argument('test_number', nargs=1)
 def main(test_number=1):
     
-    login(instance="live2")
+    login(instance="live")
     dsl = Dsl()
     test_number = int(test_number)
 
@@ -102,6 +102,54 @@ def main(test_number=1):
         data = dsl.query(q, verbose=True)
         print(len(data))
 
+    if test_number == 5:
+
+        logout()
+        from ..core.auth import APISession
+        
+        mysession1 = APISession()
+        mysession1.login(instance="key-test")
+
+        d1 = Dsl(auth_session=mysession1)
+        click.secho(""" Dsl1(instance="key-test"): ==> url="""+ d1._url, fg="magenta")
+        res1 = d1.query("""search publications where authors="Pasin" return publications""")
+        print(" ==> res.json.keys(): ", res1.json.keys())
+        
+        mysession2 = APISession()
+        mysession2.login(instance="live")
+
+        d2 = Dsl(auth_session=mysession2)
+        click.secho(""" Dsl2(instance="live"): ==> url="""+ d2._url, fg="magenta")
+        res2 = d2.query("""search publications where authors="Pasin" return publications""")
+        print(" ==> res.json.keys(): ", res2.json.keys())
+        
+        mysession3 = APISession()
+        mysession3.login(instance="live2")
+
+        d3 = Dsl(auth_session=mysession3)
+        click.secho(""" Dsl3(instance="liveV2"): ==> url="""+ d3._url, fg="magenta")
+        res3 = d3.query("""search publications where authors="Pasin" return publications""")
+        print(" ==> res.json.keys(): ", res3.json.keys())
+        
+
+    if test_number == 6:
+
+        # testing retry logic 
+
+        logout()
+        from ..core.auth import APISession
+        
+        mysession1 = APISession()
+        mysession1.login(instance="key-test")
+
+        d1 = Dsl(auth_session=mysession1)
+
+        for x in range(1990, 2020):
+            q = f"""search publications where year={x} return research_orgs"""
+            d1.query(q)
+            print(q)
+
+        # logout()
 
 
 if __name__ == '__main__':

@@ -26,13 +26,13 @@ class TestOne(unittest.TestCase):
     Tests - export functions 
     """
 
-    click.secho("**TESTS**", fg="red")
+    click.secho("**test_export.py**", fg="red")
     login(instance=API_INSTANCE)
     d = Dsl()
 
 
     def test_001(self):
-        click.secho("\nTEST 001: Save to a JSON file and construct a dimcli.DslDataset objects from JSON file.", fg="green")
+        click.secho("\nTEST 001: Save to a JSON file and construct a dimcli.DslDataset objects from JSON file.", bg="green")
         # ----
         FILENAME = "test-api-save.json"
         d = Dsl()

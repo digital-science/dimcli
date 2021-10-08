@@ -25,177 +25,131 @@ USER_SETTINGS_FILE_NAME = "settings"
 USER_SETTINGS_FILE_PATH = os.path.expanduser(USER_DIR + USER_SETTINGS_FILE_NAME)
 
 
-
-
-class APISession():
-
-    """Dimensions API Authentication logic
-    """
-
-    def __init__(self, verbose=True):
-        """Initialises a Dsl Auth object.
-
-        """
-        self.instance = None
-        self.url = None
-        self.url_auth = None
-        self.url_query = None
-        self.username = None
-        self.password = None
-        self.key = None
-        self.token = None
-        self._verbose = verbose
-
-
-    def login(self, 
-                instance="live", 
-                username="", 
-                password="", 
-                key="", 
-                url="https://app.dimensions.ai"):
-        """Login into Dimensions API endpoint and get a query token
-        
-        """
-        URL_AUTH, URL_QUERY = self._get_endpoint_urls(url)
-
-        if not (username and password) and not key:
-            
-            # GET LOCAL CONFIG FILE SECTION USING THE 'INSTANCE' ARGUMENT
-            
-            fpath = get_init_file()
-            config_section = read_init_file(fpath, instance)
-            url = config_section['url'] # OVERRIDE URL USING LOCAL CONFIG
-            URL_AUTH, URL_QUERY = self._get_endpoint_urls(url)
-            # print(URL_AUTH, URL_QUERY )
-            try:
-                username = config_section['login']
-                password = config_section['password']
-            except:
-                username, password = "", ""
-            try:
-                key = config_section['key']
-            except:
-                key = ""
-
-        login_data = {'username': username, 'password': password, 'key': key}
-        
-        # POST AUTH REQUEST
-        response = requests.post(URL_AUTH, json=login_data)
-        response.raise_for_status()
-
-        token = response.json()['token']
-
-        self.instance = instance
-        self.url = URL_QUERY
-        self.username = username
-        self.password = password
-        self.key = key
-        self.token = token
-
-
-    def _get_endpoint_urls(self, user_url):
-        """Infer the proper API endpoints URLs from the (possibly incomplete) URL the use is sending. 
-        
-        CASE 1
-        User provides a domain URL eg https://app.dimensions.ai. 
-        => Then the Query URL defaults to `/api/dsl`
-
-        CASE 1
-        User provides a full query URL eg https://app.dimensions.ai/api/dsl/v2. 
-        => Then no action is needed
-
-        Query Endpoints:
-        * /api/dsl/v1
-        * /api/dsl/v2
-        * /api/dsl
-        * /api/dsl.json
-
-        Auth endpoint (always inferred)
-        * /api/auth.json
-
-        https://docs.dimensions.ai/dsl/2.0.0/api.html#endpoints
-
-        NOTE 
-        We never try to validate URLs provided by users.
-
-        """
-        url_auth, url_query = None, None
-        if "/api/" in user_url:
-            # savy user passing the full QUERY URL
-            domain = user_url.split("/api/")[0]
-            url_auth = domain + "/api/auth.json"
-            url_query = user_url
-        else:
-            domain = user_url
-            url_auth = domain + "/api/auth.json"
-            url_query = domain + "/api/dsl"
-        self.url_auth, self.url_query = url_auth, url_query
-        return url_auth, url_query
-
-
-
-    def refresh_login(self):
-        """
-        Method used to login again if the TOKEN has expired - using previously entered credentials
-        """
-        self.login(  self.instance, 
-                        self.url, 
-                        self.username, 
-                        self.password, 
-                        self.key, 
-                        )
-
-
-    def reset_login(self):
-        ""
-        self.instance = None
-        self.url = None
-        self.username = None
-        self.password = None
-        self.key = None
-        self.token = None
-
-
-    def is_logged_in(self):
-        if self.token:
-            return True
-        else:
-            print("Warning: you are not logged in. Please use `dimcli.login()` before querying.")
-            return False
-
-
-
 # global connection object
-CONNECTION = APISession()
+CONNECTION = {'instance': None, 
+              'url': None, 
+              'username': None, 
+              'password': None, 
+              'key': None,  
+              'token' : None
+              }
 
+
+
+def _get_endpoint_urls(user_url):
+    """Infer the proper API endpoints URLs from the (possibly incomplete) URL the use is sending. 
+    
+    CASE 1
+    User provides a domain URL eg https://app.dimensions.ai. 
+    => Then the Query URL defaults to `/api/dsl`
+
+    CASE 1
+    User provides a full query URL eg https://app.dimensions.ai/api/dsl/v2. 
+    => Then no action is needed
+
+    Query Endpoints:
+    * /api/dsl/v1
+    * /api/dsl/v2
+    * /api/dsl
+    * /api/dsl.json
+
+    Auth endpoint (always inferred)
+    * /api/auth.json
+
+    https://docs.dimensions.ai/dsl/2.0.0/api.html#endpoints
+
+    NOTE 
+    We never try to validate URLs provided by users.
+
+    """
+    url_auth, url_query = None, None
+    if "/api/" in user_url:
+        # savy user passing the full QUERY URL
+        domain = user_url.split("/api/")[0]
+        url_auth = domain + "/api/auth.json"
+        url_query = user_url
+    else:
+        domain = user_url
+        url_auth = domain + "/api/auth.json"
+        url_query = domain + "/api/dsl"
+    return url_auth, url_query
 
 
 def do_global_login(instance="live", username="", password="", key="", url="https://app.dimensions.ai"):
     "Login into DSL and set the connection object with token"
-    global CONNECTION
-    CONNECTION.login(instance, username, password, key, url)
     
+    global CONNECTION
+    URL_AUTH, URL_QUERY = _get_endpoint_urls(url)
+
+    if not (username and password) and not key:
+        
+        # GET LOCAL CONFIG FILE SECTION USING THE 'INSTANCE' ARGUMENT
+        
+        fpath = get_init_file()
+        config_section = read_init_file(fpath, instance)
+        url = config_section['url'] # OVERRIDE URL USING LOCAL CONFIG
+        URL_AUTH, URL_QUERY = _get_endpoint_urls(url)
+        # print(URL_AUTH, URL_QUERY )
+        try:
+            username = config_section['login']
+            password = config_section['password']
+        except:
+            username, password = "", ""
+        try:
+            key = config_section['key']
+        except:
+            key = ""
+
+    login_data = {'username': username, 'password': password, 'key': key}
+    response = requests.post(URL_AUTH, json=login_data)
+    response.raise_for_status()
+
+    token = response.json()['token']
+
+    CONNECTION['instance'] = instance
+    CONNECTION['url'] = URL_QUERY
+    CONNECTION['username'] = username
+    CONNECTION['password'] = password
+    CONNECTION['key'] = key
+    CONNECTION['token'] = token
 
 
-def get_global_connection():
+
+def refresh_login():
+    """
+    Method used to login again if the TOKEN has expired - using previously entered credentials
+    """
+    do_global_login(CONNECTION['instance'], 
+                    CONNECTION['url'], 
+                    CONNECTION['username'], 
+                    CONNECTION['password'], 
+                    CONNECTION['key'], 
+                    )
+
+
+def reset_login():
+    ""
+    global CONNECTION
+    CONNECTION = {'instance': None, 
+                  'url': None, 
+                  'username': None, 
+                  'password': None,  
+                  'token' : None, 
+                  'key': None}
+
+
+def get_connection():
     global CONNECTION
     return CONNECTION
 
 
-def is_logged_in_globally():
-    "used only internally for magic commands and function wrappers, which always expect a global login"
-    global CONNECTION
-    if CONNECTION.token:
+def is_logged_in():
+    if CONNECTION['token']:
         return True
     else:
         print("Warning: you are not logged in. Please use `dimcli.login(username, password)` before querying.")
         return False
 
-
-
-# 
-# INIT file helpers 
-# 
 
 def get_init_file():
     """
