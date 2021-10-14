@@ -180,7 +180,9 @@ class Dsl():
                     retry - 1, 
                     verbose)
             else:
-                printDebug(str(response.content), "red")
+                printDebug("ERROR LOG\n---\nQuery\n---\n" + str(q), "red")
+                printDebug("Response.header\n---\n" + str(response.headers), "red")
+                printDebug("Response.content\n---\n" +str(response.content), "red")
                 response.raise_for_status()
 
 
