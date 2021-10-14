@@ -144,7 +144,7 @@ class TestOne(unittest.TestCase):
     def test_004(self):
         click.secho("\nTEST 004: Try magic methods on DslDataset object.", bg="green")
         # ----
-        login(instance="live")
+        login(instance=API_INSTANCE)
         d = Dsl()
         click.secho("Query #1... returning publications", fg="green")
         res = d.query("search publications where year=2018 return publications")

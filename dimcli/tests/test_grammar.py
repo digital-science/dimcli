@@ -96,7 +96,7 @@ class TestOne(unittest.TestCase):
         covid_q = '"2019-nCoV" OR "COVID-19" OR "SARS-CoV-2" OR (("coronavirus"  OR "corona virus") AND (Wuhan OR China))'
         q = f"""search publications 
                 in full_data for "{dsl_escape(covid_q)}"  
-            return publications[id+doi+pmid+pmcid+title+journal+publisher+mesh_terms+date+year+volume+issue+pages+open_access_categories+type+authors+research_orgs+funders+supporting_grant_ids+times_cited+altmetric+linkout] limit 1"""
+            return publications[id+doi+pmid+pmcid+title+journal+publisher+mesh_terms+date+year+volume+issue+pages+open_access+type+authors+research_orgs+funders+supporting_grant_ids+times_cited+altmetric+linkout] limit 1"""
         click.secho(q, fg="green")
         print("Success: ", bool(dslquery(q).count_total))
         # ----

@@ -180,6 +180,7 @@ class Dsl():
                     retry - 1, 
                     verbose)
             else:
+                printDebug(str(response.content), "red")
                 response.raise_for_status()
 
 

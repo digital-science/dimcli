@@ -71,7 +71,7 @@ class DfConverter(object):
                 [('Issue' , '', )],
             'pages' : 
                 [('Pagination' , '', )],
-            'open_access_categories' : 
+            'open_access_categories' : ## TODO update to open_access
                 [('Open Access', 'convert_dict_name')],
             'type' : 
                 [('Publication Type' , '', )],
