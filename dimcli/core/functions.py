@@ -416,7 +416,7 @@ def identify_experts(abstract, max_concepts=15, connector="OR", conflicts=None, 
     identify experts
         from concepts "\"landing\" OR \"way\" OR \"mainstream\" OR \"moon landing\" OR \"supercomputers\""
         using publications where year >= 2010
-    return experts[all+dimensions_url-obsolete] 
+    return experts[id+first_name+last_name+dimensions_url-obsolete] 
     "
     Experts found: 20
     [..experts list..]
@@ -451,11 +451,12 @@ def identify_experts(abstract, max_concepts=15, connector="OR", conflicts=None, 
     
     
     # get experts
+    experts_fields = "id+first_name+last_name+total_publications+total_grants+first_publication_year+orcid_id+dimensions_url-obsolete"
     thequery = f"""
         identify experts
             from concepts "{dsl_escape(concepts_list_query)}"
             using {source} {extra_dsl}
-        return experts[all+dimensions_url-obsolete] {conflicts_query}
+        return experts[{experts_fields}] {conflicts_query}
         """
     
     if verbose: click.secho("Query:\n======" + thequery + "\n======")
