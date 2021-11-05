@@ -17,7 +17,7 @@ import urllib.parse
 
 import pandas as pd
 
-from .auth import get_global_connection # , refresh_login, do_global_login, 
+from .auth import get_global_connection 
 from .dsl_grammar import G
 from .dataframe_factory import DfFactory
 

@@ -39,9 +39,10 @@ except:
 
 
 
-def login(username="", password="", 
-            endpoint="https://app.dimensions.ai", 
-            instance="live", 
+def login(  username="", 
+            password="", 
+            endpoint="", 
+            instance="", 
             key="", 
             verbose=True):
     """Login into the Dimensions API and store the query token in memory. 
@@ -86,15 +87,15 @@ def login(username="", password="",
 
     Otherwise you can authenticate by passing your login details as arguments
     
-    >>> dimcli.login(username="mary.poppins", password="chimneysweeper")
+    >>> dimcli.login(key="my-secret-key", endpoint="https://your-url.dimensions.ai")
 
     You can specify endpoint, which by default is set to "https://app.dimensions.ai"
     
-    >>> dimcli.login(username="mary.poppins", password="chimneysweeper", ednpoint="https://nannies-research.dimensions.ai")
+    >>> dimcli.login(key="my-secret-key", ednpoint="https://nannies-research.dimensions.ai")
 
-    If you use key based authentication, then do
-    
-    >>> dimcli.login(key="my-secret-key", endpoint="https://your-url.dimensions.ai")
+    Legacy authentication mechanisms with username/password are also supported
+
+    >>> dimcli.login(username="mary.poppins", password="chimneysweeper", ednpoint="https://nannies-research.dimensions.ai")
 
     See Also
     ---------------

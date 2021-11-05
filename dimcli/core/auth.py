@@ -78,15 +78,29 @@ class APISession():
 
 
     def login(self, 
-                instance="live", 
+                instance="", 
                 username="", 
                 password="", 
                 key="", 
-                url="https://app.dimensions.ai"):
+                url=""):
         """Login into Dimensions API endpoint and get a query token.
+
+        URL and INSTANCE are set automatically if empty. 
         
         """
-        URL_AUTH, URL_QUERY = self._get_endpoint_urls(url)
+
+        if (username or password) and not (username and password):
+            raise Exception("Authentication error: you provided only one value for username and password. Both are required.")
+
+        if url and not (username and password) and not key:  # 
+            raise Exception("Authentication error: you provided only the Endpoint url. Username/password or an API key is required.")
+
+        # if we don't have a URL at this stage, use the default one
+        if not url: 
+            url="https://app.dimensions.ai"
+        # if we don't have an INSTANCE name at this stage, use the default one
+        if not instance: 
+            instance="live"
 
         if not (username and password) and not key:
             
@@ -106,6 +120,9 @@ class APISession():
                 key = config_section['key']
             except:
                 key = ""
+
+
+        URL_AUTH, URL_QUERY = self._get_endpoint_urls(url)
 
         login_data = {'username': username, 'password': password, 'key': key}
         
@@ -207,7 +224,7 @@ CONNECTION = APISession()
 
 
 
-def do_global_login(instance="live", username="", password="", key="", url="https://app.dimensions.ai"):
+def do_global_login(instance="", username="", password="", key="", url=""):
     "Login into DSL and set the connection object with token"
     global CONNECTION
     CONNECTION.login(instance, username, password, key, url)
