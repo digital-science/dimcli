@@ -1,6 +1,12 @@
 # Changelog
 
 
+## v 0.9.3
+
+* Improved login error messages when there are missing credentials
+* Updated docs about login 
+* Added DSL grammar for DSL V2.0
+
 
 ## v 0.9.2
 
