@@ -566,7 +566,7 @@
 <span class="sd">    identify experts</span>
 <span class="sd">        from concepts &quot;\&quot;landing\&quot; OR \&quot;way\&quot; OR \&quot;mainstream\&quot; OR \&quot;moon landing\&quot; OR \&quot;supercomputers\&quot;&quot;</span>
 <span class="sd">        using publications where year &gt;= 2010</span>
-<span class="sd">    return experts[all+dimensions_url-obsolete] </span>
+<span class="sd">    return experts[id+first_name+last_name+dimensions_url-obsolete] </span>
 <span class="sd">    &quot;</span>
 <span class="sd">    Experts found: 20</span>
 <span class="sd">    [..experts list..]</span>
@@ -601,11 +601,12 @@
     
     
     <span class="c1"># get experts</span>
+    <span class="n">experts_fields</span> <span class="o">=</span> <span class="s2">&quot;id+first_name+last_name+total_publications+total_grants+first_publication_year+orcid_id+dimensions_url-obsolete&quot;</span>
     <span class="n">thequery</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">        identify experts</span>
 <span class="s2">            from concepts &quot;</span><span class="si">{</span><span class="n">dsl_escape</span><span class="p">(</span><span class="n">concepts_list_query</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="s2">            using </span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">extra_dsl</span><span class="si">}</span><span class="s2"></span>
-<span class="s2">        return experts[all+dimensions_url-obsolete] </span><span class="si">{</span><span class="n">conflicts_query</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">        return experts[</span><span class="si">{</span><span class="n">experts_fields</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">conflicts_query</span><span class="si">}</span><span class="s2"></span>
 <span class="s2">        &quot;&quot;&quot;</span>
     
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="s2">&quot;Query:</span><span class="se">\n</span><span class="s2">======&quot;</span> <span class="o">+</span> <span class="n">thequery</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">======&quot;</span><span class="p">)</span>
@@ -736,7 +737,7 @@
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2020, Digital Science
+        &copy; Copyright 2020-2021, Digital Science
 
     </p>
   </div>

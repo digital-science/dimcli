@@ -7,27 +7,27 @@ Dimcli lives on `Github <https://github.com/digital-science/dimcli/>`_. Suggesti
 
 .. code::
 
-      >>> import dimcli
+   >>> import dimcli
 
-      >>> dimcli.login(username="mary.poppins", password="chimneysweeper")
+   >>> dimcli.login(key="private-key-here",  
+                  endpoint="https://app.dimensions.ai/api/dsl/v2")
+                  
+   >>> dsl = dimcli.Dsl()
 
-      >>> dsl = dimcli.Dsl()
+   >>> res = dsl.query("""search grants for "malaria" return researchers""")
 
-      >>> res = dsl.query("""search grants for "malaria" return researchers""")
-
-      >>> print(res.json)
-      {'researchers': [{'id': 'ur.01332073522.49',
-         'count': 75,
-         'last_name': 'White',
-         'first_name': 'Nicholas J'},
-      {'id': 'ur.01343654360.43',
-         'count': 59,
-         'last_name': 'Marsh',
-         'first_name': 'Kevin'},
-      { ............. }
-      ],
-      '_stats': {'total_count': 8735}}
-
+   >>> print(res.json)
+   {'researchers': [{'id': 'ur.01332073522.49',
+      'count': 75,
+      'last_name': 'White',
+      'first_name': 'Nicholas J'},
+   {'id': 'ur.01343654360.43',
+      'count': 59,
+      'last_name': 'Marsh',
+      'first_name': 'Kevin'},
+   .............
+   ],
+   '_stats': {'total_count': 8735}}
 
 
 About Dimensions Analytics API

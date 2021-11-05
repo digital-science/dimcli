@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.abspath('.'))
 # -- Project information -----------------------------------------------------
 
 project = 'DimCli'
-copyright = '2020, Digital Science'
+copyright = '2020-2021, Digital Science'
 author = 'Michele Pasin'
 
 

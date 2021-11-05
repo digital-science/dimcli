@@ -6,11 +6,12 @@
 Dimcli is a Python client for accessing the [Dimensions Analytics API](https://www.dimensions.ai/). It makes it easier to authenticate against the API, send queries to it and process the JSON data being returned. E.g.:
 
 
-```
+```python
 >>> import dimcli
 
->>> dimcli.login(username="mary.poppins", password="chimneysweeper")
-
+>>> dimcli.login(key="private-key-here",  
+                 endpoint="https://app.dimensions.ai/api/dsl/v2")
+               
 >>> dsl = dimcli.Dsl()
 
 >>> res = dsl.query("""search grants for "malaria" return researchers""")
@@ -31,7 +32,7 @@ Dimcli is a Python client for accessing the [Dimensions Analytics API](https://w
 
 ```
 
-Dimcli includes also a **command line interface** (CLI) that aims at simplifying the process of learning the grammar of the Dimensions Search Language ([DSL](https://app.dimensions.ai/dsl)). Calling `dimcli` from the terminal opens an interactive query console with syntax autocomplete, persistent history across sessions, pretty-printing and preview of JSON results, export to HTML and CSV, and more.  
+Dimcli includes also an interactive **command line interface** (CLI) that aims at simplifying the process of learning the grammar of the Dimensions Search Language ([DSL](https://app.dimensions.ai/dsl)). Calling `dimcli` from the terminal opens an interactive query console with syntax autocomplete, persistent history across sessions, pretty-printing and preview of JSON results, export to HTML and CSV, and more.  
 
 ![dimcli_animation](https://raw.githubusercontent.com/digital-science/dimcli/master/static/dimcli_animated.gif)
 
@@ -45,13 +46,13 @@ See also an older animated video on [asciicinema](https://asciinema.org/a/jSzISI
 
 Install / upgrade the package as follows:
 
-```
+```bash
 $ pip install dimcli -U
 ```
 
 Then you can check if the installation worked with
 
-```
+```bash
 $ dimcli --help
 ```
 
@@ -68,30 +69,32 @@ There's been [reports](https://github.com/digital-science/dimcli/issues/21) of D
 
 After installation it's **strongly advised to create a configuration file** containing your Dimensions account credentials (see below). This can be done only once and it'll save you from having to type in credentials each time you use Dimcli. E.g. 
 
-```
+```python
 >>> import dimcli
 >>> dimcli.login() # config file is picked up automatically 
 ```
 
 If you can't create a configuration file you can explicitly provide log in credentials as follows (see also the [Dimcli as a Python module](#dimcli-as-a-python-module) section for more options).
 
+```python
+>>> import dimcli
+
+>>> dimcli.login(key="123456789qwertyuiop",  
+                 endpoint="https://my.instance.of.dimensions.ai")
+
 ```
+
+The default endpoint URL is set to "https://app.dimensions.ai". 
+
+The legacy username/password authentication method is also supported.
+
+```python
 >>> import dimcli
 
 # you can specify endpoint, which by default is set to "https://app.dimensions.ai"
 >>> dimcli.login(username="mary.poppins", 
                  password="chimneysweeper", 
                  endpoint="https://app.dimensions.ai")
-
-```
-
-Or if you are using **key-based** authentication: 
-
-```
->>> import dimcli
-
->>> dimcli.login(key="123456789qwertyuiop",  
-                 endpoint="https://my.instance.of.dimensions.ai")
 
 ```
 
@@ -113,14 +116,14 @@ This section provides more details about where Dimcli expects credentials data t
 
 The configuration file must be called `dsl.ini` and located in your user directory in the `.dimensions` folder. If you want to set this up manually, this is what you'd do on unix systems:
 
-```
+```bash
 $ mkdir ~/.dimensions
 $ touch ~/.dimensions/dsl.ini
 ```
 
 Then open `dsl.ini` with a text editor. Its contents should look like this:
 
-```
+```bash
 [instance.live]
 url=https://app.dimensions.ai
 key=yourkeyhere
@@ -130,7 +133,7 @@ In most situations you can simply copy/paste the text above and update its conte
 
 NOTE if your Dimensions instance still supports the legacy authentication method via username and password, you can provide that in the init file too:  
 
-```
+```bash
 [instance.live]
 url=https://app.dimensions.ai
 login=user@mail.com
@@ -143,7 +146,7 @@ password=yourpasswordhere
 * You always need to have an entry in the configuration file called `[instance.live]`
 * Depending on whether you authenticate using an API key or username & password, fill in the relevant details and just leave the other stuff blank. Eg this is a valid config snippet if you authenticate using a key:
 
-```
+```bash
 [instance.live]
 url=https://app.dimensions.ai
 key=yourkeyhere
@@ -153,7 +156,7 @@ password=
 
 The 'live' configuration directive is used by default. Eg with Python:
 
-```
+```python
 >>> import dimcli
 
 # The two lines below are equivalent
@@ -169,7 +172,7 @@ If you are using Dimcli within a Jupyter notebook and you do not want (or cannot
 
 The file contents should look just like above, that is:
 
-```
+```bash
 [instance.live]
 url=https://app.dimensions.ai
 login=user@mail.com
@@ -186,7 +189,7 @@ If you have access to multiple Dimensions API endpoints (or instances), you can 
 
 You can add details for more than one instance but make sure you give them unique names. So for example you can add another entry like this:
 
-```
+```bash
 [instance.private]
 url=https://private-instance.dimensions.ai
 login=user@mail.com
@@ -196,15 +199,14 @@ key=yourkeyhere
 
 When running the shell CLI you can select which instance to use just by passing its name as argument eg
 
-```
+```bash
 $ dimcli private
 ```
 
 Or from Python:
 
-```
+```python
 >>> import dimcli
-
 >>> dimcli.login(instance="private")
 ```
 
@@ -216,7 +218,7 @@ A settings file can be stored alongside the authentication details file, in orde
 
 This file must be called `settings` and it has to be located in your user directory, in the `.dimensions` folder. This is what you'd do on unix systems:
 
-```
+```bash
 $ touch ~/.dimensions/settings
 ```
 
@@ -229,7 +231,7 @@ See this guide on [how to create a new token](https://docs.github.com/en/free-pr
 
 One you have the token, add the following section to the `settings` file (of course replacing the token value with your token): 
 
-```
+```bash
 [gist]
 token: d5047fASAD889912HHBAJVSAD8e8bae17e2
 ```
@@ -244,7 +246,7 @@ This will allow to export/create gists from DSL queries when using the Dimcli CL
 
 Dimcli can be used as a wrapper around the Dimensions API within a Python program. It makes it easier to authenticate, query the Dimensions endpoint and handle the results, normally returned as JSON. 
 
-```
+```python
 >>> import dimcli
 
 # if you have already set up the credentials file (see above), no need to pass log in details
@@ -263,7 +265,7 @@ Dimcli can be used as a wrapper around the Dimensions API within a Python progra
 
 Once logged in, you can get a query object and try some queries:
 
-```
+```python
 
 >>> dsl = dimcli.Dsl()
 
@@ -328,7 +330,7 @@ Dimcli includes a handy Command Line Interface (CLI) which lets you query the Di
 
 Run the command line application by typing
 
-```
+```bash
 $ dimcli
 ```
 

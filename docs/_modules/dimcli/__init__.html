@@ -189,9 +189,10 @@
 
 
 
-<div class="viewcode-block" id="login"><a class="viewcode-back" href="../../modules.html#dimcli.__init__.login">[docs]</a><span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> 
-            <span class="n">endpoint</span><span class="o">=</span><span class="s2">&quot;https://app.dimensions.ai&quot;</span><span class="p">,</span> 
-            <span class="n">instance</span><span class="o">=</span><span class="s2">&quot;live&quot;</span><span class="p">,</span> 
+<div class="viewcode-block" id="login"><a class="viewcode-back" href="../../modules.html#dimcli.__init__.login">[docs]</a><span class="k">def</span> <span class="nf">login</span><span class="p">(</span>  <span class="n">username</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> 
+            <span class="n">password</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> 
+            <span class="n">endpoint</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> 
+            <span class="n">instance</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> 
             <span class="n">key</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> 
             <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Login into the Dimensions API and store the query token in memory. </span>
@@ -236,15 +237,15 @@
 
 <span class="sd">    Otherwise you can authenticate by passing your login details as arguments</span>
 <span class="sd">    </span>
-<span class="sd">    &gt;&gt;&gt; dimcli.login(username=&quot;mary.poppins&quot;, password=&quot;chimneysweeper&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; dimcli.login(key=&quot;my-secret-key&quot;, endpoint=&quot;https://your-url.dimensions.ai&quot;)</span>
 
 <span class="sd">    You can specify endpoint, which by default is set to &quot;https://app.dimensions.ai&quot;</span>
 <span class="sd">    </span>
-<span class="sd">    &gt;&gt;&gt; dimcli.login(username=&quot;mary.poppins&quot;, password=&quot;chimneysweeper&quot;, ednpoint=&quot;https://nannies-research.dimensions.ai&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; dimcli.login(key=&quot;my-secret-key&quot;, ednpoint=&quot;https://nannies-research.dimensions.ai&quot;)</span>
 
-<span class="sd">    If you use key based authentication, then do</span>
-<span class="sd">    </span>
-<span class="sd">    &gt;&gt;&gt; dimcli.login(key=&quot;my-secret-key&quot;, endpoint=&quot;https://your-url.dimensions.ai&quot;)</span>
+<span class="sd">    Legacy authentication mechanisms with username/password are also supported</span>
+
+<span class="sd">    &gt;&gt;&gt; dimcli.login(username=&quot;mary.poppins&quot;, password=&quot;chimneysweeper&quot;, ednpoint=&quot;https://nannies-research.dimensions.ai&quot;)</span>
 
 <span class="sd">    See Also</span>
 <span class="sd">    ---------------</span>
@@ -345,7 +346,7 @@
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2020, Digital Science
+        &copy; Copyright 2020-2021, Digital Science
 
     </p>
   </div>

@@ -170,7 +170,7 @@ NOTE: these functions are attached to the top level <code class="docutils litera
 </div>
 <dl class="py function">
 <dt id="dimcli.__init__.login">
-<code class="sig-prename descclassname">dimcli.__init__.</code><code class="sig-name descname">login</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">username</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">password</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">endpoint</span><span class="o">=</span><span class="default_value">'https://app.dimensions.ai'</span></em>, <em class="sig-param"><span class="n">instance</span><span class="o">=</span><span class="default_value">'live'</span></em>, <em class="sig-param"><span class="n">key</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/__init__.html#login"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.__init__.login" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">dimcli.__init__.</code><code class="sig-name descname">login</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">username</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">password</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">endpoint</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">instance</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">key</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/__init__.html#login"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.__init__.login" title="Permalink to this definition">¶</a></dt>
 <dd><p>Login into the Dimensions API and store the query token in memory.</p>
 <p>Two cases:</p>
 <ul class="simple">
@@ -204,15 +204,15 @@ NOTE: these functions are attached to the top level <code class="docutils litera
 </pre></div>
 </div>
 <p>Otherwise you can authenticate by passing your login details as arguments</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;mary.poppins&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;chimneysweeper&quot;</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;my-secret-key&quot;</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="s2">&quot;https://your-url.dimensions.ai&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>You can specify endpoint, which by default is set to “<a class="reference external" href="https://app.dimensions.ai">https://app.dimensions.ai</a>”</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;mary.poppins&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;chimneysweeper&quot;</span><span class="p">,</span> <span class="n">ednpoint</span><span class="o">=</span><span class="s2">&quot;https://nannies-research.dimensions.ai&quot;</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;my-secret-key&quot;</span><span class="p">,</span> <span class="n">ednpoint</span><span class="o">=</span><span class="s2">&quot;https://nannies-research.dimensions.ai&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>If you use key based authentication, then do</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;my-secret-key&quot;</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="s2">&quot;https://your-url.dimensions.ai&quot;</span><span class="p">)</span>
+<p>Legacy authentication mechanisms with username/password are also supported</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dimcli</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;mary.poppins&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;chimneysweeper&quot;</span><span class="p">,</span> <span class="n">ednpoint</span><span class="o">=</span><span class="s2">&quot;https://nannies-research.dimensions.ai&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="admonition seealso">
@@ -1153,7 +1153,7 @@ Alternatively, a simple list of strings as input will result in a matrix where t
 <span class="go">identify experts</span>
 <span class="go">    from concepts &quot;&quot;landing&quot; OR &quot;way&quot; OR &quot;mainstream&quot; OR &quot;moon landing&quot; OR &quot;supercomputers&quot;&quot;</span>
 <span class="go">    using publications where year &gt;= 2010</span>
-<span class="go">return experts[all+dimensions_url-obsolete]</span>
+<span class="go">return experts[id+first_name+last_name+dimensions_url-obsolete]</span>
 <span class="go">&quot;</span>
 <span class="go">Experts found: 20</span>
 <span class="go">[..experts list..]</span>
@@ -1794,7 +1794,7 @@ NOTE this output will be picked up by pipes etc..</p>
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2020, Digital Science
+        &copy; Copyright 2020-2021, Digital Science
 
     </p>
   </div>
