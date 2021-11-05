@@ -1,3 +1,8 @@
+"""
+Dimcli package instructions for setuptools
+https://setuptools.pypa.io/en/latest/setuptools.html
+"""
+
 from setuptools import setup, find_packages
 from os import path
 
