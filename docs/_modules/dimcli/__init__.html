@@ -162,6 +162,7 @@
 <span class="kn">from</span> <span class="nn">.core.api</span> <span class="kn">import</span> <span class="n">Dsl</span><span class="p">,</span> <span class="n">DslDataset</span>
 <span class="kn">from</span> <span class="nn">.core.dsl_grammar</span> <span class="kn">import</span> <span class="n">G</span> 
 <span class="kn">from</span> <span class="nn">.utils.version_utils</span> <span class="kn">import</span> <span class="n">print_dimcli_report_if_outdated</span>
+<span class="kn">from</span> <span class="nn">.utils.misc_utils</span> <span class="kn">import</span> <span class="n">printDebug</span>
 
 <span class="kn">import</span> <span class="nn">click</span>
 
@@ -197,11 +198,13 @@
             <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Login into the Dimensions API and store the query token in memory. </span>
 
-<span class="sd">    Two cases:</span>
+<span class="sd">    Two cases, with a few defaults:</span>
 
+<span class="sd">    * If credentials are provided, the login is performed using those credentials.</span>
+<span class="sd">        * If endpoint is not provided, the default endpoint is used (&quot;https://app.dimensions.ai&quot;)</span>
 <span class="sd">    * If credentials are not passed, login is attempted using the local dsl.ini credentials file. </span>
-<span class="sd">    </span>
-<span class="sd">    * If Google COLAB is detected and user/psw is not available, the interactive login workflow is triggered</span>
+<span class="sd">        * If neither instance nor endpoint are provided, instance defaults to &#39;live&#39;.</span>
+<span class="sd">        * If an endpoint url is provided, the first matching directive in the credentials file is used.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -258,7 +261,7 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="n">do_global_login</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Login failed: please ensure your credentials are correct.&quot;</span><span class="p">)</span>
+        <span class="n">printDebug</span><span class="p">(</span><span class="s2">&quot;Login failed: please ensure your credentials are correct.&quot;</span><span class="p">)</span>
         <span class="k">raise</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
     <span class="n">CONNECTION</span> <span class="o">=</span> <span class="n">get_global_connection</span><span class="p">()</span>
@@ -303,9 +306,9 @@
     <span class="n">CONNECTION</span> <span class="o">=</span> <span class="n">get_global_connection</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">CONNECTION</span><span class="o">.</span><span class="n">token</span><span class="p">:</span>
         <span class="n">CONNECTION</span><span class="o">.</span><span class="n">reset_login</span><span class="p">()</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Logging out... done&quot;</span><span class="p">)</span> 
+        <span class="n">printDebug</span><span class="p">(</span><span class="s2">&quot;Logging out... done&quot;</span><span class="p">)</span> 
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Please login first&quot;</span><span class="p">)</span> </div>
+        <span class="n">printDebug</span><span class="p">(</span><span class="s2">&quot;Please login first&quot;</span><span class="p">)</span> </div>
 
 
 
@@ -327,10 +330,10 @@
     <span class="kn">from</span> <span class="nn">.core.auth</span> <span class="kn">import</span> <span class="n">get_global_connection</span>
     <span class="n">CONNECTION</span> <span class="o">=</span> <span class="n">get_global_connection</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">CONNECTION</span><span class="o">.</span><span class="n">token</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dimcli </span><span class="si">%s</span><span class="s2"> - Succesfully connected to &lt;</span><span class="si">%s</span><span class="s2">&gt;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">VERSION</span><span class="p">),</span> <span class="n">CONNECTION</span><span class="o">.</span><span class="n">url</span><span class="p">))</span> 
+        <span class="n">printDebug</span><span class="p">(</span><span class="s2">&quot;Dimcli </span><span class="si">%s</span><span class="s2"> - Succesfully connected to &lt;</span><span class="si">%s</span><span class="s2">&gt;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">VERSION</span><span class="p">),</span> <span class="n">CONNECTION</span><span class="o">.</span><span class="n">url</span><span class="p">))</span> 
         <span class="k">return</span> <span class="kc">True</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Status: not logged in&quot;</span><span class="p">)</span> 
+        <span class="n">printDebug</span><span class="p">(</span><span class="s2">&quot;Status: not logged in&quot;</span><span class="p">)</span> 
         <span class="k">return</span> <span class="kc">False</span></div>
 
 </pre></div>

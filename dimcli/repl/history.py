@@ -13,14 +13,15 @@ from ..core.dsl_grammar import *
 
 
 class SelectiveFileHistory(FileHistory):
-    """
-    :class:`.SelectiveFileHistory` class that extends history but stores only queries 
-     - strings starting with 'search' 
+    """This class extends FileHistory, but stores only valid DSL queries 
+     (dsl_grammar_extras.py > allowed_starts_dsl_query)
+     
     NOTE This approach can be refined in the future
     """
 
     def __init__(self, filename):
         self.filename = filename
+        # print("HISTORY: ", filename)
         super(SelectiveFileHistory, self).__init__(filename)
 
     def append_string(self, string):

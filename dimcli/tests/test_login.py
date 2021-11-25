@@ -31,7 +31,17 @@ class TestOne(unittest.TestCase):
     def test_001(self):
         click.secho("\nTEST 001: GLOBAL login/logout using file-based credentials and verbose mode", bg="green")
         # ----
-        click.secho("Login... verbose=True", fg="magenta")
+        
+        click.secho("login()... without arguments", fg="magenta")
+        login()
+        d = Dsl()
+        res = d.query("search publications where year=2018 return publications")
+        print("Query BATCH results: ", res.count_batch)
+        click.secho("Logout... verbose=True", fg="magenta")
+        logout()
+        # ----
+
+        click.secho("login(instance=API_INSTANCE)", fg="magenta")
         login(instance=API_INSTANCE)
         d = Dsl()
         res = d.query("search publications where year=2018 return publications")
@@ -39,7 +49,8 @@ class TestOne(unittest.TestCase):
         click.secho("Logout... verbose=True", fg="magenta")
         logout()
         # ----
-        click.secho("Login... verbose=False", fg="magenta")
+
+        click.secho("login(instance=API_INSTANCE, verbose=False)", fg="magenta")
         login(instance=API_INSTANCE, verbose=False)
         d = Dsl()
         res = d.query("search publications where year=2018 return publications")
@@ -47,6 +58,25 @@ class TestOne(unittest.TestCase):
         click.secho("Logout... verbose=False", fg="magenta")
         logout()
         # ----
+        
+        click.secho('''login(endpoint="https://runtime.dimensions.ai")''', fg="magenta")
+        login(endpoint="https://runtime.dimensions.ai")
+        d = Dsl()
+        res = d.query("search publications where year=2018 return publications")
+        print("Query BATCH results: ", res.count_batch)
+        click.secho("Logout... verbose=True", fg="magenta")
+        logout()
+        # ----
+
+        click.secho('''login(key="", endpoint="https://app.dimensions.ai")''', fg="magenta")
+        login(key="", endpoint="https://app.dimensions.ai")
+        d = Dsl()
+        res = d.query("search publications where year=2018 return publications")
+        print("Query BATCH results: ", res.count_batch)
+        click.secho("Logout... verbose=True", fg="magenta")
+        logout()
+        # ----
+
         click.secho("\n--------\nCOMPLETED", fg="green")
 
     def test_002(self):

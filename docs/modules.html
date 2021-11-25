@@ -172,10 +172,23 @@ NOTE: these functions are attached to the top level <code class="docutils litera
 <dt id="dimcli.__init__.login">
 <code class="sig-prename descclassname">dimcli.__init__.</code><code class="sig-name descname">login</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">username</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">password</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">endpoint</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">instance</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">key</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/__init__.html#login"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dimcli.__init__.login" title="Permalink to this definition">¶</a></dt>
 <dd><p>Login into the Dimensions API and store the query token in memory.</p>
-<p>Two cases:</p>
+<p>Two cases, with a few defaults:</p>
 <ul class="simple">
-<li><p>If credentials are not passed, login is attempted using the local dsl.ini credentials file.</p></li>
-<li><p>If Google COLAB is detected and user/psw is not available, the interactive login workflow is triggered</p></li>
+<li><dl class="simple">
+<dt>If credentials are provided, the login is performed using those credentials.</dt><dd><ul>
+<li><p>If endpoint is not provided, the default endpoint is used (“<a class="reference external" href="https://app.dimensions.ai">https://app.dimensions.ai</a>”)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>If credentials are not passed, login is attempted using the local dsl.ini credentials file.</dt><dd><ul>
+<li><p>If neither instance nor endpoint are provided, instance defaults to ‘live’.</p></li>
+<li><p>If an endpoint url is provided, the first matching directive in the credentials file is used.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
 </ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

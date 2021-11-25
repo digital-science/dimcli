@@ -93,33 +93,32 @@ class APISession():
         if (username or password) and not (username and password):
             raise Exception("Authentication error: you provided only one value for username and password. Both are required.")
 
-        if instance and endpoint:
-            raise Exception("Authentication error: you provided both instance and endpoint value. Only one is required.")
+        if not (instance or endpoint):
+            printDebug("Login method received no arguments => trying config file 'live' instance..", "comment")
+            instance="live"
 
-        if (key or (username and password)):
-            # explicit credentials, no need to look for config file
+        if (username and password) or key:
             if not endpoint:
                 printDebug("Using default endpoint: 'https://app.dimensions.ai'", "comment")
                 endpoint="https://app.dimensions.ai"
-            instance = ""
 
-        else:
-            # no key, no usr/pwd => use the config file
-            fpath = get_init_file()
 
-            if not instance and not endpoint:
-                printDebug("Searching config file credentials for default 'live' instance..", "comment")
-                instance="live"
-                config_section = read_init_file(fpath, instance_name=instance)
-            elif endpoint:
-                printDebug(f"Searching config file credentials for '{endpoint}' endpoint..", "comment")
-                config_section = read_init_file(fpath, endpoint=endpoint)
-            else:
-                printDebug(f"Searching config file credentials for '{instance}' instance..", "comment")
-                config_section = read_init_file(fpath, instance_name=instance)
+        if endpoint and not (username and password) and not key:  # 
+            printDebug("Login method received only an endpoint => trying config file credentials..", "comment")
 
-            endpoint = config_section['url'] # OVERRIDE URL USING LOCAL CONFIG
+        # set the default endpoint
+        if not endpoint: 
+            endpoint="https://app.dimensions.ai"
+
+        if not (username and password) and not key:
             
+            # GET LOCAL CONFIG FILE SECTION USING THE 'INSTANCE' ARGUMENT
+            
+            fpath = get_init_file()
+            config_section = read_init_file(fpath, instance)
+            endpoint = config_section['url'] # OVERRIDE URL USING LOCAL CONFIG
+            URL_AUTH, URL_QUERY = self._get_endpoint_urls(endpoint)
+            # printDebug(URL_AUTH, URL_QUERY )
             try:
                 username = config_section['login']
                 password = config_section['password']
@@ -130,8 +129,8 @@ class APISession():
             except:
                 key = ""
 
+
         URL_AUTH, URL_QUERY = self._get_endpoint_urls(endpoint)
-        # printDebug(URL_AUTH, URL_QUERY )
 
         login_data = {'username': username, 'password': password, 'key': key}
         
@@ -302,7 +301,7 @@ def get_init_file():
                 return c + "/" + USER_CONFIG_FILE_NAME
     return None
 
-def read_init_file(fpath, instance_name="", endpoint=""):
+def read_init_file(fpath, instance_name, endpoint=None):
     """
     parse the credentials file
     """
@@ -332,9 +331,8 @@ def read_init_file(fpath, instance_name="", endpoint=""):
         # try all stored configurations
         for instance_name in config.sections():
             try:
-                # print(instance_name, config[instance_name]['url'])
-                if endpoint == config[instance_name]['url']:
-                    return config[instance_name]
+                if endpoint == config['instance.' + instance_name]['url']:
+                    return config['instance.' + instance_name]
             except:
                 pass
         printDebug(f"ERROR: Credentials file `{fpath}` does not contain settings for endpoint: '{endpoint}''", fg="red")        

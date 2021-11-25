@@ -1,6 +1,11 @@
 # Changelog
 
 
+## v 0.9.4
+
+* Improved login logic: instance and endpoint defaults accepted. 
+  * See the [login method documentation](https://digital-science.github.io/dimcli/modules.html#module-dimcli.__init__)
+
 ## v 0.9.3
 
 * Improved login error messages when there are missing credentials

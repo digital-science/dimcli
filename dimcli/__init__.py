@@ -12,6 +12,7 @@ from .VERSION import __version__, VERSION
 from .core.api import Dsl, DslDataset
 from .core.dsl_grammar import G 
 from .utils.version_utils import print_dimcli_report_if_outdated
+from .utils.misc_utils import printDebug
 
 import click
 
@@ -47,11 +48,13 @@ def login(  username="",
             verbose=True):
     """Login into the Dimensions API and store the query token in memory. 
 
-    Two cases:
+    Two cases, with a few defaults:
 
+    * If credentials are provided, the login is performed using those credentials.
+        * If endpoint is not provided, the default endpoint is used ("https://app.dimensions.ai")
     * If credentials are not passed, login is attempted using the local dsl.ini credentials file. 
-    
-    * If Google COLAB is detected and user/psw is not available, the interactive login workflow is triggered
+        * If neither instance nor endpoint are provided, instance defaults to 'live'.
+        * If an endpoint url is provided, the first matching directive in the credentials file is used.
 
     Parameters
     ----------
@@ -108,7 +111,7 @@ def login(  username="",
     try:
         do_global_login(instance, username, password, key, endpoint)
     except Exception as e:
-        print("Login failed: please ensure your credentials are correct.")
+        printDebug("Login failed: please ensure your credentials are correct.")
         raise(e)
 
     CONNECTION = get_global_connection()
@@ -153,9 +156,9 @@ def logout():
     CONNECTION = get_global_connection()
     if CONNECTION.token:
         CONNECTION.reset_login()
-        print("Logging out... done") 
+        printDebug("Logging out... done") 
     else:
-        print("Please login first") 
+        printDebug("Please login first") 
 
 
 
@@ -177,9 +180,9 @@ def login_status():
     from .core.auth import get_global_connection
     CONNECTION = get_global_connection()
     if CONNECTION.token:
-        print("Dimcli %s - Succesfully connected to <%s>" % (str(VERSION), CONNECTION.url)) 
+        printDebug("Dimcli %s - Succesfully connected to <%s>" % (str(VERSION), CONNECTION.url)) 
         return True
     else:
-        print("Status: not logged in") 
+        printDebug("Status: not logged in") 
         return False
 
