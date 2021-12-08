@@ -1,5 +1,10 @@
 # Changelog
 
+## v 0.9.5
+
+* Bug fix: automatic login token refresh breaking in certain cases
+* Bug fix: CLI not printing out JSON data correctly due to conflicting metadata keys ('_copyright')
+* Bug fix: CLI export_gsheets command not working correctly 
 
 ## v 0.9.4
 
