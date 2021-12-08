@@ -251,8 +251,26 @@ def export_as_gsheets(input_data, query="", title=None, verbose=True):
         try:
             gc = gspread.oauth()
         except:
-            raise Exception("Google authorization failed. Do you have all the required files? Please see the documentation for more information.")
+            raise Exception("Google authorization failed. Do you have all the required files? Please see the documentation for more information: https://digital-science.github.io/dimcli/modules.html#dimcli.utils.misc_utils.export_as_gsheets")
 
+
+    def line_search_return(line):
+        """
+        get the source/facet in the return statement
+        Duplicates same method in dimcli.utils.repl_utils , to avoid circular imports
+        """
+        l = line.split()
+        n = l.count("return")
+        if n == 1:
+            i = l.index("return")
+            if len(l) > i + 1: # cause index is zero based
+                return_obj = l[i + 1]
+                if "[" in return_obj:
+                    return return_obj.split('[')[0]
+                else:
+                    return return_obj
+        else: # if multiple return values, fail
+            return None
 
     if type(input_data) == type({}):
         # JSON
@@ -260,9 +278,9 @@ def export_as_gsheets(input_data, query="", title=None, verbose=True):
             raise Exception("When passing raw JSON you also have to provide the DSL query, which is needed to determine the primary records key.")            
         return_object = line_search_return(query)
         try:
-            df =  json_normalize(jjson[return_object], errors="ignore")
+            df =  json_normalize(input_data[return_object], errors="ignore")
         except:
-            df =  json_normalize(jjson, errors="ignore")
+            df =  json_normalize(input_data, errors="ignore")
 
     elif type(input_data) == DataFrame:
         # Dataframe

@@ -240,7 +240,7 @@ class CommandsManager(object):
             export_as_jupyter(jsondata, query, USER_EXPORTS_DIR)
 
         elif text == ".export_as_gsheets":
-            export_as_gsheets(jsondata, query)
+            export_as_gsheets_wrapper(jsondata, query)
 
 
     def show(self, text):

@@ -386,6 +386,16 @@ def export_json_json(jjson, query, USER_EXPORTS_DIR):
     print("Exported: ", "%s%s" % (USER_EXPORTS_DIR, filename))
 
 
+def export_as_gsheets_wrapper(jjson, query):
+    """Export to a json file
+    """
+    try:
+        url = export_as_gsheets(jjson, query)
+        print("Exported: ", "%s" % (url))
+    except:
+        print("Export failed")
+
+
 
 def export_gist(jjson, query, api_endpoint):
     """Export as a github gist
@@ -671,8 +681,9 @@ def print_json_compact(jsondata):
     formatter = formatters.TerminalFormatter()
     
     counter = 0
+    skips = ["_warnings", "_notes", "_stats", "_version", "_copyright"]
     for key in jsondata.keys():
-        if key == "_stats":
+        if key in skips:
             pass
         else:
             for row in jsondata[key]:
