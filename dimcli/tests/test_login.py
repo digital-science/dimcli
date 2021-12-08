@@ -38,6 +38,11 @@ class TestOne(unittest.TestCase):
         res = d.query("search publications where year=2018 return publications")
         print("Query BATCH results: ", res.count_batch)
         click.secho("Logout... verbose=True", fg="magenta")
+
+        click.secho("\nTesting refresh-login method ..", fg="magenta")
+        d._refresh_login()    
+        click.secho("Login refreshed!")
+
         logout()
         # ----
 
@@ -110,9 +115,9 @@ class TestOne(unittest.TestCase):
         res = d.query("""search publications where authors="Pasin" return publications""")
         print(" ==> res.json.keys(): ", res.json.keys())
         logout()
-        login(instance="test")
+        login(instance="runtime")
         d = Dsl()
-        click.secho(""" d.login(instance="test"): ==> url=""" + d._url, fg="magenta")
+        click.secho(""" d.login(instance="runtime"): ==> url=""" + d._url, fg="magenta")
         res = d.query("""search publications where authors="Pasin" return publications""")
         print(" ==> res.json.keys(): ", res.json.keys())
         logout()

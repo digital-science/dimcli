@@ -74,7 +74,7 @@ class APISession():
         self.password = None
         self.key = None
         self.token = None
-        self._verbose = verbose
+        # self._verbose = verbose
 
 
     def login(self, 
@@ -82,7 +82,8 @@ class APISession():
                 username="", 
                 password="", 
                 key="", 
-                endpoint=""):
+                endpoint="",
+                verbose=True):
         """Login into Dimensions API endpoint and get a query token.
 
         INSTANCE => used to reference the local configuration file
@@ -90,16 +91,25 @@ class APISession():
         
         """
 
+        if False:
+            # FOR INTERNAL QA ONLY
+            click.secho(f"""instance="{instance}", 
+                            username="{username}", 
+                            password="{password}", 
+                            key="{key}", 
+                            endpoint="{endpoint}")""", fg="red")
+
         if (username or password) and not (username and password):
             raise Exception("Authentication error: you provided only one value for username and password. Both are required.")
 
         if instance and endpoint:
-            raise Exception("Authentication error: you provided both instance and endpoint value. Only one is required.")
+            if verbose: printDebug(f"Warning: you provided both instance and endpoint values. Endpoint will be ignored." , "comment")
+            endpoint = ""
 
         if (key or (username and password)):
             # explicit credentials, no need to look for config file
             if not endpoint:
-                printDebug("Using default endpoint: 'https://app.dimensions.ai'", "comment")
+                if verbose: printDebug("Using default endpoint: 'https://app.dimensions.ai'", "comment")
                 endpoint="https://app.dimensions.ai"
             instance = ""
 
@@ -108,14 +118,14 @@ class APISession():
             fpath = get_init_file()
 
             if not instance and not endpoint:
-                printDebug("Searching config file credentials for default 'live' instance..", "comment")
+                if verbose: printDebug("Searching config file credentials for default 'live' instance..", "comment")
                 instance="live"
                 config_section = read_init_file(fpath, instance_name=instance)
             elif endpoint:
-                printDebug(f"Searching config file credentials for '{endpoint}' endpoint..", "comment")
+                if verbose: printDebug(f"Searching config file credentials for '{endpoint}' endpoint..", "comment")
                 config_section = read_init_file(fpath, endpoint=endpoint)
             else:
-                printDebug(f"Searching config file credentials for '{instance}' instance..", "comment")
+                if verbose: printDebug(f"Searching config file credentials for '{instance}' instance..", "comment")
                 config_section = read_init_file(fpath, instance_name=instance)
 
             endpoint = config_section['url'] # OVERRIDE URL USING LOCAL CONFIG
@@ -194,11 +204,12 @@ class APISession():
         """
         Method used to login again if the TOKEN has expired - using previously entered credentials
         """
-        self.login(  self.instance, 
-                        self.url, 
-                        self.username, 
-                        self.password, 
-                        self.key, 
+        self.login(  instance=self.instance, 
+                        username=self.username, 
+                        password=self.password, 
+                        key=self.key, 
+                        endpoint=self.url,
+                        verbose=False
                         )
 
 

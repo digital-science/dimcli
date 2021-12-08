@@ -291,7 +291,7 @@ def run(instance="live"):
         do_global_login(instance=instance)
         CLIENT = Dsl(verbose=False)
     except requests.exceptions.HTTPError as err:
-        print(err)
+        click.secho(err)
         sys.exit(1)
 
     # dynamically retrieve dsl version 

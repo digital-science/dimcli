@@ -99,6 +99,14 @@ class Dsl():
     def _print_please_login(self):
         printDebug("Warning: you are not logged in. Please use `dimcli.login(key, endpoint)` before querying.")
 
+    def _refresh_login(self):
+        if self._CONNECTION:
+            self._CONNECTION.refresh_login()
+            self._url = self._CONNECTION.url
+            self._headers = {'Authorization': "JWT " + self._CONNECTION.token}
+        else:
+            printDebug("Warning: please login first.")
+
     def query(self, q, show_results=None, retry=0, verbose=None):
         """Execute a single DSL query.
 
@@ -146,11 +154,10 @@ class Dsl():
         elif response.status_code == 403:  
             # Forbidden:
             printDebug('Login token expired. Logging in again.')
-            # refresh_login()
-            self._CONNECTION.refresh_login()
-            # self._CONNECTION = get_global_connection()
-            self._url = self._CONNECTION.url
-            self._headers = {'Authorization': "JWT " + self._CONNECTION.token}
+            self._refresh_login()
+            # self._CONNECTION.refresh_login()
+            # self._url = self._CONNECTION.url
+            # self._headers = {'Authorization': "JWT " + self._CONNECTION.token}
             return self.query(q, show_results, retry, verbose)
         elif response.status_code in [200, 400, 500]:  
             ###  
