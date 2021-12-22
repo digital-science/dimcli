@@ -6,6 +6,7 @@
 
 * Installation package updated so that `requirements.txt` gets added to distribution
   * So to fix Conda installation [ISSUE-75](https://github.com/digital-science/dimcli/issues/75)
+* Merged [PR-76](https://github.com/digital-science/dimcli/pull/76) adding `MANIFEST.in` file 
 
 
 ## v 0.9.5
