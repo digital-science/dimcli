@@ -1,5 +1,13 @@
 # Changelog
 
+
+
+## v 0.9.6
+
+* Installation package updated so that `requirements.txt` gets added to distribution
+  * So to fix Conda installation [ISSUE-75](https://github.com/digital-science/dimcli/issues/75)
+
+
 ## v 0.9.5
 
 * Bug fix: automatic login token refresh breaking in certain cases

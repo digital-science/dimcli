@@ -51,6 +51,7 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/digital-science/dimcli",
     author="Michele Pasin @lambdaman",
+    author_email="m.pasin@digital-science.com",
     license="MIT License",
     packages=find_packages(),
     include_package_data=True,
@@ -58,6 +59,7 @@ setup(
         'static': ['*'],
         'dimcli': ['templates/*.*'],
     },
+    data_files=[('*', ['requirements.txt'])],
     install_requires=REQUIREMENTS_DATA,
     entry_points="""
         [console_scripts]
