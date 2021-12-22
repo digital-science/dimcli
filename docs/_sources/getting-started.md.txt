@@ -44,21 +44,26 @@ See also an older animated video on [asciicinema](https://asciinema.org/a/jSzISI
 
 ## Installation
 
-Install / upgrade the package as follows:
+
+Using [pip](https://pip.pypa.io/en/stable/):
 
 ```bash
 $ pip install dimcli -U
 ```
 
-Then you can check if the installation worked with
+Using [conda](https://docs.conda.io/en/latest/):
+
+```bash
+conda install -c conda-forge dimcli
+```
+
+You can check if the installation worked with:
 
 ```bash
 $ dimcli --help
 ```
 
-#### Anaconda users
-
-There's been [reports](https://github.com/digital-science/dimcli/issues/21) of Dimcli failing to install on Anacoda. This can be solved by updating manually a couple of libraries Dimcli relies on:
+There's been [reports](https://github.com/digital-science/dimcli/issues/21) of Dimcli failing to install on Anaconda. This can be solved by updating manually a couple of libraries Dimcli relies on:
 * `pip install prompt-toolkit -U` 
 * `pip install ipython -U` 
 
