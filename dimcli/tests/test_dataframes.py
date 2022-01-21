@@ -74,7 +74,7 @@ class TestDataframes(unittest.TestCase):
         click.secho("\nTEST 003: Grants: funders and investigators Dataframes.", bg="green")
         # ----
         click.secho("Testing as_dataframe_funders on Grants data: ", fg="magenta")
-        res= dslquery("""search grants return grants[basics+investigator_details]""")
+        res= dslquery("""search grants return grants[basics+investigators]""")
         print(" ==> res.as_dataframe_funders(): ", res.as_dataframe_funders())
         print(" ==> res.as_dataframe_investigators(): ", res.as_dataframe_investigators())
         click.secho("Completed test succesfully", fg="green")

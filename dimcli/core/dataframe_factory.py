@@ -262,7 +262,7 @@ class DfFactory(object):
         """Utility method: return inner json as a pandas dataframe, for grants investigators 
         """
         output = pd.DataFrame()
-        FIELD = "investigator_details"
+        FIELD = "investigators"
 
         if 'grants' in self.good_keys:    
             normalize_key(FIELD, data['grants'], [])
