@@ -2,11 +2,11 @@
 
 
 
-## v 0.9.6
+## v 0.9.7
 
 * Fix compatibility issues with DSL V2
   * Grants field:  `investigators_details` => `investigators`
-
+* Added DSL grammar for DSL V2.1
 
 ## v 0.9.6
 

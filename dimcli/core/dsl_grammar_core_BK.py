@@ -5,7 +5,7 @@
 #
 #
 # GRAMMAR_DICT is a dictionary representation of the DSL language vocabulary (fields, sources)
-# DSL VERSION: v2.1
+# DSL VERSION: v2.0
 #
 #
 
@@ -139,25 +139,6 @@ GRAMMAR_DICT = {
                 },
                 "pmid": {
                     "description": "PubMed ID",
-                    "is_filter": True,
-                    "long_description": None,
-                    "name": "string",
-                    "type": "string",
-                },
-            },
-            "fieldsets": ["basics"],
-        },
-        "repositories": {
-            "fields": {
-                "id": {
-                    "description": "Dimensions ID of the repository.",
-                    "is_filter": True,
-                    "long_description": None,
-                    "name": "string",
-                    "type": "string",
-                },
-                "name": {
-                    "description": "The name of the repository of the dataset.",
                     "is_filter": True,
                     "long_description": None,
                     "name": "string",
@@ -490,9 +471,9 @@ GRAMMAR_DICT = {
             "fieldsets": ["basics", "extras", "categories"],
             "metrics": {"count": {"description": "Total count", "name": "count"}},
             "search_fields": [
-                "title_only",
-                "title_abstract_only",
                 "investigators",
+                "title_abstract_only",
+                "title_only",
                 "full_data",
             ],
         },
@@ -777,14 +758,14 @@ GRAMMAR_DICT = {
                     "long_description": None,
                     "type": "string",
                 },
-                "repository": {
-                    "description": "Repository associtated with the dataset.",
-                    "is_entity": True,
+                "repository_id": {
+                    "description": "The ID of the repository of the dataset.",
+                    "is_entity": False,
                     "is_facet": True,
                     "is_filter": True,
                     "is_multivalue": False,
                     "long_description": None,
-                    "type": "repositories",
+                    "type": "string",
                 },
                 "research_org_cities": {
                     "description": "City of the organisations the publication authors are affiliated to, expressed as GeoNames ID and name.",
@@ -852,7 +833,7 @@ GRAMMAR_DICT = {
             },
             "fieldsets": ["basics", "categories"],
             "metrics": {"count": {"description": "Total count", "name": "count"}},
-            "search_fields": ["title_only", "title_abstract_only", "full_data"],
+            "search_fields": ["title_abstract_only", "title_only", "full_data"],
         },
         "grants": {
             "fields": {
@@ -1063,15 +1044,6 @@ GRAMMAR_DICT = {
                     "long_description": None,
                     "type": "float",
                 },
-                "funding_cny": {
-                    "description": "Funding amount awarded in CNY.",
-                    "is_entity": False,
-                    "is_facet": False,
-                    "is_filter": True,
-                    "is_multivalue": False,
-                    "long_description": None,
-                    "type": "float",
-                },
                 "funding_currency": {
                     "description": "Original funding currency.",
                     "is_entity": False,
@@ -1177,7 +1149,7 @@ GRAMMAR_DICT = {
                     "is_facet": False,
                     "is_filter": True,
                     "is_multivalue": False,
-                    "long_description": 'Returned objects contain: ``id``, ``first_name``, ``middle_name``, ``last_name``, ``role``, ``affiliations``\n                                           \n                                           For example:\n\n    .. code-block:: json\n\n        {\n            "investigator_details":[\n                {\n                    "id":"ur.012516501745.79",\n                    "first_name":"O.",\n                    "middle_name":"",\n                    "last_name":"Mitas",\n                    "role":"PI",\n                    "affiliations":[\n                        {\n                            "id":"grid.5477.1",\n                            "name":"Breda University of Applied Sciences",\n                            "city":null,\n                            "city_id":"2745912",\n                            "state":null,\n                            "state_code":null,\n                            "country":null,\n                            "country_code":"NL"\n                        }\n                    ]\n                }\n            ]\n        }',
+                    "long_description": 'Returned objects contain: ``id``, ``first_name``, ``middle_name``, ``last_name``, ``role``, ``affiliations``\n                                           \n                                           For example:\n\n    .. code-block:: json\n\n        {\n            "investigators":[\n                {\n                    "id":"ur.012516501745.79",\n                    "first_name":"O.",\n                    "middle_name":"",\n                    "last_name":"Mitas",\n                    "role":"PI",\n                    "affiliations":[\n                        {\n                            "id":"grid.5477.1",\n                            "name":"Breda University of Applied Sciences",\n                            "city":null,\n                            "city_id":"2745912",\n                            "state":null,\n                            "state_code":null,\n                            "country":null,\n                            "country_code":"NL"\n                        }\n                    ]\n                }\n            ]\n        }',
                     "type": "json",
                 },
                 "language": {
@@ -1307,11 +1279,11 @@ GRAMMAR_DICT = {
                 },
             },
             "search_fields": [
-                "title_only",
-                "full_data",
                 "investigators",
                 "title_abstract_only",
+                "title_only",
                 "concepts",
+                "full_data",
             ],
         },
         "organizations": {
@@ -1764,6 +1736,15 @@ GRAMMAR_DICT = {
                     "long_description": None,
                     "type": "categories",
                 },
+                "cited_by_ids": {
+                    "description": "Dimensions IDs of the patents that cite this patent (see also: :ref:`patents_model` section).",
+                    "is_entity": False,
+                    "is_facet": False,
+                    "is_filter": True,
+                    "is_multivalue": True,
+                    "long_description": None,
+                    "type": "string",
+                },
                 "cpc": {
                     "description": "`Cooperative Patent Classification Categorization <https://www.epo.org/searching-for-patents/helpful-resources/first-time-here/classification/cpc.html>`_.",
                     "is_entity": False,
@@ -2056,8 +2037,8 @@ GRAMMAR_DICT = {
             "fieldsets": ["basics", "extras", "categories"],
             "metrics": {"count": {"description": "Total count", "name": "count"}},
             "search_fields": [
-                "title_only",
                 "title_abstract_only",
+                "title_only",
                 "inventors",
                 "full_data",
             ],
@@ -2548,15 +2529,6 @@ GRAMMAR_DICT = {
                     "long_description": None,
                     "type": "string",
                 },
-                "isbn": {
-                    "description": "International Standard Book Number (ISBN).",
-                    "is_entity": False,
-                    "is_facet": False,
-                    "is_filter": True,
-                    "is_multivalue": True,
-                    "long_description": None,
-                    "type": "string",
-                },
                 "issn": {
                     "description": "International Standard Serial Number",
                     "is_entity": False,
@@ -2902,13 +2874,13 @@ GRAMMAR_DICT = {
             },
             "search_fields": [
                 "title_only",
-                "full_data",
-                "full_data_exact",
+                "title_abstract_only",
+                "terms",
                 "authors",
                 "acknowledgements",
-                "terms",
-                "title_abstract_only",
                 "concepts",
+                "full_data_exact",
+                "full_data",
             ],
         },
         "reports": {
