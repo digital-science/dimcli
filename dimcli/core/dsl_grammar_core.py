@@ -5,7 +5,7 @@
 #
 #
 # GRAMMAR_DICT is a dictionary representation of the DSL language vocabulary (fields, sources)
-# DSL VERSION: v2.1
+# DSL VERSION: v2.1 
 #
 #
 

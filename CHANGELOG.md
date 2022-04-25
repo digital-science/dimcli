@@ -8,6 +8,7 @@
   * Grants field:  `investigators_details` => `investigators`
 * Added DSL grammar for DSL V2.1
 
+
 ## v 0.9.6
 
 * Installation package updated so that `requirements.txt` gets added to distribution
