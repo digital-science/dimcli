@@ -56,10 +56,9 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     package_data = {
-        'static': ['*'],
+        'static': ['dimcli_animated.gif'],
         'dimcli': ['templates/*.*'],
     },
-    data_files=[('*', ['requirements.txt'])],
     install_requires=REQUIREMENTS_DATA,
     entry_points="""
         [console_scripts]
