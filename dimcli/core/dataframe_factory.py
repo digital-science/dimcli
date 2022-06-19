@@ -6,7 +6,7 @@ except:
     from pandas.io.json import json_normalize
 
 from ..utils.misc_utils import normalize_key, exists_key_in_dicts_list
-
+from ..utils.dim_utils import  add_df_hyperlinks
 
 
 class DfFactory(object):
@@ -20,7 +20,7 @@ class DfFactory(object):
         self.good_keys = good_data_keys
 
 
-    def df_simple(self, data, key):
+    def df_simple(self, data, key, links=False):
         """Return inner json as a pandas dataframe
         If key is empty, the first available JSON key (eg 'publications') is used to determine
         what data should be turned into a dataframe. 
@@ -51,11 +51,14 @@ class DfFactory(object):
             else: # no list, then make one and try to return everything
                 output = pd.DataFrame.from_dict([data])
 
+        if links:
+            output = add_df_hyperlinks(output, valid_key)
+
         return output
 
 
 
-    def df_authors(self, data):
+    def df_authors(self, data, links=False):
         """Utility 
         Returns inner json as a pandas dataframe, exposing authors + pubId.
         List of affiliations per each author are not broken down and are returned as JSON. 
@@ -115,10 +118,14 @@ class DfFactory(object):
                 output.rename(columns={"id": "pub_id"}, inplace=True)
         else:
             print(f"[Warning] Dataframe cannot be created as 'publications' were not found in data. Available: {self.good_keys}")
+
+        if links:
+            output = add_df_hyperlinks(output, "publications")
+
         return output
 
 
-    def df_authors_affiliations(self, data):
+    def df_authors_affiliations(self, data, links=False):
         """Utility method
         return inner json as a pandas dataframe, exposing authors + affiliations + pubId
         affiliations ARE broken down and are returned as JSON 
@@ -137,12 +144,16 @@ class DfFactory(object):
         else:
             affiliations = authors # empty df
         affiliations.fillna('', inplace=True) # 2019-09-30: simplifies subsequent operations
+        
+        if links:
+            affiliations = add_df_hyperlinks(affiliations, "publications")
+        
         return affiliations
 
 
 
 
-    def df_concepts(self, data, key):
+    def df_concepts(self, data, key, links=False):
         """from a list of publications or grants including concepts, return a DF with one line per concept
         Enrich the dataframe with scores and other metrics.
         """
@@ -196,55 +207,18 @@ class DfFactory(object):
         # finally
         df['score_avg'] = df.groupby('concept')['score'].transform('mean').round(ROUNDING)
         df.reset_index(drop=True, inplace=True)
-
+        
+        if links:
+            df = add_df_hyperlinks(df)
+        
         out_cols = original_cols + ['concepts_count', 'concept', 'score', 'frequency', 'score_avg' ]
         return df[out_cols]
 
 
 
 
-    def _df_concepts(self, data, key):
-        """from a list of publications or grants including concepts, return a DF with one line per concept
-        Enrich the dataframe with scores and other metrics.
-        """
 
-        FIELD_NAME = "concepts"
-        ROUNDING = 5
-
-        if not ('publications' in self.good_keys) and not ('grants' in self.good_keys): 
-            s = f"Dataframe can be created only with searches returning 'publications' or 'grants' . Available: {self.good_keys}"
-            raise Exception(s)
-
-        concepts = self.df_simple(data, key)
-
-        if not 'concepts' in concepts.columns:
-            s = f"Dataframe requires raw concepts data, but a 'concepts' column was not found in: {concepts.columns.to_list()}"
-            raise Exception(s)             
-
-        if not 'id' in concepts.columns:
-            s = f"Dataframe requires an 'id' column for counting concepts, which was not found in: {concepts.columns.to_list()}"
-            raise Exception(s)   
-
-        df = concepts.explode(FIELD_NAME)
-        original_cols = [x for x in df.columns.to_list() if x != FIELD_NAME]
-        df.rename(columns={FIELD_NAME: "concept"}, inplace=True)
-        df.dropna(inplace=True) # remove rows if there is no concept
-        df['frequency'] = df.groupby('concept')['concept'].transform('count')
-        df['concepts_count'] = df.groupby("id")['concept'].transform('size')
-        ranks = df.groupby('id').cumcount()+1
-        # scores = normalized rank from 0 to 1, where 1 is the highest rank
-        df['score'] = ((df['concepts_count']+1) - ranks) / df['concepts_count']
-        df['score'] = df['score'].round(ROUNDING)
-
-        df['score_avg'] = df.groupby('concept')['score'].transform('mean').round(ROUNDING)
-
-        df.reset_index(drop=True, inplace=True)
-
-        out_cols = original_cols + ['concepts_count', 'concept', 'score', 'frequency', 'score_avg' ]
-        return df[out_cols]
-
-
-    def df_grant_funders(self, data):
+    def df_grant_funders(self, data, links=False):
         """Utility method: return inner json as a pandas dataframe, for grants funders
         """
         output = pd.DataFrame()
@@ -256,9 +230,12 @@ class DfFactory(object):
         else:
             print(f"[Warning] Dataframe cannot be created as 'grants' were not found in data. Available: {self.good_keys}")
 
+        if links:
+            output = add_df_hyperlinks(output, "grants")
+
         return output
 
-    def df_grant_investigators(self, data):
+    def df_grant_investigators(self, data, links=False):
         """Utility method: return inner json as a pandas dataframe, for grants investigators 
         """
         output = pd.DataFrame()
@@ -270,9 +247,12 @@ class DfFactory(object):
         else:
             print(f"[Warning] Dataframe cannot be created as 'grants' were not found in data. Available: {self.good_keys}")
 
+        if links:
+            output = add_df_hyperlinks(output, "grants")
+
         return output
 
-    def df_grant_investigators_affiliations(self, data):
+    def df_grant_investigators_affiliations(self, data, links=False):
         """Utility method
         return inner json as a pandas dataframe, exposing investigators + affiliations + pubId
         affiliations ARE broken down and are returned as JSON 
@@ -280,7 +260,6 @@ class DfFactory(object):
 
         NOTE this method builds on self.df_grant_investigators()
         """
-        
         investigators = self.df_grant_investigators(data)
         if len(investigators):
             affiliations = json_normalize(json.loads(investigators.to_json(orient='records')), 
@@ -289,8 +268,12 @@ class DfFactory(object):
                                                 record_prefix='aff_',
                                                 errors="ignore")
         else:
-            affiliations = authors # empty df
+            affiliations = investigators # empty df
         affiliations.fillna('', inplace=True) # 2019-09-30: simplifies subsequent operations
+        
+        if links:
+            affiliations = add_df_hyperlinks(affiliations, "grants")
+
         return affiliations
 
 
