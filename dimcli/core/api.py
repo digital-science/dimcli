@@ -723,7 +723,7 @@ class DslDataset(IPython.display.JSON):
 
     # Dataframe Methods 
 
-    def as_dataframe(self, key=""):
+    def as_dataframe(self, key="", links=False):
         """Return the JSON data as a Pandas DataFrame. 
 
         If `key` is empty, the first available JSON key (eg 'publications') is used to determine
@@ -733,6 +733,8 @@ class DslDataset(IPython.display.JSON):
         ----------
         key: str, optional
             The JSON results data object that needs to be processed.
+        links: bool, optional 
+            Tranform suitable fields to hyperlinks. Default: False.
 
         Returns
         -------
@@ -746,10 +748,10 @@ class DslDataset(IPython.display.JSON):
         """
 
         if not self.json.get("errors"):
-            return self.df_factory.df_simple(self.json, key)
+            return self.df_factory.df_simple(self.json, key, links)
 
 
-    def as_dataframe_authors(self):
+    def as_dataframe_authors(self, links=False):
         """Return the JSON data as a Pandas DataFrame, in which each row corresponds to a publication author.
 
         This method works only with 'publications' queries and it's clever enough to know if the `authors` or `author_affiliations` (deprecated) fields are used. The list of affiliations per each author are not broken down and are returned as JSON. So in essence you get one row per author.
@@ -764,10 +766,10 @@ class DslDataset(IPython.display.JSON):
         See https://api-lab.dimensions.ai/cookbooks/1-getting-started/3-Working-with-dataframes.html  
         """
         if not self.json.get("errors"):
-            return self.df_factory.df_authors(self.json)
+            return self.df_factory.df_authors(self.json, links)
 
 
-    def as_dataframe_authors_affiliations(self):
+    def as_dataframe_authors_affiliations(self, links=False):
         """Return the JSON data as a Pandas DataFrame, in which each row corresponds to a publication affiliation.
 
         This method works only with 'publications' queries and it's clever enough to know if the `authors` or `author_affiliations` (deprecated) fields are used. If an author has multiple affiliations, they would be represented in different rows (hence the same authors may appear on different rows). 
@@ -782,9 +784,9 @@ class DslDataset(IPython.display.JSON):
         See https://api-lab.dimensions.ai/cookbooks/1-getting-started/3-Working-with-dataframes.html  
         """
         if not self.json.get("errors"):
-            return self.df_factory.df_authors_affiliations(self.json)
+            return self.df_factory.df_authors_affiliations(self.json, links)
 
-    def as_dataframe_concepts(self, key=""):
+    def as_dataframe_concepts(self, key="", links=False):
         """Return the JSON data as a Pandas DataFrame, in which each row corresponds to a single 'concept'.
 
         This method works only with 'publications' and 'grants' queries and it's clever enough to know if the `concepts` or `concepts_scores` fields are used. Additional metrics like 'frequency' and 'score_average' are also included in the results. 
@@ -799,10 +801,10 @@ class DslDataset(IPython.display.JSON):
         See https://api-lab.dimensions.ai/cookbooks/1-getting-started/3-Working-with-dataframes.html  
         """
         if not self.json.get("errors"):
-            return self.df_factory.df_concepts(self.json, key)
+            return self.df_factory.df_concepts(self.json, key, links)
 
 
-    def as_dataframe_funders(self):
+    def as_dataframe_funders(self, links=False):
         """Return the JSON data as a Pandas DataFrame, in which each row corresponds to a single 'funder'.
 
         This method works only with 'grants' queries.
@@ -817,9 +819,9 @@ class DslDataset(IPython.display.JSON):
         See https://api-lab.dimensions.ai/cookbooks/1-getting-started/3-Working-with-dataframes.html  
         """
         if not self.json.get("errors"):
-            return self.df_factory.df_grant_funders(self.json)
+            return self.df_factory.df_grant_funders(self.json, links)
 
-    def as_dataframe_investigators(self):
+    def as_dataframe_investigators(self, links=False):
         """Return the JSON data as a Pandas DataFrame, in which each row corresponds to a single 'investigator'.
 
         This method works only with 'grants' queries.
@@ -834,7 +836,7 @@ class DslDataset(IPython.display.JSON):
         See https://api-lab.dimensions.ai/cookbooks/1-getting-started/3-Working-with-dataframes.html  
         """
         if not self.json.get("errors"):
-            return self.df_factory.df_grant_investigators(self.json)
+            return self.df_factory.df_grant_investigators(self.json, links)
 
     def as_dimensions_url(self, records=500, verbose=True):
         """Utility that turns a list of records into a Dimensions webapp URL, by using the record IDs as filters.
