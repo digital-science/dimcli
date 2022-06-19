@@ -226,9 +226,8 @@ def dimensions_styler(df, source_type=""):
 
     Notes
     -----
-    Implemented using https://pandas.pydata.org/docs/reference/api/pandas.io.formats.style.Styler.format.html. 
-    Side effect is that the resulting dataframe becomes an instance of https://pandas.io.formats.style.styler/, which is a wrapper around the underlying Styler object 
-    and loses some of the standard DF methods eg CSV export etc.. 
+    Implemented using https://pandas.pydata.org/docs/reference/api/pandas.io.formats.style.Styler.format.html. Side effect is that the resulting dataframe becomes an instance of https://pandas.io.formats.style.styler/, which is a wrapper around the underlying Styler object. 
+    NOTE To get back to the original dataframe, you can use the `.data` method.
 
     Returns
     -------
