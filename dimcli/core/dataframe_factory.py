@@ -6,7 +6,7 @@ except:
     from pandas.io.json import json_normalize
 
 from ..utils.misc_utils import normalize_key, exists_key_in_dicts_list
-from ..utils.dim_utils import  add_df_hyperlinks
+from ..utils.dim_utils import  dimensions_styler
 
 
 class DfFactory(object):
@@ -52,7 +52,7 @@ class DfFactory(object):
                 output = pd.DataFrame.from_dict([data])
 
         if links:
-            output = add_df_hyperlinks(output, valid_key)
+            output = dimensions_styler(output, valid_key)
 
         return output
 
@@ -120,7 +120,7 @@ class DfFactory(object):
             print(f"[Warning] Dataframe cannot be created as 'publications' were not found in data. Available: {self.good_keys}")
 
         if links:
-            output = add_df_hyperlinks(output, "publications")
+            output = dimensions_styler(output, "publications")
 
         return output
 
@@ -146,7 +146,7 @@ class DfFactory(object):
         affiliations.fillna('', inplace=True) # 2019-09-30: simplifies subsequent operations
         
         if links:
-            affiliations = add_df_hyperlinks(affiliations, "publications")
+            affiliations = dimensions_styler(affiliations, "publications")
         
         return affiliations
 
@@ -208,11 +208,14 @@ class DfFactory(object):
         df['score_avg'] = df.groupby('concept')['score'].transform('mean').round(ROUNDING)
         df.reset_index(drop=True, inplace=True)
         
-        if links:
-            df = add_df_hyperlinks(df)
-        
+ 
         out_cols = original_cols + ['concepts_count', 'concept', 'score', 'frequency', 'score_avg' ]
-        return df[out_cols]
+        output = df[out_cols]
+        
+        if links:
+            output = dimensions_styler(output)
+        
+        return output
 
 
 
@@ -231,7 +234,7 @@ class DfFactory(object):
             print(f"[Warning] Dataframe cannot be created as 'grants' were not found in data. Available: {self.good_keys}")
 
         if links:
-            output = add_df_hyperlinks(output, "grants")
+            output = dimensions_styler(output, "grants")
 
         return output
 
@@ -248,7 +251,7 @@ class DfFactory(object):
             print(f"[Warning] Dataframe cannot be created as 'grants' were not found in data. Available: {self.good_keys}")
 
         if links:
-            output = add_df_hyperlinks(output, "grants")
+            output = dimensions_styler(output, "grants")
 
         return output
 
@@ -272,7 +275,7 @@ class DfFactory(object):
         affiliations.fillna('', inplace=True) # 2019-09-30: simplifies subsequent operations
         
         if links:
-            affiliations = add_df_hyperlinks(affiliations, "grants")
+            affiliations = dimensions_styler(affiliations, "grants")
 
         return affiliations
 

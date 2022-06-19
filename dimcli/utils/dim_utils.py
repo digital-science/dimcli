@@ -212,7 +212,7 @@ def dsl_escape(stringa, all=False):
 
 
 
-def add_df_hyperlinks(df, source_type=""):
+def dimensions_styler(df, source_type=""):
     """Format the text display value of a dataframe by including Dimensions hyperlinks whenever possible.
     Useful mainly in notebooks when printing out dataframes and clicking on links etc..
     Expects column names to match the default DSL field names. 
@@ -229,33 +229,36 @@ def add_df_hyperlinks(df, source_type=""):
     Implemented using https://pandas.pydata.org/docs/reference/api/pandas.io.formats.style.Styler.format.html. 
     Side effect is that the resulting dataframe becomes an instance of https://pandas.io.formats.style.styler/, which is a wrapper around the underlying Styler object 
     and loses some of the standard DF methods eg CSV export etc.. 
-    So it's best to use this function only in the Jupyter notebook when you want to display the dataframe in a nice way. 
 
     Returns
     -------
     pandas.io.formats.style.Styler
-        Wrapper for a dataframe object, with Dimensions hyperlinks.
+        Wrapper for a dataframe object, including custom Dimensions hyperlinks.
 
     Example
     -------
-    >>> from dimcli.utils import add_df_hyperlinks
+    >>> from dimcli.utils import dimensions_styler
     >>> dsl = dimcli.Dsl() 
     >>> q = 'search publications for "scientometrics" return publications[basics]' 
     >>> df = dsl.query(q).as_dataframe()
-    >>> add_df_hyperlinks(df)
+    >>> dimensions_styler(df)
+    # alternatively, use the shortcut method:
+    >>> dsl.query(q).as_dataframe(links=True)
     """
 
     format_rules = {}
 
-    def df_value_as_link(url, val):
+    def df_value_as_link(url, val, url_root=""):
         """Val is the value found in the dataframe column. It should be a string or an integer, or a list.
         If it's a list, we just take the first element (e.g. for 'linkout' field).
         If it's a float, it means it's a Pandas NaN. So we don't want to return a link.
         """
-        if type(val) == float:
+        if not val or type(val) == float:
             return val
         if type(val) == list:
             url = val[0]
+        if url_root:
+            url = url_root + url
         return '<a target="_blank" href="{}">{}</a>'.format(url, val)
             
 
@@ -264,11 +267,17 @@ def add_df_hyperlinks(df, source_type=""):
         format_rules['dimensions_url'] = lambda x: df_value_as_link(x, x)
 
     if "linkout" in df.columns:
+        # ps this is a list, only first el will be used
         format_rules['linkout'] = lambda x: df_value_as_link(x, x)
 
+    if "orcid" in df.columns:
+        # ps this is a list, only first el will be used
+        url_root = "https://orcid.org/"
+        format_rules['orcid'] = lambda x: df_value_as_link(x, x, url_root)
+
     if "doi" in df.columns:
-        url = "https://doi.org/{}"
-        format_rules['doi'] = lambda x: df_value_as_link(url.format(x), x)
+        url_root = "https://doi.org/"
+        format_rules['doi'] = lambda x: df_value_as_link(x, x, url_root)
 
     if "id" in df.columns:
         format_rules['id'] = lambda x: df_value_as_link(dimensions_url(x, source_type), x)
@@ -287,5 +296,11 @@ def add_df_hyperlinks(df, source_type=""):
 
     if "aff_id" in df.columns:
         format_rules["aff_id"] = lambda x: df_value_as_link(dimensions_url(x, "organizations"), x)
+
+    if "current_organization_id" in df.columns:
+        format_rules["current_organization_id"] = lambda x: df_value_as_link(dimensions_url(x, "organizations"), x)
+
+    
+
 
     return df.style.format(format_rules)
