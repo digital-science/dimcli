@@ -46,6 +46,25 @@ class DslMagics(Magics):
             res = self.dslobject.query_iterative(text)
             return res
         
+    def _handle_input(self, line, cell):
+        """Parse user input and return separate components
+        Links and custom variable can be specified in the line only when the DSL query
+        is passed via a cell magic.
+        """
+        QUERY, DEST_VAR, LINKS_FLAG = None, self.results_var, False
+
+        if not cell:
+            QUERY = line
+        else:
+            QUERY = cell
+            if line and "--links" in line:
+                LINKS_FLAG = True
+            if line and line.split()[0] != "--links":
+                DEST_VAR = line.split()[0]
+
+        print("QUERY: ", QUERY, "DEST_VAR: ", DEST_VAR, "LINKS_FLAG: ", LINKS_FLAG)
+        return QUERY, DEST_VAR, LINKS_FLAG
+        
 
     #
     # MAGIC METHODS
@@ -56,8 +75,8 @@ class DslMagics(Magics):
     def dsl(self, line, cell=None):
         """Magic command to run a single DSL query. 
 
-        Can be used as a single-line (``%dsl``) or multi-line (``%%dsl``) command. Requires an authenticated API session. Results are saved to a variable called ``dsl_last_results``.
-
+        Can be used as a single-line (``%dsl``) or multi-line (``%%dsl``) command. Requires an authenticated API session. If used as a multi-line command, a variable name can be specified as the first argument. Otherwise, the results are saved to a variable called ``dsl_last_results``. 
+        
         Parameters
         ----------
         line: str
@@ -71,21 +90,25 @@ class DslMagics(Magics):
         Example
         -------
         >>> %dsl search publications for "malaria" return publications limit 500
+        >>> %%dsl my_data
+        ...    search publications for "malaria" return publications limit 500
 
         """
         if self._handle_login():
-            if cell:
-                line = cell
-            data = self._handle_query(line)
-            self.shell.user_ns[self.results_var] = data
+            QUERY, DEST_VAR, LINKS_FLAG = self._handle_input(line, cell)
+            data = self._handle_query(QUERY)
+            self.shell.user_ns[DEST_VAR] = data
             return data
+
 
 
     @line_cell_magic
     def dsldf(self, line, cell=None):
         """Magic command to run a single DSL query, results are transformed to a Pandas DataFrame. 
 
-        Can be used as a single-line (``%dsldf``) or multi-line (``%%dsldf``) command. Requires an authenticated API session. Results are saved to a variable called ``dsl_last_results``.
+        Can be used as a single-line (``%dsldf``) or multi-line (``%%dsldf``) command. Requires an authenticated API session. If used as a multi-line command, a variable name can be specified as the first argument. Otherwise, the results are saved to a variable called ``dsl_last_results``.
+
+        Pass the ``--links`` flag to style the dataframe with links to the original data sources.
 
         Parameters
         ----------
@@ -100,18 +123,21 @@ class DslMagics(Magics):
         Example
         -------
         >>> %dsldf search publications for "malaria" return publications limit 500
-
+        >>> %%dsldf --links
+        ...    search publications for "malaria" return publications limit 500
+        >>> %%dsldf my_data
+        ...    search publications for "malaria" return publications limit 500
         """
 
         if self._handle_login():
-            if cell:
-                line = cell
-            if not line_is_search_query(line):
+            QUERY, DEST_VAR, LINKS_FLAG = self._handle_input(line, cell)
+            if not line_is_search_query(QUERY):
                 print("Sorry - DSL to dataframe magic methods work only with `search` queries.")
                 return None
-            data = self._handle_query(line).as_dataframe()
-            self.shell.user_ns[self.results_var] = data
+            data = self._handle_query(QUERY).as_dataframe(links=LINKS_FLAG)
+            self.shell.user_ns[DEST_VAR] = data
             return data
+
 
     @line_cell_magic
     def dslgsheets(self, line, cell=None):
@@ -119,7 +145,7 @@ class DslMagics(Magics):
 
         NOTE: this method requires preexisting valid Google authentication credentials. See the description of ``utils.export_as_gsheets`` for more information.
 
-        Can be used as a single-line (``%dslgsheets``) or multi-line (``%%dslgsheets``) command. Requires an authenticated API session. Results are also saved to a variable called ``dsl_last_results``.
+        Can be used as a single-line (``%dsl``) or multi-line (``%%dsl``) command. Requires an authenticated API session. If used as a multi-line command, a variable name can be specified as the first argument. Otherwise, the results are saved to a variable called ``dsl_last_results``. 
 
         Parameters
         ----------
@@ -137,13 +163,12 @@ class DslMagics(Magics):
 
         """
         if self._handle_login():
-            if cell:
-                line = cell
-            if not line_is_search_query(line):
+            QUERY, DEST_VAR, LINKS_FLAG = self._handle_input(line, cell)
+            if not line_is_search_query(QUERY):
                 print("Sorry - DSL to dataframe magic methods work only with `search` queries.")
                 return None
-            data = self._handle_query(line).as_dataframe()
-            self.shell.user_ns[self.results_var] = data
+            data = self._handle_query(QUERY).as_dataframe(links=LINKS_FLAG)
+            self.shell.user_ns[DEST_VAR] = data
             return export_as_gsheets(data, line)
 
     @line_cell_magic
@@ -152,8 +177,8 @@ class DslMagics(Magics):
 
         This command automatically loops over all the pages of a results set, until all possible records have been returned.
 
-        Can be used as a single-line (``%dslloop``) or multi-line (``%%dslloop``) command. Requires an authenticated API session. Results are saved to a variable called ``dsl_last_results``.
-
+        Can be used as a single-line (``%dsl``) or multi-line (``%%dsl``) command. Requires an authenticated API session. If used as a multi-line command, a variable name can be specified as the first argument. Otherwise, the results are saved to a variable called ``dsl_last_results``. 
+        
         Parameters
         ----------
         line: str
@@ -167,21 +192,24 @@ class DslMagics(Magics):
         Example
         -------
         >>> %dslloop search publications for "malaria" where times_cited > 200 return publications 
-
+        >>> %%dslloop my_data
+        ...    search publications for "malaria" return publications limit 500
         """
         if self._handle_login():
-            if cell:
-                line = cell
-            data = self._handle_query(line, loop=True)
-            self.shell.user_ns[self.results_var] = data
+            QUERY, DEST_VAR, LINKS_FLAG = self._handle_input(line, cell)
+            data = self._handle_query(QUERY, loop=True)
+            self.shell.user_ns[DEST_VAR] = data
             return data
+
 
 
     @line_cell_magic
     def dslloopdf(self, line, cell=None):
         """Magic command to run a DSL 'loop' (iterative) query. Results are automatically transformed to a pandas dataframe.
 
-        Can be used as a single-line (``%dslloopdf``) or multi-line (``%%dslloopdf``) command. Requires an authenticated API session. Results are saved to a variable called ``dsl_last_results``.
+        Can be used as a single-line (``%dsl``) or multi-line (``%%dsl``) command. Requires an authenticated API session. If used as a multi-line command, a variable name can be specified as the first argument. Otherwise, the results are saved to a variable called ``dsl_last_results``. 
+        
+        Pass the ``--links`` flag to style the dataframe with links to the original data sources.
 
         Parameters
         ----------
@@ -196,17 +224,20 @@ class DslMagics(Magics):
         Example
         -------
         >>> %dslloopdf search publications for "malaria" where times_cited > 200 return publications 
-
+        >>> %%dslloopdf --links
+        ...    search publications for "malaria" return publications limit 500
+        >>> %%dslloopdf my_data
+        ...    search publications for "malaria" return publications limit 500
         """
         if self._handle_login():
-            if cell:
-                line = cell
-            if not line_is_search_query(line):
+            QUERY, DEST_VAR, LINKS_FLAG = self._handle_input(line, cell)
+            if not line_is_search_query(QUERY):
                 print("Sorry - DSL to dataframe magic methods work only with `search` queries.")
                 return None
-            data = self._handle_query(line, loop=True).as_dataframe()
-            self.shell.user_ns[self.results_var] = data
+            data = self._handle_query(QUERY, loop=True).as_dataframe(links=LINKS_FLAG)
+            self.shell.user_ns[DEST_VAR] = data
             return data
+
 
     @line_cell_magic
     def dslloopgsheets(self, line, cell=None):
@@ -214,7 +245,7 @@ class DslMagics(Magics):
 
         NOTE: this method requires preexisting valid Google authentication credentials. See also https://gspread.readthedocs.io/en/latest/oauth2.html and the description of ``utils.export_as_gsheets`` for more information.
 
-        Can be used as a single-line (``%dslloopgsheets``) or multi-line (``%%dslloopgsheets``) command. Requires an authenticated API session. Results are also saved to a variable called ``dsl_last_results``.
+        Can be used as a single-line (``%dsl``) or multi-line (``%%dsl``) command. Requires an authenticated API session. If used as a multi-line command, a variable name can be specified as the first argument. Otherwise, the results are saved to a variable called ``dsl_last_results``. 
 
         Parameters
         ----------
@@ -231,20 +262,21 @@ class DslMagics(Magics):
         >>> %dslloopdf search publications for "malaria" where times_cited > 200 return publications 
         """
         if self._handle_login():
-            if cell:
-                line = cell
-            if not line_is_search_query(line):
+            QUERY, DEST_VAR, LINKS_FLAG = self._handle_input(line, cell)
+            if not line_is_search_query(QUERY):
                 print("Sorry - DSL to dataframe magic methods work only with `search` queries.")
                 return None
-            data = self._handle_query(line, loop=True).as_dataframe()
-            self.shell.user_ns[self.results_var] = data
+            data = self._handle_query(QUERY, loop=True).as_dataframe(links=LINKS_FLAG)
+            self.shell.user_ns[DEST_VAR] = data
             return export_as_gsheets(data, line)
 
 
     @line_cell_magic
-    def extract_concepts(self, line, cell=None):
+    def dsl_extract_concepts(self, line, cell=None):
         """Magic command to run the `extract_concepts` function. Results are transformed to a Pandas DataFrame. Score are included by default.
         
+        If used as a multi-line command, a variable name can be specified as the first argument. Otherwise, the results are saved to a variable called ``dsl_last_results``. 
+
         Parameters
         ----------
         cell: str
@@ -263,19 +295,19 @@ class DslMagics(Magics):
         """
 
         if self._handle_login():
-            if cell:
-                line = cell
-            data = line.replace("\n", "")
-            data = extract_concepts(data, scores=True, as_df=True)
-            self.shell.user_ns[self.results_var] = data
+            QUERY, DEST_VAR, LINKS_FLAG = self._handle_input(line, cell)
+            QUERY = QUERY.replace("\n", "")
+            data = extract_concepts(QUERY, scores=True, as_df=True)
+            self.shell.user_ns[DEST_VAR] = data
             return data
 
 
-
     @line_cell_magic
-    def identify_experts(self, line, cell=None):
+    def dsl_identify_experts(self, line, cell=None):
         """Magic command to run the `identify_experts` function. Uses all the default options, takes only the `abstract` argument.
-        
+
+        If used as a multi-line command, a variable name can be specified as the first argument. Otherwise, the results are saved to a variable called ``dsl_last_results``. 
+
         Parameters
         ----------
         cell: str
@@ -294,11 +326,10 @@ class DslMagics(Magics):
         """
 
         if self._handle_login():
-            if cell:
-                line = cell
-            data = line.replace("\n", "")
+            QUERY, DEST_VAR, LINKS_FLAG = self._handle_input(line, cell)
+            QUERY = QUERY.replace("\n", "")
             data = identify_experts(data)
-            self.shell.user_ns[self.results_var] = data
+            self.shell.user_ns[DEST_VAR] = data
             return data
 
 
@@ -433,7 +464,7 @@ def _load_ipython_custom_completers(ipython):
     
     # loader
 
-    for command in ["%dslloop_to_dataframe", "%dsl_to_dataframe", "%dslloop", "%dsl"]:
+    for command in ["%dslloopdf", "%dsldf", "%dslloop", "%dsl"]:
         ipython.set_hook('complete_command', dslq_completers, re_key = command)
         ipython.set_hook('complete_command', dslq_completers, re_key = "%" + command)
 
