@@ -1,66 +1,31 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>dimcli.utils.dim_utils &mdash; DimCli  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-
-  
-  
-  
-  
-
-  
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-
-    
+    <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
-            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> DimCli
-          
-
-          
+            <a href="../../../index.html" class="icon icon-home"> DimCli
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -68,85 +33,37 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <p class="caption"><span class="caption-text">Contents</span></p>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../getting-started.html">Getting Started with Dimcli</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Modules Reference</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">DimCli</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="../../index.html">Module code</a> &raquo;</li>
-        
       <li>dimcli.utils.dim_utils</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <h1>Source code for dimcli.utils.dim_utils</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Dimcli utilities for querying and working with Dimensions data.  </span>
@@ -261,18 +178,24 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="kn">from</span> <span class="nn">..core.dsl_grammar</span> <span class="kn">import</span> <span class="n">G</span> 
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj_id</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">obj_id</span> <span class="o">=</span> <span class="n">obj_id</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">obj_type</span> <span class="ow">and</span> <span class="p">(</span><span class="n">obj_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">sources</span><span class="p">()):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;ERROR: valid sources are: &quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">sources</span><span class="p">()]))</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">obj_type</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">source</span><span class="p">,</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">object_id_patterns</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="k">if</span> <span class="n">obj_id</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">):</span>
-                    <span class="n">obj_type</span> <span class="o">=</span> <span class="n">source</span>
-        <span class="k">if</span> <span class="n">obj_type</span><span class="p">:</span>
-            <span class="n">url</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">url_for_source</span><span class="p">(</span><span class="n">obj_type</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">url</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">url</span> <span class="o">+</span> <span class="n">obj_id</span></div>
+        <span class="n">obj_type</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="c1"># raise ValueError(&quot;ERROR: valid sources are: &quot; + &quot; &quot;.join([x for x in G.sources()]))</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">obj_type</span><span class="p">:</span> <span class="c1"># then infer it from the ID</span>
+        <span class="k">for</span> <span class="n">source</span><span class="p">,</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">object_id_patterns</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># print(&quot;Inferring source from ID: {}&quot;.format(obj_id), source, prefix)</span>
+            <span class="k">if</span> <span class="n">obj_id</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">):</span>
+                <span class="c1"># print(&quot;Inferred source: {}&quot;.format(source))</span>
+                <span class="n">obj_type</span> <span class="o">=</span> <span class="n">source</span>
+    <span class="k">if</span> <span class="n">obj_type</span><span class="p">:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">url_for_source</span><span class="p">(</span><span class="n">obj_type</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">url</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">url</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">obj_id</span><span class="p">)</span></div>
 
 
 
@@ -351,52 +274,129 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">escaped</span> <span class="o">=</span> <span class="n">stringa</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">maketrans</span><span class="p">({</span><span class="s1">&#39;&quot;&#39;</span><span class="p">:</span>  <span class="sa">r</span><span class="s1">&#39;\&quot;&#39;</span><span class="p">}))</span>        
     <span class="k">return</span> <span class="n">escaped</span></div>
+
+
+
+
+
+<div class="viewcode-block" id="dimensions_styler"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.dim_utils.dimensions_styler">[docs]</a><span class="k">def</span> <span class="nf">dimensions_styler</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">source_type</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Format the text display value of a dataframe by including Dimensions hyperlinks whenever possible.</span>
+<span class="sd">    Useful mainly in notebooks when printing out dataframes and clicking on links etc..</span>
+<span class="sd">    Expects column names to match the default DSL field names. </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df: pd.Dataframe</span>
+<span class="sd">        Pandas dataframe obtained from a DSL query e.g. via the `as_dataframe` methods.</span>
+<span class="sd">    source_type: str, optional</span>
+<span class="sd">        The name of the source: one of &#39;publications&#39;, &#39;grants&#39;, &#39;patents&#39;, &#39;policy_documents&#39;, &#39;clinical_trials&#39;, &#39;researchers&#39;. If not provided, it can be inferred in some cases.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Implemented using https://pandas.pydata.org/docs/reference/api/pandas.io.formats.style.Styler.format.html. Side effect is that the resulting dataframe becomes an instance of https://pandas.io.formats.style.styler/, which is a wrapper around the underlying Styler object. </span>
+<span class="sd">    NOTE To get back to the original dataframe, you can use the `.data` method.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas.io.formats.style.Styler</span>
+<span class="sd">        Wrapper for a dataframe object, including custom Dimensions hyperlinks.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from dimcli.utils import dimensions_styler</span>
+<span class="sd">    &gt;&gt;&gt; dsl = dimcli.Dsl() </span>
+<span class="sd">    &gt;&gt;&gt; q = &#39;search publications for &quot;scientometrics&quot; return publications[basics]&#39; </span>
+<span class="sd">    &gt;&gt;&gt; df = dsl.query(q).as_dataframe()</span>
+<span class="sd">    &gt;&gt;&gt; dimensions_styler(df)</span>
+<span class="sd">    # alternatively, use the shortcut method:</span>
+<span class="sd">    &gt;&gt;&gt; dsl.query(q).as_dataframe(links=True)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">format_rules</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">df_value_as_link</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">url_root</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Val is the value found in the dataframe column. It should be a string or an integer, or a list.</span>
+<span class="sd">        If it&#39;s a list, we just take the first element (e.g. for &#39;linkout&#39; field).</span>
+<span class="sd">        If it&#39;s a float, it means it&#39;s a Pandas NaN. So we don&#39;t want to return a link.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">val</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="nb">float</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">val</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">url_root</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="n">url_root</span> <span class="o">+</span> <span class="n">url</span>
+        <span class="k">return</span> <span class="s1">&#39;&lt;a target=&quot;_blank&quot; href=&quot;</span><span class="si">{}</span><span class="s1">&quot;&gt;</span><span class="si">{}</span><span class="s1">&lt;/a&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+            
+
+    <span class="c1"># transformations</span>
+    <span class="k">if</span> <span class="s2">&quot;dimensions_url&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">format_rules</span><span class="p">[</span><span class="s1">&#39;dimensions_url&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df_value_as_link</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;linkout&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="c1"># ps this is a list, only first el will be used</span>
+        <span class="n">format_rules</span><span class="p">[</span><span class="s1">&#39;linkout&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df_value_as_link</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;orcid&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="c1"># ps this is a list, only first el will be used</span>
+        <span class="n">url_root</span> <span class="o">=</span> <span class="s2">&quot;https://orcid.org/&quot;</span>
+        <span class="n">format_rules</span><span class="p">[</span><span class="s1">&#39;orcid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df_value_as_link</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">url_root</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;doi&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">url_root</span> <span class="o">=</span> <span class="s2">&quot;https://doi.org/&quot;</span>
+        <span class="n">format_rules</span><span class="p">[</span><span class="s1">&#39;doi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df_value_as_link</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">url_root</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;id&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">format_rules</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df_value_as_link</span><span class="p">(</span><span class="n">dimensions_url</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">source_type</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;journal.id&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">format_rules</span><span class="p">[</span><span class="s2">&quot;journal.id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df_value_as_link</span><span class="p">(</span><span class="n">dimensions_url</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;source_titles&quot;</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;pub_id&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">format_rules</span><span class="p">[</span><span class="s2">&quot;pub_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df_value_as_link</span><span class="p">(</span><span class="n">dimensions_url</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;publications&quot;</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;researcher_id&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">format_rules</span><span class="p">[</span><span class="s2">&quot;researcher_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df_value_as_link</span><span class="p">(</span><span class="n">dimensions_url</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;researchers&quot;</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;grant_id&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">format_rules</span><span class="p">[</span><span class="s2">&quot;grant_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df_value_as_link</span><span class="p">(</span><span class="n">dimensions_url</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;grants&quot;</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;aff_id&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">format_rules</span><span class="p">[</span><span class="s2">&quot;aff_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df_value_as_link</span><span class="p">(</span><span class="n">dimensions_url</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;organizations&quot;</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;current_organization_id&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">format_rules</span><span class="p">[</span><span class="s2">&quot;current_organization_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df_value_as_link</span><span class="p">(</span><span class="n">dimensions_url</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;organizations&quot;</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
+
+    
+
+
+    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">format_rules</span><span class="p">)</span></div>
 </pre></div>
 
            </div>
-           
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        
-        &copy; Copyright 2020-2021, Digital Science
-
-    </p>
+    <p>&#169; Copyright 2020-2021, Digital Science.</p>
   </div>
-    
-    
-    
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
-    
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

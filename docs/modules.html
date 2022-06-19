@@ -346,13 +346,16 @@ using the <cite>auth_session</cite> parameter, IE:</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="dimcli.core.api.DslDataset.as_dataframe">
-<span class="sig-name descname"><span class="pre">as_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/api.html#DslDataset.as_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.core.api.DslDataset.as_dataframe" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">as_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">links</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/api.html#DslDataset.as_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.core.api.DslDataset.as_dataframe" title="Permalink to this definition"></a></dt>
 <dd><p>Return the JSON data as a Pandas DataFrame.</p>
 <p>If <cite>key</cite> is empty, the first available JSON key (eg ‘publications’) is used to determine
 what JSON data should be turned into a dataframe (mostly relevant when using multi-result DSL queries).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>key</strong> (<em>str</em><em>, </em><em>optional</em>) – The JSON results data object that needs to be processed.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>str</em><em>, </em><em>optional</em>) – The JSON results data object that needs to be processed.</p></li>
+<li><p><strong>links</strong> (<em>bool</em><em>, </em><em>optional</em>) – Tranform suitable fields to hyperlinks. Default: False.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A DataFrame instance containing API records.</p>
@@ -367,7 +370,7 @@ what JSON data should be turned into a dataframe (mostly relevant when using mul
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dimcli.core.api.DslDataset.as_dataframe_authors">
-<span class="sig-name descname"><span class="pre">as_dataframe_authors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/api.html#DslDataset.as_dataframe_authors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.core.api.DslDataset.as_dataframe_authors" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">as_dataframe_authors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">links</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/api.html#DslDataset.as_dataframe_authors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.core.api.DslDataset.as_dataframe_authors" title="Permalink to this definition"></a></dt>
 <dd><p>Return the JSON data as a Pandas DataFrame, in which each row corresponds to a publication author.</p>
 <p>This method works only with ‘publications’ queries and it’s clever enough to know if the <cite>authors</cite> or <cite>author_affiliations</cite> (deprecated) fields are used. The list of affiliations per each author are not broken down and are returned as JSON. So in essence you get one row per author.</p>
 <dl class="field-list simple">
@@ -384,7 +387,7 @@ what JSON data should be turned into a dataframe (mostly relevant when using mul
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dimcli.core.api.DslDataset.as_dataframe_authors_affiliations">
-<span class="sig-name descname"><span class="pre">as_dataframe_authors_affiliations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/api.html#DslDataset.as_dataframe_authors_affiliations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.core.api.DslDataset.as_dataframe_authors_affiliations" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">as_dataframe_authors_affiliations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">links</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/api.html#DslDataset.as_dataframe_authors_affiliations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.core.api.DslDataset.as_dataframe_authors_affiliations" title="Permalink to this definition"></a></dt>
 <dd><p>Return the JSON data as a Pandas DataFrame, in which each row corresponds to a publication affiliation.</p>
 <p>This method works only with ‘publications’ queries and it’s clever enough to know if the <cite>authors</cite> or <cite>author_affiliations</cite> (deprecated) fields are used. If an author has multiple affiliations, they would be represented in different rows (hence the same authors may appear on different rows).</p>
 <dl class="field-list simple">
@@ -401,7 +404,7 @@ what JSON data should be turned into a dataframe (mostly relevant when using mul
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dimcli.core.api.DslDataset.as_dataframe_concepts">
-<span class="sig-name descname"><span class="pre">as_dataframe_concepts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/api.html#DslDataset.as_dataframe_concepts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.core.api.DslDataset.as_dataframe_concepts" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">as_dataframe_concepts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">links</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/api.html#DslDataset.as_dataframe_concepts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.core.api.DslDataset.as_dataframe_concepts" title="Permalink to this definition"></a></dt>
 <dd><p>Return the JSON data as a Pandas DataFrame, in which each row corresponds to a single ‘concept’.</p>
 <p>This method works only with ‘publications’ and ‘grants’ queries and it’s clever enough to know if the <cite>concepts</cite> or <cite>concepts_scores</cite> fields are used. Additional metrics like ‘frequency’ and ‘score_average’ are also included in the results.</p>
 <dl class="field-list simple">
@@ -418,7 +421,7 @@ what JSON data should be turned into a dataframe (mostly relevant when using mul
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dimcli.core.api.DslDataset.as_dataframe_funders">
-<span class="sig-name descname"><span class="pre">as_dataframe_funders</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/api.html#DslDataset.as_dataframe_funders"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.core.api.DslDataset.as_dataframe_funders" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">as_dataframe_funders</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">links</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/api.html#DslDataset.as_dataframe_funders"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.core.api.DslDataset.as_dataframe_funders" title="Permalink to this definition"></a></dt>
 <dd><p>Return the JSON data as a Pandas DataFrame, in which each row corresponds to a single ‘funder’.</p>
 <p>This method works only with ‘grants’ queries.</p>
 <dl class="field-list simple">
@@ -435,7 +438,7 @@ what JSON data should be turned into a dataframe (mostly relevant when using mul
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dimcli.core.api.DslDataset.as_dataframe_investigators">
-<span class="sig-name descname"><span class="pre">as_dataframe_investigators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/api.html#DslDataset.as_dataframe_investigators"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.core.api.DslDataset.as_dataframe_investigators" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">as_dataframe_investigators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">links</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/api.html#DslDataset.as_dataframe_investigators"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.core.api.DslDataset.as_dataframe_investigators" title="Permalink to this definition"></a></dt>
 <dd><p>Return the JSON data as a Pandas DataFrame, in which each row corresponds to a single ‘investigator’.</p>
 <p>This method works only with ‘grants’ queries.</p>
 <dl class="field-list simple">
@@ -1122,6 +1125,43 @@ NOTE: these functions are attached to the top level <code class="docutils litera
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="dimcli.utils.dim_utils.dimensions_styler">
+<span class="sig-prename descclassname"><span class="pre">dimcli.utils.dim_utils.</span></span><span class="sig-name descname"><span class="pre">dimensions_styler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/dim_utils.html#dimensions_styler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.dim_utils.dimensions_styler" title="Permalink to this definition"></a></dt>
+<dd><p>Format the text display value of a dataframe by including Dimensions hyperlinks whenever possible.
+Useful mainly in notebooks when printing out dataframes and clicking on links etc..
+Expects column names to match the default DSL field names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pd.Dataframe</em>) – Pandas dataframe obtained from a DSL query e.g. via the <cite>as_dataframe</cite> methods.</p></li>
+<li><p><strong>source_type</strong> (<em>str</em><em>, </em><em>optional</em>) – The name of the source: one of ‘publications’, ‘grants’, ‘patents’, ‘policy_documents’, ‘clinical_trials’, ‘researchers’. If not provided, it can be inferred in some cases.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Implemented using <a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.io.formats.style.Styler.format.html">https://pandas.pydata.org/docs/reference/api/pandas.io.formats.style.Styler.format.html</a>. Side effect is that the resulting dataframe becomes an instance of <a class="reference external" href="https://pandas.io.formats.style.styler/">https://pandas.io.formats.style.styler/</a>, which is a wrapper around the underlying Styler object.
+NOTE To get back to the original dataframe, you can use the <cite>.data</cite> method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Wrapper for a dataframe object, including custom Dimensions hyperlinks.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pandas.io.formats.style.Styler</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dimcli.utils</span> <span class="kn">import</span> <span class="n">dimensions_styler</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dsl</span> <span class="o">=</span> <span class="n">dimcli</span><span class="o">.</span><span class="n">Dsl</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">q</span> <span class="o">=</span> <span class="s1">&#39;search publications for &quot;scientometrics&quot; return publications[basics]&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">dsl</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">as_dataframe</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dimensions_styler</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="go"># alternatively, use the shortcut method:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dsl</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">as_dataframe</span><span class="p">(</span><span class="n">links</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="dimcli.utils.dim_utils.dimensions_url">
 <span class="sig-prename descclassname"><span class="pre">dimcli.utils.dim_utils.</span></span><span class="sig-name descname"><span class="pre">dimensions_url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/dim_utils.html#dimensions_url"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.dim_utils.dimensions_url" title="Permalink to this definition"></a></dt>
 <dd><p>Generate a valid Dimensions URL for one of the available sources.</p>
@@ -1502,7 +1542,7 @@ NOTE this output will be picked up by pipes etc..</p>
 <dt class="sig sig-object py" id="dimcli.jupyter.magics.DslMagics.dsl">
 <span class="sig-name descname"><span class="pre">dsl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/jupyter/magics.html#DslMagics.dsl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.jupyter.magics.DslMagics.dsl" title="Permalink to this definition"></a></dt>
 <dd><p>Magic command to run a single DSL query.</p>
-<p>Can be used as a single-line (<code class="docutils literal notranslate"><span class="pre">%dsl</span></code>) or multi-line (<code class="docutils literal notranslate"><span class="pre">%%dsl</span></code>) command. Requires an authenticated API session. Results are saved to a variable called <code class="docutils literal notranslate"><span class="pre">dsl_last_results</span></code>.</p>
+<p>Can be used as a single-line (<code class="docutils literal notranslate"><span class="pre">%dsl</span></code>) or multi-line (<code class="docutils literal notranslate"><span class="pre">%%dsl</span></code>) command. Requires an authenticated API session. If used as a multi-line command, a variable name can be specified as the first argument. Otherwise, the results are saved to a variable called <code class="docutils literal notranslate"><span class="pre">dsl_last_results</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>line</strong> (<em>str</em>) – A valid DSL search query.</p>
@@ -1516,6 +1556,54 @@ NOTE this output will be picked up by pipes etc..</p>
 </dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="o">%</span><span class="n">dsl</span> <span class="n">search</span> <span class="n">publications</span> <span class="k">for</span> <span class="s2">&quot;malaria&quot;</span> <span class="k">return</span> <span class="n">publications</span> <span class="n">limit</span> <span class="mi">500</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">%%</span><span class="n">dsl</span> <span class="n">my_data</span>
+<span class="gp">... </span>   <span class="n">search</span> <span class="n">publications</span> <span class="k">for</span> <span class="s2">&quot;malaria&quot;</span> <span class="k">return</span> <span class="n">publications</span> <span class="n">limit</span> <span class="mi">500</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dimcli.jupyter.magics.DslMagics.dsl_extract_concepts">
+<span class="sig-name descname"><span class="pre">dsl_extract_concepts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/jupyter/magics.html#DslMagics.dsl_extract_concepts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.jupyter.magics.DslMagics.dsl_extract_concepts" title="Permalink to this definition"></a></dt>
+<dd><p>Magic command to run the <cite>extract_concepts</cite> function. Results are transformed to a Pandas DataFrame. Score are included by default.</p>
+<p>If used as a multi-line command, a variable name can be specified as the first argument. Otherwise, the results are saved to a variable called <code class="docutils literal notranslate"><span class="pre">dsl_last_results</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cell</strong> (<em>str</em>) – Text to extract concepts from.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A pandas dataframe containing the concepts and scores.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="o">%%</span><span class="n">extract_concepts</span>
+<span class="gp">... </span><span class="o">&lt;</span><span class="n">text</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dimcli.jupyter.magics.DslMagics.dsl_identify_experts">
+<span class="sig-name descname"><span class="pre">dsl_identify_experts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/jupyter/magics.html#DslMagics.dsl_identify_experts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.jupyter.magics.DslMagics.dsl_identify_experts" title="Permalink to this definition"></a></dt>
+<dd><p>Magic command to run the <cite>identify_experts</cite> function. Uses all the default options, takes only the <cite>abstract</cite> argument.</p>
+<p>If used as a multi-line command, a variable name can be specified as the first argument. Otherwise, the results are saved to a variable called <code class="docutils literal notranslate"><span class="pre">dsl_last_results</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cell</strong> (<em>str</em>) – Text abstract to use to find experts.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A pandas dataframe containing experts details.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="o">%%</span><span class="n">identify_experts</span>
+<span class="gp">... </span><span class="o">&lt;</span><span class="n">text</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1524,7 +1612,8 @@ NOTE this output will be picked up by pipes etc..</p>
 <dt class="sig sig-object py" id="dimcli.jupyter.magics.DslMagics.dsldf">
 <span class="sig-name descname"><span class="pre">dsldf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/jupyter/magics.html#DslMagics.dsldf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.jupyter.magics.DslMagics.dsldf" title="Permalink to this definition"></a></dt>
 <dd><p>Magic command to run a single DSL query, results are transformed to a Pandas DataFrame.</p>
-<p>Can be used as a single-line (<code class="docutils literal notranslate"><span class="pre">%dsldf</span></code>) or multi-line (<code class="docutils literal notranslate"><span class="pre">%%dsldf</span></code>) command. Requires an authenticated API session. Results are saved to a variable called <code class="docutils literal notranslate"><span class="pre">dsl_last_results</span></code>.</p>
+<p>Can be used as a single-line (<code class="docutils literal notranslate"><span class="pre">%dsldf</span></code>) or multi-line (<code class="docutils literal notranslate"><span class="pre">%%dsldf</span></code>) command. Requires an authenticated API session. If used as a multi-line command, a variable name can be specified as the first argument. Otherwise, the results are saved to a variable called <code class="docutils literal notranslate"><span class="pre">dsl_last_results</span></code>.</p>
+<p>Pass the <code class="docutils literal notranslate"><span class="pre">--links</span></code> flag to style the dataframe with links to the original data sources.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>line</strong> (<em>str</em>) – A valid DSL search query.</p>
@@ -1538,6 +1627,10 @@ NOTE this output will be picked up by pipes etc..</p>
 </dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="o">%</span><span class="n">dsldf</span> <span class="n">search</span> <span class="n">publications</span> <span class="k">for</span> <span class="s2">&quot;malaria&quot;</span> <span class="k">return</span> <span class="n">publications</span> <span class="n">limit</span> <span class="mi">500</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">%%</span><span class="n">dsldf</span> <span class="o">--</span><span class="n">links</span>
+<span class="gp">... </span>   <span class="n">search</span> <span class="n">publications</span> <span class="k">for</span> <span class="s2">&quot;malaria&quot;</span> <span class="k">return</span> <span class="n">publications</span> <span class="n">limit</span> <span class="mi">500</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">%%</span><span class="n">dsldf</span> <span class="n">my_data</span>
+<span class="gp">... </span>   <span class="n">search</span> <span class="n">publications</span> <span class="k">for</span> <span class="s2">&quot;malaria&quot;</span> <span class="k">return</span> <span class="n">publications</span> <span class="n">limit</span> <span class="mi">500</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1569,7 +1662,7 @@ NOTE this output will be picked up by pipes etc..</p>
 <span class="sig-name descname"><span class="pre">dslgsheets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/jupyter/magics.html#DslMagics.dslgsheets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.jupyter.magics.DslMagics.dslgsheets" title="Permalink to this definition"></a></dt>
 <dd><p>Magic command to run a single DSL query and to save the results to a google sheet.</p>
 <p>NOTE: this method requires preexisting valid Google authentication credentials. See the description of <code class="docutils literal notranslate"><span class="pre">utils.export_as_gsheets</span></code> for more information.</p>
-<p>Can be used as a single-line (<code class="docutils literal notranslate"><span class="pre">%dslgsheets</span></code>) or multi-line (<code class="docutils literal notranslate"><span class="pre">%%dslgsheets</span></code>) command. Requires an authenticated API session. Results are also saved to a variable called <code class="docutils literal notranslate"><span class="pre">dsl_last_results</span></code>.</p>
+<p>Can be used as a single-line (<code class="docutils literal notranslate"><span class="pre">%dsl</span></code>) or multi-line (<code class="docutils literal notranslate"><span class="pre">%%dsl</span></code>) command. Requires an authenticated API session. If used as a multi-line command, a variable name can be specified as the first argument. Otherwise, the results are saved to a variable called <code class="docutils literal notranslate"><span class="pre">dsl_last_results</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>line</strong> (<em>str</em>) – A valid DSL search query.</p>
@@ -1592,7 +1685,7 @@ NOTE this output will be picked up by pipes etc..</p>
 <span class="sig-name descname"><span class="pre">dslloop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/jupyter/magics.html#DslMagics.dslloop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.jupyter.magics.DslMagics.dslloop" title="Permalink to this definition"></a></dt>
 <dd><p>Magic command to run a DSL ‘loop’ (iterative) query.</p>
 <p>This command automatically loops over all the pages of a results set, until all possible records have been returned.</p>
-<p>Can be used as a single-line (<code class="docutils literal notranslate"><span class="pre">%dslloop</span></code>) or multi-line (<code class="docutils literal notranslate"><span class="pre">%%dslloop</span></code>) command. Requires an authenticated API session. Results are saved to a variable called <code class="docutils literal notranslate"><span class="pre">dsl_last_results</span></code>.</p>
+<p>Can be used as a single-line (<code class="docutils literal notranslate"><span class="pre">%dsl</span></code>) or multi-line (<code class="docutils literal notranslate"><span class="pre">%%dsl</span></code>) command. Requires an authenticated API session. If used as a multi-line command, a variable name can be specified as the first argument. Otherwise, the results are saved to a variable called <code class="docutils literal notranslate"><span class="pre">dsl_last_results</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>line</strong> (<em>str</em>) – A valid DSL search query. Should not include limit/skip clauses, as those are added automatically during the iterations.</p>
@@ -1606,6 +1699,8 @@ NOTE this output will be picked up by pipes etc..</p>
 </dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="o">%</span><span class="n">dslloop</span> <span class="n">search</span> <span class="n">publications</span> <span class="k">for</span> <span class="s2">&quot;malaria&quot;</span> <span class="n">where</span> <span class="n">times_cited</span> <span class="o">&gt;</span> <span class="mi">200</span> <span class="k">return</span> <span class="n">publications</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">%%</span><span class="n">dslloop</span> <span class="n">my_data</span>
+<span class="gp">... </span>   <span class="n">search</span> <span class="n">publications</span> <span class="k">for</span> <span class="s2">&quot;malaria&quot;</span> <span class="k">return</span> <span class="n">publications</span> <span class="n">limit</span> <span class="mi">500</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1614,7 +1709,8 @@ NOTE this output will be picked up by pipes etc..</p>
 <dt class="sig sig-object py" id="dimcli.jupyter.magics.DslMagics.dslloopdf">
 <span class="sig-name descname"><span class="pre">dslloopdf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/jupyter/magics.html#DslMagics.dslloopdf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.jupyter.magics.DslMagics.dslloopdf" title="Permalink to this definition"></a></dt>
 <dd><p>Magic command to run a DSL ‘loop’ (iterative) query. Results are automatically transformed to a pandas dataframe.</p>
-<p>Can be used as a single-line (<code class="docutils literal notranslate"><span class="pre">%dslloopdf</span></code>) or multi-line (<code class="docutils literal notranslate"><span class="pre">%%dslloopdf</span></code>) command. Requires an authenticated API session. Results are saved to a variable called <code class="docutils literal notranslate"><span class="pre">dsl_last_results</span></code>.</p>
+<p>Can be used as a single-line (<code class="docutils literal notranslate"><span class="pre">%dsl</span></code>) or multi-line (<code class="docutils literal notranslate"><span class="pre">%%dsl</span></code>) command. Requires an authenticated API session. If used as a multi-line command, a variable name can be specified as the first argument. Otherwise, the results are saved to a variable called <code class="docutils literal notranslate"><span class="pre">dsl_last_results</span></code>.</p>
+<p>Pass the <code class="docutils literal notranslate"><span class="pre">--links</span></code> flag to style the dataframe with links to the original data sources.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>line</strong> (<em>str</em>) – A valid DSL search query. Should not include limit/skip clauses, as those are added automatically during the iterations.</p>
@@ -1628,6 +1724,10 @@ NOTE this output will be picked up by pipes etc..</p>
 </dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="o">%</span><span class="n">dslloopdf</span> <span class="n">search</span> <span class="n">publications</span> <span class="k">for</span> <span class="s2">&quot;malaria&quot;</span> <span class="n">where</span> <span class="n">times_cited</span> <span class="o">&gt;</span> <span class="mi">200</span> <span class="k">return</span> <span class="n">publications</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">%%</span><span class="n">dslloopdf</span> <span class="o">--</span><span class="n">links</span>
+<span class="gp">... </span>   <span class="n">search</span> <span class="n">publications</span> <span class="k">for</span> <span class="s2">&quot;malaria&quot;</span> <span class="k">return</span> <span class="n">publications</span> <span class="n">limit</span> <span class="mi">500</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">%%</span><span class="n">dslloopdf</span> <span class="n">my_data</span>
+<span class="gp">... </span>   <span class="n">search</span> <span class="n">publications</span> <span class="k">for</span> <span class="s2">&quot;malaria&quot;</span> <span class="k">return</span> <span class="n">publications</span> <span class="n">limit</span> <span class="mi">500</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1637,7 +1737,7 @@ NOTE this output will be picked up by pipes etc..</p>
 <span class="sig-name descname"><span class="pre">dslloopgsheets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/jupyter/magics.html#DslMagics.dslloopgsheets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.jupyter.magics.DslMagics.dslloopgsheets" title="Permalink to this definition"></a></dt>
 <dd><p>Magic command to run a DSL ‘loop’ (iterative) query. Results are automatically uploaded to google sheets.</p>
 <p>NOTE: this method requires preexisting valid Google authentication credentials. See also <a class="reference external" href="https://gspread.readthedocs.io/en/latest/oauth2.html">https://gspread.readthedocs.io/en/latest/oauth2.html</a> and the description of <code class="docutils literal notranslate"><span class="pre">utils.export_as_gsheets</span></code> for more information.</p>
-<p>Can be used as a single-line (<code class="docutils literal notranslate"><span class="pre">%dslloopgsheets</span></code>) or multi-line (<code class="docutils literal notranslate"><span class="pre">%%dslloopgsheets</span></code>) command. Requires an authenticated API session. Results are also saved to a variable called <code class="docutils literal notranslate"><span class="pre">dsl_last_results</span></code>.</p>
+<p>Can be used as a single-line (<code class="docutils literal notranslate"><span class="pre">%dsl</span></code>) or multi-line (<code class="docutils literal notranslate"><span class="pre">%%dsl</span></code>) command. Requires an authenticated API session. If used as a multi-line command, a variable name can be specified as the first argument. Otherwise, the results are saved to a variable called <code class="docutils literal notranslate"><span class="pre">dsl_last_results</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>line</strong> (<em>str</em>) – A valid DSL search query. Should not include limit/skip clauses, as those are added automatically during the iterations.</p>
@@ -1651,50 +1751,6 @@ NOTE this output will be picked up by pipes etc..</p>
 </dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="o">%</span><span class="n">dslloopdf</span> <span class="n">search</span> <span class="n">publications</span> <span class="k">for</span> <span class="s2">&quot;malaria&quot;</span> <span class="n">where</span> <span class="n">times_cited</span> <span class="o">&gt;</span> <span class="mi">200</span> <span class="k">return</span> <span class="n">publications</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="dimcli.jupyter.magics.DslMagics.extract_concepts">
-<span class="sig-name descname"><span class="pre">extract_concepts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/jupyter/magics.html#DslMagics.extract_concepts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.jupyter.magics.DslMagics.extract_concepts" title="Permalink to this definition"></a></dt>
-<dd><p>Magic command to run the <cite>extract_concepts</cite> function. Results are transformed to a Pandas DataFrame. Score are included by default.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>cell</strong> (<em>str</em>) – Text to extract concepts from.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A pandas dataframe containing the concepts and scores.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>pandas.DataFrame</p>
-</dd>
-</dl>
-<p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="o">%%</span><span class="n">extract_concepts</span>
-<span class="gp">... </span><span class="o">&lt;</span><span class="n">text</span><span class="o">&gt;</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="dimcli.jupyter.magics.DslMagics.identify_experts">
-<span class="sig-name descname"><span class="pre">identify_experts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/jupyter/magics.html#DslMagics.identify_experts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.jupyter.magics.DslMagics.identify_experts" title="Permalink to this definition"></a></dt>
-<dd><p>Magic command to run the <cite>identify_experts</cite> function. Uses all the default options, takes only the <cite>abstract</cite> argument.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>cell</strong> (<em>str</em>) – Text abstract to use to find experts.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A pandas dataframe containing experts details.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>pandas.DataFrame</p>
-</dd>
-</dl>
-<p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="o">%%</span><span class="n">identify_experts</span>
-<span class="gp">... </span><span class="o">&lt;</span><span class="n">text</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 </dd></dl>

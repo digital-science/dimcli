@@ -790,7 +790,7 @@
 
     <span class="c1"># Dataframe Methods </span>
 
-<div class="viewcode-block" id="DslDataset.as_dataframe"><a class="viewcode-back" href="../../../modules.html#dimcli.core.api.DslDataset.as_dataframe">[docs]</a>    <span class="k">def</span> <span class="nf">as_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="DslDataset.as_dataframe"><a class="viewcode-back" href="../../../modules.html#dimcli.core.api.DslDataset.as_dataframe">[docs]</a>    <span class="k">def</span> <span class="nf">as_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">links</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the JSON data as a Pandas DataFrame. </span>
 
 <span class="sd">        If `key` is empty, the first available JSON key (eg &#39;publications&#39;) is used to determine</span>
@@ -800,6 +800,8 @@
 <span class="sd">        ----------</span>
 <span class="sd">        key: str, optional</span>
 <span class="sd">            The JSON results data object that needs to be processed.</span>
+<span class="sd">        links: bool, optional </span>
+<span class="sd">            Tranform suitable fields to hyperlinks. Default: False.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -813,10 +815,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;errors&quot;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_factory</span><span class="o">.</span><span class="n">df_simple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span></div>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_factory</span><span class="o">.</span><span class="n">df_simple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">links</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="DslDataset.as_dataframe_authors"><a class="viewcode-back" href="../../../modules.html#dimcli.core.api.DslDataset.as_dataframe_authors">[docs]</a>    <span class="k">def</span> <span class="nf">as_dataframe_authors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="DslDataset.as_dataframe_authors"><a class="viewcode-back" href="../../../modules.html#dimcli.core.api.DslDataset.as_dataframe_authors">[docs]</a>    <span class="k">def</span> <span class="nf">as_dataframe_authors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">links</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the JSON data as a Pandas DataFrame, in which each row corresponds to a publication author.</span>
 
 <span class="sd">        This method works only with &#39;publications&#39; queries and it&#39;s clever enough to know if the `authors` or `author_affiliations` (deprecated) fields are used. The list of affiliations per each author are not broken down and are returned as JSON. So in essence you get one row per author.</span>
@@ -831,10 +833,10 @@
 <span class="sd">        See https://api-lab.dimensions.ai/cookbooks/1-getting-started/3-Working-with-dataframes.html  </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;errors&quot;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_factory</span><span class="o">.</span><span class="n">df_authors</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">)</span></div>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_factory</span><span class="o">.</span><span class="n">df_authors</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">,</span> <span class="n">links</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="DslDataset.as_dataframe_authors_affiliations"><a class="viewcode-back" href="../../../modules.html#dimcli.core.api.DslDataset.as_dataframe_authors_affiliations">[docs]</a>    <span class="k">def</span> <span class="nf">as_dataframe_authors_affiliations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="DslDataset.as_dataframe_authors_affiliations"><a class="viewcode-back" href="../../../modules.html#dimcli.core.api.DslDataset.as_dataframe_authors_affiliations">[docs]</a>    <span class="k">def</span> <span class="nf">as_dataframe_authors_affiliations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">links</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the JSON data as a Pandas DataFrame, in which each row corresponds to a publication affiliation.</span>
 
 <span class="sd">        This method works only with &#39;publications&#39; queries and it&#39;s clever enough to know if the `authors` or `author_affiliations` (deprecated) fields are used. If an author has multiple affiliations, they would be represented in different rows (hence the same authors may appear on different rows). </span>
@@ -849,9 +851,9 @@
 <span class="sd">        See https://api-lab.dimensions.ai/cookbooks/1-getting-started/3-Working-with-dataframes.html  </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;errors&quot;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_factory</span><span class="o">.</span><span class="n">df_authors_affiliations</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">)</span></div>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_factory</span><span class="o">.</span><span class="n">df_authors_affiliations</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">,</span> <span class="n">links</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="DslDataset.as_dataframe_concepts"><a class="viewcode-back" href="../../../modules.html#dimcli.core.api.DslDataset.as_dataframe_concepts">[docs]</a>    <span class="k">def</span> <span class="nf">as_dataframe_concepts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="DslDataset.as_dataframe_concepts"><a class="viewcode-back" href="../../../modules.html#dimcli.core.api.DslDataset.as_dataframe_concepts">[docs]</a>    <span class="k">def</span> <span class="nf">as_dataframe_concepts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">links</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the JSON data as a Pandas DataFrame, in which each row corresponds to a single &#39;concept&#39;.</span>
 
 <span class="sd">        This method works only with &#39;publications&#39; and &#39;grants&#39; queries and it&#39;s clever enough to know if the `concepts` or `concepts_scores` fields are used. Additional metrics like &#39;frequency&#39; and &#39;score_average&#39; are also included in the results. </span>
@@ -866,10 +868,10 @@
 <span class="sd">        See https://api-lab.dimensions.ai/cookbooks/1-getting-started/3-Working-with-dataframes.html  </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;errors&quot;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_factory</span><span class="o">.</span><span class="n">df_concepts</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span></div>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_factory</span><span class="o">.</span><span class="n">df_concepts</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">links</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="DslDataset.as_dataframe_funders"><a class="viewcode-back" href="../../../modules.html#dimcli.core.api.DslDataset.as_dataframe_funders">[docs]</a>    <span class="k">def</span> <span class="nf">as_dataframe_funders</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="DslDataset.as_dataframe_funders"><a class="viewcode-back" href="../../../modules.html#dimcli.core.api.DslDataset.as_dataframe_funders">[docs]</a>    <span class="k">def</span> <span class="nf">as_dataframe_funders</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">links</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the JSON data as a Pandas DataFrame, in which each row corresponds to a single &#39;funder&#39;.</span>
 
 <span class="sd">        This method works only with &#39;grants&#39; queries.</span>
@@ -884,9 +886,9 @@
 <span class="sd">        See https://api-lab.dimensions.ai/cookbooks/1-getting-started/3-Working-with-dataframes.html  </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;errors&quot;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_factory</span><span class="o">.</span><span class="n">df_grant_funders</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">)</span></div>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_factory</span><span class="o">.</span><span class="n">df_grant_funders</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">,</span> <span class="n">links</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="DslDataset.as_dataframe_investigators"><a class="viewcode-back" href="../../../modules.html#dimcli.core.api.DslDataset.as_dataframe_investigators">[docs]</a>    <span class="k">def</span> <span class="nf">as_dataframe_investigators</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="DslDataset.as_dataframe_investigators"><a class="viewcode-back" href="../../../modules.html#dimcli.core.api.DslDataset.as_dataframe_investigators">[docs]</a>    <span class="k">def</span> <span class="nf">as_dataframe_investigators</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">links</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the JSON data as a Pandas DataFrame, in which each row corresponds to a single &#39;investigator&#39;.</span>
 
 <span class="sd">        This method works only with &#39;grants&#39; queries.</span>
@@ -901,7 +903,7 @@
 <span class="sd">        See https://api-lab.dimensions.ai/cookbooks/1-getting-started/3-Working-with-dataframes.html  </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;errors&quot;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_factory</span><span class="o">.</span><span class="n">df_grant_investigators</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">)</span></div>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_factory</span><span class="o">.</span><span class="n">df_grant_investigators</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">,</span> <span class="n">links</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DslDataset.as_dimensions_url"><a class="viewcode-back" href="../../../modules.html#dimcli.core.api.DslDataset.as_dimensions_url">[docs]</a>    <span class="k">def</span> <span class="nf">as_dimensions_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">records</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Utility that turns a list of records into a Dimensions webapp URL, by using the record IDs as filters.</span>

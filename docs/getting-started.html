@@ -369,11 +369,14 @@ token: d5047fASAD889912HHBAJVSAD8e8bae17e2
 <p>Dimcli includes a number of features that simplify working with the Dimensions API within Jupyter notebooks.</p>
 <p>For example, it contains a few <a class="reference external" href="https://github.com/digital-science/dimcli/blob/master/dimcli/jupyter/magics.py">magic commands</a> that make it super-easy to hit the API from a notebook cell:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">%dsl</span></code> can be used to run an API query</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">%dslloop</span></code> can be used to run an API query, using pagination (= iterations up to 50k records)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">%dsldf</span></code> can be used to run an API query and transform the JSON data to a dataframe</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">%dslloopdf</span></code> can be used to run a paginated API query and transform the JSON data to a dataframe</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">%dsldocs</span></code> can be used to programmatically extract API schema information</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%dsl</span></code> -&gt; run an API query</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%dslloop</span></code> -&gt; run an API query, using pagination (= iterations up to 50k records)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%dsldf</span></code> -&gt; run an API query and transform the JSON data to a dataframe</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%dslloopdf</span></code> -&gt;  run a paginated API query and transform the JSON data to a dataframe</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%dsldocs</span></code> -&gt; get DSL documentation information</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%dslgsheets</span></code> -&gt; run an API query and export results to Google Sheets</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%dsl_extract_concepts</span></code> -&gt; extract keywords from text input</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%dsl_identify_experts</span></code> -&gt; find researchers matching text input</p></li>
 </ul>
 <p>For more information and examples see the <a class="reference external" href="https://api-lab.dimensions.ai/cookbooks/1-getting-started/4-Dimcli-magic-commands.html">The Dimcli Python library: Magic Commands</a> notebook and the <a class="reference external" href="https://digital-science.github.io/dimcli/modules.html#module-dimcli.jupyter.magics">jupyter.magics module</a>.</p>
 </section>

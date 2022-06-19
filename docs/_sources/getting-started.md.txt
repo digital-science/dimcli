@@ -352,11 +352,15 @@ Dimcli includes a number of features that simplify working with the Dimensions A
 For example, it contains a few [magic commands](https://github.com/digital-science/dimcli/blob/master/dimcli/jupyter/magics.py) that make it super-easy to hit the API from a notebook cell:
 
 
-* `%dsl` can be used to run an API query
-* `%dslloop` can be used to run an API query, using pagination (= iterations up to 50k records)
-* `%dsldf` can be used to run an API query and transform the JSON data to a dataframe
-* `%dslloopdf` can be used to run a paginated API query and transform the JSON data to a dataframe
-* `%dsldocs` can be used to programmatically extract API schema information
+* `%dsl` -> run an API query
+* `%dslloop` -> run an API query, using pagination (= iterations up to 50k records)
+* `%dsldf` -> run an API query and transform the JSON data to a dataframe
+* `%dslloopdf` ->  run a paginated API query and transform the JSON data to a dataframe
+* `%dsldocs` -> get DSL documentation information
+* `%dslgsheets` -> run an API query and export results to Google Sheets
+* `%dsl_extract_concepts` -> extract keywords from text input
+* `%dsl_identify_experts` -> find researchers matching text input
+
 
 For more information and examples see the [The Dimcli Python library: Magic Commands](https://api-lab.dimensions.ai/cookbooks/1-getting-started/4-Dimcli-magic-commands.html) notebook and the [jupyter.magics module](https://digital-science.github.io/dimcli/modules.html#module-dimcli.jupyter.magics).
 

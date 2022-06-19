@@ -1,66 +1,31 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>dimcli.jupyter.magics &mdash; DimCli  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-
-  
-  
-  
-  
-
-  
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-
-    
+    <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
-            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> DimCli
-          
-
-          
+            <a href="../../../index.html" class="icon icon-home"> DimCli
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -68,85 +33,37 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <p class="caption"><span class="caption-text">Contents</span></p>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../getting-started.html">Getting Started with Dimcli</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Modules Reference</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">DimCli</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="../../index.html">Module code</a> &raquo;</li>
-        
       <li>dimcli.jupyter.magics</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <h1>Source code for dimcli.jupyter.magics</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Dimcli magic commands used with iPython / Jupyter environments only. See also: https://api-lab.dimensions.ai/cookbooks/1-getting-started/4-Dimcli-magic-commands.html</span>
@@ -196,6 +113,25 @@
             <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dslobject</span><span class="o">.</span><span class="n">query_iterative</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">res</span>
         
+    <span class="k">def</span> <span class="nf">_handle_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parse user input and return separate components</span>
+<span class="sd">        Links and custom variable can be specified in the line only when the DSL query</span>
+<span class="sd">        is passed via a cell magic.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">QUERY</span><span class="p">,</span> <span class="n">DEST_VAR</span><span class="p">,</span> <span class="n">LINKS_FLAG</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">results_var</span><span class="p">,</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">cell</span><span class="p">:</span>
+            <span class="n">QUERY</span> <span class="o">=</span> <span class="n">line</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">QUERY</span> <span class="o">=</span> <span class="n">cell</span>
+            <span class="k">if</span> <span class="n">line</span> <span class="ow">and</span> <span class="s2">&quot;--links&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">LINKS_FLAG</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">line</span> <span class="ow">and</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;--links&quot;</span><span class="p">:</span>
+                <span class="n">DEST_VAR</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># print(&quot;QUERY: &quot;, QUERY, &quot;DEST_VAR: &quot;, DEST_VAR, &quot;LINKS_FLAG: &quot;, LINKS_FLAG)</span>
+        <span class="k">return</span> <span class="n">QUERY</span><span class="p">,</span> <span class="n">DEST_VAR</span><span class="p">,</span> <span class="n">LINKS_FLAG</span>
+        
 
     <span class="c1">#</span>
     <span class="c1"># MAGIC METHODS</span>
@@ -206,8 +142,8 @@
     <span class="k">def</span> <span class="nf">dsl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Magic command to run a single DSL query. </span>
 
-<span class="sd">        Can be used as a single-line (``%dsl``) or multi-line (``%%dsl``) command. Requires an authenticated API session. Results are saved to a variable called ``dsl_last_results``.</span>
-
+<span class="sd">        Can be used as a single-line (``%dsl``) or multi-line (``%%dsl``) command. Requires an authenticated API session. If used as a multi-line command, a variable name can be specified as the first argument. Otherwise, the results are saved to a variable called ``dsl_last_results``. </span>
+<span class="sd">        </span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        line: str</span>
@@ -221,21 +157,25 @@
 <span class="sd">        Example</span>
 <span class="sd">        -------</span>
 <span class="sd">        &gt;&gt;&gt; %dsl search publications for &quot;malaria&quot; return publications limit 500</span>
+<span class="sd">        &gt;&gt;&gt; %%dsl my_data</span>
+<span class="sd">        ...    search publications for &quot;malaria&quot; return publications limit 500</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_login</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">cell</span><span class="p">:</span>
-                <span class="n">line</span> <span class="o">=</span> <span class="n">cell</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_query</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">results_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+            <span class="n">QUERY</span><span class="p">,</span> <span class="n">DEST_VAR</span><span class="p">,</span> <span class="n">LINKS_FLAG</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_input</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_query</span><span class="p">(</span><span class="n">QUERY</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span><span class="p">[</span><span class="n">DEST_VAR</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
             <span class="k">return</span> <span class="n">data</span></div>
+
 
 
 <div class="viewcode-block" id="DslMagics.dsldf"><a class="viewcode-back" href="../../../modules.html#dimcli.jupyter.magics.DslMagics.dsldf">[docs]</a>    <span class="nd">@line_cell_magic</span>
     <span class="k">def</span> <span class="nf">dsldf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Magic command to run a single DSL query, results are transformed to a Pandas DataFrame. </span>
 
-<span class="sd">        Can be used as a single-line (``%dsldf``) or multi-line (``%%dsldf``) command. Requires an authenticated API session. Results are saved to a variable called ``dsl_last_results``.</span>
+<span class="sd">        Can be used as a single-line (``%dsldf``) or multi-line (``%%dsldf``) command. Requires an authenticated API session. If used as a multi-line command, a variable name can be specified as the first argument. Otherwise, the results are saved to a variable called ``dsl_last_results``.</span>
+
+<span class="sd">        Pass the ``--links`` flag to style the dataframe with links to the original data sources.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -250,18 +190,21 @@
 <span class="sd">        Example</span>
 <span class="sd">        -------</span>
 <span class="sd">        &gt;&gt;&gt; %dsldf search publications for &quot;malaria&quot; return publications limit 500</span>
-
+<span class="sd">        &gt;&gt;&gt; %%dsldf --links</span>
+<span class="sd">        ...    search publications for &quot;malaria&quot; return publications limit 500</span>
+<span class="sd">        &gt;&gt;&gt; %%dsldf my_data</span>
+<span class="sd">        ...    search publications for &quot;malaria&quot; return publications limit 500</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_login</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">cell</span><span class="p">:</span>
-                <span class="n">line</span> <span class="o">=</span> <span class="n">cell</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">line_is_search_query</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+            <span class="n">QUERY</span><span class="p">,</span> <span class="n">DEST_VAR</span><span class="p">,</span> <span class="n">LINKS_FLAG</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_input</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">line_is_search_query</span><span class="p">(</span><span class="n">QUERY</span><span class="p">):</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sorry - DSL to dataframe magic methods work only with `search` queries.&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="kc">None</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_query</span><span class="p">(</span><span class="n">line</span><span class="p">)</span><span class="o">.</span><span class="n">as_dataframe</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">results_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_query</span><span class="p">(</span><span class="n">QUERY</span><span class="p">)</span><span class="o">.</span><span class="n">as_dataframe</span><span class="p">(</span><span class="n">links</span><span class="o">=</span><span class="n">LINKS_FLAG</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span><span class="p">[</span><span class="n">DEST_VAR</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
             <span class="k">return</span> <span class="n">data</span></div>
+
 
 <div class="viewcode-block" id="DslMagics.dslgsheets"><a class="viewcode-back" href="../../../modules.html#dimcli.jupyter.magics.DslMagics.dslgsheets">[docs]</a>    <span class="nd">@line_cell_magic</span>
     <span class="k">def</span> <span class="nf">dslgsheets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -269,7 +212,7 @@
 
 <span class="sd">        NOTE: this method requires preexisting valid Google authentication credentials. See the description of ``utils.export_as_gsheets`` for more information.</span>
 
-<span class="sd">        Can be used as a single-line (``%dslgsheets``) or multi-line (``%%dslgsheets``) command. Requires an authenticated API session. Results are also saved to a variable called ``dsl_last_results``.</span>
+<span class="sd">        Can be used as a single-line (``%dsl``) or multi-line (``%%dsl``) command. Requires an authenticated API session. If used as a multi-line command, a variable name can be specified as the first argument. Otherwise, the results are saved to a variable called ``dsl_last_results``. </span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -287,13 +230,12 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_login</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">cell</span><span class="p">:</span>
-                <span class="n">line</span> <span class="o">=</span> <span class="n">cell</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">line_is_search_query</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+            <span class="n">QUERY</span><span class="p">,</span> <span class="n">DEST_VAR</span><span class="p">,</span> <span class="n">LINKS_FLAG</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_input</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">line_is_search_query</span><span class="p">(</span><span class="n">QUERY</span><span class="p">):</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sorry - DSL to dataframe magic methods work only with `search` queries.&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="kc">None</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_query</span><span class="p">(</span><span class="n">line</span><span class="p">)</span><span class="o">.</span><span class="n">as_dataframe</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">results_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_query</span><span class="p">(</span><span class="n">QUERY</span><span class="p">)</span><span class="o">.</span><span class="n">as_dataframe</span><span class="p">(</span><span class="n">links</span><span class="o">=</span><span class="n">LINKS_FLAG</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span><span class="p">[</span><span class="n">DEST_VAR</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
             <span class="k">return</span> <span class="n">export_as_gsheets</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DslMagics.dslloop"><a class="viewcode-back" href="../../../modules.html#dimcli.jupyter.magics.DslMagics.dslloop">[docs]</a>    <span class="nd">@line_cell_magic</span>
@@ -302,8 +244,8 @@
 
 <span class="sd">        This command automatically loops over all the pages of a results set, until all possible records have been returned.</span>
 
-<span class="sd">        Can be used as a single-line (``%dslloop``) or multi-line (``%%dslloop``) command. Requires an authenticated API session. Results are saved to a variable called ``dsl_last_results``.</span>
-
+<span class="sd">        Can be used as a single-line (``%dsl``) or multi-line (``%%dsl``) command. Requires an authenticated API session. If used as a multi-line command, a variable name can be specified as the first argument. Otherwise, the results are saved to a variable called ``dsl_last_results``. </span>
+<span class="sd">        </span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        line: str</span>
@@ -317,21 +259,24 @@
 <span class="sd">        Example</span>
 <span class="sd">        -------</span>
 <span class="sd">        &gt;&gt;&gt; %dslloop search publications for &quot;malaria&quot; where times_cited &gt; 200 return publications </span>
-
+<span class="sd">        &gt;&gt;&gt; %%dslloop my_data</span>
+<span class="sd">        ...    search publications for &quot;malaria&quot; return publications limit 500</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_login</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">cell</span><span class="p">:</span>
-                <span class="n">line</span> <span class="o">=</span> <span class="n">cell</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_query</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">results_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+            <span class="n">QUERY</span><span class="p">,</span> <span class="n">DEST_VAR</span><span class="p">,</span> <span class="n">LINKS_FLAG</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_input</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_query</span><span class="p">(</span><span class="n">QUERY</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span><span class="p">[</span><span class="n">DEST_VAR</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
             <span class="k">return</span> <span class="n">data</span></div>
+
 
 
 <div class="viewcode-block" id="DslMagics.dslloopdf"><a class="viewcode-back" href="../../../modules.html#dimcli.jupyter.magics.DslMagics.dslloopdf">[docs]</a>    <span class="nd">@line_cell_magic</span>
     <span class="k">def</span> <span class="nf">dslloopdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Magic command to run a DSL &#39;loop&#39; (iterative) query. Results are automatically transformed to a pandas dataframe.</span>
 
-<span class="sd">        Can be used as a single-line (``%dslloopdf``) or multi-line (``%%dslloopdf``) command. Requires an authenticated API session. Results are saved to a variable called ``dsl_last_results``.</span>
+<span class="sd">        Can be used as a single-line (``%dsl``) or multi-line (``%%dsl``) command. Requires an authenticated API session. If used as a multi-line command, a variable name can be specified as the first argument. Otherwise, the results are saved to a variable called ``dsl_last_results``. </span>
+<span class="sd">        </span>
+<span class="sd">        Pass the ``--links`` flag to style the dataframe with links to the original data sources.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -346,17 +291,20 @@
 <span class="sd">        Example</span>
 <span class="sd">        -------</span>
 <span class="sd">        &gt;&gt;&gt; %dslloopdf search publications for &quot;malaria&quot; where times_cited &gt; 200 return publications </span>
-
+<span class="sd">        &gt;&gt;&gt; %%dslloopdf --links</span>
+<span class="sd">        ...    search publications for &quot;malaria&quot; return publications limit 500</span>
+<span class="sd">        &gt;&gt;&gt; %%dslloopdf my_data</span>
+<span class="sd">        ...    search publications for &quot;malaria&quot; return publications limit 500</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_login</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">cell</span><span class="p">:</span>
-                <span class="n">line</span> <span class="o">=</span> <span class="n">cell</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">line_is_search_query</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+            <span class="n">QUERY</span><span class="p">,</span> <span class="n">DEST_VAR</span><span class="p">,</span> <span class="n">LINKS_FLAG</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_input</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">line_is_search_query</span><span class="p">(</span><span class="n">QUERY</span><span class="p">):</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sorry - DSL to dataframe magic methods work only with `search` queries.&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="kc">None</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_query</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">as_dataframe</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">results_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_query</span><span class="p">(</span><span class="n">QUERY</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">as_dataframe</span><span class="p">(</span><span class="n">links</span><span class="o">=</span><span class="n">LINKS_FLAG</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span><span class="p">[</span><span class="n">DEST_VAR</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
             <span class="k">return</span> <span class="n">data</span></div>
+
 
 <div class="viewcode-block" id="DslMagics.dslloopgsheets"><a class="viewcode-back" href="../../../modules.html#dimcli.jupyter.magics.DslMagics.dslloopgsheets">[docs]</a>    <span class="nd">@line_cell_magic</span>
     <span class="k">def</span> <span class="nf">dslloopgsheets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -364,7 +312,7 @@
 
 <span class="sd">        NOTE: this method requires preexisting valid Google authentication credentials. See also https://gspread.readthedocs.io/en/latest/oauth2.html and the description of ``utils.export_as_gsheets`` for more information.</span>
 
-<span class="sd">        Can be used as a single-line (``%dslloopgsheets``) or multi-line (``%%dslloopgsheets``) command. Requires an authenticated API session. Results are also saved to a variable called ``dsl_last_results``.</span>
+<span class="sd">        Can be used as a single-line (``%dsl``) or multi-line (``%%dsl``) command. Requires an authenticated API session. If used as a multi-line command, a variable name can be specified as the first argument. Otherwise, the results are saved to a variable called ``dsl_last_results``. </span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -381,20 +329,21 @@
 <span class="sd">        &gt;&gt;&gt; %dslloopdf search publications for &quot;malaria&quot; where times_cited &gt; 200 return publications </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_login</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">cell</span><span class="p">:</span>
-                <span class="n">line</span> <span class="o">=</span> <span class="n">cell</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">line_is_search_query</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+            <span class="n">QUERY</span><span class="p">,</span> <span class="n">DEST_VAR</span><span class="p">,</span> <span class="n">LINKS_FLAG</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_input</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">line_is_search_query</span><span class="p">(</span><span class="n">QUERY</span><span class="p">):</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sorry - DSL to dataframe magic methods work only with `search` queries.&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="kc">None</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_query</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">as_dataframe</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">results_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_query</span><span class="p">(</span><span class="n">QUERY</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">as_dataframe</span><span class="p">(</span><span class="n">links</span><span class="o">=</span><span class="n">LINKS_FLAG</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span><span class="p">[</span><span class="n">DEST_VAR</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
             <span class="k">return</span> <span class="n">export_as_gsheets</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="DslMagics.extract_concepts"><a class="viewcode-back" href="../../../modules.html#dimcli.jupyter.magics.DslMagics.extract_concepts">[docs]</a>    <span class="nd">@line_cell_magic</span>
-    <span class="k">def</span> <span class="nf">extract_concepts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="DslMagics.dsl_extract_concepts"><a class="viewcode-back" href="../../../modules.html#dimcli.jupyter.magics.DslMagics.dsl_extract_concepts">[docs]</a>    <span class="nd">@line_cell_magic</span>
+    <span class="k">def</span> <span class="nf">dsl_extract_concepts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Magic command to run the `extract_concepts` function. Results are transformed to a Pandas DataFrame. Score are included by default.</span>
 <span class="sd">        </span>
+<span class="sd">        If used as a multi-line command, a variable name can be specified as the first argument. Otherwise, the results are saved to a variable called ``dsl_last_results``. </span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        cell: str</span>
@@ -413,19 +362,19 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_login</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">cell</span><span class="p">:</span>
-                <span class="n">line</span> <span class="o">=</span> <span class="n">cell</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">extract_concepts</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">scores</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">results_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+            <span class="n">QUERY</span><span class="p">,</span> <span class="n">DEST_VAR</span><span class="p">,</span> <span class="n">LINKS_FLAG</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_input</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="p">)</span>
+            <span class="n">QUERY</span> <span class="o">=</span> <span class="n">QUERY</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">extract_concepts</span><span class="p">(</span><span class="n">QUERY</span><span class="p">,</span> <span class="n">scores</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">as_df</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span><span class="p">[</span><span class="n">DEST_VAR</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
             <span class="k">return</span> <span class="n">data</span></div>
 
 
-
-<div class="viewcode-block" id="DslMagics.identify_experts"><a class="viewcode-back" href="../../../modules.html#dimcli.jupyter.magics.DslMagics.identify_experts">[docs]</a>    <span class="nd">@line_cell_magic</span>
-    <span class="k">def</span> <span class="nf">identify_experts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="DslMagics.dsl_identify_experts"><a class="viewcode-back" href="../../../modules.html#dimcli.jupyter.magics.DslMagics.dsl_identify_experts">[docs]</a>    <span class="nd">@line_cell_magic</span>
+    <span class="k">def</span> <span class="nf">dsl_identify_experts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Magic command to run the `identify_experts` function. Uses all the default options, takes only the `abstract` argument.</span>
-<span class="sd">        </span>
+
+<span class="sd">        If used as a multi-line command, a variable name can be specified as the first argument. Otherwise, the results are saved to a variable called ``dsl_last_results``. </span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        cell: str</span>
@@ -444,11 +393,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_login</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">cell</span><span class="p">:</span>
-                <span class="n">line</span> <span class="o">=</span> <span class="n">cell</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">QUERY</span><span class="p">,</span> <span class="n">DEST_VAR</span><span class="p">,</span> <span class="n">LINKS_FLAG</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_input</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">cell</span><span class="p">)</span>
+            <span class="n">QUERY</span> <span class="o">=</span> <span class="n">QUERY</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
             <span class="n">data</span> <span class="o">=</span> <span class="n">identify_experts</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">results_var</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">user_ns</span><span class="p">[</span><span class="n">DEST_VAR</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
             <span class="k">return</span> <span class="n">data</span></div>
 
 
@@ -583,7 +531,7 @@
     
     <span class="c1"># loader</span>
 
-    <span class="k">for</span> <span class="n">command</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">slloop_to_dataframe&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">sl_to_dataframe&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">slloop&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">sl&quot;</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">command</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">slloopdf&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">sldf&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">slloop&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">sl&quot;</span><span class="p">]:</span>
         <span class="n">ipython</span><span class="o">.</span><span class="n">set_hook</span><span class="p">(</span><span class="s1">&#39;complete_command&#39;</span><span class="p">,</span> <span class="n">dslq_completers</span><span class="p">,</span> <span class="n">re_key</span> <span class="o">=</span> <span class="n">command</span><span class="p">)</span>
         <span class="n">ipython</span><span class="o">.</span><span class="n">set_hook</span><span class="p">(</span><span class="s1">&#39;complete_command&#39;</span><span class="p">,</span> <span class="n">dslq_completers</span><span class="p">,</span> <span class="n">re_key</span> <span class="o">=</span> <span class="s2">&quot;%&quot;</span> <span class="o">+</span> <span class="n">command</span><span class="p">)</span>
 
@@ -640,49 +588,30 @@
 </pre></div>
 
            </div>
-           
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        
-        &copy; Copyright 2020-2021, Digital Science
-
-    </p>
+    <p>&#169; Copyright 2020-2021, Digital Science.</p>
   </div>
-    
-    
-    
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
-    
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>
