@@ -5,8 +5,10 @@
 ## v 0.9.8
 
 * Fix bug with df_grant_investigators_affiliations methods
-* Util to turn URLs into 'dimensions_url' hyperlinks in dataframes
-
+* `dim_utils.dimensions_styler`: format the text display value of a dataframe by including Dimensions hyperlinks whenever possible.
+* Magic commands: refactoring of line/cell operations
+  * Variable name can be passed to save data
+  * `--links` parameter makes resulting dataframe table interactive
 
 
 ## v 0.9.7
