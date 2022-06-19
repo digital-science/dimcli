@@ -62,7 +62,7 @@ class DslMagics(Magics):
             if line and line.split()[0] != "--links":
                 DEST_VAR = line.split()[0]
 
-        print("QUERY: ", QUERY, "DEST_VAR: ", DEST_VAR, "LINKS_FLAG: ", LINKS_FLAG)
+        # print("QUERY: ", QUERY, "DEST_VAR: ", DEST_VAR, "LINKS_FLAG: ", LINKS_FLAG)
         return QUERY, DEST_VAR, LINKS_FLAG
         
 
