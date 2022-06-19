@@ -364,6 +364,9 @@ For example, it contains a few [magic commands](https://github.com/digital-scien
 
 For more information and examples see the [The Dimcli Python library: Magic Commands](https://api-lab.dimensions.ai/cookbooks/1-getting-started/4-Dimcli-magic-commands.html) notebook and the [jupyter.magics module](https://digital-science.github.io/dimcli/modules.html#module-dimcli.jupyter.magics).
 
+![dimcli_animation_jupyter](https://raw.githubusercontent.com/digital-science/dimcli/master/static/dimcli_animated_jupyter.gif)
+
+
 ## Changelog
 
 See the file `CHANGELOG.md` on [Github](https://github.com/digital-science/dimcli).
