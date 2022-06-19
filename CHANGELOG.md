@@ -2,6 +2,13 @@
 
 
 
+## v 0.9.8
+
+* Fix bug with df_grant_investigators_affiliations methods
+* Util to turn URLs into 'dimensions_url' hyperlinks in dataframes
+
+
+
 ## v 0.9.7
 
 * Fix compatibility issues with DSL V2
