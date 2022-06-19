@@ -5,7 +5,7 @@
 """
 simple test queries [for DEVELOPMENT  / not part of official tests]
 
-$ pip instal -e .
+$ pip install -e .
 $ dimcli_quicktest 1
 
 """
@@ -17,9 +17,7 @@ import requests
 from .. import *
 from ..utils import *
 from ..core.converters import *
-
 from ..utils.gists_utils import *
-
 from .settings import API_INSTANCE
 
 
@@ -30,6 +28,25 @@ def main(test_number=1):
     login(instance="live")
     dsl = Dsl()
     test_number = int(test_number)
+
+
+    if test_number == 3:
+
+        from dimcli.utils import dimensions_url
+
+        print(dimensions_url("pub.1043845707"))
+
+    if test_number == 2:
+
+        q = """
+            search publications 
+            for "scientometrics" 
+            return publications[title+doi+year+journal+dimensions_url] 
+            sort by times_cited"""
+
+        df = dsl.query(q).as_dataframe(links=True)
+
+        print(df)
 
     if test_number == 1:
 
@@ -46,6 +63,9 @@ def main(test_number=1):
 
         mysession1.refresh_login()    
         print("Login refreshed")
+
+
+
 
 
 

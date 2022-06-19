@@ -41,6 +41,15 @@ class TestDataframes(unittest.TestCase):
         print(" ==> res.as_dataframe(): ", res.as_dataframe())
         print(" ==> res.as_dataframe('year'): ", res.as_dataframe('year'))
         print(" ==> res.as_dataframe('XXX'): [FAILS] ", res.as_dataframe('XXX'))
+        # ----
+        click.secho("Query returning Hyperlinks", fg="green")
+        click.secho("search publications for \"science\" return publications[id+dimensions_url]", fg="green")
+        res = dslquery("""search publications for \"science\" return publications[id+dimensions_url]""")
+        click.secho("Query results: ", fg="magenta")
+        print(" ==> res.json.keys(): ", res.json.keys())
+        print(" ==> len(res): ", len(res))
+        print(" ==> res.stats: ", res.stats)
+        print(" ==> res.as_dataframe(links=True): ", res.as_dataframe(links=True))
 
 
     def test_002(self):

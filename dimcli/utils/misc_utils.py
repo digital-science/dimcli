@@ -468,3 +468,5 @@ def printInfo(text, mystyle="", **kwargs):
     Fixes https://github.com/lambdamusic/Ontospy/issues/76
     """
     printDebug(text, mystyle, False, **kwargs)
+
+

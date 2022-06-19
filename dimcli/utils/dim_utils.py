@@ -111,18 +111,24 @@ def dimensions_url(obj_id, obj_type="", verbose=True):
     """
     
     from ..core.dsl_grammar import G 
+    if type(obj_id) != str:
+        return ""
+    obj_id = obj_id.strip()
 
     if obj_type and (obj_type not in G.sources()):
-        raise ValueError("ERROR: valid sources are: " + " ".join([x for x in G.sources()]))
-    else:
-        if not obj_type:
-            for source, prefix in G.object_id_patterns().items():
-                if obj_id.startswith(prefix):
-                    obj_type = source
-        if obj_type:
-            url = G.url_for_source(obj_type)
-            if url:
-                return url + obj_id
+        obj_type = ""
+        # raise ValueError("ERROR: valid sources are: " + " ".join([x for x in G.sources()]))
+    
+    if not obj_type: # then infer it from the ID
+        for source, prefix in G.object_id_patterns().items():
+            # print("Inferring source from ID: {}".format(obj_id), source, prefix)
+            if obj_id.startswith(prefix):
+                # print("Inferred source: {}".format(source))
+                obj_type = source
+    if obj_type:
+        url = G.url_for_source(obj_type)
+        if url:
+            return url + str(obj_id)
 
 
 
@@ -201,3 +207,85 @@ def dsl_escape(stringa, all=False):
     else:
         escaped = stringa.translate(str.maketrans({'"':  r'\"'}))        
     return escaped
+
+
+
+
+
+def add_df_hyperlinks(df, source_type=""):
+    """Format the text display value of a dataframe by including Dimensions hyperlinks whenever possible.
+    Useful mainly in notebooks when printing out dataframes and clicking on links etc..
+    Expects column names to match the default DSL field names. 
+
+    Parameters
+    ----------
+    df: pd.Dataframe
+        Pandas dataframe obtained from a DSL query e.g. via the `as_dataframe` methods.
+    source_type: str, optional
+        The name of the source: one of 'publications', 'grants', 'patents', 'policy_documents', 'clinical_trials', 'researchers'. If not provided, it can be inferred in some cases.
+
+    Notes
+    -----
+    Implemented using https://pandas.pydata.org/docs/reference/api/pandas.io.formats.style.Styler.format.html. 
+    Side effect is that the resulting dataframe becomes an instance of https://pandas.io.formats.style.styler/, which is a wrapper around the underlying Styler object 
+    and loses some of the standard DF methods eg CSV export etc.. 
+    So it's best to use this function only in the Jupyter notebook when you want to display the dataframe in a nice way. 
+
+    Returns
+    -------
+    pandas.io.formats.style.Styler
+        Wrapper for a dataframe object, with Dimensions hyperlinks.
+
+    Example
+    -------
+    >>> from dimcli.utils import add_df_hyperlinks
+    >>> dsl = dimcli.Dsl() 
+    >>> q = 'search publications for "scientometrics" return publications[basics]' 
+    >>> df = dsl.query(q).as_dataframe()
+    >>> add_df_hyperlinks(df)
+    """
+
+    format_rules = {}
+
+    def df_value_as_link(url, val):
+        """Val is the value found in the dataframe column. It should be a string or an integer, or a list.
+        If it's a list, we just take the first element (e.g. for 'linkout' field).
+        If it's a float, it means it's a Pandas NaN. So we don't want to return a link.
+        """
+        if type(val) == float:
+            return val
+        if type(val) == list:
+            url = val[0]
+        return '<a target="_blank" href="{}">{}</a>'.format(url, val)
+            
+
+    # transformations
+    if "dimensions_url" in df.columns:
+        format_rules['dimensions_url'] = lambda x: df_value_as_link(x, x)
+
+    if "linkout" in df.columns:
+        format_rules['linkout'] = lambda x: df_value_as_link(x, x)
+
+    if "doi" in df.columns:
+        url = "https://doi.org/{}"
+        format_rules['doi'] = lambda x: df_value_as_link(url.format(x), x)
+
+    if "id" in df.columns:
+        format_rules['id'] = lambda x: df_value_as_link(dimensions_url(x, source_type), x)
+
+    if "journal.id" in df.columns:
+        format_rules["journal.id"] = lambda x: df_value_as_link(dimensions_url(x, "source_titles"), x)
+
+    if "pub_id" in df.columns:
+        format_rules["pub_id"] = lambda x: df_value_as_link(dimensions_url(x, "publications"), x)
+
+    if "researcher_id" in df.columns:
+        format_rules["researcher_id"] = lambda x: df_value_as_link(dimensions_url(x, "researchers"), x)
+
+    if "grant_id" in df.columns:
+        format_rules["grant_id"] = lambda x: df_value_as_link(dimensions_url(x, "grants"), x)
+
+    if "aff_id" in df.columns:
+        format_rules["aff_id"] = lambda x: df_value_as_link(dimensions_url(x, "organizations"), x)
+
+    return df.style.format(format_rules)

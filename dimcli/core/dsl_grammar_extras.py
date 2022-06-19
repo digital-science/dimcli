@@ -50,13 +50,13 @@ SYNTAX_DICT = {
     'dimensions_object_id_patterns' : {
         'publications' : 'pub.',
         'grants' : 'grant.',
-        'patents' : ' ', # leave space to ensure matching fails always
+        # 'patents' : ' ', # not yet supported
         'policy_documents' : 'policy.',
-        'clinical_trials' : ' ',
-        'datasets' : ' ',
+        # 'clinical_trials' : ' ',
+        # 'datasets' : ' ',
         'researchers' : 'ur.',
         'organizations' : 'grid.',
-        'reports' : '',
+        # 'reports' : ' ',
         'source_titles' : 'jour.',
     },
     'lang_all': [
