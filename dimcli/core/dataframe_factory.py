@@ -20,6 +20,21 @@ class DfFactory(object):
         self.good_keys = good_data_keys
 
 
+
+    def _reorder_cols(self, df):
+        """Reorder df columns based on Dimensions data. Try to have ID and TITLE always at the beginning.
+        Goal is to improve readability of data returned."""
+
+
+        FIELDS = ["id", "title"]
+
+        for f in FIELDS.reverse():
+            if f in df:
+                df.insert(0, f, df.pop(f))
+        
+        return df
+
+
     def df_simple(self, data, key, links=False):
         """Return inner json as a pandas dataframe
         If key is empty, the first available JSON key (eg 'publications') is used to determine
@@ -50,6 +65,8 @@ class DfFactory(object):
                 output = pd.DataFrame.from_dict(data[valid_key], orient="index", columns=[valid_key]) 
             else: # no list, then make one and try to return everything
                 output = pd.DataFrame.from_dict([data])
+
+        output = self._reorder_cols(output)
 
         if links:
             output = dimensions_styler(output, valid_key)
