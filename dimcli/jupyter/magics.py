@@ -14,6 +14,9 @@ from ..core.api import Dsl
 from ..core.functions import *
 from ..core.auth import get_global_connection, is_logged_in_globally as is_logged_in
 from ..utils.all import *
+from ..utils.converters import *
+from ..utils.repl_utils import line_search_subject
+
 
 
 @magics_class
@@ -47,23 +50,28 @@ class DslMagics(Magics):
             return res
         
     def _handle_input(self, line, cell):
-        """Parse user input and return separate components
+        """Parse user input and return separate components.
         Links and custom variable can be specified in the line only when the DSL query
         is passed via a cell magic.
         """
-        QUERY, DEST_VAR, LINKS_FLAG = None, self.results_var, False
+        QUERY, DEST_VAR, LINKS_FLAG, NICE_FLAG = None, self.results_var, False, False
 
         if not cell:
             QUERY = line
         else:
             QUERY = cell
-            if line and "--links" in line:
-                LINKS_FLAG = True
-            if line and line.split()[0] != "--links":
-                DEST_VAR = line.split()[0]
+            FLAGS = ["--links", "--nice"]
+            if line:
+                if "--links" in line:
+                    LINKS_FLAG = True
+                if "--nice" in line:
+                    NICE_FLAG = True
+                if line.split()[0] != "--links" and line.split()[0] != "--nice":
+                    # DEST_VAR should always go first!
+                    DEST_VAR = line.split()[0]
 
         # print("QUERY: ", QUERY, "DEST_VAR: ", DEST_VAR, "LINKS_FLAG: ", LINKS_FLAG)
-        return QUERY, DEST_VAR, LINKS_FLAG
+        return QUERY, DEST_VAR, LINKS_FLAG, NICE_FLAG
         
 
     #
@@ -95,7 +103,7 @@ class DslMagics(Magics):
 
         """
         if self._handle_login():
-            QUERY, DEST_VAR, LINKS_FLAG = self._handle_input(line, cell)
+            QUERY, DEST_VAR, LINKS_FLAG, NICE_FLAG = self._handle_input(line, cell)
             data = self._handle_query(QUERY)
             self.shell.user_ns[DEST_VAR] = data
             return data
@@ -108,7 +116,9 @@ class DslMagics(Magics):
 
         Can be used as a single-line (``%dsldf``) or multi-line (``%%dsldf``) command. Requires an authenticated API session. If used as a multi-line command, a variable name can be specified as the first argument. Otherwise, the results are saved to a variable called ``dsl_last_results``.
 
-        Pass the ``--links`` flag to style the dataframe with links to the original data sources.
+        Flags:
+        ``--links`` => style the dataframe with links to the original data sources.
+        ``--nice``  => break down complex structures into strings (EXPERIMENTAL).
 
         Parameters
         ----------
@@ -130,11 +140,31 @@ class DslMagics(Magics):
         """
 
         if self._handle_login():
-            QUERY, DEST_VAR, LINKS_FLAG = self._handle_input(line, cell)
+            QUERY, DEST_VAR, LINKS_FLAG, NICE_FLAG = self._handle_input(line, cell)
             if not line_is_search_query(QUERY):
                 print("Sorry - DSL to dataframe magic methods work only with `search` queries.")
                 return None
-            data = self._handle_query(QUERY).as_dataframe(links=LINKS_FLAG)
+
+            source = line_search_subject(QUERY)
+            # print("***", source)
+            data = self._handle_query(QUERY).as_dataframe()
+
+            if NICE_FLAG:
+                if source == "publications":
+                    data = DslPubsConverter(data).run()
+                elif source == "grants":
+                    data = DslGrantsConverter(data).run()
+                if source == "clinical_trials":
+                    data = DslClinicaltrialsConverter(data).run()
+                elif source == "datasets":
+                    data = DslDatasetsConverter(data).run()
+                else:
+                    pass
+
+            if LINKS_FLAG:
+                data = dimensions_styler(data, source)
+                # data = self._handle_query(QUERY).as_dataframe(links=LINKS_FLAG)
+
             self.shell.user_ns[DEST_VAR] = data
             return data
 
@@ -163,7 +193,7 @@ class DslMagics(Magics):
 
         """
         if self._handle_login():
-            QUERY, DEST_VAR, LINKS_FLAG = self._handle_input(line, cell)
+            QUERY, DEST_VAR, LINKS_FLAG, NICE_FLAG = self._handle_input(line, cell)
             if not line_is_search_query(QUERY):
                 print("Sorry - DSL to dataframe magic methods work only with `search` queries.")
                 return None
@@ -196,7 +226,7 @@ class DslMagics(Magics):
         ...    search publications for "malaria" return publications limit 500
         """
         if self._handle_login():
-            QUERY, DEST_VAR, LINKS_FLAG = self._handle_input(line, cell)
+            QUERY, DEST_VAR, LINKS_FLAG, NICE_FLAG = self._handle_input(line, cell)
             data = self._handle_query(QUERY, loop=True)
             self.shell.user_ns[DEST_VAR] = data
             return data
@@ -230,7 +260,7 @@ class DslMagics(Magics):
         ...    search publications for "malaria" return publications limit 500
         """
         if self._handle_login():
-            QUERY, DEST_VAR, LINKS_FLAG = self._handle_input(line, cell)
+            QUERY, DEST_VAR, LINKS_FLAG, NICE_FLAG = self._handle_input(line, cell)
             if not line_is_search_query(QUERY):
                 print("Sorry - DSL to dataframe magic methods work only with `search` queries.")
                 return None
@@ -262,7 +292,7 @@ class DslMagics(Magics):
         >>> %dslloopdf search publications for "malaria" where times_cited > 200 return publications 
         """
         if self._handle_login():
-            QUERY, DEST_VAR, LINKS_FLAG = self._handle_input(line, cell)
+            QUERY, DEST_VAR, LINKS_FLAG, NICE_FLAG = self._handle_input(line, cell)
             if not line_is_search_query(QUERY):
                 print("Sorry - DSL to dataframe magic methods work only with `search` queries.")
                 return None
@@ -295,7 +325,7 @@ class DslMagics(Magics):
         """
 
         if self._handle_login():
-            QUERY, DEST_VAR, LINKS_FLAG = self._handle_input(line, cell)
+            QUERY, DEST_VAR, LINKS_FLAG, NICE_FLAG = self._handle_input(line, cell)
             QUERY = QUERY.replace("\n", "")
             data = extract_concepts(QUERY, scores=True, as_df=True)
             self.shell.user_ns[DEST_VAR] = data
@@ -326,7 +356,7 @@ class DslMagics(Magics):
         """
 
         if self._handle_login():
-            QUERY, DEST_VAR, LINKS_FLAG = self._handle_input(line, cell)
+            QUERY, DEST_VAR, LINKS_FLAG, NICE_FLAG = self._handle_input(line, cell)
             QUERY = QUERY.replace("\n", "")
             data = identify_experts(data)
             self.shell.user_ns[DEST_VAR] = data
@@ -334,8 +364,8 @@ class DslMagics(Magics):
 
 
 
-    @line_magic
-    def dsldocs(self, line):
+    @line_cell_magic
+    def dsldocs(self, line, cell=None):
         """Magic command to get DSL documentation about sources and fields.
         
         This is a wrapper around the DSL `describe` function.
@@ -359,6 +389,10 @@ class DslMagics(Magics):
         if not self._handle_login():
             return
 
+        if self._handle_login():
+            QUERY, DEST_VAR, LINKS_FLAG, NICE_FLAG = self._handle_input(line, cell)
+            QUERY = QUERY.replace("\n", "")
+
         try:
             import pandas as pd
             df = pd.DataFrame()
@@ -366,7 +400,7 @@ class DslMagics(Magics):
             print("Sorry this functionality requires the Pandas python library. Please install it first")
             return
 
-        obj = line.strip()
+        obj = QUERY.strip()
         if obj and obj not in G.entities() and obj not in G.sources():
             sou = " - ".join([x for x in G.sources()])
             ent = " - ".join([x for x in G.entities()])
@@ -404,7 +438,9 @@ class DslMagics(Magics):
                 d['is_entity'] += [res.json[header][S]['fields'][x].get('is_entity', False)]
 
         data = df.from_dict(d)
-        self.shell.user_ns[self.results_var] = data
+        # self.shell.user_ns[self.results_var] = data
+        self.shell.user_ns[DEST_VAR] = data
+
         return data
 
 
