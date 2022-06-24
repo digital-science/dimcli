@@ -6,9 +6,14 @@
 
 * Fix bug with df_grant_investigators_affiliations methods
 * `dim_utils.dimensions_styler`: format the text display value of a dataframe by including Dimensions hyperlinks whenever possible.
+* `dim_utils.converters`: JSON converters utils allow to pass a dataframe and get back an altered version of it where complex structures are transformed into list of comma separated values.
 * Magic commands: refactoring of line/cell operations
   * Variable name can be passed to save data
-  * `--links` parameter makes resulting dataframe table interactive
+  * `--links` parameter: makes resulting dataframe table interactive
+  * `--nice`  parameter: convert struct to strings for easier reading and export 
+  * `dsldocs` can be used as a cell command too 
+
+
 
 
 ## v 0.9.7
