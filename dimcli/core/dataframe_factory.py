@@ -22,13 +22,13 @@ class DfFactory(object):
 
 
     def _reorder_cols(self, df):
-        """Reorder df columns based on Dimensions data. Try to have ID and TITLE always at the beginning.
-        Goal is to improve readability of data returned."""
+        """Reorder df columns based on Dimensions data. EG Try to have ID and TITLE always at the beginning.
+        Goal is to improve readability of data returned. Currently used only with `df_simple`."""
 
 
         FIELDS = ["id", "title"]
 
-        for f in FIELDS.reverse():
+        for f in reversed(FIELDS):
             if f in df:
                 df.insert(0, f, df.pop(f))
         
@@ -66,6 +66,7 @@ class DfFactory(object):
             else: # no list, then make one and try to return everything
                 output = pd.DataFrame.from_dict([data])
 
+        # move ID and Title at the beginning, always
         output = self._reorder_cols(output)
 
         if links:
@@ -290,7 +291,7 @@ class DfFactory(object):
         else:
             affiliations = investigators # empty df
         affiliations.fillna('', inplace=True) # 2019-09-30: simplifies subsequent operations
-        
+
         if links:
             affiliations = dimensions_styler(affiliations, "grants")
 
