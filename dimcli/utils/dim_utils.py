@@ -261,42 +261,52 @@ def dimensions_styler(df, source_type=""):
         return '<a target="_blank" href="{}">{}</a>'.format(url, val)
             
 
+    cols = [x.lower() for x in df.columns]
+
+
     # transformations
-    if "dimensions_url" in df.columns:
-        format_rules['dimensions_url'] = lambda x: df_value_as_link(x, x)
+    # multiple naming supported, so to handle standard conversion (--nice flag)
+    for test in ["dimensions_url", 'Dimensions URL']:
+        if test.lower() in cols:
+            format_rules[test] = lambda x: df_value_as_link(x, x)
 
-    if "linkout" in df.columns:
-        # ps this is a list, only first el will be used
-        format_rules['linkout'] = lambda x: df_value_as_link(x, x)
+    for test in ["linkout", 'Source Linkout']:
+        if test.lower() in cols:
+            # ps this is a list, only first el will be used
+            format_rules['linkout'] = lambda x: df_value_as_link(x, x)
 
-    if "orcid" in df.columns:
+    if "orcid" in cols:
         # ps this is a list, only first el will be used
         url_root = "https://orcid.org/"
         format_rules['orcid'] = lambda x: df_value_as_link(x, x, url_root)
 
-    if "doi" in df.columns:
-        url_root = "https://doi.org/"
-        format_rules['doi'] = lambda x: df_value_as_link(x, x, url_root)
+    for test in ["doi", 'DOI']:
+        if test.lower() in cols:
+            url_root = "https://doi.org/"
+            format_rules[test] = lambda x: df_value_as_link(x, x, url_root)
 
-    if "id" in df.columns:
-        format_rules['id'] = lambda x: df_value_as_link(dimensions_url(x, source_type), x)
+    for test in ["id", 'Publication ID', 'Dataset ID', 'Trial ID', 'Grant ID',]:
+        if test.lower() in cols:
+            format_rules[test] = lambda x: df_value_as_link(dimensions_url(x, source_type), x)
 
-    if "journal.id" in df.columns:
-        format_rules["journal.id"] = lambda x: df_value_as_link(dimensions_url(x, "source_titles"), x)
+    for test in ["journal.id", 'Source ID']:
+        if test.lower() in cols:
+            format_rules[test] = lambda x: df_value_as_link(dimensions_url(x, "source_titles"), x)
 
-    if "pub_id" in df.columns:
+    # denorm data for special df methods
+    if "pub_id" in cols:
         format_rules["pub_id"] = lambda x: df_value_as_link(dimensions_url(x, "publications"), x)
 
-    if "researcher_id" in df.columns:
+    if "researcher_id" in cols:
         format_rules["researcher_id"] = lambda x: df_value_as_link(dimensions_url(x, "researchers"), x)
 
-    if "grant_id" in df.columns:
+    if "grant_id" in cols:
         format_rules["grant_id"] = lambda x: df_value_as_link(dimensions_url(x, "grants"), x)
 
-    if "aff_id" in df.columns:
+    if "aff_id" in cols:
         format_rules["aff_id"] = lambda x: df_value_as_link(dimensions_url(x, "organizations"), x)
 
-    if "current_organization_id" in df.columns:
+    if "current_organization_id" in cols:
         format_rules["current_organization_id"] = lambda x: df_value_as_link(dimensions_url(x, "organizations"), x)
 
     
