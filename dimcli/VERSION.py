@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 #  -*- coding: UTF-8 -*-
 
-__version__ = "0.9.8"  # LATEST? =>  https://pypi.org/project/dimcli/
+__version__ = "0.9.8.1"  # LATEST? =>  https://pypi.org/project/dimcli/
 __copyright__ = "CopyRight (C) 2018-2022 by Digital Science"
 __license__ = "MIT"
 __author__ = "Michele Pasin"
