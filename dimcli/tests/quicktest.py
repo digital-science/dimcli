@@ -16,7 +16,7 @@ import requests
 
 from .. import *
 from ..utils import *
-from ..core.converters import *
+from ..utils.converters import *
 from ..utils.gists_utils import *
 from .settings import API_INSTANCE
 

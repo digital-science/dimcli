@@ -14,7 +14,7 @@ from ..core.auth import USER_CONFIG_FILE_PATH
 from ..utils.dim_utils import dimensions_url
 from ..utils import *
 
-from ..core.converters import *
+from ..utils.converters import *
 
 
 class TestRenderer(unittest.TestCase):
