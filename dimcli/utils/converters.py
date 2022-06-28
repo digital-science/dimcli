@@ -116,8 +116,8 @@ class DslDataConverter():
 		"""generate a default order if not provided, keeping only those cols
 		
 		keep_extra_cols:
-			bool, False
-			Columns not included in the transformation rules are dropped by default.
+			bool, True
+			Columns not included in the transformation rules are included by default.
 		
 		"""
 
@@ -323,8 +323,7 @@ class DslPubsConverter(DslDataConverter):
 			'Times cited' : ('times_cited', 'convert_float_to_integer'), 
 			'Altmetric' : ('altmetric', 'convert_float_to_integer'), 
 			'Source Linkout' : ('linkout', ''), 
-			'Dimensions URL' : ('id', 'convert_id_to_url'), 
-			# NOT USED
+			# 'Dimensions URL' : ('id', 'convert_id_to_url'), 
 			'FOR (ANZSRC) Categories' : ('category_for', 'convert_dict_name'), 
 			'RCDC Categories' : ('category_rcdc', 'convert_dict_name'), 
 			'HRCS HC Categories' : ('category_hrcs_hc', 'convert_dict_name'), 
@@ -371,7 +370,7 @@ class DslDatasetsConverter(DslDataConverter):
 			'Dataset author' : ('authors', 'convert_dict_name'), 
 			'Associated publication' : ('associated_publication_id', ''), 
 			'Source Linkout' : ('figshare_url', ''), 
-			'Dimensions URL' : ('id', 'convert_id_to_url', 'datasets'), 
+			# 'Dimensions URL' : ('id', 'convert_id_to_url', 'datasets'), 
 		})
 
 
@@ -421,7 +420,7 @@ class DslClinicaltrialsConverter(DslDataConverter):
 			'Collaborating Funders' : ('funders', 'convert_dict_name'), 
 			'Funder Country' : ('funders', 'convert_country_name'), 
 			'Source Linkout' : ('linkout', ''), 
-			'Dimensions URL' : ('id', 'convert_id_to_url', 'clinical_trials'), 
+			# 'Dimensions URL' : ('id', 'convert_id_to_url', 'clinical_trials'), 
 		})
 
 
@@ -463,7 +462,7 @@ class DslGrantsConverter(DslDataConverter):
 			'Research organizations GRID IDs' : ('research_orgs', 'convert_dict_ids'), 
 			'Research organizations country' : ('research_orgs', 'convert_country_name'), 
 			'Source linkout' : ('linkout', ''), 
-			'Dimensions URL' : ('id', 'convert_id_to_url', 'grants'), 
+			# 'Dimensions URL' : ('id', 'convert_id_to_url', 'grants'), 
 		})
 
 
