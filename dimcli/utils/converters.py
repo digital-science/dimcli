@@ -20,7 +20,12 @@ class DslDataConverter():
 	* Grants
 	* Clinical Trials
 	* Datasets 
-	Missing: Patents, Organizations, Policy Documents
+	* Patents
+	
+	To Review:
+	* Organizations
+	* Policy Documents
+	* Researchers
 
 
 	Example
@@ -53,27 +58,32 @@ class DslDataConverter():
 
 		self.object_type = object_type
 		# self.df_converted = df.copy()
+		self.keep_extra_cols = False
 		self.verbose = verbose
 
 		self.columns_original = self.df_original.columns.to_list()
 		if self.verbose: printDebug("Original columns are:", self.columns_original)
 
-		# PS decided to not deal with DEPRECATED FIELDS!
-		# self.column_transformations_old = {
-		#     # ('new_col_name', 'fun_name')
-		# }
-
+		# defined when subclassing
 		self.column_transformations = OrderedDict()
 
 
-	def run(self):
+	def run(self, keep_extra_cols=True):
 		"""@TODO define a suitable abstraction for automatic transformation
 		eg simplify all fields to strings
 		"""
+		self.keep_extra_cols = keep_extra_cols
 		self.apply_transformations()
 		self.sort_and_prune()
 		return self.df_modified
 
+
+	def extend_transformations(self):
+		"""Add default transformations for all fields found in a df (not just the ones defined explicitly) using standard rules (camel case and spacing). """
+		for c in self.columns_original:
+			if c not in [x[0] for x in self.column_transformations.values()]:
+				new_c = c.replace("_", " ").title()
+				self.column_transformations[new_c] = (c, '')
 
 
 
@@ -84,12 +94,19 @@ class DslDataConverter():
 	#
 
 	def apply_transformations(self):
-		"""
+		"""For each column, see if there is a transformation defined, and apply it.
 
+		keep_extra_cols:
+			bool, True
+			Columns not included in the transformation rules are included by default.
+		
 		"""
 		if self.verbose: printDebug("Applying transformations..")
 		
 		df = self.df_original.copy()
+
+		if self.keep_extra_cols:
+			self.extend_transformations()
 		
 		if self.column_transformations:
 			for new_col, details in self.column_transformations.items():
@@ -108,42 +125,28 @@ class DslDataConverter():
 						df[new_col] = df[source]
 
 		df.fillna('', inplace=True)
+		# finally:
 		self.df_modified = df
-		return self.df_modified
 
 
-	def sort_and_prune(self, new_cols_ordered_list=None, keep_extra_cols=True):
+	def sort_and_prune(self, new_cols_ordered_list=None):
 		"""generate a default order if not provided, keeping only those cols
-		
-		keep_extra_cols:
-			bool, True
-			Columns not included in the transformation rules are included by default.
-		
 		"""
 
 		if self.verbose: printDebug("Sorting / dropping columns...")
 
 		if new_cols_ordered_list and type(new_cols_ordered_list) == list:
+			# user-provided list of cols
 			self.df_modified = self.df_modified[new_cols_ordered_list]
 		else:
 			# infer from all declared columns
 			new_cols_ordered_list = []
-			new_cols_ordered_list_prev_names = []
 			existing_cols = self.df_modified.columns.to_list()
 
 			for new_col in self.column_transformations:
 				# PS ensure declared cols actually exist!!
 				if new_col in existing_cols:
 					new_cols_ordered_list.append(new_col)
-					prev_name = self.column_transformations[new_col][0]
-					new_cols_ordered_list_prev_names.append(prev_name)
-
-		if keep_extra_cols:
-			# add to the right any column not touched by transformations
-			for col in self.df_modified:
-				if col not in new_cols_ordered_list:
-					if col not in new_cols_ordered_list_prev_names:
-						new_cols_ordered_list.append(col)
 
 		if new_cols_ordered_list:
 			self.df_modified = self.df_modified[new_cols_ordered_list]
@@ -176,14 +179,11 @@ class DslDataConverter():
 			for col in cols_subset:
 				self.df_modified[col] = self.df_modified[col].apply(lambda x: helper(x))
 
-
-
 	#
 	#
 	# CONVERSION METHODS
 	#
 	#
-
 
 	def convert_id_to_url(self, idd, ttype=None):
 		"""
@@ -323,6 +323,7 @@ class DslPubsConverter(DslDataConverter):
 			'Times cited' : ('times_cited', 'convert_float_to_integer'), 
 			'Altmetric' : ('altmetric', 'convert_float_to_integer'), 
 			'Source Linkout' : ('linkout', ''), 
+			'Concepts' : ('concepts', 'convert_list'), 
 			# 'Dimensions URL' : ('id', 'convert_id_to_url'), 
 			'FOR (ANZSRC) Categories' : ('category_for', 'convert_dict_name'), 
 			'RCDC Categories' : ('category_rcdc', 'convert_dict_name'), 
@@ -330,20 +331,88 @@ class DslPubsConverter(DslDataConverter):
 			'HRCS RAC Categories' : ('category_hrcs_rac', 'convert_dict_name'), 
 			'ICRP Cancer Types' : ('category_icrp_ct', 'convert_dict_name'), 
 			'ICRP CSO Categories' : ('category_icrp_cso', 'convert_dict_name'), 
+			'BRA Categories' : ('category_bra', 'convert_dict_name'), 
+			'HRA Categories' : ('category_hra', 'convert_dict_name'), 
+			'SDG Categories' : ('category_sdg', 'convert_dict_name'), 
 		})
 
 
-	def run(self):
-		"""
-		"""
-		self.apply_transformations()
-		self.sort_and_prune()
-		if False:
-			self.truncate_for_gsheets(['Abstract', 'Authors', 'Authors Affiliations'])
-		return self.df_modified
 
 
 
+
+
+class DslGrantsConverter(DslDataConverter):
+	"""
+	"""
+
+	def __init__(self, df, verbose=False):
+
+		super().__init__(df, "grants", verbose)
+
+		self.column_transformations = OrderedDict({
+			'Date added' : ('date_inserted', ''), 
+			'Grant ID' : ('id', ''), 
+			'Title' : ('title', ''), 
+			'Abstract' : ('abstract', ''), 
+			'Start date' : ('start_date', ''), 
+			'End date' : ('end_date', ''), 
+			'Funders' : ('funders', 'convert_dict_name'), 
+			'Funders GRID IDs' : ('funders', 'convert_dict_ids'), 
+			'Funders country' : ('funders', 'convert_country_name'), 
+			'Research organizations' : ('research_orgs', 'convert_dict_name'), 
+			'Research organizations GRID IDs' : ('research_orgs', 'convert_dict_ids'), 
+			'Research organizations country' : ('research_orgs', 'convert_country_name'), 
+			'Source linkout' : ('linkout', ''), 
+			# 'Dimensions URL' : ('id', 'convert_id_to_url', 'grants'), 
+			'Concepts' : ('concepts', 'convert_list'), 
+			'FOR (ANZSRC) Categories' : ('category_for', 'convert_dict_name'), 
+			'RCDC Categories' : ('category_rcdc', 'convert_dict_name'), 
+			'HRCS HC Categories' : ('category_hrcs_hc', 'convert_dict_name'), 
+			'HRCS RAC Categories' : ('category_hrcs_rac', 'convert_dict_name'), 
+			'ICRP Cancer Types' : ('category_icrp_ct', 'convert_dict_name'), 
+			'ICRP CSO Categories' : ('category_icrp_cso', 'convert_dict_name'), 
+			'BRA Categories' : ('category_bra', 'convert_dict_name'), 
+			'HRA Categories' : ('category_hra', 'convert_dict_name'), 
+			'SDG Categories' : ('category_sdg', 'convert_dict_name'), 
+		})
+
+
+
+
+class DslPatentsConverter(DslDataConverter):
+	"""
+	"""
+
+	def __init__(self, df, verbose=False):
+
+		super().__init__(df, "grants", verbose)
+
+		self.column_transformations = OrderedDict({
+			'Date added' : ('date_inserted', ''), 
+			'Patent ID' : ('id', ''), 
+			'Title' : ('title', ''), 
+			'Abstract' : ('abstract', ''), 
+			'Date' : ('date', ''), 
+			'Funders' : ('funders', 'convert_dict_name'), 
+			'Funders GRID IDs' : ('funders', 'convert_dict_ids'), 
+			'Funders country' : ('funders', 'convert_country_name'), 
+			'Research organizations' : ('research_orgs', 'convert_dict_name'), 
+			'Research organizations GRID IDs' : ('research_orgs', 'convert_dict_ids'), 
+			'Research organizations country' : ('research_orgs', 'convert_country_name'), 
+			'Source linkout' : ('linkout', ''), 
+			# 'Dimensions URL' : ('id', 'convert_id_to_url', 'grants'), 
+			'Concepts' : ('concepts', 'convert_list'), 
+			'FOR (ANZSRC) Categories' : ('category_for', 'convert_dict_name'), 
+			'RCDC Categories' : ('category_rcdc', 'convert_dict_name'), 
+			'HRCS HC Categories' : ('category_hrcs_hc', 'convert_dict_name'), 
+			'HRCS RAC Categories' : ('category_hrcs_rac', 'convert_dict_name'), 
+			'ICRP Cancer Types' : ('category_icrp_ct', 'convert_dict_name'), 
+			'ICRP CSO Categories' : ('category_icrp_cso', 'convert_dict_name'), 
+			'BRA Categories' : ('category_bra', 'convert_dict_name'), 
+			'HRA Categories' : ('category_hra', 'convert_dict_name'), 
+			'SDG Categories' : ('category_sdg', 'convert_dict_name'), 
+		})
 
 
 
@@ -371,20 +440,17 @@ class DslDatasetsConverter(DslDataConverter):
 			'Associated publication' : ('associated_publication_id', ''), 
 			'Source Linkout' : ('figshare_url', ''), 
 			# 'Dimensions URL' : ('id', 'convert_id_to_url', 'datasets'), 
+			'Concepts' : ('concepts', 'convert_list'), 
+			'FOR (ANZSRC) Categories' : ('category_for', 'convert_dict_name'), 
+			'RCDC Categories' : ('category_rcdc', 'convert_dict_name'), 
+			'HRCS HC Categories' : ('category_hrcs_hc', 'convert_dict_name'), 
+			'HRCS RAC Categories' : ('category_hrcs_rac', 'convert_dict_name'), 
+			'ICRP Cancer Types' : ('category_icrp_ct', 'convert_dict_name'), 
+			'ICRP CSO Categories' : ('category_icrp_cso', 'convert_dict_name'), 
+			'BRA Categories' : ('category_bra', 'convert_dict_name'), 
+			'HRA Categories' : ('category_hra', 'convert_dict_name'), 
+			'SDG Categories' : ('category_sdg', 'convert_dict_name'), 
 		})
-
-
-	def run(self):
-		"""
-		"""
-		self.apply_transformations()
-		self.sort_and_prune()        
-		if False:
-			# TODO clarify when to use
-			self.truncate_for_gsheets(['Description'])
-			self.sort_and_prune()
-		return self.df_modified
-
 
 
 
@@ -421,27 +487,26 @@ class DslClinicaltrialsConverter(DslDataConverter):
 			'Funder Country' : ('funders', 'convert_country_name'), 
 			'Source Linkout' : ('linkout', ''), 
 			# 'Dimensions URL' : ('id', 'convert_id_to_url', 'clinical_trials'), 
+			'Concepts' : ('concepts', 'convert_list'), 
+			'FOR (ANZSRC) Categories' : ('category_for', 'convert_dict_name'), 
+			'RCDC Categories' : ('category_rcdc', 'convert_dict_name'), 
+			'HRCS HC Categories' : ('category_hrcs_hc', 'convert_dict_name'), 
+			'HRCS RAC Categories' : ('category_hrcs_rac', 'convert_dict_name'), 
+			'ICRP Cancer Types' : ('category_icrp_ct', 'convert_dict_name'), 
+			'ICRP CSO Categories' : ('category_icrp_cso', 'convert_dict_name'), 
+			'BRA Categories' : ('category_bra', 'convert_dict_name'), 
+			'HRA Categories' : ('category_hra', 'convert_dict_name'), 
+			'SDG Categories' : ('category_sdg', 'convert_dict_name'), 
 		})
 
 
-	def run(self):
-		"""
-		"""
-		
-		self.apply_transformations()
-		self.sort_and_prune()
-		if False:
-			# TODO clarify when to use
-			self.truncate_for_gsheets(['Abstract'])
-		return self.df_modified
 
 
 
 
 
-
-class DslGrantsConverter(DslDataConverter):
-	"""
+class DslPolicyDocumentsConverter(DslDataConverter):
+	"""@TODO review
 	"""
 
 	def __init__(self, df, verbose=False):
@@ -450,11 +515,10 @@ class DslGrantsConverter(DslDataConverter):
 
 		self.column_transformations = OrderedDict({
 			'Date added' : ('date_inserted', ''), 
-			'Grant ID' : ('id', ''), 
+			'Patent ID' : ('id', ''), 
 			'Title' : ('title', ''), 
 			'Abstract' : ('abstract', ''), 
-			'Start date' : ('start_date', ''), 
-			'End date' : ('end_date', ''), 
+			'Date' : ('date', ''), 
 			'Funders' : ('funders', 'convert_dict_name'), 
 			'Funders GRID IDs' : ('funders', 'convert_dict_ids'), 
 			'Funders country' : ('funders', 'convert_country_name'), 
@@ -463,15 +527,77 @@ class DslGrantsConverter(DslDataConverter):
 			'Research organizations country' : ('research_orgs', 'convert_country_name'), 
 			'Source linkout' : ('linkout', ''), 
 			# 'Dimensions URL' : ('id', 'convert_id_to_url', 'grants'), 
+			'Concepts' : ('concepts', 'convert_list'), 
+			'FOR (ANZSRC) Categories' : ('category_for', 'convert_dict_name'), 
+			'RCDC Categories' : ('category_rcdc', 'convert_dict_name'), 
+			'HRCS HC Categories' : ('category_hrcs_hc', 'convert_dict_name'), 
+			'HRCS RAC Categories' : ('category_hrcs_rac', 'convert_dict_name'), 
+			'ICRP Cancer Types' : ('category_icrp_ct', 'convert_dict_name'), 
+			'ICRP CSO Categories' : ('category_icrp_cso', 'convert_dict_name'), 
+			'BRA Categories' : ('category_bra', 'convert_dict_name'), 
+			'HRA Categories' : ('category_hra', 'convert_dict_name'), 
+			'SDG Categories' : ('category_sdg', 'convert_dict_name'), 
 		})
 
 
-	def run(self):
-		"""
-		"""
-		self.apply_transformations()
-		self.sort_and_prune()
-		if False:
-			# TODO clarify when to use
-			self.truncate_for_gsheets(['Abstract'])
-		return self.df_modified
+
+
+
+class DslOrganizationsConverter(DslDataConverter):
+	"""@TODO review
+	"""
+
+	def __init__(self, df, verbose=False):
+
+		super().__init__(df, "grants", verbose)
+
+		self.column_transformations = OrderedDict({
+			'GRID ID' : ('id', ''), 
+		})
+
+
+
+
+class DslResearchersConverter(DslDataConverter):
+	"""@TODO review
+	"""
+
+	def __init__(self, df, verbose=False):
+
+		super().__init__(df, "grants", verbose)
+
+		self.column_transformations = OrderedDict({
+			'Researcher ID' : ('id', ''), 
+		})
+
+
+
+
+
+class DslReportsConverter(DslDataConverter):
+	"""@TODO review
+	"""
+
+	def __init__(self, df, verbose=False):
+
+		super().__init__(df, "grants", verbose)
+
+		self.column_transformations = OrderedDict({
+			'Report ID' : ('id', ''), 
+		})
+
+
+
+
+class DslSourceTitlesConverter(DslDataConverter):
+	"""@TODO review
+	"""
+
+	def __init__(self, df, verbose=False):
+
+		super().__init__(df, "grants", verbose)
+
+		self.column_transformations = OrderedDict({
+			'Source ID' : ('id', ''), 
+		})
+

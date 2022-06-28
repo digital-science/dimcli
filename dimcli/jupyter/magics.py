@@ -154,9 +154,21 @@ class DslMagics(Magics):
                     data = DslPubsConverter(data).run()
                 elif source == "grants":
                     data = DslGrantsConverter(data).run()
-                if source == "clinical_trials":
+                elif source == "patents":
+                    data = DslPatentsConverter(data).run()
+                elif source == "policy_documents":
+                    data = DslPolicyDocumentsConverter(data).run()
+                elif source == "clinical_trials":
                     data = DslClinicaltrialsConverter(data).run()
                 elif source == "datasets":
+                    data = DslDatasetsConverter(data).run()
+                elif source == "reports":
+                    data = DslReportsConverter(data).run()
+                elif source == "source_titles":
+                    data = DslSourceTitlesConverter(data).run()
+                elif source == "organizations":
+                    data = DslClinicaltrialsConverter(data).run()
+                elif source == "researchers":
                     data = DslDatasetsConverter(data).run()
                 else:
                     pass
