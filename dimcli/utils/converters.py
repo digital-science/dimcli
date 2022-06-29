@@ -515,7 +515,7 @@ class DslPolicyDocumentsConverter(DslDataConverter):
 
 		self.column_transformations = OrderedDict({
 			'Date added' : ('date_inserted', ''), 
-			'Patent ID' : ('id', ''), 
+			'Policy ID' : ('id', ''), 
 			'Title' : ('title', ''), 
 			'Abstract' : ('abstract', ''), 
 			'Date' : ('date', ''), 

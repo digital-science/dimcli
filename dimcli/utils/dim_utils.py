@@ -212,7 +212,7 @@ def dsl_escape(stringa, all=False):
 
 
 
-def dimensions_styler(df, source_type=""):
+def dimensions_styler(df, source_type="", title_links=True):
     """Format the text display value of a dataframe by including Dimensions hyperlinks whenever possible.
     Useful mainly in notebooks when printing out dataframes and clicking on links etc..
     Expects column names to match the default DSL field names. 
@@ -223,11 +223,13 @@ def dimensions_styler(df, source_type=""):
         Pandas dataframe obtained from a DSL query e.g. via the `as_dataframe` methods.
     source_type: str, optional
         The name of the source: one of 'publications', 'grants', 'patents', 'policy_documents', 'clinical_trials', 'researchers'. If not provided, it can be inferred in some cases.
+    title_links: bool, optional, True
+        Hyperlink document titles too, using the ID (if available).
 
     Notes
     -----
-    Implemented using https://pandas.pydata.org/docs/reference/api/pandas.io.formats.style.Styler.format.html. Side effect is that the resulting dataframe becomes an instance of https://pandas.io.formats.style.styler/, which is a wrapper around the underlying Styler object. 
-    NOTE To get back to the original dataframe, you can use the `.data` method.
+    Implemented using https://pandas.pydata.org/docs/reference/api/pandas.io.formats.style.Styler.format.html. Side effect is that the resulting dataframe becomes an instance of https://pandas.io.formats.style.styler/, which is a wrapper around the underlying Styler object. TIP To get back to the original dataframe, you can use the `.data` method. 
+    See also: https://stackoverflow.com/questions/42263946/how-to-create-a-table-with-clickable-hyperlink-in-pandas-jupyter-notebook
 
     Returns
     -------
@@ -241,59 +243,82 @@ def dimensions_styler(df, source_type=""):
     >>> q = 'search publications for "scientometrics" return publications[basics]' 
     >>> df = dsl.query(q).as_dataframe()
     >>> dimensions_styler(df)
-    # alternatively, use the shortcut method:
+    # 
+    # alternatively, using the shortcut method:
+    #
     >>> dsl.query(q).as_dataframe(links=True)
     """
 
     format_rules = {}
 
     def df_value_as_link(url, val, url_root=""):
-        """Val is the value found in the dataframe column. It should be a string or an integer, or a list.
-        If it's a list, we just take the first element (e.g. for 'linkout' field).
-        If it's a float, it means it's a Pandas NaN. So we don't want to return a link.
+        """Generic method to create an HTML hyperlink from a dataframe cell value and a URL.
+        If cell value is list, we just take the first element (e.g. for 'linkout' field).
+        NOTE If cell value is a float, it means it's a Pandas NaN. So we don't want to return a link.
         """
         if not val or type(val) == float:
             return val
-        if type(val) == list:
-            url = val[0]
         if url_root:
             url = url_root + url
+        if type(val) == list:
+            url = val[0]
+        elif "###" in val: # title URL
+            val, url = val.split("###")
         return '<a target="_blank" href="{}">{}</a>'.format(url, val)
             
 
     cols = [x.lower() for x in df.columns]
 
 
-    # transformations
-    # multiple naming supported, so to handle standard conversion (--nice flag)
-    for test in ["dimensions_url", 'Dimensions URL']:
-        if test.lower() in cols:
-            format_rules[test] = lambda x: df_value_as_link(x, x)
+    # TRANSFORMATIONS
+    # NOTE multiple naming supported, so to handle columm conversions obtained via --nice flag
 
-    for test in ["linkout", 'Source Linkout']:
-        if test.lower() in cols:
+    for col in ["dimensions_url", 'Dimensions URL']:
+        if col.lower() in cols:
+            format_rules[col] = lambda x: df_value_as_link(x, x)
+
+    for col in ["linkout", 'Source Linkout']:
+        if col.lower() in cols:
             # ps this is a list, only first el will be used
-            format_rules['linkout'] = lambda x: df_value_as_link(x, x)
+            format_rules[col] = lambda x: df_value_as_link(x, x)
 
     if "orcid" in cols:
         # ps this is a list, only first el will be used
         url_root = "https://orcid.org/"
         format_rules['orcid'] = lambda x: df_value_as_link(x, x, url_root)
 
-    for test in ["doi", 'DOI']:
-        if test.lower() in cols:
+    for col in ["doi", 'DOI']:
+        if col.lower() in cols:
             url_root = "https://doi.org/"
-            format_rules[test] = lambda x: df_value_as_link(x, x, url_root)
+            format_rules[col] = lambda x: df_value_as_link(x, x, url_root)
 
-    for test in ["id", 'Publication ID', 'Dataset ID', 'Trial ID', 'Grant ID',]:
-        if test.lower() in cols:
-            format_rules[test] = lambda x: df_value_as_link(dimensions_url(x, source_type), x)
+    for col in ["id", 'Publication ID', 'Patent ID', 'Dataset ID', 'Trial ID', 
+                'Policy ID', 'Grant ID', 'GRID ID', 'Researcher ID', 'Report ID']:
+        if col.lower() in cols:
+            format_rules[col] = lambda x: df_value_as_link(dimensions_url(x, source_type), x)
+            # extra step to hyperlink titles as well, using the ID
+            # create a new col with URL+title and split it when formatting the table
+            if title_links:    
+                title_names = ["title", "Title"]
+                for t in title_names:
+                    if t in df.columns:
+                        df[t] = df[t] + '###' + df[col].apply(lambda x: dimensions_url(x), source_type)
+                        format_rules[t] = lambda x: df_value_as_link(x, x)
 
-    for test in ["journal.id", 'Source ID']:
-        if test.lower() in cols:
-            format_rules[test] = lambda x: df_value_as_link(dimensions_url(x, "source_titles"), x)
+    for col in ["journal.id", 'Source ID']:
+        if col.lower() in cols:
+            format_rules[col] = lambda x: df_value_as_link(dimensions_url(x, "source_titles"), x)
+            # extra step to hyperlink titles as well, using the ID
+            # create a new col with URL+title and split it when formatting the table
+            if title_links:    
+                title_names = ["journal.title", "Source title"]
+                for t in title_names:
+                    if t in df.columns:
+                        df[t] = df[t] + '###' + df[col].apply(lambda x: dimensions_url(x), source_type)
+                        format_rules[t] = lambda x: df_value_as_link(x, x)        
 
-    # denorm data for special df methods
+    # denorm data for cols resulting from dimcli df methods 
+    # TODO more testing needed
     if "pub_id" in cols:
         format_rules["pub_id"] = lambda x: df_value_as_link(dimensions_url(x, "publications"), x)
 
@@ -308,8 +333,5 @@ def dimensions_styler(df, source_type=""):
 
     if "current_organization_id" in cols:
         format_rules["current_organization_id"] = lambda x: df_value_as_link(dimensions_url(x, "organizations"), x)
-
-    
-
 
     return df.style.format(format_rules)
