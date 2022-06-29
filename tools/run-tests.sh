@@ -33,6 +33,13 @@ python -m dimcli.tests.test_dataframes
 sleep 2
 
 echo "=================="
+echo "CALLING [test_magics] in 1 second..."
+echo "=================="
+sleep 1
+python -m dimcli.tests.test_magics
+sleep 2
+
+echo "=================="
 echo "CALLING [test_functions] in 1 second..."
 echo "=================="
 sleep 1

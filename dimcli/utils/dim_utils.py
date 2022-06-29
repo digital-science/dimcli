@@ -15,6 +15,22 @@ import os
 
 
 
+
+
+def gen_dslqueries(sources, text="Albert Einstein"):
+    """Generate test DSL queries for each source
+    eg
+    >>> from dimcli import G
+    >>> gen_dslqueries(G.sources())
+    """
+    
+    _q = """ search {} for "{}" return {}[basics] limit 10 """
+    out = []
+    for source in sources:
+        out += [_q.format(source, source)]
+        return reversed(out)
+
+
 def dslquery(query_string):
     """Shortcut for running a query without instantiating dimcli.Dsl(). 
     

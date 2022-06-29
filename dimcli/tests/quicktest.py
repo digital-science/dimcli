@@ -30,11 +30,30 @@ def main(test_number=1):
     test_number = int(test_number)
 
 
+    if test_number == 4:
+
+        _q = """ search {} for "Albert Einstein" return {}[basics] limit 10 """
+
+        for source in G.sources():
+            q = _q.format(source, source)
+            print(q)
+            data = dsl.query(q)
+
+
     if test_number == 3:
+        # testing magics 
+        from IPython.testing.globalipapp import get_ipython
+        ip = get_ipython()
+        # ip.magic('load_ext excelify')
+        # from dimcli.jupyter import magics
+        from dimcli.jupyter.magics import DslMagics
+        ip.register_magics(DslMagics)
+        df = ip.run_cell_magic(magic_name='dsldf', line='', cell='search publications return publications')
 
-        from dimcli.utils import dimensions_url
+        # mg = magics.DslMagics()
 
-        print(dimensions_url("pub.1043845707"))
+        # df = mg.dsldf(line="--links --nice", cell="""search publications return publications""")
+        print(df)
 
     if test_number == 2:
 

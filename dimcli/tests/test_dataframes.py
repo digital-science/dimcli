@@ -132,5 +132,6 @@ class TestDataframes(unittest.TestCase):
         concepts.info()
         click.secho("Completed test succesfully", fg="green")
 
+
 if __name__ == "__main__":
     unittest.main()

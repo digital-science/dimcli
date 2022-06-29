@@ -105,7 +105,10 @@ class DslMagics(Magics):
         if self._handle_login():
             QUERY, DEST_VAR, LINKS_FLAG, NICE_FLAG = self._handle_input(line, cell)
             data = self._handle_query(QUERY)
-            self.shell.user_ns[DEST_VAR] = data
+            try:
+                self.shell.user_ns[DEST_VAR] = data
+            except:
+                pass
             return data
 
 
@@ -178,6 +181,7 @@ class DslMagics(Magics):
                 # data = self._handle_query(QUERY).as_dataframe(links=LINKS_FLAG)
 
             self.shell.user_ns[DEST_VAR] = data
+
             return data
 
 
