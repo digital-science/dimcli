@@ -25,8 +25,7 @@ class DfFactory(object):
         """Reorder df columns based on Dimensions data. EG Try to have ID and TITLE always at the beginning.
         Goal is to improve readability of data returned. Currently used only with `df_simple`."""
 
-
-        FIELDS = ["id", "title"]
+        FIELDS = ["id", "title", "name", "first_name", "last_name"]
 
         for f in reversed(FIELDS):
             if f in df:

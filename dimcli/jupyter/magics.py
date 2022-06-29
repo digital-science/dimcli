@@ -167,9 +167,9 @@ class DslMagics(Magics):
                 elif source == "source_titles":
                     data = DslSourceTitlesConverter(data).run()
                 elif source == "organizations":
-                    data = DslClinicaltrialsConverter(data).run()
+                    data = DslOrganizationsConverter(data).run()
                 elif source == "researchers":
-                    data = DslDatasetsConverter(data).run()
+                    data = DslResearchersConverter(data).run()
                 else:
                     pass
 

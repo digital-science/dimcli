@@ -251,17 +251,18 @@ def dimensions_styler(df, source_type="", title_links=True):
 
     format_rules = {}
 
-    def df_value_as_link(url, val, url_root=""):
+    def df_value_as_link(url, val, url_root="", verbose=False):
         """Generic method to create an HTML hyperlink from a dataframe cell value and a URL.
         If cell value is list, we just take the first element (e.g. for 'linkout' field).
         NOTE If cell value is a float, it means it's a Pandas NaN. So we don't want to return a link.
         """
+        if verbose: print(f"""url: {url} / val: {val} / url_root: {url_root}""")
         if not val or type(val) == float:
             return val
-        if url_root:
-            url = url_root + url
         if type(val) == list:
             url = val[0]
+        if url_root:
+            url = url_root + url
         elif "###" in val: # title URL
             val, url = val.split("###")
         return '<a target="_blank" href="{}">{}</a>'.format(url, val)
@@ -295,14 +296,16 @@ def dimensions_styler(df, source_type="", title_links=True):
     for col in ["id", 'Publication ID', 'Patent ID', 'Dataset ID', 'Trial ID', 
                 'Policy ID', 'Grant ID', 'GRID ID', 'Researcher ID', 'Report ID']:
         if col.lower() in cols:
+            # print("Matched =", col)
             format_rules[col] = lambda x: df_value_as_link(dimensions_url(x, source_type), x)
             # extra step to hyperlink titles as well, using the ID
             # create a new col with URL+title and split it when formatting the table
             if title_links:    
-                title_names = ["title", "Title"]
+                title_names = ["title", "Title", "name", "Name"]
                 for t in title_names:
                     if t in df.columns:
-                        df[t] = df[t] + '###' + df[col].apply(lambda x: dimensions_url(x), source_type)
+                        # print("Matched Title=", t, source_type)
+                        df[t] = df[t] + '###' + df[col].apply(lambda x: dimensions_url(x, source_type))
                         format_rules[t] = lambda x: df_value_as_link(x, x)
 
     for col in ["journal.id", 'Source ID']:
@@ -314,7 +317,7 @@ def dimensions_styler(df, source_type="", title_links=True):
                 title_names = ["journal.title", "Source title"]
                 for t in title_names:
                     if t in df.columns:
-                        df[t] = df[t] + '###' + df[col].apply(lambda x: dimensions_url(x), source_type)
+                        df[t] = df[t] + '###' + df[col].apply(lambda x: dimensions_url(x, source_type))
                         format_rules[t] = lambda x: df_value_as_link(x, x)        
 
     # denorm data for cols resulting from dimcli df methods 
@@ -333,5 +336,12 @@ def dimensions_styler(df, source_type="", title_links=True):
 
     if "current_organization_id" in cols:
         format_rules["current_organization_id"] = lambda x: df_value_as_link(dimensions_url(x, "organizations"), x)
+
+    for col in ["orcid_id", 'Orcid ID']:
+        if col.lower() in cols:
+            url_root = "https://orcid.org/"
+            format_rules[col] = lambda x: df_value_as_link(x, x, url_root)
+
+
 
     return df.style.format(format_rules)
