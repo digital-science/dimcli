@@ -266,6 +266,8 @@ def dimensions_styler(df, source_type="", title_links=True):
     """
 
     format_rules = {}
+    cols = [x.lower() for x in df.columns]
+
 
     def df_value_as_link(url, val, url_root="", verbose=False):
         """Generic method to create an HTML hyperlink from a dataframe cell value and a URL.
@@ -283,8 +285,20 @@ def dimensions_styler(df, source_type="", title_links=True):
             val, url = val.split("###")
         return '<a target="_blank" href="{}">{}</a>'.format(url, val)
             
+    def df_format_gridids(val, verbose=False):
+        """Version of df_value_as_link() for lists of GRID IDs. 
+        NOTE If cell value is a float, it means it's a Pandas NaN. So we don't want to return a link.
 
-    cols = [x.lower() for x in df.columns]
+        val: string
+            List of GRID IDs separated by ';' (normal output of 'nice' converters)
+        """
+        if verbose: print(f"""val: {val} """)
+        if not val or type(val) == float:
+            return val
+        grids = val.split(";")
+        z = ['<a target="_blank" href="{}">{}</a>'.format(dimensions_url(g.strip(), "organizations"), g) for g in grids]
+        return "; ".join(z)
+
 
 
     # TRANSFORMATIONS
@@ -298,11 +312,6 @@ def dimensions_styler(df, source_type="", title_links=True):
         if col.lower() in cols:
             # ps this is a list, only first el will be used
             format_rules[col] = lambda x: df_value_as_link(x, x)
-
-    if "orcid" in cols:
-        # ps this is a list, only first el will be used
-        url_root = "https://orcid.org/"
-        format_rules['orcid'] = lambda x: df_value_as_link(x, x, url_root)
 
     for col in ["doi", 'DOI']:
         if col.lower() in cols:
@@ -353,10 +362,14 @@ def dimensions_styler(df, source_type="", title_links=True):
     if "current_organization_id" in cols:
         format_rules["current_organization_id"] = lambda x: df_value_as_link(dimensions_url(x, "organizations"), x)
 
-    for col in ["orcid_id", 'Orcid ID']:
+    for col in ["orcid_id", 'Orcid IDs']:
         if col.lower() in cols:
             url_root = "https://orcid.org/"
             format_rules[col] = lambda x: df_value_as_link(x, x, url_root)
+
+    for col in ["GRID IDs", "Funders GRID IDs", "Assignees GRID IDs"]:
+        if col.lower() in cols:
+            format_rules[col] = lambda x: df_format_gridids(x)
 
 
 
