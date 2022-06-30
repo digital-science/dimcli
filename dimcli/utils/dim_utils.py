@@ -244,7 +244,7 @@ def dimensions_styler(df, source_type="", title_links=True):
 
     Notes
     -----
-    Implemented using https://pandas.pydata.org/docs/reference/api/pandas.io.formats.style.Styler.format.html. Side effect is that the resulting dataframe becomes an instance of https://pandas.io.formats.style.styler/, which is a wrapper around the underlying Styler object. TIP To get back to the original dataframe, you can use the `.data` method. 
+    Implemented using https://pandas.pydata.org/docs/reference/api/pandas.io.formats.style.Styler.format.html. Side effect is that the resulting dataframe becomes an instance of pandas.io.formats.style.styler, which is a wrapper around the underlying Styler object. TIP To get back to the original dataframe, you can use the `.data` method. 
     See also: https://stackoverflow.com/questions/42263946/how-to-create-a-table-with-clickable-hyperlink-in-pandas-jupyter-notebook
 
     Returns
@@ -267,6 +267,8 @@ def dimensions_styler(df, source_type="", title_links=True):
 
     format_rules = {}
     cols = [x.lower() for x in df.columns]
+    REPLACE_TITLES = title_links
+    cols_to_drop = [] 
 
 
     def df_value_as_link(url, val, url_root="", verbose=False):
@@ -306,9 +308,10 @@ def dimensions_styler(df, source_type="", title_links=True):
 
     for col in ["dimensions_url", 'Dimensions URL']:
         if col.lower() in cols:
-            format_rules[col] = lambda x: df_value_as_link(x, x)
+            cols_to_drop += [col] # always drop cause IDs get linked already
+            # format_rules[col] = lambda x: df_value_as_link(x, x)
 
-    for col in ["linkout", 'Source Linkout']:
+    for col in ["linkout", "Source Linkout", "Linkout"]:
         if col.lower() in cols:
             # ps this is a list, only first el will be used
             format_rules[col] = lambda x: df_value_as_link(x, x)
@@ -323,27 +326,29 @@ def dimensions_styler(df, source_type="", title_links=True):
         if col.lower() in cols:
             # print("Matched =", col)
             format_rules[col] = lambda x: df_value_as_link(dimensions_url(x, source_type), x)
-            # extra step to hyperlink titles as well, using the ID
+            # HYPERLINK THE TITLE AS WELL, USING THE ID
             # create a new col with URL+title and split it when formatting the table
-            if title_links:    
+            if REPLACE_TITLES:    
                 title_names = ["title", "Title", "name", "Name"]
                 for t in title_names:
                     if t in df.columns:
                         # print("Matched Title=", t, source_type)
                         df[t] = df[t] + '###' + df[col].apply(lambda x: dimensions_url(x, source_type))
                         format_rules[t] = lambda x: df_value_as_link(x, x)
+                        cols_to_drop += [col]
 
     for col in ["journal.id", 'Source ID']:
         if col.lower() in cols:
             format_rules[col] = lambda x: df_value_as_link(dimensions_url(x, "source_titles"), x)
-            # extra step to hyperlink titles as well, using the ID
+            # HYPERLINK THE TITLE AS WELL, USING THE ID
             # create a new col with URL+title and split it when formatting the table
-            if title_links:    
+            if REPLACE_TITLES:    
                 title_names = ["journal.title", "Source title"]
                 for t in title_names:
                     if t in df.columns:
                         df[t] = df[t] + '###' + df[col].apply(lambda x: dimensions_url(x, source_type))
-                        format_rules[t] = lambda x: df_value_as_link(x, x)        
+                        format_rules[t] = lambda x: df_value_as_link(x, x)    
+                        cols_to_drop += [col]    
 
     # denorm data for cols resulting from dimcli df methods 
     # TODO more testing needed
@@ -371,6 +376,8 @@ def dimensions_styler(df, source_type="", title_links=True):
         if col.lower() in cols:
             format_rules[col] = lambda x: df_format_gridids(x)
 
+    df = df.style.format(format_rules)
+    if cols_to_drop:
+        df = df.hide_columns(cols_to_drop)
+    return df
 
-
-    return df.style.format(format_rules)

@@ -322,7 +322,7 @@ class DslPubsConverter(DslDataConverter):
 			'PubYear' : ('year', ''), 
 			'Volume' : ('volume', ''), 
 			'Issue' : ('issue', ''), 
-			# 'Pagination' : ('pages', ''), 
+			'Pagination' : ('pages', ''), 
 			'Open Access' : ('open_access_categories', 'convert_dict_name'), 
 			'Publication Type' : ('type', ''), 
 			'Authors' : ('authors', 'convert_authors_to_names'), 
@@ -342,7 +342,7 @@ class DslPubsConverter(DslDataConverter):
 			'Altmetric' : ('altmetric', 'convert_float_to_integer'), 
 			'Source Linkout' : ('linkout', ''), 
 			'Concepts' : ('concepts', 'convert_list'), 
-			# 'Dimensions URL' : ('id', 'convert_id_to_url'), 
+			'Dimensions URL' : ('id', 'convert_id_to_url'), 
 			'FOR (ANZSRC) Categories' : ('category_for', 'convert_dict_name'), 
 			'RCDC Categories' : ('category_rcdc', 'convert_dict_name'), 
 			'HRCS HC Categories' : ('category_hrcs_hc', 'convert_dict_name'), 
@@ -382,7 +382,7 @@ class DslGrantsConverter(DslDataConverter):
 			'GRID IDs' : ('research_orgs', 'convert_dict_ids'), 
 			'Research organizations countries' : ('research_orgs', 'convert_country_name'), 
 			'Source linkout' : ('linkout', ''), 
-			# 'Dimensions URL' : ('id', 'convert_id_to_url', 'grants'), 
+			'Dimensions URL' : ('id', 'convert_id_to_url', 'grants'), 
 			'Concepts' : ('concepts', 'convert_list'), 
 			'FOR (ANZSRC) Categories' : ('category_for', 'convert_dict_name'), 
 			'RCDC Categories' : ('category_rcdc', 'convert_dict_name'), 
@@ -419,7 +419,7 @@ class DslPatentsConverter(DslDataConverter):
 			'Assignees GRID IDs' : ('assignees', 'convert_dict_ids'), 
 			'Assignees countries' : ('assignees', 'convert_country_name'), 
 			'Source linkout' : ('linkout', ''), 
-			# 'Dimensions URL' : ('id', 'convert_id_to_url', 'grants'), 
+			'Dimensions URL' : ('id', 'convert_id_to_url', 'patents'), 
 			'Concepts' : ('concepts', 'convert_list'), 
 			'FOR (ANZSRC) Categories' : ('category_for', 'convert_dict_name'), 
 			'RCDC Categories' : ('category_rcdc', 'convert_dict_name'), 
@@ -463,7 +463,7 @@ class DslDatasetsConverter(DslDataConverter):
 			'GRID IDs' : ('research_orgs', 'convert_dict_ids'), 
 			'Countries' : ('research_orgs', 'convert_country_name'), 
 			'Source Linkout' : ('figshare_url', ''), 
-			# 'Dimensions URL' : ('id', 'convert_id_to_url', 'datasets'), 
+			'Dimensions URL' : ('id', 'convert_id_to_url', 'datasets'), 
 			'Concepts' : ('concepts', 'convert_list'), 
 			'FOR (ANZSRC) Categories' : ('category_for', 'convert_dict_name'), 
 			'RCDC Categories' : ('category_rcdc', 'convert_dict_name'), 
@@ -508,7 +508,7 @@ class DslClinicaltrialsConverter(DslDataConverter):
 			'Collaborating Funders' : ('funders', 'convert_dict_name'), 
 			'Funder Country' : ('funders', 'convert_country_name'), 
 			'Source Linkout' : ('linkout', ''), 
-			# 'Dimensions URL' : ('id', 'convert_id_to_url', 'clinical_trials'), 
+			'Dimensions URL' : ('id', 'convert_id_to_url', 'clinical_trials'), 
 			'Concepts' : ('concepts', 'convert_list'), 
 			'FOR (ANZSRC) Categories' : ('category_for', 'convert_dict_name'), 
 			'RCDC Categories' : ('category_rcdc', 'convert_dict_name'), 
@@ -548,7 +548,7 @@ class DslPolicyDocumentsConverter(DslDataConverter):
 			'Funders country' : ('funders', 'convert_country_name'), 
 			'Research organizations' : ('research_orgs', 'convert_dict_name'), 
 			'Source linkout' : ('linkout', ''), 
-			# 'Dimensions URL' : ('id', 'convert_id_to_url', 'grants'), 
+			'Dimensions URL' : ('id', 'convert_id_to_url', 'policy_documents'), 
 			'Concepts' : ('concepts', 'convert_list'), 
 			'FOR (ANZSRC) Categories' : ('category_for', 'convert_dict_name'), 
 			'RCDC Categories' : ('category_rcdc', 'convert_dict_name'), 
@@ -575,6 +575,8 @@ class DslOrganizationsConverter(DslDataConverter):
 
 		self.column_transformations = OrderedDict({
 			'GRID ID' : ('id', ''), 
+			'Name' : ('name', ''), 
+			# 'Dimensions URL' : ('id', 'convert_id_to_url', 'organizations'), 
 		})
 
 
@@ -596,6 +598,7 @@ class DslResearchersConverter(DslDataConverter):
 			'Research organizations' : ('research_orgs', 'convert_dict_name'), 
 			'GRID IDs' : ('research_orgs', 'convert_dict_ids'), 
 			'Countries' : ('research_orgs', 'convert_country_name'), 
+			'Dimensions URL' : ('id', 'convert_id_to_url', 'researchers'), 
 		})
 
 
@@ -612,6 +615,7 @@ class DslReportsConverter(DslDataConverter):
 
 		self.column_transformations = OrderedDict({
 			'Report ID' : ('id', ''), 
+			'Dimensions URL' : ('id', 'convert_id_to_url', 'reports'), 
 		})
 
 
@@ -627,5 +631,11 @@ class DslSourceTitlesConverter(DslDataConverter):
 
 		self.column_transformations = OrderedDict({
 			'Source ID' : ('id', ''), 
+			'Source title' : ('title', ''), 
+			'Type' : ('type', ''), 
+			'ISSNs' : ('issn', ''), 
+			'Publisher' : ('publisher', ''), 
+			'Start year' : ('start_year', ''), 
+			'Dimensions URL' : ('id', 'convert_id_to_url', 'source_titles'), 
 		})
 
