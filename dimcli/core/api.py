@@ -723,7 +723,7 @@ class DslDataset(IPython.display.JSON):
 
     # Dataframe Methods 
 
-    def as_dataframe(self, key="", links=False):
+    def as_dataframe(self, key="", links=False, nice=False):
         """Return the JSON data as a Pandas DataFrame. 
 
         If `key` is empty, the first available JSON key (eg 'publications') is used to determine
@@ -735,6 +735,8 @@ class DslDataset(IPython.display.JSON):
             The JSON results data object that needs to be processed.
         links: bool, optional 
             Tranform suitable fields to hyperlinks. Default: False.
+        nice: bool, optional 
+            Reformat column names and complex values where possible. Useful for visual inspection and printing our. Default: False.
 
         Returns
         -------
@@ -748,7 +750,7 @@ class DslDataset(IPython.display.JSON):
         """
 
         if not self.json.get("errors"):
-            return self.df_factory.df_simple(self.json, key, links)
+            return self.df_factory.df_simple(self.json, key, links, nice)
 
 
     def as_dataframe_authors(self, links=False):

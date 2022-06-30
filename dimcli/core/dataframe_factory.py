@@ -7,7 +7,7 @@ except:
 
 from ..utils.misc_utils import normalize_key, exists_key_in_dicts_list
 from ..utils.dim_utils import  dimensions_styler
-
+from ..utils.converters import *
 
 class DfFactory(object):
     """
@@ -34,10 +34,18 @@ class DfFactory(object):
         return df
 
 
-    def df_simple(self, data, key, links=False):
+    def df_simple(self, data, key, links=False, nice=False):
         """Return inner json as a pandas dataframe
-        If key is empty, the first available JSON key (eg 'publications') is used to determine
-        what data should be turned into a dataframe. 
+
+        Parameters
+        ----------
+        data: dict
+            dict representation of JSON data from the DSL 
+        key: string
+            JSON key to be used to extract dataframe data from. If key is empty, the first available JSON key (eg 'publications') is used to determine what data should be turned into a dataframe.
+        links: bool, False
+            control to return a special dataframe with hyperlinks for Jupyter environments
+         
         """
 
         output = pd.DataFrame()
@@ -68,6 +76,30 @@ class DfFactory(object):
         # move ID and Title at the beginning, always
         output = self._reorder_cols(output)
 
+        if nice:
+            if valid_key == "publications":
+                output = DslPubsConverter(output).run()
+            elif valid_key == "grants":
+                output = DslGrantsConverter(output).run()
+            elif valid_key == "patents":
+                output = DslPatentsConverter(output).run()
+            elif valid_key == "policy_documents":
+                output = DslPolicyDocumentsConverter(output).run()
+            elif valid_key == "clinical_trials":
+                output = DslClinicaltrialsConverter(output).run()
+            elif valid_key == "outputsets":
+                output = DslDatasetsConverter(output).run()
+            elif valid_key == "reports":
+                output = DslReportsConverter(output).run()
+            elif valid_key == "source_titles":
+                output = DslSourceTitlesConverter(output).run()
+            elif valid_key == "organizations":
+                output = DslOrganizationsConverter(output).run()
+            elif valid_key == "researchers":
+                output = DslResearchersConverter(output).run()
+            else:
+                pass
+            
         if links:
             output = dimensions_styler(output, valid_key)
 

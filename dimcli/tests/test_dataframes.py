@@ -42,14 +42,16 @@ class TestDataframes(unittest.TestCase):
         print(" ==> res.as_dataframe('year'): ", res.as_dataframe('year'))
         print(" ==> res.as_dataframe('XXX'): [FAILS] ", res.as_dataframe('XXX'))
         # ----
-        click.secho("Query returning Hyperlinks", fg="green")
-        click.secho("search publications for \"science\" return publications[id+dimensions_url]", fg="green")
-        res = dslquery("""search publications for \"science\" return publications[id+dimensions_url]""")
+        click.secho("Query returning Hyperlinks and NICE methods", fg="green")
+        click.secho("search publications for \"science\" return publications[basics] limit 200", fg="green")
+        res = dslquery("""search publications for \"science\" return publications[basics] limit 200""")
         click.secho("Query results: ", fg="magenta")
         print(" ==> res.json.keys(): ", res.json.keys())
         print(" ==> len(res): ", len(res))
         print(" ==> res.stats: ", res.stats)
         print(" ==> res.as_dataframe(links=True): ", res.as_dataframe(links=True))
+        print(" ==> res.as_dataframe(nice=True): ", res.as_dataframe(nice=True))
+        print(" ==> res.as_dataframe(links=True, nice=True): ", res.as_dataframe(links=True, nice=True))      
 
 
     def test_002(self):
@@ -131,6 +133,8 @@ class TestDataframes(unittest.TestCase):
         print(" ==> res.as_dataframe_concepts(): ", concepts)
         concepts.info()
         click.secho("Completed test succesfully", fg="green")
+
+
 
 
 if __name__ == "__main__":
