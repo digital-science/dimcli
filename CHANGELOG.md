@@ -4,6 +4,9 @@
 
 * New parameters for [DslDataset.as_dataframe()](https://digital-science.github.io/dimcli/modules.html#dimcli.core.api.DslDataset.as_dataframe)  
 * Improvements to the  `--nice` and `--links` rendering of dataframes with Dimesions data
+  - with hyperlinks, drop IDs if title is present
+  - affiliations as a list with GRID links
+  - generic 'default_transform' method for extra column not in transformations
 * Test suite for magic commands
 
 ## v 0.9.8
