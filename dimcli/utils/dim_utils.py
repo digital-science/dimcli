@@ -346,7 +346,7 @@ def dimensions_styler(df, source_type="", title_links=True):
                 title_names = ["journal.title", "Source title"]
                 for t in title_names:
                     if t in df.columns:
-                        df[t] = df[t] + '###' + df[col].apply(lambda x: dimensions_url(x, source_type))
+                        df[t] = df[t] + '###' + df[col].apply(lambda x: dimensions_url(x, "source_titles"))
                         format_rules[t] = lambda x: df_value_as_link(x, x)    
                         cols_to_drop += [col]    
 
