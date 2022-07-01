@@ -1,6 +1,10 @@
 # Changelog
 
+## v 0.9.9
 
+* New parameters for [DslDataset.as_dataframe()](https://digital-science.github.io/dimcli/modules.html#dimcli.core.api.DslDataset.as_dataframe)  
+* Improvements to the  `--nice` and `--links` rendering of dataframes with Dimesions data
+* Test suite for magic commands
 
 ## v 0.9.8
 
@@ -12,8 +16,6 @@
   * `--links` parameter: makes resulting dataframe table interactive
   * `--nice`  parameter: convert struct to strings for easier reading and export 
   * `dsldocs` can be used as a cell command too 
-
-
 
 
 ## v 0.9.7
