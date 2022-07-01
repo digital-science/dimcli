@@ -82,6 +82,22 @@
 
 
 
+
+
+<div class="viewcode-block" id="gen_dslqueries"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.dim_utils.gen_dslqueries">[docs]</a><span class="k">def</span> <span class="nf">gen_dslqueries</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Albert Einstein&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generate test DSL queries for each source</span>
+<span class="sd">    eg</span>
+<span class="sd">    &gt;&gt;&gt; from dimcli import G</span>
+<span class="sd">    &gt;&gt;&gt; gen_dslqueries(G.sources())</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">_q</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot; search </span><span class="si">{}</span><span class="s2"> for &quot;</span><span class="si">{}</span><span class="s2">&quot; return </span><span class="si">{}</span><span class="s2">[basics] limit 10 &quot;&quot;&quot;</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">sources</span><span class="p">:</span>
+        <span class="n">out</span> <span class="o">+=</span> <span class="p">[</span><span class="n">_q</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">source</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">out</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="dslquery"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.dim_utils.dslquery">[docs]</a><span class="k">def</span> <span class="nf">dslquery</span><span class="p">(</span><span class="n">query_string</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Shortcut for running a query without instantiating dimcli.Dsl(). </span>
 <span class="sd">    </span>
@@ -279,7 +295,7 @@
 
 
 
-<div class="viewcode-block" id="dimensions_styler"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.dim_utils.dimensions_styler">[docs]</a><span class="k">def</span> <span class="nf">dimensions_styler</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">source_type</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="dimensions_styler"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.dim_utils.dimensions_styler">[docs]</a><span class="k">def</span> <span class="nf">dimensions_styler</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">source_type</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">title_links</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Format the text display value of a dataframe by including Dimensions hyperlinks whenever possible.</span>
 <span class="sd">    Useful mainly in notebooks when printing out dataframes and clicking on links etc..</span>
 <span class="sd">    Expects column names to match the default DSL field names. </span>
@@ -290,11 +306,13 @@
 <span class="sd">        Pandas dataframe obtained from a DSL query e.g. via the `as_dataframe` methods.</span>
 <span class="sd">    source_type: str, optional</span>
 <span class="sd">        The name of the source: one of &#39;publications&#39;, &#39;grants&#39;, &#39;patents&#39;, &#39;policy_documents&#39;, &#39;clinical_trials&#39;, &#39;researchers&#39;. If not provided, it can be inferred in some cases.</span>
+<span class="sd">    title_links: bool, optional, True</span>
+<span class="sd">        Hyperlink document titles too, using the ID (if available).</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    Implemented using https://pandas.pydata.org/docs/reference/api/pandas.io.formats.style.Styler.format.html. Side effect is that the resulting dataframe becomes an instance of https://pandas.io.formats.style.styler/, which is a wrapper around the underlying Styler object. </span>
-<span class="sd">    NOTE To get back to the original dataframe, you can use the `.data` method.</span>
+<span class="sd">    Implemented using https://pandas.pydata.org/docs/reference/api/pandas.io.formats.style.Styler.format.html. Side effect is that the resulting dataframe becomes an instance of pandas.io.formats.style.styler, which is a wrapper around the underlying Styler object. TIP To get back to the original dataframe, you can use the `.data` method. </span>
+<span class="sd">    See also: https://stackoverflow.com/questions/42263946/how-to-create-a-table-with-clickable-hyperlink-in-pandas-jupyter-notebook</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -308,68 +326,128 @@
 <span class="sd">    &gt;&gt;&gt; q = &#39;search publications for &quot;scientometrics&quot; return publications[basics]&#39; </span>
 <span class="sd">    &gt;&gt;&gt; df = dsl.query(q).as_dataframe()</span>
 <span class="sd">    &gt;&gt;&gt; dimensions_styler(df)</span>
-<span class="sd">    # alternatively, use the shortcut method:</span>
+<span class="sd">    # </span>
+<span class="sd">    # alternatively, using the shortcut method:</span>
+<span class="sd">    #</span>
 <span class="sd">    &gt;&gt;&gt; dsl.query(q).as_dataframe(links=True)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">format_rules</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="n">REPLACE_TITLES</span> <span class="o">=</span> <span class="n">title_links</span>
+    <span class="n">cols_to_drop</span> <span class="o">=</span> <span class="p">[]</span> 
 
-    <span class="k">def</span> <span class="nf">df_value_as_link</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">url_root</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Val is the value found in the dataframe column. It should be a string or an integer, or a list.</span>
-<span class="sd">        If it&#39;s a list, we just take the first element (e.g. for &#39;linkout&#39; field).</span>
-<span class="sd">        If it&#39;s a float, it means it&#39;s a Pandas NaN. So we don&#39;t want to return a link.</span>
+
+    <span class="k">def</span> <span class="nf">df_value_as_link</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">url_root</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generic method to create an HTML hyperlink from a dataframe cell value and a URL.</span>
+<span class="sd">        If cell value is list, we just take the first element (e.g. for &#39;linkout&#39; field).</span>
+<span class="sd">        NOTE If cell value is a float, it means it&#39;s a Pandas NaN. So we don&#39;t want to return a link.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;url: </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2"> / val: </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2"> / url_root: </span><span class="si">{</span><span class="n">url_root</span><span class="si">}</span><span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">val</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="nb">float</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">val</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">:</span>
             <span class="n">url</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">url_root</span><span class="p">:</span>
             <span class="n">url</span> <span class="o">=</span> <span class="n">url_root</span> <span class="o">+</span> <span class="n">url</span>
+        <span class="k">elif</span> <span class="s2">&quot;###&quot;</span> <span class="ow">in</span> <span class="n">val</span><span class="p">:</span> <span class="c1"># title URL</span>
+            <span class="n">val</span><span class="p">,</span> <span class="n">url</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;###&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="s1">&#39;&lt;a target=&quot;_blank&quot; href=&quot;</span><span class="si">{}</span><span class="s1">&quot;&gt;</span><span class="si">{}</span><span class="s1">&lt;/a&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
             
+    <span class="k">def</span> <span class="nf">df_format_gridids</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Version of df_value_as_link() for lists of GRID IDs. </span>
+<span class="sd">        NOTE If cell value is a float, it means it&#39;s a Pandas NaN. So we don&#39;t want to return a link.</span>
 
-    <span class="c1"># transformations</span>
-    <span class="k">if</span> <span class="s2">&quot;dimensions_url&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="n">format_rules</span><span class="p">[</span><span class="s1">&#39;dimensions_url&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df_value_as_link</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="sd">        val: string</span>
+<span class="sd">            List of GRID IDs separated by &#39;;&#39; (normal output of &#39;nice&#39; converters)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;val: </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2"> &quot;&quot;&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">val</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="nb">float</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">val</span>
+        <span class="n">grids</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&lt;a target=&quot;_blank&quot; href=&quot;</span><span class="si">{}</span><span class="s1">&quot;&gt;</span><span class="si">{}</span><span class="s1">&lt;/a&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dimensions_url</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s2">&quot;organizations&quot;</span><span class="p">),</span> <span class="n">g</span><span class="p">)</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">grids</span><span class="p">]</span>
+        <span class="k">return</span> <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;linkout&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="c1"># ps this is a list, only first el will be used</span>
-        <span class="n">format_rules</span><span class="p">[</span><span class="s1">&#39;linkout&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df_value_as_link</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;orcid&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="c1"># ps this is a list, only first el will be used</span>
-        <span class="n">url_root</span> <span class="o">=</span> <span class="s2">&quot;https://orcid.org/&quot;</span>
-        <span class="n">format_rules</span><span class="p">[</span><span class="s1">&#39;orcid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df_value_as_link</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">url_root</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;doi&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="n">url_root</span> <span class="o">=</span> <span class="s2">&quot;https://doi.org/&quot;</span>
-        <span class="n">format_rules</span><span class="p">[</span><span class="s1">&#39;doi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df_value_as_link</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">url_root</span><span class="p">)</span>
+    <span class="c1"># TRANSFORMATIONS</span>
+    <span class="c1"># NOTE multiple naming supported, so to handle columm conversions obtained via --nice flag</span>
 
-    <span class="k">if</span> <span class="s2">&quot;id&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="n">format_rules</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df_value_as_link</span><span class="p">(</span><span class="n">dimensions_url</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">source_type</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;dimensions_url&quot;</span><span class="p">,</span> <span class="s1">&#39;Dimensions URL&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">col</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">:</span>
+            <span class="n">cols_to_drop</span> <span class="o">+=</span> <span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="c1"># always drop cause IDs get linked already</span>
+            <span class="c1"># format_rules[col] = lambda x: df_value_as_link(x, x)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;journal.id&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="n">format_rules</span><span class="p">[</span><span class="s2">&quot;journal.id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df_value_as_link</span><span class="p">(</span><span class="n">dimensions_url</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;source_titles&quot;</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;linkout&quot;</span><span class="p">,</span> <span class="s2">&quot;Source Linkout&quot;</span><span class="p">,</span> <span class="s2">&quot;Linkout&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">col</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">:</span>
+            <span class="c1"># ps this is a list, only first el will be used</span>
+            <span class="n">format_rules</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df_value_as_link</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;pub_id&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;doi&quot;</span><span class="p">,</span> <span class="s1">&#39;DOI&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">col</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">:</span>
+            <span class="n">url_root</span> <span class="o">=</span> <span class="s2">&quot;https://doi.org/&quot;</span>
+            <span class="n">format_rules</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df_value_as_link</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">url_root</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s1">&#39;Publication ID&#39;</span><span class="p">,</span> <span class="s1">&#39;Patent ID&#39;</span><span class="p">,</span> <span class="s1">&#39;Dataset ID&#39;</span><span class="p">,</span> <span class="s1">&#39;Trial ID&#39;</span><span class="p">,</span> 
+                <span class="s1">&#39;Policy ID&#39;</span><span class="p">,</span> <span class="s1">&#39;Grant ID&#39;</span><span class="p">,</span> <span class="s1">&#39;GRID ID&#39;</span><span class="p">,</span> <span class="s1">&#39;Researcher ID&#39;</span><span class="p">,</span> <span class="s1">&#39;Report ID&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">col</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">:</span>
+            <span class="c1"># print(&quot;Matched =&quot;, col)</span>
+            <span class="n">format_rules</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df_value_as_link</span><span class="p">(</span><span class="n">dimensions_url</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">source_type</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
+            <span class="c1"># HYPERLINK THE TITLE AS WELL, USING THE ID</span>
+            <span class="c1"># create a new col with URL+title and split it when formatting the table</span>
+            <span class="k">if</span> <span class="n">REPLACE_TITLES</span><span class="p">:</span>    
+                <span class="n">title_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;Title&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;Name&quot;</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">title_names</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                        <span class="c1"># print(&quot;Matched Title=&quot;, t, source_type)</span>
+                        <span class="n">df</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;###&#39;</span> <span class="o">+</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">dimensions_url</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">source_type</span><span class="p">))</span>
+                        <span class="n">format_rules</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df_value_as_link</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+                        <span class="n">cols_to_drop</span> <span class="o">+=</span> <span class="p">[</span><span class="n">col</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;journal.id&quot;</span><span class="p">,</span> <span class="s1">&#39;Source ID&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">col</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">:</span>
+            <span class="n">format_rules</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df_value_as_link</span><span class="p">(</span><span class="n">dimensions_url</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;source_titles&quot;</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
+            <span class="c1"># HYPERLINK THE TITLE AS WELL, USING THE ID</span>
+            <span class="c1"># create a new col with URL+title and split it when formatting the table</span>
+            <span class="k">if</span> <span class="n">REPLACE_TITLES</span><span class="p">:</span>    
+                <span class="n">title_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;journal.title&quot;</span><span class="p">,</span> <span class="s2">&quot;Source title&quot;</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">title_names</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                        <span class="n">df</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;###&#39;</span> <span class="o">+</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">dimensions_url</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;source_titles&quot;</span><span class="p">))</span>
+                        <span class="n">format_rules</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df_value_as_link</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>    
+                        <span class="n">cols_to_drop</span> <span class="o">+=</span> <span class="p">[</span><span class="n">col</span><span class="p">]</span>    
+
+    <span class="c1"># denorm data for cols resulting from dimcli df methods </span>
+    <span class="c1"># TODO more testing needed</span>
+    <span class="k">if</span> <span class="s2">&quot;pub_id&quot;</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">:</span>
         <span class="n">format_rules</span><span class="p">[</span><span class="s2">&quot;pub_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df_value_as_link</span><span class="p">(</span><span class="n">dimensions_url</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;publications&quot;</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;researcher_id&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">&quot;researcher_id&quot;</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">:</span>
         <span class="n">format_rules</span><span class="p">[</span><span class="s2">&quot;researcher_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df_value_as_link</span><span class="p">(</span><span class="n">dimensions_url</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;researchers&quot;</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;grant_id&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">&quot;grant_id&quot;</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">:</span>
         <span class="n">format_rules</span><span class="p">[</span><span class="s2">&quot;grant_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df_value_as_link</span><span class="p">(</span><span class="n">dimensions_url</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;grants&quot;</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;aff_id&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">&quot;aff_id&quot;</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">:</span>
         <span class="n">format_rules</span><span class="p">[</span><span class="s2">&quot;aff_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df_value_as_link</span><span class="p">(</span><span class="n">dimensions_url</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;organizations&quot;</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;current_organization_id&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">&quot;current_organization_id&quot;</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">:</span>
         <span class="n">format_rules</span><span class="p">[</span><span class="s2">&quot;current_organization_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df_value_as_link</span><span class="p">(</span><span class="n">dimensions_url</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;organizations&quot;</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
 
-    
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;orcid_id&quot;</span><span class="p">,</span> <span class="s1">&#39;Orcid IDs&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">col</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">:</span>
+            <span class="n">url_root</span> <span class="o">=</span> <span class="s2">&quot;https://orcid.org/&quot;</span>
+            <span class="n">format_rules</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df_value_as_link</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">url_root</span><span class="p">)</span>
 
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;GRID IDs&quot;</span><span class="p">,</span> <span class="s2">&quot;Funders GRID IDs&quot;</span><span class="p">,</span> <span class="s2">&quot;Assignees GRID IDs&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">col</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">:</span>
+            <span class="n">format_rules</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df_format_gridids</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">format_rules</span><span class="p">)</span></div>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">format_rules</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">cols_to_drop</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">hide_columns</span><span class="p">(</span><span class="n">cols_to_drop</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span></div>
+
 </pre></div>
 
            </div>

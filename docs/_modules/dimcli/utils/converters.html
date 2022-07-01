@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>dimcli.utils.converters &mdash; DimCli  documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> DimCli
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started.html">Getting Started with Dimcli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Modules Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DimCli</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>dimcli.utils.converters</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for dimcli.utils.converters</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">.misc_utils</span> <span class="kn">import</span> <span class="n">printDebug</span>
+<span class="kn">from</span> <span class="nn">.dim_utils</span> <span class="kn">import</span> <span class="n">dimensions_url</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+
+
+<span class="c1"># ===========</span>
+<span class="c1"># TESTING - UNSUPPORTED FEATURE</span>
+<span class="c1"># ===========</span>
+<span class="c1">#</span>
+
+<div class="viewcode-block" id="DslDataConverter"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.converters.DslDataConverter">[docs]</a><span class="k">class</span> <span class="nc">DslDataConverter</span><span class="p">():</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Helper class containing methods for transforming JSON complex snippets to other formats.</span>
+<span class="sd">	Useful eg for creating a nice looking CSV from raw API data.</span>
+
+<span class="sd">	Status: ALPHA - UNSUPPORTED FEATURE</span>
+
+<span class="sd">	Converters subclasses available only for</span>
+<span class="sd">	* Pubs</span>
+<span class="sd">	* Grants</span>
+<span class="sd">	* Clinical Trials</span>
+<span class="sd">	* Datasets </span>
+<span class="sd">	* Patents</span>
+<span class="sd">	</span>
+<span class="sd">	To Review:</span>
+<span class="sd">	* Organizations</span>
+<span class="sd">	* Policy Documents</span>
+<span class="sd">	* Researchers</span>
+
+
+<span class="sd">	Example</span>
+<span class="sd">	========</span>
+<span class="sd">	&gt;&gt;&gt; from dimcli.utils.converters import *</span>
+<span class="sd">	&gt;&gt;&gt; df_temp = dsl.query_iterative(&quot;search publications return publications&quot;).as_dataframe()</span>
+<span class="sd">	&gt;&gt;&gt; c1 = DslDatasetsConverter(df_temp)</span>
+<span class="sd">	&gt;&gt;&gt; df_final = c1.run()</span>
+
+<span class="sd">	ALGORITHM</span>
+<span class="sd">	==========</span>
+<span class="sd">	# iterate through all keys/columns in dataframe</span>
+<span class="sd">	#</span>
+<span class="sd">	# if column name == key in fields_mappings:</span>
+<span class="sd">	#   apply all functions =&gt; generate new columns</span>
+<span class="sd">	#   remove old column </span>
+<span class="sd">	# else if column value is list </span>
+<span class="sd">	#   break down list into semicolon delimited string</span>
+<span class="sd">	#   replace old column</span>
+<span class="sd">	#</span>
+<span class="sd">	#  PS dimensions_url special case, we just add a new column without removing &#39;ID&#39;</span>
+<span class="sd">	#   also, it applies only to sources</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">object_type</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">df_original</span> <span class="o">=</span> <span class="n">df</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">df_modified</span> <span class="o">=</span> <span class="kc">None</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">object_type</span> <span class="o">=</span> <span class="n">object_type</span>
+		<span class="c1"># self.df_converted = df.copy()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">keep_extra_cols</span> <span class="o">=</span> <span class="kc">False</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">columns_original</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_original</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span> <span class="n">printDebug</span><span class="p">(</span><span class="s2">&quot;Original columns are:&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns_original</span><span class="p">)</span>
+
+		<span class="c1"># defined when subclassing</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">column_transformations</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="DslDataConverter.run"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.converters.DslDataConverter.run">[docs]</a>	<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keep_extra_cols</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;@TODO define a suitable abstraction for automatic transformation</span>
+<span class="sd">		eg simplify all fields to strings</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">keep_extra_cols</span> <span class="o">=</span> <span class="n">keep_extra_cols</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">apply_transformations</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">sort_and_prune</span><span class="p">()</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_modified</span></div>
+
+
+<div class="viewcode-block" id="DslDataConverter.extend_transformations"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.converters.DslDataConverter.extend_transformations">[docs]</a>	<span class="k">def</span> <span class="nf">extend_transformations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Add default transformations for all fields found in a df (not just the ones defined explicitly) using standard rules (camel case and spacing). &quot;&quot;&quot;</span>
+		<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns_original</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">column_transformations</span><span class="o">.</span><span class="n">values</span><span class="p">()]:</span>
+				<span class="n">new_c</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">()</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">column_transformations</span><span class="p">[</span><span class="n">new_c</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span></div>
+
+
+
+	<span class="c1">#</span>
+	<span class="c1">#</span>
+	<span class="c1"># Helpers METHODS</span>
+	<span class="c1">#</span>
+	<span class="c1">#</span>
+
+<div class="viewcode-block" id="DslDataConverter.apply_transformations"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.converters.DslDataConverter.apply_transformations">[docs]</a>	<span class="k">def</span> <span class="nf">apply_transformations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;For each column, see if there is a transformation defined, and apply it.</span>
+
+<span class="sd">		keep_extra_cols:</span>
+<span class="sd">			bool, True</span>
+<span class="sd">			Columns not included in the transformation rules are included by default.</span>
+<span class="sd">		</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span> <span class="n">printDebug</span><span class="p">(</span><span class="s2">&quot;Applying transformations..&quot;</span><span class="p">)</span>
+		
+		<span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_original</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">keep_extra_cols</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">extend_transformations</span><span class="p">()</span>
+		
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">column_transformations</span><span class="p">:</span>
+			<span class="k">for</span> <span class="n">new_col</span><span class="p">,</span> <span class="n">details</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">column_transformations</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+				<span class="n">source</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">arg</span> <span class="o">=</span> <span class="n">details</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">details</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="kc">None</span>
+				<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">details</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">2</span><span class="p">:</span>
+					<span class="n">arg</span> <span class="o">=</span> <span class="n">details</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+				<span class="k">if</span> <span class="n">source</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns_original</span><span class="p">:</span>
+					<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span> <span class="n">printDebug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;...converting &#39;</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">&#39; to &#39;</span><span class="si">{</span><span class="n">new_col</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+					<span class="k">if</span> <span class="n">action</span><span class="p">:</span>
+						<span class="n">function</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">)</span>
+						<span class="k">if</span> <span class="n">arg</span><span class="p">:</span>
+							<span class="n">df</span><span class="p">[</span><span class="n">new_col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">source</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">cell</span><span class="p">:</span> <span class="n">function</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">arg</span><span class="p">))</span>
+						<span class="k">else</span><span class="p">:</span>
+							<span class="n">df</span><span class="p">[</span><span class="n">new_col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">source</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">cell</span><span class="p">:</span> <span class="n">function</span><span class="p">(</span><span class="n">cell</span><span class="p">))</span>
+					<span class="k">else</span><span class="p">:</span>
+						<span class="n">df</span><span class="p">[</span><span class="n">new_col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">source</span><span class="p">]</span>
+
+		<span class="n">df</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+		<span class="c1"># finally:</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">df_modified</span> <span class="o">=</span> <span class="n">df</span></div>
+
+
+<div class="viewcode-block" id="DslDataConverter.sort_and_prune"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.converters.DslDataConverter.sort_and_prune">[docs]</a>	<span class="k">def</span> <span class="nf">sort_and_prune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_cols_ordered_list</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;generate a default order if not provided, keeping only those cols</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span> <span class="n">printDebug</span><span class="p">(</span><span class="s2">&quot;Sorting / dropping columns...&quot;</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="n">new_cols_ordered_list</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">new_cols_ordered_list</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">:</span>
+			<span class="c1"># user-provided list of cols</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">df_modified</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_modified</span><span class="p">[</span><span class="n">new_cols_ordered_list</span><span class="p">]</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="c1"># infer from all declared columns</span>
+			<span class="n">new_cols_ordered_list</span> <span class="o">=</span> <span class="p">[]</span>
+			<span class="n">existing_cols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_modified</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+
+			<span class="k">for</span> <span class="n">new_col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">column_transformations</span><span class="p">:</span>
+				<span class="c1"># PS ensure declared cols actually exist!!</span>
+				<span class="k">if</span> <span class="n">new_col</span> <span class="ow">in</span> <span class="n">existing_cols</span><span class="p">:</span>
+					<span class="n">new_cols_ordered_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_col</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="n">new_cols_ordered_list</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">df_modified</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_modified</span><span class="p">[</span><span class="n">new_cols_ordered_list</span><span class="p">]</span>
+		
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_modified</span></div>
+
+
+
+<div class="viewcode-block" id="DslDataConverter.truncate_for_gsheets"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.converters.DslDataConverter.truncate_for_gsheets">[docs]</a>	<span class="k">def</span> <span class="nf">truncate_for_gsheets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cols_subset</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		helper to avoid gsheets error</span>
+<span class="sd">		&#39;Your input contains more than the maximum of 50000 characters in a single cell.&#39;</span>
+
+<span class="sd">		cols_subset: eg [&#39;Abstract&#39;, &#39;Authors&#39;, &#39;Authors Affiliations&#39;]</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span> <span class="n">printDebug</span><span class="p">(</span><span class="s2">&quot;Truncating strings longer than 50k chars...&quot;</span><span class="p">)</span>
+
+		<span class="k">def</span> <span class="nf">helper</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+			<span class="c1"># printDebug(len(str(s)))</span>
+			<span class="c1"># n = str(s)[:49500]</span>
+			<span class="c1"># printDebug(len(str(n)))</span>
+			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">49500</span><span class="p">:</span>
+				<span class="n">n</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">)[:</span><span class="mi">49500</span><span class="p">]</span>
+				<span class="k">return</span> <span class="n">n</span> <span class="o">+</span> <span class="s2">&quot;...&quot;</span>
+			<span class="k">return</span> <span class="n">s</span>
+
+		<span class="k">if</span> <span class="n">cols_subset</span><span class="p">:</span>
+			<span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols_subset</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">df_modified</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_modified</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">helper</span><span class="p">(</span><span class="n">x</span><span class="p">))</span></div>
+
+	<span class="c1">#</span>
+	<span class="c1">#</span>
+	<span class="c1"># CONVERSION METHODS</span>
+	<span class="c1">#</span>
+	<span class="c1">#</span>
+
+<div class="viewcode-block" id="DslDataConverter.convert_id_to_url"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.converters.DslDataConverter.convert_id_to_url">[docs]</a>	<span class="k">def</span> <span class="nf">convert_id_to_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idd</span><span class="p">,</span> <span class="n">ttype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">ttype</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">dimensions_url</span><span class="p">(</span><span class="n">idd</span><span class="p">,</span> <span class="n">ttype</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">dimensions_url</span><span class="p">(</span><span class="n">idd</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DslDataConverter.convert_authors_to_names"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.converters.DslDataConverter.convert_authors_to_names">[docs]</a>	<span class="k">def</span> <span class="nf">convert_authors_to_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">authorslist</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">authors</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">authorslist</span><span class="p">:</span>
+			<span class="n">name</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;last_name&#39;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">+</span> <span class="n">x</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;first_name&#39;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> 
+			<span class="n">authors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+		<span class="k">return</span> <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">authors</span><span class="p">)</span></div>
+
+
+	<span class="k">def</span> <span class="nf">convert_authors_corresponding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">authorslist</span><span class="p">):</span>
+		<span class="n">authors</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">authorslist</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;corresponding&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+				<span class="n">name</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;last_name&#39;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">+</span> <span class="n">x</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;first_name&#39;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+				<span class="n">authors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+		<span class="k">return</span> <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">authors</span><span class="p">)</span>        
+
+<div class="viewcode-block" id="DslDataConverter.convert_authors_affiliations"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.converters.DslDataConverter.convert_authors_affiliations">[docs]</a>	<span class="k">def</span> <span class="nf">convert_authors_affiliations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">authorslist</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">author_affiliations</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">authorslist</span><span class="p">:</span>
+			<span class="n">name</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;last_name&#39;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">+</span> <span class="n">x</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;first_name&#39;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+			<span class="n">affiliations</span> <span class="o">=</span> <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">a</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;affiliations&#39;</span><span class="p">]])</span>
+			<span class="n">author_affiliations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">affiliations</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+		<span class="k">return</span> <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">author_affiliations</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DslDataConverter.convert_authors_grids"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.converters.DslDataConverter.convert_authors_grids">[docs]</a>	<span class="k">def</span> <span class="nf">convert_authors_grids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">authorslist</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">grids</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">authorslist</span><span class="p">:</span>
+			<span class="n">grids</span> <span class="o">+=</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;affiliations&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)]</span>
+		<span class="k">return</span> <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">grids</span><span class="p">)))</span></div>
+
+<div class="viewcode-block" id="DslDataConverter.convert_authors_countries"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.converters.DslDataConverter.convert_authors_countries">[docs]</a>	<span class="k">def</span> <span class="nf">convert_authors_countries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">authorslist</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">countries</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">authorslist</span><span class="p">:</span>
+			<span class="n">countries</span> <span class="o">+=</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;country&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;affiliations&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;country&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)]</span>
+		<span class="k">return</span> <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">countries</span><span class="p">)))</span></div>
+
+<div class="viewcode-block" id="DslDataConverter.convert_investigators_cltrials"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.converters.DslDataConverter.convert_investigators_cltrials">[docs]</a>	<span class="k">def</span> <span class="nf">convert_investigators_cltrials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">investigatorslist</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		From: </span>
+<span class="sd">		[[&#39;Chaoqian Li&#39;, &#39;&#39;, &#39;Study leader&#39;, &#39;6 Shuangyong Road, Nanning, Guangxi Zhuang Autonomous Region, China&#39;, &#39;&#39;, &#39;&#39;], [&#39;Jianlin Huang&#39;, &#39;&#39;, &#39;Applicant&#39;, &quot;Beihai People&#39;s Hospital&quot;, &quot;Beihai People&#39;s Hospital&quot;, &#39;grid.452719.c&#39;]]</span>
+<span class="sd">		To</span>
+<span class="sd">		&quot;Chaoqian Li; Jianlin Huang&quot;</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">investigatorslist</span><span class="p">])</span> </div>
+
+	<span class="k">def</span> <span class="nf">convert_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">])</span>
+
+	<span class="k">def</span> <span class="nf">convert_dict_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">y</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">data</span><span class="p">])</span>
+
+	<span class="k">def</span> <span class="nf">convert_dict_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">y</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">data</span><span class="p">])</span>
+
+	<span class="k">def</span> <span class="nf">convert_city_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">y</span><span class="p">[</span><span class="s1">&#39;city_name&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">data</span><span class="p">])</span>
+
+	<span class="k">def</span> <span class="nf">convert_state_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">y</span><span class="p">[</span><span class="s1">&#39;city_name&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">data</span><span class="p">])</span>
+
+	<span class="k">def</span> <span class="nf">convert_country_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">y</span><span class="p">[</span><span class="s1">&#39;country_name&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">data</span><span class="p">])</span>
+
+<div class="viewcode-block" id="DslDataConverter.convert_interventions_dict"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.converters.DslDataConverter.convert_interventions_dict">[docs]</a>	<span class="k">def</span> <span class="nf">convert_interventions_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Return &#39;name&#39; and &#39;type&#39; for clinical trials / interventions </span>
+
+<span class="sd">		From: &quot;[{&#39;arm_group_labels&#39;: &#39;Hydroxychloroquine and conventional treatments&#39;, &#39;type&#39;: &#39;Drug&#39;, &#39;description&#39;: &#39;Subjects take hydroxychloroquine 400 mg per day for 5 days, also take conventional treatments&#39;, &#39;other_names&#39;: &#39;&#39;, &#39;name&#39;: &#39;Hydroxychloroquine&#39;}]&quot;</span>
+<span class="sd">		</span>
+<span class="sd">		To: &quot;Hydroxychloroquine (Drug)&quot;</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">])</span></div>
+
+	<span class="k">def</span> <span class="nf">convert_float_to_integer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+		<span class="k">except</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">data</span>
+
+
+<div class="viewcode-block" id="DslDataConverter.convert_abstract_to_preview"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.converters.DslDataConverter.convert_abstract_to_preview">[docs]</a>	<span class="k">def</span> <span class="nf">convert_abstract_to_preview</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">abstract</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">abstract</span><span class="p">:</span>
+			<span class="k">return</span> <span class="s2">&quot;&quot;</span>
+			<span class="c1"># May 22, 2020</span>
+			<span class="c1"># return &quot; &quot;.join(abstract.split()[:20]) + &quot;...&quot;</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span> <span class="s2">&quot;&quot;</span></div></div>
+
+
+
+
+<div class="viewcode-block" id="DslPubsConverter"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.converters.DslPubsConverter">[docs]</a><span class="k">class</span> <span class="nc">DslPubsConverter</span><span class="p">(</span><span class="n">DslDataConverter</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;publications&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+		<span class="c1">## OVERRRIDE VALUES</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">column_transformations</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">({</span>
+			<span class="c1"># (&#39;new_col_name&#39;, &#39;fun_name&#39;)</span>
+			<span class="s1">&#39;Date added&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;date_inserted&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Publication ID&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;DOI&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;doi&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;PMID&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;pmid&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;PMCID&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;pmcid&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Title&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Abstract&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;abstract&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Source title&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;journal.title&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Source ID&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;journal.id&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Publisher&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;publisher&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;MeSH terms&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;mesh_terms&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_list&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Publication Date&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;PubYear&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Volume&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;volume&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Issue&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;issue&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Pagination&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;pages&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Open Access&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;open_access_categories&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Publication Type&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Authors&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;authors&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_authors_to_names&#39;</span><span class="p">),</span> 
+			<span class="c1"># &#39;Corresponding Authors&#39; : (&#39;authors&#39;, &#39;convert_authors_corresponding&#39;), </span>
+			<span class="s1">&#39;Authors Affiliations&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;authors&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_authors_affiliations&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;GRID IDs&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;authors&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_authors_grids&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Countries&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;authors&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_authors_countries&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Research Organizations - standardized&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;research_orgs&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="c1"># &#39;GRID IDs&#39; : (&#39;research_orgs&#39;, &#39;convert_dict_ids&#39;),  # alternate method on different field</span>
+			<span class="s1">&#39;City of Research organization&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;research_orgs&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_city_name&#39;</span><span class="p">),</span> 
+			<span class="c1"># &#39;State of Research organization&#39; : (&#39;research_orgs&#39;, &#39;convert_state_name&#39;), </span>
+			<span class="s1">&#39;Country of Research organization&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;research_orgs&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_country_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Funder&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;funders&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;UIDs of supporting grants&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;supporting_grant_ids&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_list&#39;</span><span class="p">),</span> 
+			<span class="c1"># TODO Supporting Grants (proj number?)</span>
+			<span class="s1">&#39;Times cited&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;times_cited&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_float_to_integer&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Altmetric&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;altmetric&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_float_to_integer&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Source Linkout&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;linkout&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Concepts&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;concepts&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_list&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Dimensions URL&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_id_to_url&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;FOR (ANZSRC) Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_for&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;RCDC Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_rcdc&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;HRCS HC Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_hrcs_hc&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;HRCS RAC Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_hrcs_rac&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;ICRP Cancer Types&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_icrp_ct&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;ICRP CSO Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_icrp_cso&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;BRA Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_bra&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;HRA Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_hra&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;SDG Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_sdg&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+		<span class="p">})</span></div>
+
+
+
+
+
+
+
+<div class="viewcode-block" id="DslGrantsConverter"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.converters.DslGrantsConverter">[docs]</a><span class="k">class</span> <span class="nc">DslGrantsConverter</span><span class="p">(</span><span class="n">DslDataConverter</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;grants&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">column_transformations</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">({</span>
+			<span class="s1">&#39;Date added&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;date_inserted&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Grant ID&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Title&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Abstract&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;abstract&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Start date&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;start_date&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;End date&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;end_date&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Funders&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;funders&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Funders GRID IDs&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;funders&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_ids&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Funders country&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;funders&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_country_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Research organizations&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;research_orgs&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;GRID IDs&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;research_orgs&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_ids&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Research organizations countries&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;research_orgs&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_country_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Source linkout&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;linkout&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Dimensions URL&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_id_to_url&#39;</span><span class="p">,</span> <span class="s1">&#39;grants&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Concepts&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;concepts&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_list&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;FOR (ANZSRC) Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_for&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;RCDC Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_rcdc&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;HRCS HC Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_hrcs_hc&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;HRCS RAC Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_hrcs_rac&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;ICRP Cancer Types&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_icrp_ct&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;ICRP CSO Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_icrp_cso&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;BRA Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_bra&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;HRA Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_hra&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;SDG Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_sdg&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+		<span class="p">})</span></div>
+
+
+
+
+<div class="viewcode-block" id="DslPatentsConverter"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.converters.DslPatentsConverter">[docs]</a><span class="k">class</span> <span class="nc">DslPatentsConverter</span><span class="p">(</span><span class="n">DslDataConverter</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;grants&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">column_transformations</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">({</span>
+			<span class="s1">&#39;Date added&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;date_inserted&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Patent ID&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Title&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Abstract&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;abstract&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Date&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Funders&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;funders&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Funders GRID IDs&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;funders&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_ids&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Funders countries&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;funders&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_country_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Assignees&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;assignees&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Assignees GRID IDs&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;assignees&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_ids&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Assignees countries&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;assignees&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_country_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Source linkout&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;linkout&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Dimensions URL&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_id_to_url&#39;</span><span class="p">,</span> <span class="s1">&#39;patents&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Concepts&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;concepts&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_list&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;FOR (ANZSRC) Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_for&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;RCDC Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_rcdc&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;HRCS HC Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_hrcs_hc&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;HRCS RAC Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_hrcs_rac&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;ICRP Cancer Types&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_icrp_ct&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;ICRP CSO Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_icrp_cso&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;BRA Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_bra&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;HRA Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_hra&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;SDG Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_sdg&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+		<span class="p">})</span></div>
+
+
+
+
+
+<div class="viewcode-block" id="DslDatasetsConverter"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.converters.DslDatasetsConverter">[docs]</a><span class="k">class</span> <span class="nc">DslDatasetsConverter</span><span class="p">(</span><span class="n">DslDataConverter</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;datasets&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+		<span class="c1">## OVERRRIDE VALUES</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">column_transformations</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">({</span>
+			<span class="s1">&#39;Date added&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;date_inserted&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Dataset ID&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;DOI&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;doi&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Title&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Description&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Repository&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;repository_id&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Publication year&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Dataset author&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;authors&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Associated publication&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;associated_publication_id&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Funders&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;funders&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Funders GRID IDs&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;funders&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_ids&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Funders countries&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;funders&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_country_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Research organizations&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;research_orgs&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;GRID IDs&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;research_orgs&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_ids&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Countries&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;research_orgs&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_country_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Source Linkout&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;figshare_url&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Dimensions URL&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_id_to_url&#39;</span><span class="p">,</span> <span class="s1">&#39;datasets&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Concepts&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;concepts&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_list&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;FOR (ANZSRC) Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_for&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;RCDC Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_rcdc&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;HRCS HC Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_hrcs_hc&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;HRCS RAC Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_hrcs_rac&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;ICRP Cancer Types&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_icrp_ct&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;ICRP CSO Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_icrp_cso&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;BRA Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_bra&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;HRA Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_hra&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;SDG Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_sdg&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+		<span class="p">})</span></div>
+
+
+
+
+<div class="viewcode-block" id="DslClinicaltrialsConverter"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.converters.DslClinicaltrialsConverter">[docs]</a><span class="k">class</span> <span class="nc">DslClinicaltrialsConverter</span><span class="p">(</span><span class="n">DslDataConverter</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;clinical_trials&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">column_transformations</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">({</span>
+			<span class="s1">&#39;Date added&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;date_inserted&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Trial ID&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Title&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Brief title&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;brief_title&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Acronym&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;acronym&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Abstract&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;abstract&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Publication date&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Active years&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;active_years&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_list&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Phase&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;phase&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Conditions&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;conditions&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_list&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Intervention&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;interventions&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_interventions_dict&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Gender&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;gender&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Registry&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;registry&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Investigators/Contacts&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;investigators&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_investigators_cltrials&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Sponsors/Collaborators&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;research_orgs&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;GRID IDs&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;research_orgs&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_ids&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Country of Sponsor/Collaborator&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;research_orgs&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_country_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Collaborating Funders&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;funders&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Funder Country&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;funders&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_country_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Source Linkout&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;linkout&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Dimensions URL&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_id_to_url&#39;</span><span class="p">,</span> <span class="s1">&#39;clinical_trials&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Concepts&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;concepts&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_list&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;FOR (ANZSRC) Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_for&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;RCDC Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_rcdc&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;HRCS HC Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_hrcs_hc&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;HRCS RAC Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_hrcs_rac&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;ICRP Cancer Types&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_icrp_ct&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;ICRP CSO Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_icrp_cso&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;BRA Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_bra&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;HRA Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_hra&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;SDG Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_sdg&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+		<span class="p">})</span></div>
+
+
+
+
+
+
+
+<div class="viewcode-block" id="DslPolicyDocumentsConverter"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.converters.DslPolicyDocumentsConverter">[docs]</a><span class="k">class</span> <span class="nc">DslPolicyDocumentsConverter</span><span class="p">(</span><span class="n">DslDataConverter</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;@TODO review</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;grants&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">column_transformations</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">({</span>
+			<span class="s1">&#39;Date added&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;date_inserted&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Policy ID&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Title&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Abstract&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;abstract&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Date&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;GRID IDs&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;research_orgs&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_ids&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Countries&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;research_orgs&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_country_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Funders&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;funders&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Funders GRID IDs&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;funders&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_ids&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Funders country&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;funders&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_country_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Research organizations&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;research_orgs&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Source linkout&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;linkout&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Dimensions URL&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_id_to_url&#39;</span><span class="p">,</span> <span class="s1">&#39;policy_documents&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Concepts&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;concepts&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_list&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;FOR (ANZSRC) Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_for&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;RCDC Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_rcdc&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;HRCS HC Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_hrcs_hc&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;HRCS RAC Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_hrcs_rac&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;ICRP Cancer Types&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_icrp_ct&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;ICRP CSO Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_icrp_cso&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;BRA Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_bra&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;HRA Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_hra&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;SDG Categories&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;category_sdg&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+		<span class="p">})</span></div>
+
+
+
+
+
+<div class="viewcode-block" id="DslOrganizationsConverter"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.converters.DslOrganizationsConverter">[docs]</a><span class="k">class</span> <span class="nc">DslOrganizationsConverter</span><span class="p">(</span><span class="n">DslDataConverter</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;@TODO review</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;grants&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">column_transformations</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">({</span>
+			<span class="s1">&#39;GRID ID&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Name&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="c1"># &#39;Dimensions URL&#39; : (&#39;id&#39;, &#39;convert_id_to_url&#39;, &#39;organizations&#39;), </span>
+		<span class="p">})</span></div>
+
+
+
+
+<div class="viewcode-block" id="DslResearchersConverter"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.converters.DslResearchersConverter">[docs]</a><span class="k">class</span> <span class="nc">DslResearchersConverter</span><span class="p">(</span><span class="n">DslDataConverter</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;@TODO review</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;grants&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">column_transformations</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">({</span>
+			<span class="s1">&#39;Researcher ID&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;First Name&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;first_name&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Last Name&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;last_name&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Orcid IDs&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;orcid_id&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Research organizations&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;research_orgs&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;GRID IDs&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;research_orgs&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_dict_ids&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Countries&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;research_orgs&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_country_name&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Dimensions URL&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_id_to_url&#39;</span><span class="p">,</span> <span class="s1">&#39;researchers&#39;</span><span class="p">),</span> 
+		<span class="p">})</span></div>
+
+
+
+
+
+<div class="viewcode-block" id="DslReportsConverter"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.converters.DslReportsConverter">[docs]</a><span class="k">class</span> <span class="nc">DslReportsConverter</span><span class="p">(</span><span class="n">DslDataConverter</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;@TODO review</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;grants&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">column_transformations</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">({</span>
+			<span class="s1">&#39;Report ID&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Dimensions URL&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_id_to_url&#39;</span><span class="p">,</span> <span class="s1">&#39;reports&#39;</span><span class="p">),</span> 
+		<span class="p">})</span></div>
+
+
+
+
+<div class="viewcode-block" id="DslSourceTitlesConverter"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.converters.DslSourceTitlesConverter">[docs]</a><span class="k">class</span> <span class="nc">DslSourceTitlesConverter</span><span class="p">(</span><span class="n">DslDataConverter</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;@TODO review</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;grants&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">column_transformations</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">({</span>
+			<span class="s1">&#39;Source ID&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Source title&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Type&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;ISSNs&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;issn&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Publisher&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;publisher&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Start year&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;start_year&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span> 
+			<span class="s1">&#39;Dimensions URL&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;convert_id_to_url&#39;</span><span class="p">,</span> <span class="s1">&#39;source_titles&#39;</span><span class="p">),</span> 
+		<span class="p">})</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2021, Digital Science.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

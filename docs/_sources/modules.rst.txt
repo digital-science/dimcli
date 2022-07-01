@@ -45,6 +45,15 @@ dimcli.utils.miscellaneous
     :show-inheritance:
 
 
+dimcli.utils.converters
+-------------------------------
+
+.. automodule:: dimcli.utils.converters
+    :members: 
+    :show-inheritance:
+
+
+
 dimcli.jupyter.magics 
 ----------------------
 

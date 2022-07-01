@@ -45,6 +45,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-dimcli.core.functions">dimcli.core.functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-dimcli.utils.dim_utils">dimcli.utils.dimensions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-dimcli.utils.misc_utils">dimcli.utils.miscellaneous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-dimcli.utils.converters">dimcli.utils.converters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-dimcli.jupyter.magics">dimcli.jupyter.magics</a></li>
 </ul>
 </li>
@@ -346,7 +347,7 @@ using the <cite>auth_session</cite> parameter, IE:</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="dimcli.core.api.DslDataset.as_dataframe">
-<span class="sig-name descname"><span class="pre">as_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">links</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/api.html#DslDataset.as_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.core.api.DslDataset.as_dataframe" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">as_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">links</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/api.html#DslDataset.as_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.core.api.DslDataset.as_dataframe" title="Permalink to this definition"></a></dt>
 <dd><p>Return the JSON data as a Pandas DataFrame.</p>
 <p>If <cite>key</cite> is empty, the first available JSON key (eg ‘publications’) is used to determine
 what JSON data should be turned into a dataframe (mostly relevant when using multi-result DSL queries).</p>
@@ -355,6 +356,7 @@ what JSON data should be turned into a dataframe (mostly relevant when using mul
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>key</strong> (<em>str</em><em>, </em><em>optional</em>) – The JSON results data object that needs to be processed.</p></li>
 <li><p><strong>links</strong> (<em>bool</em><em>, </em><em>optional</em>) – Tranform suitable fields to hyperlinks. Default: False.</p></li>
+<li><p><strong>nice</strong> (<em>bool</em><em>, </em><em>optional</em>) – Reformat column names and complex values where possible. Useful for visual inspection and printing our. Default: False.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1126,7 +1128,7 @@ NOTE: these functions are attached to the top level <code class="docutils litera
 
 <dl class="py function">
 <dt class="sig sig-object py" id="dimcli.utils.dim_utils.dimensions_styler">
-<span class="sig-prename descclassname"><span class="pre">dimcli.utils.dim_utils.</span></span><span class="sig-name descname"><span class="pre">dimensions_styler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/dim_utils.html#dimensions_styler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.dim_utils.dimensions_styler" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">dimcli.utils.dim_utils.</span></span><span class="sig-name descname"><span class="pre">dimensions_styler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title_links</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/dim_utils.html#dimensions_styler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.dim_utils.dimensions_styler" title="Permalink to this definition"></a></dt>
 <dd><p>Format the text display value of a dataframe by including Dimensions hyperlinks whenever possible.
 Useful mainly in notebooks when printing out dataframes and clicking on links etc..
 Expects column names to match the default DSL field names.</p>
@@ -1135,12 +1137,13 @@ Expects column names to match the default DSL field names.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>df</strong> (<em>pd.Dataframe</em>) – Pandas dataframe obtained from a DSL query e.g. via the <cite>as_dataframe</cite> methods.</p></li>
 <li><p><strong>source_type</strong> (<em>str</em><em>, </em><em>optional</em>) – The name of the source: one of ‘publications’, ‘grants’, ‘patents’, ‘policy_documents’, ‘clinical_trials’, ‘researchers’. If not provided, it can be inferred in some cases.</p></li>
+<li><p><strong>title_links</strong> (<em>bool</em><em>, </em><em>optional</em><em>, </em><em>True</em>) – Hyperlink document titles too, using the ID (if available).</p></li>
 </ul>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>Implemented using <a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.io.formats.style.Styler.format.html">https://pandas.pydata.org/docs/reference/api/pandas.io.formats.style.Styler.format.html</a>. Side effect is that the resulting dataframe becomes an instance of <a class="reference external" href="https://pandas.io.formats.style.styler/">https://pandas.io.formats.style.styler/</a>, which is a wrapper around the underlying Styler object.
-NOTE To get back to the original dataframe, you can use the <cite>.data</cite> method.</p>
+<p>Implemented using <a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.io.formats.style.Styler.format.html">https://pandas.pydata.org/docs/reference/api/pandas.io.formats.style.Styler.format.html</a>. Side effect is that the resulting dataframe becomes an instance of pandas.io.formats.style.styler, which is a wrapper around the underlying Styler object. TIP To get back to the original dataframe, you can use the <cite>.data</cite> method.
+See also: <a class="reference external" href="https://stackoverflow.com/questions/42263946/how-to-create-a-table-with-clickable-hyperlink-in-pandas-jupyter-notebook">https://stackoverflow.com/questions/42263946/how-to-create-a-table-with-clickable-hyperlink-in-pandas-jupyter-notebook</a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>Wrapper for a dataframe object, including custom Dimensions hyperlinks.</p>
@@ -1155,7 +1158,9 @@ NOTE To get back to the original dataframe, you can use the <cite>.data</cite> m
 <span class="gp">&gt;&gt;&gt; </span><span class="n">q</span> <span class="o">=</span> <span class="s1">&#39;search publications for &quot;scientometrics&quot; return publications[basics]&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">dsl</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">as_dataframe</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dimensions_styler</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-<span class="go"># alternatively, use the shortcut method:</span>
+<span class="go">#</span>
+<span class="go"># alternatively, using the shortcut method:</span>
+<span class="go">#</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dsl</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">as_dataframe</span><span class="p">(</span><span class="n">links</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1263,6 +1268,15 @@ NOTE To get back to the original dataframe, you can use the <cite>.data</cite> m
 <dd class="field-odd"><p><a class="reference internal" href="#dimcli.core.api.DslDataset" title="dimcli.core.api.DslDataset">DslDataset</a></p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dimcli.utils.dim_utils.gen_dslqueries">
+<span class="sig-prename descclassname"><span class="pre">dimcli.utils.dim_utils.</span></span><span class="sig-name descname"><span class="pre">gen_dslqueries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sources</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Albert</span> <span class="pre">Einstein'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/dim_utils.html#gen_dslqueries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.dim_utils.gen_dslqueries" title="Permalink to this definition"></a></dt>
+<dd><p>Generate test DSL queries for each source
+eg
+&gt;&gt;&gt; from dimcli import G
+&gt;&gt;&gt; gen_dslqueries(G.sources())</p>
 </dd></dl>
 
 </section>
@@ -1530,6 +1544,196 @@ NOTE this output will be picked up by pipes etc..</p>
 </dd></dl>
 
 </section>
+<section id="module-dimcli.utils.converters">
+<span id="dimcli-utils-converters"></span><h2>dimcli.utils.converters<a class="headerlink" href="#module-dimcli.utils.converters" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="dimcli.utils.converters.DslClinicaltrialsConverter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dimcli.utils.converters.</span></span><span class="sig-name descname"><span class="pre">DslClinicaltrialsConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/converters.html#DslClinicaltrialsConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.converters.DslClinicaltrialsConverter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dimcli.utils.converters.DslDataConverter" title="dimcli.utils.converters.DslDataConverter"><code class="xref py py-class docutils literal notranslate"><span class="pre">dimcli.utils.converters.DslDataConverter</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dimcli.utils.converters.DslDataConverter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dimcli.utils.converters.</span></span><span class="sig-name descname"><span class="pre">DslDataConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/converters.html#DslDataConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.converters.DslDataConverter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Helper class containing methods for transforming JSON complex snippets to other formats.
+Useful eg for creating a nice looking CSV from raw API data.</p>
+<p>Status: ALPHA - UNSUPPORTED FEATURE</p>
+<p>Converters subclasses available only for
+* Pubs
+* Grants
+* Clinical Trials
+* Datasets
+* Patents</p>
+<p>To Review:
+* Organizations
+* Policy Documents
+* Researchers</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dimcli.utils.converters</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df_temp</span> <span class="o">=</span> <span class="n">dsl</span><span class="o">.</span><span class="n">query_iterative</span><span class="p">(</span><span class="s2">&quot;search publications return publications&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">as_dataframe</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c1</span> <span class="o">=</span> <span class="n">DslDatasetsConverter</span><span class="p">(</span><span class="n">df_temp</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df_final</span> <span class="o">=</span> <span class="n">c1</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<p># iterate through all keys/columns in dataframe
+#
+# if column name == key in fields_mappings:
+#   apply all functions =&gt; generate new columns
+#   remove old column
+# else if column value is list
+#   break down list into semicolon delimited string
+#   replace old column
+#
+#  PS dimensions_url special case, we just add a new column without removing ‘ID’
+#   also, it applies only to sources</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="dimcli.utils.converters.DslDataConverter.apply_transformations">
+<span class="sig-name descname"><span class="pre">apply_transformations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/converters.html#DslDataConverter.apply_transformations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.converters.DslDataConverter.apply_transformations" title="Permalink to this definition"></a></dt>
+<dd><p>For each column, see if there is a transformation defined, and apply it.</p>
+<dl class="simple">
+<dt>keep_extra_cols:</dt><dd><p>bool, True
+Columns not included in the transformation rules are included by default.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dimcli.utils.converters.DslDataConverter.convert_abstract_to_preview">
+<span class="sig-name descname"><span class="pre">convert_abstract_to_preview</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">abstract</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/converters.html#DslDataConverter.convert_abstract_to_preview"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.converters.DslDataConverter.convert_abstract_to_preview" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dimcli.utils.converters.DslDataConverter.convert_authors_affiliations">
+<span class="sig-name descname"><span class="pre">convert_authors_affiliations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">authorslist</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/converters.html#DslDataConverter.convert_authors_affiliations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.converters.DslDataConverter.convert_authors_affiliations" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dimcli.utils.converters.DslDataConverter.convert_authors_countries">
+<span class="sig-name descname"><span class="pre">convert_authors_countries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">authorslist</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/converters.html#DslDataConverter.convert_authors_countries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.converters.DslDataConverter.convert_authors_countries" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dimcli.utils.converters.DslDataConverter.convert_authors_grids">
+<span class="sig-name descname"><span class="pre">convert_authors_grids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">authorslist</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/converters.html#DslDataConverter.convert_authors_grids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.converters.DslDataConverter.convert_authors_grids" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dimcli.utils.converters.DslDataConverter.convert_authors_to_names">
+<span class="sig-name descname"><span class="pre">convert_authors_to_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">authorslist</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/converters.html#DslDataConverter.convert_authors_to_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.converters.DslDataConverter.convert_authors_to_names" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dimcli.utils.converters.DslDataConverter.convert_id_to_url">
+<span class="sig-name descname"><span class="pre">convert_id_to_url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/converters.html#DslDataConverter.convert_id_to_url"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.converters.DslDataConverter.convert_id_to_url" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dimcli.utils.converters.DslDataConverter.convert_interventions_dict">
+<span class="sig-name descname"><span class="pre">convert_interventions_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/converters.html#DslDataConverter.convert_interventions_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.converters.DslDataConverter.convert_interventions_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Return ‘name’ and ‘type’ for clinical trials / interventions</p>
+<p>From: “[{‘arm_group_labels’: ‘Hydroxychloroquine and conventional treatments’, ‘type’: ‘Drug’, ‘description’: ‘Subjects take hydroxychloroquine 400 mg per day for 5 days, also take conventional treatments’, ‘other_names’: ‘’, ‘name’: ‘Hydroxychloroquine’}]”</p>
+<p>To: “Hydroxychloroquine (Drug)”</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dimcli.utils.converters.DslDataConverter.convert_investigators_cltrials">
+<span class="sig-name descname"><span class="pre">convert_investigators_cltrials</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">investigatorslist</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/converters.html#DslDataConverter.convert_investigators_cltrials"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.converters.DslDataConverter.convert_investigators_cltrials" title="Permalink to this definition"></a></dt>
+<dd><p>From:
+[[‘Chaoqian Li’, ‘’, ‘Study leader’, ‘6 Shuangyong Road, Nanning, Guangxi Zhuang Autonomous Region, China’, ‘’, ‘’], [‘Jianlin Huang’, ‘’, ‘Applicant’, “Beihai People’s Hospital”, “Beihai People’s Hospital”, ‘grid.452719.c’]]
+To
+“Chaoqian Li; Jianlin Huang”</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dimcli.utils.converters.DslDataConverter.extend_transformations">
+<span class="sig-name descname"><span class="pre">extend_transformations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/converters.html#DslDataConverter.extend_transformations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.converters.DslDataConverter.extend_transformations" title="Permalink to this definition"></a></dt>
+<dd><p>Add default transformations for all fields found in a df (not just the ones defined explicitly) using standard rules (camel case and spacing).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dimcli.utils.converters.DslDataConverter.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keep_extra_cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/converters.html#DslDataConverter.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.converters.DslDataConverter.run" title="Permalink to this definition"></a></dt>
+<dd><p>&#64;TODO define a suitable abstraction for automatic transformation
+eg simplify all fields to strings</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dimcli.utils.converters.DslDataConverter.sort_and_prune">
+<span class="sig-name descname"><span class="pre">sort_and_prune</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_cols_ordered_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/converters.html#DslDataConverter.sort_and_prune"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.converters.DslDataConverter.sort_and_prune" title="Permalink to this definition"></a></dt>
+<dd><p>generate a default order if not provided, keeping only those cols</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dimcli.utils.converters.DslDataConverter.truncate_for_gsheets">
+<span class="sig-name descname"><span class="pre">truncate_for_gsheets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cols_subset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/converters.html#DslDataConverter.truncate_for_gsheets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.converters.DslDataConverter.truncate_for_gsheets" title="Permalink to this definition"></a></dt>
+<dd><p>helper to avoid gsheets error
+‘Your input contains more than the maximum of 50000 characters in a single cell.’</p>
+<p>cols_subset: eg [‘Abstract’, ‘Authors’, ‘Authors Affiliations’]</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dimcli.utils.converters.DslDatasetsConverter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dimcli.utils.converters.</span></span><span class="sig-name descname"><span class="pre">DslDatasetsConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/converters.html#DslDatasetsConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.converters.DslDatasetsConverter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dimcli.utils.converters.DslDataConverter" title="dimcli.utils.converters.DslDataConverter"><code class="xref py py-class docutils literal notranslate"><span class="pre">dimcli.utils.converters.DslDataConverter</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dimcli.utils.converters.DslGrantsConverter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dimcli.utils.converters.</span></span><span class="sig-name descname"><span class="pre">DslGrantsConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/converters.html#DslGrantsConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.converters.DslGrantsConverter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dimcli.utils.converters.DslDataConverter" title="dimcli.utils.converters.DslDataConverter"><code class="xref py py-class docutils literal notranslate"><span class="pre">dimcli.utils.converters.DslDataConverter</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dimcli.utils.converters.DslOrganizationsConverter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dimcli.utils.converters.</span></span><span class="sig-name descname"><span class="pre">DslOrganizationsConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/converters.html#DslOrganizationsConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.converters.DslOrganizationsConverter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dimcli.utils.converters.DslDataConverter" title="dimcli.utils.converters.DslDataConverter"><code class="xref py py-class docutils literal notranslate"><span class="pre">dimcli.utils.converters.DslDataConverter</span></code></a></p>
+<p>&#64;TODO review</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dimcli.utils.converters.DslPatentsConverter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dimcli.utils.converters.</span></span><span class="sig-name descname"><span class="pre">DslPatentsConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/converters.html#DslPatentsConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.converters.DslPatentsConverter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dimcli.utils.converters.DslDataConverter" title="dimcli.utils.converters.DslDataConverter"><code class="xref py py-class docutils literal notranslate"><span class="pre">dimcli.utils.converters.DslDataConverter</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dimcli.utils.converters.DslPolicyDocumentsConverter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dimcli.utils.converters.</span></span><span class="sig-name descname"><span class="pre">DslPolicyDocumentsConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/converters.html#DslPolicyDocumentsConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.converters.DslPolicyDocumentsConverter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dimcli.utils.converters.DslDataConverter" title="dimcli.utils.converters.DslDataConverter"><code class="xref py py-class docutils literal notranslate"><span class="pre">dimcli.utils.converters.DslDataConverter</span></code></a></p>
+<p>&#64;TODO review</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dimcli.utils.converters.DslPubsConverter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dimcli.utils.converters.</span></span><span class="sig-name descname"><span class="pre">DslPubsConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/converters.html#DslPubsConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.converters.DslPubsConverter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dimcli.utils.converters.DslDataConverter" title="dimcli.utils.converters.DslDataConverter"><code class="xref py py-class docutils literal notranslate"><span class="pre">dimcli.utils.converters.DslDataConverter</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dimcli.utils.converters.DslReportsConverter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dimcli.utils.converters.</span></span><span class="sig-name descname"><span class="pre">DslReportsConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/converters.html#DslReportsConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.converters.DslReportsConverter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dimcli.utils.converters.DslDataConverter" title="dimcli.utils.converters.DslDataConverter"><code class="xref py py-class docutils literal notranslate"><span class="pre">dimcli.utils.converters.DslDataConverter</span></code></a></p>
+<p>&#64;TODO review</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dimcli.utils.converters.DslResearchersConverter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dimcli.utils.converters.</span></span><span class="sig-name descname"><span class="pre">DslResearchersConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/converters.html#DslResearchersConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.converters.DslResearchersConverter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dimcli.utils.converters.DslDataConverter" title="dimcli.utils.converters.DslDataConverter"><code class="xref py py-class docutils literal notranslate"><span class="pre">dimcli.utils.converters.DslDataConverter</span></code></a></p>
+<p>&#64;TODO review</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dimcli.utils.converters.DslSourceTitlesConverter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dimcli.utils.converters.</span></span><span class="sig-name descname"><span class="pre">DslSourceTitlesConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/converters.html#DslSourceTitlesConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.converters.DslSourceTitlesConverter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dimcli.utils.converters.DslDataConverter" title="dimcli.utils.converters.DslDataConverter"><code class="xref py py-class docutils literal notranslate"><span class="pre">dimcli.utils.converters.DslDataConverter</span></code></a></p>
+<p>&#64;TODO review</p>
+</dd></dl>
+
+</section>
 <section id="module-dimcli.jupyter.magics">
 <span id="dimcli-jupyter-magics"></span><h2>dimcli.jupyter.magics<a class="headerlink" href="#module-dimcli.jupyter.magics" title="Permalink to this headline"></a></h2>
 <p>Dimcli magic commands used with iPython / Jupyter environments only. See also: <a class="reference external" href="https://api-lab.dimensions.ai/cookbooks/1-getting-started/4-Dimcli-magic-commands.html">https://api-lab.dimensions.ai/cookbooks/1-getting-started/4-Dimcli-magic-commands.html</a></p>
@@ -1613,10 +1817,15 @@ NOTE this output will be picked up by pipes etc..</p>
 <span class="sig-name descname"><span class="pre">dsldf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/jupyter/magics.html#DslMagics.dsldf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.jupyter.magics.DslMagics.dsldf" title="Permalink to this definition"></a></dt>
 <dd><p>Magic command to run a single DSL query, results are transformed to a Pandas DataFrame.</p>
 <p>Can be used as a single-line (<code class="docutils literal notranslate"><span class="pre">%dsldf</span></code>) or multi-line (<code class="docutils literal notranslate"><span class="pre">%%dsldf</span></code>) command. Requires an authenticated API session. If used as a multi-line command, a variable name can be specified as the first argument. Otherwise, the results are saved to a variable called <code class="docutils literal notranslate"><span class="pre">dsl_last_results</span></code>.</p>
-<p>Pass the <code class="docutils literal notranslate"><span class="pre">--links</span></code> flag to style the dataframe with links to the original data sources.</p>
+<p>Flags:</p>
+<p><code class="docutils literal notranslate"><span class="pre">--links</span></code> =&gt; style the dataframe with links to the original data sources.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--nice</span></code>  =&gt; break down complex structures into strings (EXPERIMENTAL).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>line</strong> (<em>str</em>) – A valid DSL search query.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>line</strong> (<em>str</em>) – A valid DSL search query, or, for multiline commands, a parameter name and/or formatting flags.</p></li>
+<li><p><strong>cell</strong> (<em>str</em>) – A valid DSL search query.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A pandas dataframe containing the query results.</p>
@@ -1637,7 +1846,7 @@ NOTE this output will be picked up by pipes etc..</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dimcli.jupyter.magics.DslMagics.dsldocs">
-<span class="sig-name descname"><span class="pre">dsldocs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/jupyter/magics.html#DslMagics.dsldocs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.jupyter.magics.DslMagics.dsldocs" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">dsldocs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/jupyter/magics.html#DslMagics.dsldocs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.jupyter.magics.DslMagics.dsldocs" title="Permalink to this definition"></a></dt>
 <dd><p>Magic command to get DSL documentation about sources and fields.</p>
 <p>This is a wrapper around the DSL <cite>describe</cite> function.</p>
 <dl class="field-list simple">

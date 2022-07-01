@@ -120,12 +120,16 @@ class DslMagics(Magics):
         Can be used as a single-line (``%dsldf``) or multi-line (``%%dsldf``) command. Requires an authenticated API session. If used as a multi-line command, a variable name can be specified as the first argument. Otherwise, the results are saved to a variable called ``dsl_last_results``.
 
         Flags:
+
         ``--links`` => style the dataframe with links to the original data sources.
+
         ``--nice``  => break down complex structures into strings (EXPERIMENTAL).
 
         Parameters
         ----------
         line: str
+            A valid DSL search query, or, for multiline commands, a parameter name and/or formatting flags.
+        cell: str
             A valid DSL search query. 
 
         Returns

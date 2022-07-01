@@ -790,7 +790,7 @@
 
     <span class="c1"># Dataframe Methods </span>
 
-<div class="viewcode-block" id="DslDataset.as_dataframe"><a class="viewcode-back" href="../../../modules.html#dimcli.core.api.DslDataset.as_dataframe">[docs]</a>    <span class="k">def</span> <span class="nf">as_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">links</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="DslDataset.as_dataframe"><a class="viewcode-back" href="../../../modules.html#dimcli.core.api.DslDataset.as_dataframe">[docs]</a>    <span class="k">def</span> <span class="nf">as_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">links</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">nice</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the JSON data as a Pandas DataFrame. </span>
 
 <span class="sd">        If `key` is empty, the first available JSON key (eg &#39;publications&#39;) is used to determine</span>
@@ -802,6 +802,8 @@
 <span class="sd">            The JSON results data object that needs to be processed.</span>
 <span class="sd">        links: bool, optional </span>
 <span class="sd">            Tranform suitable fields to hyperlinks. Default: False.</span>
+<span class="sd">        nice: bool, optional </span>
+<span class="sd">            Reformat column names and complex values where possible. Useful for visual inspection and printing our. Default: False.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -815,7 +817,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;errors&quot;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_factory</span><span class="o">.</span><span class="n">df_simple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">links</span><span class="p">)</span></div>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df_factory</span><span class="o">.</span><span class="n">df_simple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">links</span><span class="p">,</span> <span class="n">nice</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="DslDataset.as_dataframe_authors"><a class="viewcode-back" href="../../../modules.html#dimcli.core.api.DslDataset.as_dataframe_authors">[docs]</a>    <span class="k">def</span> <span class="nf">as_dataframe_authors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">links</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
