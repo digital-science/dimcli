@@ -163,6 +163,18 @@ class TestOne(unittest.TestCase):
         click.secho("\n--------\nCOMPLETED", fg="green")
 
 
+    def test_005(self):
+        click.secho("\nTEST 005: GLOBAL login/logout using verify_ssl flag.", bg="green")
+        # ----
+        logout()
+        login(instance="key-test", verify_ssl=True, verbose=True)
+        d = Dsl()
+        click.secho(""" Dsl(instance="key-test" / verify_ssl=True): ==> url="""+ d._url, fg="magenta")
+        res = d.query("""search publications where authors="Pasin" return publications""")
+        print(" ==> res.json.keys(): ", res.json.keys())
+        logout()
+        # ----
+        click.secho("\n--------\nCOMPLETED", fg="green")
 
 
 

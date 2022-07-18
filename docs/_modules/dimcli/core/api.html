@@ -146,6 +146,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_verbose</span> <span class="o">=</span> <span class="n">verbose</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_url</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_headers</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verify_ssl</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">if</span> <span class="n">auth_session</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_CONNECTION</span> <span class="o">=</span> <span class="n">auth_session</span> 
         <span class="k">else</span><span class="p">:</span>
@@ -155,6 +156,7 @@
             <span class="c1"># if already logged in, reuse connection          </span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CONNECTION</span><span class="o">.</span><span class="n">url</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Authorization&#39;</span><span class="p">:</span> <span class="s2">&quot;JWT &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CONNECTION</span><span class="o">.</span><span class="n">token</span><span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">verify_ssl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CONNECTION</span><span class="o">.</span><span class="n">verify_ssl</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_print_please_login</span><span class="p">()</span>
 
@@ -171,6 +173,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_CONNECTION</span><span class="o">.</span><span class="n">refresh_login</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CONNECTION</span><span class="o">.</span><span class="n">url</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Authorization&#39;</span><span class="p">:</span> <span class="s2">&quot;JWT &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CONNECTION</span><span class="o">.</span><span class="n">token</span><span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">verify_ssl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CONNECTION</span><span class="o">.</span><span class="n">verify_ssl</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">printDebug</span><span class="p">(</span><span class="s2">&quot;Warning: please login first.&quot;</span><span class="p">)</span>
 
@@ -210,7 +213,7 @@
         
         <span class="c1">#   Execute DSL query.</span>
         <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">q</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_headers</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">q</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_headers</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verify_ssl</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">429</span><span class="p">:</span>  
             <span class="c1"># Too Many Requests</span>
             <span class="n">printDebug</span><span class="p">(</span>

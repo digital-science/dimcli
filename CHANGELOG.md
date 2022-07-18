@@ -8,6 +8,7 @@
   - affiliations as a list with GRID links
   - generic 'default_transform' method for extra column not in transformations
 * Test suite for magic commands
+* New feature: `verify_ssl` option for `login()` method
 
 ## v 0.9.8
 

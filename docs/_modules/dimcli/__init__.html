@@ -112,6 +112,7 @@
             <span class="n">endpoint</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> 
             <span class="n">instance</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> 
             <span class="n">key</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> 
+            <span class="n">verify_ssl</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
             <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Login into the Dimensions API and store the query token in memory. </span>
 
@@ -135,6 +136,8 @@
 <span class="sd">        The instance name, from the local dsl.ini credentials file. Default: &#39;live&#39;</span>
 <span class="sd">    key: str, optional</span>
 <span class="sd">        The API key (available to some users instead of username/password)</span>
+<span class="sd">    verify_ssl: bool, optional</span>
+<span class="sd">        Verify SSL certificates for HTTPS requests. Default: True.</span>
 <span class="sd">    verbose: bool, optional</span>
 <span class="sd">        Verbose mode. Default: True.</span>
 
@@ -147,6 +150,10 @@
 <span class="sd">        * `https://app.dimensions.ai/api/dsl/v1` </span>
 <span class="sd">        * `https://app.dimensions.ai/api/dsl/v2`</span>
 
+
+<span class="sd">    About SSL verification:</span>
+
+<span class="sd">    Dimcli internally uses the Requests library, which verifies SSL certificates for HTTPS requests, just like a web browser. For some users, it is necessary to turn off SSL verification in order to connect to the API. This can be achieved by passing `verify_ssl=False` at login time. All subsequent API queries will not use SSL verification. NOTE This setting can also be added to the `dsl.ini` file with the following line: `verify_ssl=false`.</span>
 
 
 <span class="sd">    Example</span>
@@ -161,11 +168,11 @@
 
 <span class="sd">    You can specify endpoint, which by default is set to &quot;https://app.dimensions.ai&quot;</span>
 <span class="sd">    </span>
-<span class="sd">    &gt;&gt;&gt; dimcli.login(key=&quot;my-secret-key&quot;, ednpoint=&quot;https://nannies-research.dimensions.ai&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; dimcli.login(key=&quot;my-secret-key&quot;, endpoint=&quot;https://nannies-research.dimensions.ai&quot;)</span>
 
 <span class="sd">    Legacy authentication mechanisms with username/password are also supported</span>
 
-<span class="sd">    &gt;&gt;&gt; dimcli.login(username=&quot;mary.poppins&quot;, password=&quot;chimneysweeper&quot;, ednpoint=&quot;https://nannies-research.dimensions.ai&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; dimcli.login(username=&quot;mary.poppins&quot;, password=&quot;chimneysweeper&quot;, endpoint=&quot;https://nannies-research.dimensions.ai&quot;)</span>
 
 <span class="sd">    See Also</span>
 <span class="sd">    ---------------</span>
@@ -176,7 +183,7 @@
     <span class="kn">from</span> <span class="nn">.core.auth</span> <span class="kn">import</span> <span class="n">do_global_login</span><span class="p">,</span> <span class="n">get_global_connection</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">do_global_login</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">)</span>
+        <span class="n">do_global_login</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">,</span> <span class="n">verify_ssl</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="n">printDebug</span><span class="p">(</span><span class="s2">&quot;Login failed: please ensure your credentials are correct.&quot;</span><span class="p">)</span>
         <span class="k">raise</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>

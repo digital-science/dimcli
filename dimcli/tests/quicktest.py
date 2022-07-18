@@ -29,6 +29,23 @@ def main(test_number=1):
     dsl = Dsl()
     test_number = int(test_number)
 
+    if test_number == 5:
+
+        click.secho("\nTEST 005: GLOBAL login/logout using verify_ssl flag.", bg="green")
+        # ----
+        logout()
+        login(instance="key-test", verify_ssl=True, verbose=True)
+        d = Dsl()
+        click.secho(""" Dsl(instance="key-test" / verify_ssl=True): ==> url="""+ d._url, fg="magenta")
+        res = d.query("""search publications where authors="Pasin" return publications""")
+        print(" ==> res.json.keys(): ", res.json.keys())
+        logout()
+        # ----
+        click.secho("\n--------\nCOMPLETED", fg="green")
+
+
+
+
 
     if test_number == 4:
 

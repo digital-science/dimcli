@@ -79,6 +79,7 @@ class Dsl():
         self._verbose = verbose
         self._url = None
         self._headers = None
+        self.verify_ssl = True
         if auth_session:
             self._CONNECTION = auth_session 
         else:
@@ -88,6 +89,7 @@ class Dsl():
             # if already logged in, reuse connection          
             self._url = self._CONNECTION.url
             self._headers = {'Authorization': "JWT " + self._CONNECTION.token}
+            self.verify_ssl = self._CONNECTION.verify_ssl
         else:
             self._print_please_login()
 
@@ -104,6 +106,7 @@ class Dsl():
             self._CONNECTION.refresh_login()
             self._url = self._CONNECTION.url
             self._headers = {'Authorization': "JWT " + self._CONNECTION.token}
+            self.verify_ssl = self._CONNECTION.verify_ssl
         else:
             printDebug("Warning: please login first.")
 
@@ -143,7 +146,7 @@ class Dsl():
         
         #   Execute DSL query.
         start = time.time()
-        response = requests.post(self._url, data=q.encode(), headers=self._headers)
+        response = requests.post(self._url, data=q.encode(), headers=self._headers, verify=self.verify_ssl)
         if response.status_code == 429:  
             # Too Many Requests
             printDebug(

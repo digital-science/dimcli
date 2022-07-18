@@ -73,6 +73,7 @@ class APISession():
         self.username = None
         self.password = None
         self.key = None
+        self.verify_ssl = None
         self.token = None
         # self._verbose = verbose
 
@@ -83,6 +84,7 @@ class APISession():
                 password="", 
                 key="", 
                 endpoint="",
+                verify_ssl=True,
                 verbose=True):
         """Login into Dimensions API endpoint and get a query token.
 
@@ -97,7 +99,8 @@ class APISession():
                             username="{username}", 
                             password="{password}", 
                             key="{key}", 
-                            endpoint="{endpoint}")""", fg="red")
+                            endpoint="{endpoint}",
+                            verify_ssl="{verify_ssl}")""", fg="red")
 
         if (username or password) and not (username and password):
             raise Exception("Authentication error: you provided only one value for username and password. Both are required.")
@@ -139,6 +142,10 @@ class APISession():
                 key = config_section['key']
             except:
                 key = ""
+            try:
+                verify_ssl = config_section.getboolean('verify_ssl')
+            except:
+                verify_ssl = True
 
         URL_AUTH, URL_QUERY = self._get_endpoint_urls(endpoint)
         # printDebug(URL_AUTH, URL_QUERY )
@@ -146,7 +153,7 @@ class APISession():
         login_data = {'username': username, 'password': password, 'key': key}
         
         # POST AUTH REQUEST
-        response = requests.post(URL_AUTH, json=login_data)
+        response = requests.post(URL_AUTH, json=login_data, verify=verify_ssl)
         response.raise_for_status()
 
         token = response.json()['token']
@@ -156,6 +163,7 @@ class APISession():
         self.username = username
         self.password = password
         self.key = key
+        self.verify_ssl = verify_ssl
         self.token = token
 
 
@@ -209,6 +217,7 @@ class APISession():
                         password=self.password, 
                         key=self.key, 
                         endpoint=self.url,
+                        verify_ssl=self.verify_ssl,
                         verbose=False
                         )
 
@@ -221,6 +230,7 @@ class APISession():
         self.password = None
         self.key = None
         self.token = None
+        self.verify_ssl = True
 
 
     def is_logged_in(self):
@@ -244,10 +254,10 @@ CONNECTION = APISession()
 
 
 
-def do_global_login(instance="", username="", password="", key="", url=""):
+def do_global_login(instance="", username="", password="", key="", url="", verify_ssl=True):
     "Login into DSL and set the connection object with token"
     global CONNECTION
-    CONNECTION.login(instance, username, password, key, url)
+    CONNECTION.login(instance, username, password, key, url, verify_ssl)
     
 
 

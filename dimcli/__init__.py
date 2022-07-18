@@ -45,6 +45,7 @@ def login(  username="",
             endpoint="", 
             instance="", 
             key="", 
+            verify_ssl=True, 
             verbose=True):
     """Login into the Dimensions API and store the query token in memory. 
 
@@ -68,6 +69,8 @@ def login(  username="",
         The instance name, from the local dsl.ini credentials file. Default: 'live'
     key: str, optional
         The API key (available to some users instead of username/password)
+    verify_ssl: bool, optional
+        Verify SSL certificates for HTTPS requests. Default: True.
     verbose: bool, optional
         Verbose mode. Default: True.
 
@@ -80,6 +83,10 @@ def login(  username="",
         * `https://app.dimensions.ai/api/dsl/v1` 
         * `https://app.dimensions.ai/api/dsl/v2`
 
+
+    About SSL verification:
+
+    Dimcli internally uses the Requests library, which verifies SSL certificates for HTTPS requests, just like a web browser. For some users, it is necessary to turn off SSL verification in order to connect to the API. This can be achieved by passing `verify_ssl=False` at login time. All subsequent API queries will not use SSL verification. NOTE This setting can also be added to the `dsl.ini` file with the following line: `verify_ssl=false`.
 
 
     Example
@@ -94,11 +101,11 @@ def login(  username="",
 
     You can specify endpoint, which by default is set to "https://app.dimensions.ai"
     
-    >>> dimcli.login(key="my-secret-key", ednpoint="https://nannies-research.dimensions.ai")
+    >>> dimcli.login(key="my-secret-key", endpoint="https://nannies-research.dimensions.ai")
 
     Legacy authentication mechanisms with username/password are also supported
 
-    >>> dimcli.login(username="mary.poppins", password="chimneysweeper", ednpoint="https://nannies-research.dimensions.ai")
+    >>> dimcli.login(username="mary.poppins", password="chimneysweeper", endpoint="https://nannies-research.dimensions.ai")
 
     See Also
     ---------------
@@ -109,7 +116,7 @@ def login(  username="",
     from .core.auth import do_global_login, get_global_connection
 
     try:
-        do_global_login(instance, username, password, key, endpoint)
+        do_global_login(instance, username, password, key, endpoint, verify_ssl)
     except Exception as e:
         printDebug("Login failed: please ensure your credentials are correct.")
         raise(e)
