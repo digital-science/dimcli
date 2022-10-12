@@ -121,13 +121,13 @@ def remove_fulltext_search_clause(line):
         re.sub(r'\"(.+?)\"', "", a)
         # => 'search grants in title_abstract_only for return grants[id]'
 
-    TODO fails with inner escaped quotes 
-        a = 'search grants in title_abstract_only for "Heisenberg limit " and for "\"b\" return c" return grants[id]'
-        re.sub(r'\"(.+?)\"', "", a)
-        # => 'search grants in title_abstract_only for  and for  return c" return grants[id]'
+    DONE succeeds with inner escaped quotes 
+        a = r'search grants in title_abstract_only for "Heisenberg limit " and for "\"b\" return c" return grants[id]'
+        re.sub(r'\"(.+?)\"', "", a.replace(r'\"', ""))
+        # => 'search grants in title_abstract_only for  and for  return grants[id]'
 
     """
-    return re.sub(r'\"(.+?)\"', "", line)
+    return re.sub(r'\"(.+?)\"', "", line.replace(r'\"', ""))
 
 
 def line_count_returns(line):
