@@ -46,6 +46,8 @@ SYNTAX_DICT = {
         'organizations' : 'https://app.dimensions.ai/discover/publication?and_facet_research_org=',
         'reports' : '',
         'source_titles' : 'https://app.dimensions.ai/discover/publication?and_facet_source_title=',
+        'university_groups' : 'https://app.dimensions.ai/discover/publication?and_facet_research_org_group=',
+        'funder_groups' : 'https://app.dimensions.ai/discover/publication?and_facet_funder_group=',
     },
     'dimensions_object_id_patterns' : {
         'publications' : 'pub.',
