@@ -1,5 +1,12 @@
 # Changelog
 
+
+## v 1.0.1
+
+* Added DSL grammar for DSL V2.6
+
+
+
 ## v 0.9.9
 
 * New parameters for [DslDataset.as_dataframe()](https://digital-science.github.io/dimcli/modules.html#dimcli.core.api.DslDataset.as_dataframe)  

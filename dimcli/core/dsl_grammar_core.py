@@ -1,13 +1,3 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-
-#
-#
-# GRAMMAR_DICT is a dictionary representation of the DSL language vocabulary (fields, sources)
-# DSL VERSION: v2.6
-#
-#
-
 GRAMMAR_DICT = {
     "entities": {
         "categories": {
@@ -3928,7 +3918,7 @@ GRAMMAR_DICT = {
             "metrics": {"count": {"description": "Total count", "name": "count"}},
             "search_fields": ["title_only"],
         },
-        "university_groups": {
+        "research_org_groups": {
             "fields": {
                 "id": {
                     "description": "The Dimensions ID of the group.",
