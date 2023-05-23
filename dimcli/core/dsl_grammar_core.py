@@ -586,10 +586,11 @@ GRAMMAR_DICT = {
             "fieldsets": ["basics", "extras", "categories", "studies"],
             "metrics": {"count": {"description": "Total count", "name": "count"}},
             "search_fields": [
-                "full_data",
-                "investigators",
                 "title_only",
                 "title_abstract_only",
+                "investigators",
+                "raw_affiliations",
+                "full_data",
             ],
         },
         "datasets": {
@@ -975,7 +976,7 @@ GRAMMAR_DICT = {
             },
             "fieldsets": ["basics", "categories"],
             "metrics": {"count": {"description": "Total count", "name": "count"}},
-            "search_fields": ["full_data", "title_only", "title_abstract_only"],
+            "search_fields": ["title_only", "title_abstract_only", "full_data"],
         },
         "funder_groups": {
             "fields": {
@@ -1518,11 +1519,12 @@ GRAMMAR_DICT = {
                 },
             },
             "search_fields": [
-                "full_data",
-                "concepts",
-                "investigators",
                 "title_only",
                 "title_abstract_only",
+                "concepts",
+                "investigators",
+                "raw_affiliations",
+                "full_data",
             ],
         },
         "organizations": {
@@ -1867,6 +1869,15 @@ GRAMMAR_DICT = {
                     "long_description": None,
                     "type": "string",
                 },
+                "application_number": {
+                    "description": "The application number is the number assigned to a patent application when it is filed.",
+                    "is_entity": False,
+                    "is_facet": False,
+                    "is_filter": True,
+                    "is_multivalue": False,
+                    "long_description": None,
+                    "type": "string",
+                },
                 "assignee_cities": {
                     "description": "City of the assignees of the patent, expressed as GeoNames ID and name (note: this value is extracted independently from GRID).",
                     "is_entity": True,
@@ -2048,7 +2059,7 @@ GRAMMAR_DICT = {
                     "type": "organizations",
                 },
                 "date": {
-                    "description": "Date when the patent was filed.",
+                    "description": "The filing date is the date when a patent application is first filed at a patent office.",
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": True,
@@ -2075,13 +2086,22 @@ GRAMMAR_DICT = {
                     "type": "string",
                 },
                 "expiration_date": {
-                    "description": "Date when the patent expires.",
+                    "description": "Expiration date is an estimate of when a patent is expected to expire. Note: The expiration date should not be considered authoritative or final. An attorney or the relevant patent office should be consulted for an authoritative expiration and status determination.",
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": True,
                     "is_multivalue": False,
                     "long_description": None,
                     "type": "date",
+                },
+                "family_count": {
+                    "description": "Number of documents within a simple patent family.",
+                    "is_entity": False,
+                    "is_facet": True,
+                    "is_filter": True,
+                    "is_multivalue": False,
+                    "long_description": None,
+                    "type": "integer",
                 },
                 "family_id": {
                     "description": "Identifier of the corresponding `EPO patent family <https://www.epo.org/searching-for-patents/helpful-resources/first-time-here/patent-families/docdb.html>`_.",
@@ -2100,6 +2120,15 @@ GRAMMAR_DICT = {
                     "is_multivalue": True,
                     "long_description": None,
                     "type": "string",
+                },
+                "filing_date": {
+                    "description": "The filing date is the date when a patent application is first filed at a patent office.",
+                    "is_entity": False,
+                    "is_facet": False,
+                    "is_filter": True,
+                    "is_multivalue": False,
+                    "long_description": None,
+                    "type": "date",
                 },
                 "filing_status": {
                     "description": "Filing Status of the patent e.g. ‘Application’ or ‘Grant’ (note: this field is also called ‘Publication type’ in the Dimensions webapp).",
@@ -2129,7 +2158,7 @@ GRAMMAR_DICT = {
                     "type": "organizations",
                 },
                 "granted_date": {
-                    "description": "The date on which the official body grants the patent.",
+                    "description": "Granted date is the date when the patent office issues a patent to the applicant.",
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": True,
@@ -2228,7 +2257,7 @@ GRAMMAR_DICT = {
                     "type": "organizations",
                 },
                 "priority_date": {
-                    "description": "The earliest filing date in a family of patent applications.",
+                    "description": "The priority date describes the first date of filing of a patent application.",
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": True,
@@ -2282,7 +2311,7 @@ GRAMMAR_DICT = {
                     "type": "publication_links",
                 },
                 "reference_ids": {
-                    "description": "Dimensions IDs of the patents which are cited by this patent (see also: :ref:`patents_model` section).",
+                    "description": "Dimensions IDs of the patents which are cited by this patent (see also: :ref:`patents_model` section). This field may in some cases include identifiers of provisional patent applications that are not yet in the Dimensions database. In such cases, on the Dimensions web application patent detail page, the total number of references will be slightly different as the web application only shows fully resolved identifiers.",
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": True,
@@ -2339,10 +2368,11 @@ GRAMMAR_DICT = {
             "fieldsets": ["basics", "extras", "categories"],
             "metrics": {"count": {"description": "Total count", "name": "count"}},
             "search_fields": [
-                "full_data",
-                "inventors",
                 "title_only",
                 "title_abstract_only",
+                "assignees",
+                "inventors",
+                "full_data",
             ],
         },
         "policy_documents": {
@@ -2557,7 +2587,7 @@ GRAMMAR_DICT = {
             },
             "fieldsets": ["basics", "categories"],
             "metrics": {"count": {"description": "Total count", "name": "count"}},
-            "search_fields": ["full_data", "title_only"],
+            "search_fields": ["title_only", "full_data"],
         },
         "publications": {
             "fields": {
@@ -2967,7 +2997,7 @@ GRAMMAR_DICT = {
                     "type": "string",
                 },
                 "open_access": {
-                    "description": "Open Access categories for publications `(latest version) <https://www.dimensions.ai/wp-content/uploads/2021/02/Dimensions_New-OA-status-definition.pdf>`_",
+                    "description": "Open Access categories for publications (`more info <https://dimensions.freshdesk.com/support/solutions/articles/23000018863-where-does-the-definition-of-open-access-come-from-in-dimensions-what-does-it-include->`_)",
                     "is_entity": False,
                     "is_facet": True,
                     "is_filter": True,
@@ -3256,15 +3286,15 @@ GRAMMAR_DICT = {
                 },
             },
             "search_fields": [
-                "terms",
                 "full_data_exact",
+                "terms",
+                "title_abstract_only",
+                "authors",
+                "title_only",
                 "concepts",
                 "raw_affiliations",
-                "acknowledgements",
-                "title_only",
-                "title_abstract_only",
                 "full_data",
-                "authors",
+                "acknowledgements",
             ],
         },
         "reports": {
@@ -3641,7 +3671,41 @@ GRAMMAR_DICT = {
             },
             "fieldsets": ["basics", "categories"],
             "metrics": {"count": {"description": "Total count", "name": "count"}},
-            "search_fields": ["full_data", "title_abstract_only"],
+            "search_fields": ["title_abstract_only", "full_data"],
+        },
+        "research_org_groups": {
+            "fields": {
+                "id": {
+                    "description": "The Dimensions ID of the group.",
+                    "is_entity": False,
+                    "is_facet": False,
+                    "is_filter": True,
+                    "is_multivalue": False,
+                    "long_description": None,
+                    "type": "string",
+                },
+                "name": {
+                    "description": "The name of the group.",
+                    "is_entity": False,
+                    "is_facet": False,
+                    "is_filter": True,
+                    "is_multivalue": False,
+                    "long_description": None,
+                    "type": "string",
+                },
+                "organization_ids": {
+                    "description": "The GRID IDs of the organizations which are members of this group.",
+                    "is_entity": False,
+                    "is_facet": False,
+                    "is_filter": True,
+                    "is_multivalue": True,
+                    "long_description": None,
+                    "type": "string",
+                },
+            },
+            "fieldsets": ["basics"],
+            "metrics": {"count": {"description": "Total count", "name": "count"}},
+            "search_fields": ["name"],
         },
         "researchers": {
             "fields": {
@@ -3850,15 +3914,6 @@ GRAMMAR_DICT = {
                     "long_description": None,
                     "type": "string",
                 },
-                "publisher": {
-                    "description": "The name of the source publisher entity.",
-                    "is_entity": False,
-                    "is_facet": True,
-                    "is_filter": True,
-                    "is_multivalue": False,
-                    "long_description": None,
-                    "type": "string",
-                },
                 "score": {
                     "description": "For full-text queries, the relevance score is a numerical value assigned to a document that indicates how relevant that document is for a given query. Note: the score is query-specific i.e. it cannot be used to compare documents across queries.",
                     "is_entity": False,
@@ -3917,40 +3972,6 @@ GRAMMAR_DICT = {
             "fieldsets": ["basics"],
             "metrics": {"count": {"description": "Total count", "name": "count"}},
             "search_fields": ["title_only"],
-        },
-        "research_org_groups": {
-            "fields": {
-                "id": {
-                    "description": "The Dimensions ID of the group.",
-                    "is_entity": False,
-                    "is_facet": False,
-                    "is_filter": True,
-                    "is_multivalue": False,
-                    "long_description": None,
-                    "type": "string",
-                },
-                "name": {
-                    "description": "The name of the group.",
-                    "is_entity": False,
-                    "is_facet": False,
-                    "is_filter": True,
-                    "is_multivalue": False,
-                    "long_description": None,
-                    "type": "string",
-                },
-                "organization_ids": {
-                    "description": "The GRID IDs of the organizations which are members of this group.",
-                    "is_entity": False,
-                    "is_facet": False,
-                    "is_filter": True,
-                    "is_multivalue": True,
-                    "long_description": None,
-                    "type": "string",
-                },
-            },
-            "fieldsets": ["basics"],
-            "metrics": {"count": {"description": "Total count", "name": "count"}},
-            "search_fields": ["name"],
         },
     },
 }

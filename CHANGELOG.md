@@ -1,10 +1,17 @@
 # Changelog
 
 
+## v 1.0.3
+
+* Added DSL grammar for DSL V2.7
+
+## v 1.0.2
+
+* Minor code cleanups
+
 ## v 1.0.1
 
 * Added DSL grammar for DSL V2.6
-
 
 
 ## v 0.9.9
