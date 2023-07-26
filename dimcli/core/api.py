@@ -200,9 +200,11 @@ class Dsl():
     def query_iterative(self, q, show_results=None, limit=1000, skip=0, pause=1.5, force=False, maxlimit=0, verbose=None, _tot_count_prev_query=0, _warnings_tot=None):       
         """Runs a DSL query and then keep querying until all matching records have been extracted. 
         
-        The API returns a maximum of 1000 records per call. If a DSL query results in more than 1000 matches, it is possible to use pagination to get more results. 
+        The API returns a maximum of 1000 records per call. If a DSL query results in more than 1000 matches, it is possible to use pagination to get more results, up to 50k. 
         
         Iterative querying works by automatically paginating through all records available for a result set. The original query gets turned into a loop that uses the `limit` / `skip` operators until all the results available have been extracted. 
+
+        NOTE If any of the iterative queries produce warning messages, these are aggregated and added to the `_warnings`section of the output data.
         
         Parameters
         ----------
@@ -319,10 +321,11 @@ class Dsl():
             printDebug(f"{skip}-{new_skip} / {tot} ({t}s)")
 
         if res["_warnings"]:
+            warnings = [f"""{x} (iteration: {skip}-{new_skip})""" for x in res["_warnings"]]
             if _warnings_tot:
-                _warnings_tot += res["_warnings"]
+                _warnings_tot += warnings
             else:
-                _warnings_tot = res["_warnings"]
+                _warnings_tot = warnings
 
         if flag_force:
             output = self.query_iterative(q, show_results, limit, new_skip, pause, force, maxlimit, verbose, _tot_count_prev_query, _warnings_tot)                    
@@ -357,7 +360,10 @@ class Dsl():
             result = DslDataset(response_simulation)
             if show_results or (show_results is None and self._show_results):
                 IPython.display.display(result)
-            if verbose: printDebug(f"===\nRecords extracted: {len(output)}")
+            if verbose: 
+                printDebug(f"===\nRecords extracted: {len(output)}")
+                if _warnings_tot: 
+                    printDebug(f"Warnings:  {len(_warnings_tot)}")
             return result
         else:
             return output

@@ -1,6 +1,10 @@
 # Changelog
 
 
+## v 1.1
+
+* Warning messages included with `query_iterative` outputs.
+
 ## v 1.0.3
 
 * Added DSL grammar for DSL V2.7
