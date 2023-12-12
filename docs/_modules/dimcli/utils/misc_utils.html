@@ -86,6 +86,7 @@
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">islice</span>
 
 <span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">concat</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">json_normalize</span>
 <span class="k">except</span><span class="p">:</span>
@@ -204,7 +205,7 @@
 
 
 <div class="viewcode-block" id="normalize_key"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.misc_utils.normalize_key">[docs]</a><span class="k">def</span> <span class="nf">normalize_key</span><span class="p">(</span><span class="n">key_name</span><span class="p">,</span> <span class="n">dict_list</span><span class="p">,</span> <span class="n">new_val</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Ensures the key always appear in a JSON dict/objects list by adding it when missing.</span>
+    <span class="sd">&quot;&quot;&quot;Ensures a key always appear in a JSON dict/objects list by adding it when missing. Used to prepare API results for subsequent data processing operations, where a missing key in the records may lead to unwanted errors.  </span>
 
 <span class="sd">    UPDATE 2019-11-28</span>
 <span class="sd">    v0.6.1.2: normalizes also &#39;None&#39; values (to address 1.21 DSL change)</span>
@@ -322,8 +323,7 @@
 
 
     <span class="k">def</span> <span class="nf">line_search_return</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        get the source/facet in the return statement</span>
+        <span class="sd">&quot;&quot;&quot;Get the source/facet in the return statement</span>
 <span class="sd">        Duplicates same method in dimcli.utils.repl_utils , to avoid circular imports</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">l</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
@@ -450,43 +450,23 @@
 <div class="viewcode-block" id="printDebug"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.misc_utils.printDebug">[docs]</a><span class="k">def</span> <span class="nf">printDebug</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">mystyle</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">err</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Wrapper around click.secho() for printing in colors with various defaults.</span>
 
-<span class="sd">    :kwargs = you can do printDebug(&quot;s&quot;, bold=True)</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    text: string</span>
+<span class="sd">        The text to print</span>
+<span class="sd">    mystyle: string</span>
+<span class="sd">        One of: comment, important, normal, red, error, green</span>
+<span class="sd">    err: boolean, default: True</span>
+<span class="sd">         By default print to standard error stderr (err=True). This means that the output is ok with `less` and when piped to other commands (or files).  </span>
+<span class="sd">    kwargs: dict</span>
+<span class="sd">        Pass any other named parameter accepted by click.secho(), eg you can do printDebug(&quot;s&quot;, bold=True)</span>
 
-<span class="sd">    2018-12-06: by default print to standard error stderr (err=True)</span>
-<span class="sd">    https://click.palletsprojects.com/en/5.x/api/#click.echo</span>
-<span class="sd">    This means that the output is ok with `less` and when piped to other commands (or files)</span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Styles a text with ANSI styles and returns the new string. See https://click.palletsprojects.com/en/5.x/api/#click.echo</span>
+<span class="sd">    and http://click.pocoo.org/5/api/#click.style. By default the styling is self contained which means that at the end of the string a reset code is issued. This can be prevented by passing reset=False.</span>
 
-<span class="sd">    Styling output:</span>
-<span class="sd">    &lt;http://click.pocoo.org/5/api/#click.style&gt;</span>
-<span class="sd">    Styles a text with ANSI styles and returns the new string. By default the styling is self contained which means that at the end of the string a reset code is issued. This can be prevented by passing reset=False.</span>
-
-<span class="sd">    This works also with inner click styles eg</span>
-
-<span class="sd">    ```python</span>
-<span class="sd">    uri, title = &quot;http://example.com&quot;, &quot;My ontology&quot;</span>
-<span class="sd">    printDebug(click.style(&quot;[%d]&quot; % 1, fg=&#39;blue&#39;) +</span>
-<span class="sd">               click.style(uri + &quot; ==&gt; &quot;, fg=&#39;black&#39;) +</span>
-<span class="sd">               click.style(title, fg=&#39;red&#39;))</span>
-<span class="sd">    ```</span>
-
-<span class="sd">    Or even with Colorama</span>
-
-<span class="sd">    ```</span>
-<span class="sd">    from colorama import Fore, Style</span>
-
-<span class="sd">    printDebug(Fore.BLUE + Style.BRIGHT + &quot;[%d]&quot; % 1 + </span>
-<span class="sd">            Style.RESET_ALL + uri + &quot; ==&gt; &quot; + Fore.RED + title + </span>
-<span class="sd">            Style.RESET_ALL)</span>
-<span class="sd">    ```</span>
-
-
-<span class="sd">    Examples:</span>
-
-<span class="sd">    click.echo(click.style(&#39;Hello World!&#39;, fg=&#39;green&#39;))</span>
-<span class="sd">    click.echo(click.style(&#39;ATTENTION!&#39;, blink=True))</span>
-<span class="sd">    click.echo(click.style(&#39;Some things&#39;, reverse=True, fg=&#39;cyan&#39;))</span>
-<span class="sd">    Supported color names:</span>
-
+<span class="sd">    Supported click color names:</span>
 <span class="sd">    black (might be a gray)</span>
 <span class="sd">    red</span>
 <span class="sd">    green</span>
@@ -496,9 +476,8 @@
 <span class="sd">    cyan</span>
 <span class="sd">    white (might be light gray)</span>
 <span class="sd">    reset (reset the color code only)</span>
-<span class="sd">    New in version 2.0.</span>
 
-<span class="sd">    Parameters:</span>
+<span class="sd">    Supported click parameters:</span>
 <span class="sd">    text – the string to style with ansi codes.</span>
 <span class="sd">    fg – if provided this will become the foreground color.</span>
 <span class="sd">    bg – if provided this will become the background color.</span>
@@ -508,6 +487,31 @@
 <span class="sd">    blink – if provided this will enable or disable blinking.</span>
 <span class="sd">    reverse – if provided this will enable or disable inverse rendering (foreground becomes background and the other way round).</span>
 <span class="sd">    reset – by default a reset-all code is added at the end of the string which means that styles do not carry over. This can be disabled to compose styles.</span>
+<span class="sd">    </span>
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; printDebug(&quot;My comment&quot;, &quot;comment&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; printDebug(&quot;My warning&quot;, &quot;important&quot;)</span>
+<span class="sd">    # This works also with inner click styles eg</span>
+<span class="sd">    &gt;&gt;&gt; uri, title = &quot;http://example.com&quot;, &quot;My ontology&quot;</span>
+<span class="sd">    &gt;&gt;&gt; printDebug(click.style(&quot;[%d]&quot; % 1, fg=&#39;blue&#39;) +</span>
+<span class="sd">               click.style(uri + &quot; ==&gt; &quot;, fg=&#39;black&#39;) +</span>
+<span class="sd">               click.style(title, fg=&#39;red&#39;))</span>
+<span class="sd">    # or even with Colorama</span>
+<span class="sd">    &gt;&gt;&gt; from colorama import Fore, Style</span>
+<span class="sd">    &gt;&gt;&gt; printDebug(Fore.BLUE + Style.BRIGHT + &quot;[%d]&quot; % 1 + </span>
+<span class="sd">            Style.RESET_ALL + uri + &quot; ==&gt; &quot; + Fore.RED + title + </span>
+<span class="sd">            Style.RESET_ALL)</span>
+<span class="sd">    # Memo: how the underlying click.echo works:</span>
+<span class="sd">    &gt;&gt;&gt; click.echo(click.style(&#39;Hello World!&#39;, fg=&#39;green&#39;))</span>
+<span class="sd">    &gt;&gt;&gt; click.echo(click.style(&#39;ATTENTION!&#39;, blink=True))</span>
+<span class="sd">    &gt;&gt;&gt; click.echo(click.style(&#39;Some things&#39;, reverse=True, fg=&#39;cyan&#39;))</span>
+
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        The colorized text. </span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -537,6 +541,28 @@
     <span class="n">printDebug</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">mystyle</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
+
+
+<div class="viewcode-block" id="explode_nested_repeated_field"><a class="viewcode-back" href="../../../modules.html#dimcli.utils.misc_utils.explode_nested_repeated_field">[docs]</a><span class="k">def</span> <span class="nf">explode_nested_repeated_field</span><span class="p">(</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">field_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Utility that can be run against any nested repeated field returned by the API, in order to flatten them so that they are more easily used in spreadsheets and other tools. </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dataframe : pd.Dataframe</span>
+<span class="sd">        A dataframe object.</span>
+<span class="sd">    field_name : string</span>
+<span class="sd">        The column of the dataframe to be exploded.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pd.Dataframe</span>
+<span class="sd">        A new dataframe with new columns corresponding to the flattened column. The new columns prefix is the original column label.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">exploded_df</span> <span class="o">=</span> <span class="p">(</span><span class="n">dataframe</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="n">field_name</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="n">normalized_df</span> <span class="o">=</span> <span class="n">json_normalize</span><span class="p">(</span><span class="n">exploded_df</span><span class="p">[</span><span class="n">field_name</span><span class="p">])</span>
+    <span class="n">normalized_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">field_name</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">normalized_df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="n">dataframe</span> <span class="o">=</span> <span class="n">concat</span><span class="p">([</span><span class="n">exploded_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">field_name</span><span class="p">]),</span> <span class="n">normalized_df</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dataframe</span></div>
 </pre></div>
 
            </div>

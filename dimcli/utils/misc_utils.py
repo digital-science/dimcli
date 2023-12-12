@@ -19,6 +19,7 @@ import webbrowser
 from itertools import islice
 
 from pandas import DataFrame
+from pandas import concat
 try:
     from pandas import json_normalize
 except:
@@ -137,7 +138,7 @@ def exists_key_in_dicts_list(dict_list, key):
 
 
 def normalize_key(key_name, dict_list, new_val=None):
-    """Ensures the key always appear in a JSON dict/objects list by adding it when missing.
+    """Ensures a key always appear in a JSON dict/objects list by adding it when missing. Used to prepare API results for subsequent data processing operations, where a missing key in the records may lead to unwanted errors.  
 
     UPDATE 2019-11-28
     v0.6.1.2: normalizes also 'None' values (to address 1.21 DSL change)
@@ -255,8 +256,7 @@ def export_as_gsheets(input_data, query="", title=None, verbose=True):
 
 
     def line_search_return(line):
-        """
-        get the source/facet in the return statement
+        """Get the source/facet in the return statement
         Duplicates same method in dimcli.utils.repl_utils , to avoid circular imports
         """
         l = line.split()
@@ -383,43 +383,23 @@ def walk_up(bottom):
 def printDebug(text, mystyle="", err=True, **kwargs):
     """Wrapper around click.secho() for printing in colors with various defaults.
 
-    :kwargs = you can do printDebug("s", bold=True)
+    Parameters
+    ----------
+    text: string
+        The text to print
+    mystyle: string
+        One of: comment, important, normal, red, error, green
+    err: boolean, default: True
+         By default print to standard error stderr (err=True). This means that the output is ok with `less` and when piped to other commands (or files).  
+    kwargs: dict
+        Pass any other named parameter accepted by click.secho(), eg you can do printDebug("s", bold=True)
 
-    2018-12-06: by default print to standard error stderr (err=True)
-    https://click.palletsprojects.com/en/5.x/api/#click.echo
-    This means that the output is ok with `less` and when piped to other commands (or files)
+    Notes
+    -----
+    Styles a text with ANSI styles and returns the new string. See https://click.palletsprojects.com/en/5.x/api/#click.echo
+    and http://click.pocoo.org/5/api/#click.style. By default the styling is self contained which means that at the end of the string a reset code is issued. This can be prevented by passing reset=False.
 
-    Styling output:
-    <http://click.pocoo.org/5/api/#click.style>
-    Styles a text with ANSI styles and returns the new string. By default the styling is self contained which means that at the end of the string a reset code is issued. This can be prevented by passing reset=False.
-
-    This works also with inner click styles eg
-
-    ```python
-    uri, title = "http://example.com", "My ontology"
-    printDebug(click.style("[%d]" % 1, fg='blue') +
-               click.style(uri + " ==> ", fg='black') +
-               click.style(title, fg='red'))
-    ```
-
-    Or even with Colorama
-
-    ```
-    from colorama import Fore, Style
-
-    printDebug(Fore.BLUE + Style.BRIGHT + "[%d]" % 1 + 
-            Style.RESET_ALL + uri + " ==> " + Fore.RED + title + 
-            Style.RESET_ALL)
-    ```
-
-
-    Examples:
-
-    click.echo(click.style('Hello World!', fg='green'))
-    click.echo(click.style('ATTENTION!', blink=True))
-    click.echo(click.style('Some things', reverse=True, fg='cyan'))
-    Supported color names:
-
+    Supported click color names:
     black (might be a gray)
     red
     green
@@ -429,9 +409,8 @@ def printDebug(text, mystyle="", err=True, **kwargs):
     cyan
     white (might be light gray)
     reset (reset the color code only)
-    New in version 2.0.
 
-    Parameters:
+    Supported click parameters:
     text – the string to style with ansi codes.
     fg – if provided this will become the foreground color.
     bg – if provided this will become the background color.
@@ -441,6 +420,31 @@ def printDebug(text, mystyle="", err=True, **kwargs):
     blink – if provided this will enable or disable blinking.
     reverse – if provided this will enable or disable inverse rendering (foreground becomes background and the other way round).
     reset – by default a reset-all code is added at the end of the string which means that styles do not carry over. This can be disabled to compose styles.
+    
+    Example
+    -------
+    >>> printDebug("My comment", "comment")
+    >>> printDebug("My warning", "important")
+    # This works also with inner click styles eg
+    >>> uri, title = "http://example.com", "My ontology"
+    >>> printDebug(click.style("[%d]" % 1, fg='blue') +
+               click.style(uri + " ==> ", fg='black') +
+               click.style(title, fg='red'))
+    # or even with Colorama
+    >>> from colorama import Fore, Style
+    >>> printDebug(Fore.BLUE + Style.BRIGHT + "[%d]" % 1 + 
+            Style.RESET_ALL + uri + " ==> " + Fore.RED + title + 
+            Style.RESET_ALL)
+    # Memo: how the underlying click.echo works:
+    >>> click.echo(click.style('Hello World!', fg='green'))
+    >>> click.echo(click.style('ATTENTION!', blink=True))
+    >>> click.echo(click.style('Some things', reverse=True, fg='cyan'))
+
+    
+    Returns
+    -------
+    str
+        The colorized text. 
 
     """
 
@@ -470,3 +474,25 @@ def printInfo(text, mystyle="", **kwargs):
     printDebug(text, mystyle, False, **kwargs)
 
 
+
+
+def explode_nested_repeated_field(dataframe, field_name):
+    """Utility that can be run against any nested repeated field returned by the API, in order to flatten them so that they are more easily used in spreadsheets and other tools. 
+
+    Parameters
+    ----------
+    dataframe : pd.Dataframe
+        A dataframe object.
+    field_name : string
+        The column of the dataframe to be exploded.
+
+    Returns
+    -------
+    pd.Dataframe
+        A new dataframe with new columns corresponding to the flattened column. The new columns prefix is the original column label.
+    """
+    exploded_df = (dataframe.explode(field_name).reset_index(drop=True))
+    normalized_df = json_normalize(exploded_df[field_name])
+    normalized_df.columns = [field_name + '_' + col for col in normalized_df.columns]
+    dataframe = concat([exploded_df.drop(columns=[field_name]), normalized_df], axis=1)
+    return dataframe

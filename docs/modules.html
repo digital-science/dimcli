@@ -1344,6 +1344,26 @@ NOTE: these functions are attached to the top level <code class="docutils litera
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="dimcli.utils.misc_utils.explode_nested_repeated_field">
+<span class="sig-prename descclassname"><span class="pre">dimcli.utils.misc_utils.</span></span><span class="sig-name descname"><span class="pre">explode_nested_repeated_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/misc_utils.html#explode_nested_repeated_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.misc_utils.explode_nested_repeated_field" title="Permalink to this definition"></a></dt>
+<dd><p>Utility that can be run against any nested repeated field returned by the API, in order to flatten them so that they are more easily used in spreadsheets and other tools.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataframe</strong> (<em>pd.Dataframe</em>) – A dataframe object.</p></li>
+<li><p><strong>field_name</strong> (<em>string</em>) – The column of the dataframe to be exploded.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A new dataframe with new columns corresponding to the flattened column. The new columns prefix is the original column label.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.Dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="dimcli.utils.misc_utils.export_as_gsheets">
 <span class="sig-prename descclassname"><span class="pre">dimcli.utils.misc_utils.</span></span><span class="sig-name descname"><span class="pre">export_as_gsheets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/misc_utils.html#export_as_gsheets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.misc_utils.export_as_gsheets" title="Permalink to this definition"></a></dt>
 <dd><p>Save data to google sheets with one-line.</p>
@@ -1406,7 +1426,7 @@ These steps are described at <a class="reference external" href="https://gspread
 <dl class="py function">
 <dt class="sig sig-object py" id="dimcli.utils.misc_utils.normalize_key">
 <span class="sig-prename descclassname"><span class="pre">dimcli.utils.misc_utils.</span></span><span class="sig-name descname"><span class="pre">normalize_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dict_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/misc_utils.html#normalize_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.misc_utils.normalize_key" title="Permalink to this definition"></a></dt>
-<dd><p>Ensures the key always appear in a JSON dict/objects list by adding it when missing.</p>
+<dd><p>Ensures a key always appear in a JSON dict/objects list by adding it when missing. Used to prepare API results for subsequent data processing operations, where a missing key in the records may lead to unwanted errors.</p>
 <p>UPDATE 2019-11-28
 v0.6.1.2: normalizes also ‘None’ values (to address 1.21 DSL change)</p>
 <dl class="field-list simple">
@@ -1447,37 +1467,21 @@ v0.6.1.2: normalizes also ‘None’ values (to address 1.21 DSL change)</p>
 <dt class="sig sig-object py" id="dimcli.utils.misc_utils.printDebug">
 <span class="sig-prename descclassname"><span class="pre">dimcli.utils.misc_utils.</span></span><span class="sig-name descname"><span class="pre">printDebug</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mystyle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">err</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/utils/misc_utils.html#printDebug"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.utils.misc_utils.printDebug" title="Permalink to this definition"></a></dt>
 <dd><p>Wrapper around click.secho() for printing in colors with various defaults.</p>
-<p>:kwargs = you can do printDebug(“s”, bold=True)</p>
-<p>2018-12-06: by default print to standard error stderr (err=True)
-<a class="reference external" href="https://click.palletsprojects.com/en/5.x/api/#click.echo">https://click.palletsprojects.com/en/5.x/api/#click.echo</a>
-This means that the output is ok with <cite>less</cite> and when piped to other commands (or files)</p>
-<p>Styling output:
-&lt;<a class="reference external" href="http://click.pocoo.org/5/api/#click.style">http://click.pocoo.org/5/api/#click.style</a>&gt;
-Styles a text with ANSI styles and returns the new string. By default the styling is self contained which means that at the end of the string a reset code is issued. This can be prevented by passing reset=False.</p>
-<p>This works also with inner click styles eg</p>
-<p><a href="#id3"><span class="problematic" id="id4">``</span></a><a href="#id5"><span class="problematic" id="id6">`</span></a>python
-uri, title = “<a class="reference external" href="http://example.com">http://example.com</a>”, “My ontology”
-printDebug(click.style(“[%d]” % 1, fg=’blue’) +</p>
-<blockquote>
-<div><p>click.style(uri + ” ==&gt; “, fg=’black’) +
-click.style(title, fg=’red’))</p>
-</div></blockquote>
-<p><a href="#id7"><span class="problematic" id="id8">``</span></a><a href="#id9"><span class="problematic" id="id10">`</span></a></p>
-<p>Or even with Colorama</p>
-<p><a href="#id11"><span class="problematic" id="id12">``</span></a>`
-from colorama import Fore, Style</p>
-<dl class="simple">
-<dt>printDebug(Fore.BLUE + Style.BRIGHT + “[%d]” % 1 +</dt><dd><p>Style.RESET_ALL + uri + ” ==&gt; ” + Fore.RED + title +
-Style.RESET_ALL)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>string</em>) – The text to print</p></li>
+<li><p><strong>mystyle</strong> (<em>string</em>) – One of: comment, important, normal, red, error, green</p></li>
+<li><p><strong>err</strong> (<em>boolean</em><em>, </em><em>default: True</em>) – By default print to standard error stderr (err=True). This means that the output is ok with <cite>less</cite> and when piped to other commands (or files).</p></li>
+<li><p><strong>kwargs</strong> (<em>dict</em>) – Pass any other named parameter accepted by click.secho(), eg you can do printDebug(“s”, bold=True)</p></li>
+</ul>
 </dd>
 </dl>
-<p><a href="#id13"><span class="problematic" id="id14">``</span></a><a href="#id15"><span class="problematic" id="id16">`</span></a></p>
-<p>Examples:</p>
-<p>click.echo(click.style(‘Hello World!’, fg=’green’))
-click.echo(click.style(‘ATTENTION!’, blink=True))
-click.echo(click.style(‘Some things’, reverse=True, fg=’cyan’))
-Supported color names:</p>
-<p>black (might be a gray)
+<p class="rubric">Notes</p>
+<p>Styles a text with ANSI styles and returns the new string. See <a class="reference external" href="https://click.palletsprojects.com/en/5.x/api/#click.echo">https://click.palletsprojects.com/en/5.x/api/#click.echo</a>
+and <a class="reference external" href="http://click.pocoo.org/5/api/#click.style">http://click.pocoo.org/5/api/#click.style</a>. By default the styling is self contained which means that at the end of the string a reset code is issued. This can be prevented by passing reset=False.</p>
+<p>Supported click color names:
+black (might be a gray)
 red
 green
 yellow (might be an orange)
@@ -1485,9 +1489,8 @@ blue
 magenta
 cyan
 white (might be light gray)
-reset (reset the color code only)
-New in version 2.0.</p>
-<p>Parameters:
+reset (reset the color code only)</p>
+<p>Supported click parameters:
 text – the string to style with ansi codes.
 fg – if provided this will become the foreground color.
 bg – if provided this will become the background color.
@@ -1497,6 +1500,33 @@ underline – if provided this will enable or disable underline.
 blink – if provided this will enable or disable blinking.
 reverse – if provided this will enable or disable inverse rendering (foreground becomes background and the other way round).
 reset – by default a reset-all code is added at the end of the string which means that styles do not carry over. This can be disabled to compose styles.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">printDebug</span><span class="p">(</span><span class="s2">&quot;My comment&quot;</span><span class="p">,</span> <span class="s2">&quot;comment&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">printDebug</span><span class="p">(</span><span class="s2">&quot;My warning&quot;</span><span class="p">,</span> <span class="s2">&quot;important&quot;</span><span class="p">)</span>
+<span class="go"># This works also with inner click styles eg</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uri</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;http://example.com&quot;</span><span class="p">,</span> <span class="s2">&quot;My ontology&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">printDebug</span><span class="p">(</span><span class="n">click</span><span class="o">.</span><span class="n">style</span><span class="p">(</span><span class="s2">&quot;[</span><span class="si">%d</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="mi">1</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span> <span class="o">+</span>
+<span class="go">           click.style(uri + &quot; ==&gt; &quot;, fg=&#39;black&#39;) +</span>
+<span class="go">           click.style(title, fg=&#39;red&#39;))</span>
+<span class="go"># or even with Colorama</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">colorama</span> <span class="kn">import</span> <span class="n">Fore</span><span class="p">,</span> <span class="n">Style</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">printDebug</span><span class="p">(</span><span class="n">Fore</span><span class="o">.</span><span class="n">BLUE</span> <span class="o">+</span> <span class="n">Style</span><span class="o">.</span><span class="n">BRIGHT</span> <span class="o">+</span> <span class="s2">&quot;[</span><span class="si">%d</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="mi">1</span> <span class="o">+</span>
+<span class="go">        Style.RESET_ALL + uri + &quot; ==&gt; &quot; + Fore.RED + title +</span>
+<span class="go">        Style.RESET_ALL)</span>
+<span class="go"># Memo: how the underlying click.echo works:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="n">click</span><span class="o">.</span><span class="n">style</span><span class="p">(</span><span class="s1">&#39;Hello World!&#39;</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="n">click</span><span class="o">.</span><span class="n">style</span><span class="p">(</span><span class="s1">&#39;ATTENTION!&#39;</span><span class="p">,</span> <span class="n">blink</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="n">click</span><span class="o">.</span><span class="n">style</span><span class="p">(</span><span class="s1">&#39;Some things&#39;</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s1">&#39;cyan&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The colorized text.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">

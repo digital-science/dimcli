@@ -249,15 +249,6 @@ GRAMMAR_DICT = {
                     "long_description": None,
                     "type": "categories",
                 },
-                "category_for_2008": {
-                    "description": "`ANZSRC Fields of Research classification <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
-                    "is_entity": True,
-                    "is_facet": True,
-                    "is_filter": True,
-                    "is_multivalue": True,
-                    "long_description": None,
-                    "type": "categories",
-                },
                 "category_for_2020": {
                     "description": "`ANZSRC Fields of Research classification <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
                     "is_entity": True,
@@ -587,10 +578,10 @@ GRAMMAR_DICT = {
             "metrics": {"count": {"description": "Total count", "name": "count"}},
             "search_fields": [
                 "title_only",
-                "title_abstract_only",
-                "investigators",
                 "raw_affiliations",
                 "full_data",
+                "investigators",
+                "title_abstract_only",
             ],
         },
         "datasets": {
@@ -642,15 +633,6 @@ GRAMMAR_DICT = {
                 },
                 "category_for": {
                     "description": "`ANZSRC Fields of Research classification <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_ (alias for most recent version).",
-                    "is_entity": True,
-                    "is_facet": True,
-                    "is_filter": True,
-                    "is_multivalue": True,
-                    "long_description": None,
-                    "type": "categories",
-                },
-                "category_for_2008": {
-                    "description": "`ANZSRC Fields of Research classification <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -976,7 +958,7 @@ GRAMMAR_DICT = {
             },
             "fieldsets": ["basics", "categories"],
             "metrics": {"count": {"description": "Total count", "name": "count"}},
-            "search_fields": ["title_only", "title_abstract_only", "full_data"],
+            "search_fields": ["full_data", "title_only", "title_abstract_only"],
         },
         "funder_groups": {
             "fields": {
@@ -1043,15 +1025,6 @@ GRAMMAR_DICT = {
                 },
                 "category_for": {
                     "description": "ANZSRC Fields of Research classification (alias for most recent version).",
-                    "is_entity": True,
-                    "is_facet": True,
-                    "is_filter": True,
-                    "is_multivalue": True,
-                    "long_description": None,
-                    "type": "categories",
-                },
-                "category_for_2008": {
-                    "description": "`ANZSRC Fields of Research classification <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -1519,12 +1492,12 @@ GRAMMAR_DICT = {
                 },
             },
             "search_fields": [
-                "title_only",
-                "title_abstract_only",
                 "concepts",
-                "investigators",
+                "title_only",
                 "raw_affiliations",
                 "full_data",
+                "investigators",
+                "title_abstract_only",
             ],
         },
         "organizations": {
@@ -1950,15 +1923,6 @@ GRAMMAR_DICT = {
                     "long_description": None,
                     "type": "categories",
                 },
-                "category_for_2008": {
-                    "description": "`ANZSRC Fields of Research classification <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
-                    "is_entity": True,
-                    "is_facet": True,
-                    "is_filter": True,
-                    "is_multivalue": True,
-                    "long_description": None,
-                    "type": "categories",
-                },
                 "category_for_2020": {
                     "description": "`ANZSRC Fields of Research classification <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
                     "is_entity": True,
@@ -2220,6 +2184,15 @@ GRAMMAR_DICT = {
                     "long_description": None,
                     "type": "string",
                 },
+                "kind": {
+                    "description": "Kind code of applications, from DOCDB.",
+                    "is_entity": False,
+                    "is_facet": True,
+                    "is_filter": True,
+                    "is_multivalue": False,
+                    "long_description": None,
+                    "type": "string",
+                },
                 "legal_status": {
                     "description": "The legal status of the patent, e.g. 'Granted', 'Active', 'Abandoned' etc..",
                     "is_entity": False,
@@ -2368,11 +2341,11 @@ GRAMMAR_DICT = {
             "fieldsets": ["basics", "extras", "categories"],
             "metrics": {"count": {"description": "Total count", "name": "count"}},
             "search_fields": [
-                "title_only",
-                "title_abstract_only",
-                "assignees",
                 "inventors",
+                "title_only",
+                "assignees",
                 "full_data",
+                "title_abstract_only",
             ],
         },
         "policy_documents": {
@@ -2388,15 +2361,6 @@ GRAMMAR_DICT = {
                 },
                 "category_for": {
                     "description": "`ANZSRC Fields of Research classification <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_ (alias for most recent version).",
-                    "is_entity": True,
-                    "is_facet": True,
-                    "is_filter": True,
-                    "is_multivalue": True,
-                    "long_description": None,
-                    "type": "categories",
-                },
-                "category_for_2008": {
-                    "description": "`ANZSRC Fields of Research classification <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -2587,7 +2551,7 @@ GRAMMAR_DICT = {
             },
             "fieldsets": ["basics", "categories"],
             "metrics": {"count": {"description": "Total count", "name": "count"}},
-            "search_fields": ["title_only", "full_data"],
+            "search_fields": ["full_data", "title_only"],
         },
         "publications": {
             "fields": {
@@ -2692,15 +2656,6 @@ GRAMMAR_DICT = {
                 },
                 "category_for": {
                     "description": "`ANZSRC Fields of Research classification <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_ (alias for most recent version).",
-                    "is_entity": True,
-                    "is_facet": True,
-                    "is_filter": True,
-                    "is_multivalue": True,
-                    "long_description": None,
-                    "type": "categories",
-                },
-                "category_for_2008": {
-                    "description": "`ANZSRC Fields of Research classification <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -3286,15 +3241,15 @@ GRAMMAR_DICT = {
                 },
             },
             "search_fields": [
+                "acknowledgements",
+                "authors",
+                "concepts",
                 "full_data_exact",
+                "full_data",
                 "terms",
                 "title_abstract_only",
-                "authors",
-                "title_only",
-                "concepts",
                 "raw_affiliations",
-                "full_data",
-                "acknowledgements",
+                "title_only",
             ],
         },
         "reports": {
@@ -3328,15 +3283,6 @@ GRAMMAR_DICT = {
                 },
                 "category_for": {
                     "description": "`ANZSRC Fields of Research classification <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_ (alias for most recent version).",
-                    "is_entity": True,
-                    "is_facet": True,
-                    "is_filter": True,
-                    "is_multivalue": True,
-                    "long_description": None,
-                    "type": "categories",
-                },
-                "category_for_2008": {
-                    "description": "`ANZSRC Fields of Research classification <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -3671,7 +3617,7 @@ GRAMMAR_DICT = {
             },
             "fieldsets": ["basics", "categories"],
             "metrics": {"count": {"description": "Total count", "name": "count"}},
-            "search_fields": ["title_abstract_only", "full_data"],
+            "search_fields": ["full_data", "concepts", "title_abstract_only"],
         },
         "research_org_groups": {
             "fields": {
@@ -3902,6 +3848,15 @@ GRAMMAR_DICT = {
                     "is_facet": False,
                     "is_filter": True,
                     "is_multivalue": False,
+                    "long_description": None,
+                    "type": "string",
+                },
+                "journal_lists": {
+                    "description": "Independent grouping of journals outside of Dimensions, e.g. 'ERA 2015' or 'Norwegian register level 1'.",
+                    "is_entity": False,
+                    "is_facet": True,
+                    "is_filter": True,
+                    "is_multivalue": True,
                     "long_description": None,
                     "type": "string",
                 },

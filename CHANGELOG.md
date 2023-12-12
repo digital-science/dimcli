@@ -1,5 +1,9 @@
 # Changelog
 
+## v 1.2
+
+* Added DSL grammar for DSL V2.8
+* New utility function: [utils.explode_nested_repeated_field](https://digital-science.github.io/dimcli/modules.html#dimcli.utils.misc_utils.explode_nested_repeated_field)
 
 ## v 1.1
 

@@ -112,8 +112,28 @@ class TestDataframes(unittest.TestCase):
         click.secho("Completed test succesfully", fg="green")
 
     def test_005(self):
+        click.secho("\nTEST 005: UTILS: explode_nested_repeated_field", bg="green")
+        
         # ----
-        click.secho("\nTEST 005: Concepts extraction.", bg="green")
+        res = dslquery("""search publications for "malaria" return publications[basics] limit 1000""")
+        click.secho("Query results for standard query: ", fg="magenta")
+        print(" ==> res['stats']: ", res['stats'])
+        print(" ==> len(res['publications']): ", len(res['publications']))
+        click.secho("Now exploding authors column..", fg="magenta")
+        df = res.as_dataframe()
+        print(""" ==> explode_nested_repeated_field(df, "authors") """)
+        df2 = explode_nested_repeated_field(df, "authors")
+        print("New columns: ", df2.columns)
+        click.secho("Now exploding inner affiliations column..", fg="magenta")
+        print(""" ==> explode_nested_repeated_field(df2, "authors_affiliations") """)
+        df3 = explode_nested_repeated_field(df2, "authors_affiliations")
+        print("New columns: ", df3.columns)
+        # ----
+        click.secho("Completed test succesfully", fg="green")
+
+    def test_006(self):
+        # ----
+        click.secho("\nTEST 006: Concepts extraction.", bg="green")
         # ----
         click.secho("Testing as_dataframe_concepts on Publications data: ", fg="magenta")
         res= dslquery("""search publications for "graphene" where year=2019 return publications[id+concepts+year+title+doi+journal] limit 1000""")

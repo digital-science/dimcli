@@ -1,8 +1,8 @@
 # !/usr/bin/env python
 #  -*- coding: UTF-8 -*-
 
-__version__ = "1.1"  # LATEST? =>  https://pypi.org/project/dimcli/
-__copyright__ = "CopyRight (C) 2018-2023 by Digital Science"
+__version__ = "1.2"  # LATEST? =>  https://pypi.org/project/dimcli/
+__copyright__ = "CopyRight (C) 2018-2024 by Digital Science"
 __license__ = "MIT"
 __author__ = "Michele Pasin"
 __author_email__ = "michele dot pasin at digital dash science dot com"
