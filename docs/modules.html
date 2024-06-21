@@ -891,7 +891,7 @@ Alternatively, a simple list of strings as input will result in a matrix where t
 
 <dl class="py function">
 <dt class="sig sig-object py" id="dimcli.core.functions.extract_affiliations">
-<span class="sig-prename descclassname"><span class="pre">dimcli.core.functions.</span></span><span class="sig-name descname"><span class="pre">extract_affiliations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">affiliations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_json</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/functions.html#extract_affiliations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.core.functions.extract_affiliations" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">dimcli.core.functions.</span></span><span class="sig-name descname"><span class="pre">extract_affiliations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">affiliations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_json</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dimcli/core/functions.html#extract_affiliations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dimcli.core.functions.extract_affiliations" title="Permalink to this definition"></a></dt>
 <dd><p>Python wrapper for the DSL function <cite>extract_affiliations</cite>.</p>
 <p>This function returns GRID affiliations either using structured or unstructured input. Up to 200 input objects are allowed per request. See also: <a class="reference external" href="https://docs.dimensions.ai/dsl/functions.html#function-extract-affiliations">https://docs.dimensions.ai/dsl/functions.html#function-extract-affiliations</a></p>
 <p>The input argument <code class="docutils literal notranslate"><span class="pre">affiliations</span></code> can be one of the following:</p>
@@ -932,6 +932,7 @@ Alternatively, a simple list of strings as input will result in a matrix where t
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>affiliations</strong> (<em>str</em><em> or </em><em>list</em><em> or </em><em>dict</em>) – The raw affiliation data to process.</p></li>
 <li><p><strong>as_json</strong> (<em>bool</em><em>, </em><em>optional</em>) – Return raw JSON encoded as a Python dict (instead of a pandas dataframe, by default).</p></li>
+<li><p><strong>include_input</strong> (<em>bool</em><em>, </em><em>optional</em><em>, </em><em>False</em>) – For unstructured affiliation matching, return also a column <cite>input_affiliation</cite> with the original input string.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>

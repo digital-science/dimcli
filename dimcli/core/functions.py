@@ -160,7 +160,7 @@ def extract_classification(title, abstract, system="", verbose=True):
 
 
 
-def extract_affiliations(affiliations, as_json=False):
+def extract_affiliations(affiliations, as_json=False, include_input=False):
     """Python wrapper for the DSL function `extract_affiliations`. 
 
     This function returns GRID affiliations either using structured or unstructured input. Up to 200 input objects are allowed per request. See also: https://docs.dimensions.ai/dsl/functions.html#function-extract-affiliations
@@ -204,6 +204,8 @@ def extract_affiliations(affiliations, as_json=False):
         The raw affiliation data to process. 
     as_json : bool, optional
         Return raw JSON encoded as a Python dict (instead of a pandas dataframe, by default). 
+    include_input: bool, optional, False
+        For unstructured affiliation matching, return also a column `input_affiliation` with the original input string.
 
     Returns
     -------
@@ -254,7 +256,16 @@ def extract_affiliations(affiliations, as_json=False):
         if affiliation_type == "STRUCTURED":
             temp = pd.json_normalize(output.json['results'],  errors='ignore')
         if affiliation_type == "UNSTRUCTURED": 
-            temp = pd.json_normalize(output.json['results'],  'matches', errors='ignore')
+            if include_input:
+                temp = pd.json_normalize(output.json['results'],  'matches', ["input"], errors='ignore')
+                temp["input_affiliation"] = temp["input"].apply(lambda x : x["affiliation"])
+                temp.drop(columns=["input"], inplace=True)
+                # move input col first
+                col_input = temp['input_affiliation']
+                temp.drop(labels=['input_affiliation'], axis=1,inplace = True)
+                temp.insert(0, 'input_affiliation', col_input)
+            else:
+                temp = pd.json_normalize(output.json['results'],  'matches', errors='ignore')
         temp = temp.explode("institutes")
         temp = temp.explode("geo.countries")
         temp = temp.explode("geo.states")

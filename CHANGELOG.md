@@ -1,5 +1,9 @@
 # Changelog
 
+## v 1.3
+
+* Function `extract_affiliations` return an extra column for unstructured data, with the input string.
+
 ## v 1.2
 
 * Added DSL grammar for DSL V2.8
