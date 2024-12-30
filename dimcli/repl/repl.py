@@ -56,7 +56,7 @@ All special commands start with '.'
 >>> .export_as_html: save results from last query as HTML file. 
 >>> .export_as_bar_chart: save results from last query as Plotly bar chart. 
 >>> .export_as_jupyter: save results from last query as Jupyter notebook. 
->>> .export_as_gsheets: save results from last query as Google Sheets (requires gpread credentials). 
+>>> .export_as_gsheets: save results from last query as Google Sheets (requires gspread credentials). 
 >>> .show [optional: N]: print N results from last query, trying to build URLs for objects. Default N=10.
 >>> .json_compact: print results of last query as single-line JSON. 
 >>> .json_full: print results of last query as formatted JSON.
@@ -303,7 +303,8 @@ def run(instance="live"):
     click.secho(f"Using endpoint: {CLIENT._url} - DSL version: {_info}", dim=True)
 
     # history
-    session = PromptSession(history=SelectiveFileHistory(USER_HISTORY_FILE))
+    session = PromptSession(history=SelectiveFileHistory(USER_HISTORY_FILE))  ### December 30, 2024 
+    # session = PromptSession()
 
     databuffer = DslResultsBuffer()
 

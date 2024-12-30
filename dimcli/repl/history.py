@@ -24,11 +24,10 @@ class SelectiveFileHistory(FileHistory):
         # print("HISTORY: ", filename)
         super(SelectiveFileHistory, self).__init__(filename)
 
-    def append_string(self, string):
-        " Add string to the history only if it is a valid DSL query"
+    def append_string(self, string: str) -> None:
+        "DIMCLI override: add string to the history only if it is a valid DSL query"
         l = G.allowed_starts_dsl_query()
-        for x in l:
-            if string.startswith(x):
-                self._loaded_strings.append(string)
-                self.store_string(string)
-                return
+        if string.startswith(tuple(l)):
+            self._loaded_strings.insert(0, string)
+            self.store_string(string)
+
