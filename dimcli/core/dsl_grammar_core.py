@@ -577,11 +577,11 @@ GRAMMAR_DICT = {
             "fieldsets": ["basics", "extras", "categories", "studies"],
             "metrics": {"count": {"description": "Total count", "name": "count"}},
             "search_fields": [
-                "title_only",
-                "raw_affiliations",
                 "full_data",
+                "title_only",
                 "investigators",
                 "title_abstract_only",
+                "raw_affiliations",
             ],
         },
         "datasets": {
@@ -875,7 +875,7 @@ GRAMMAR_DICT = {
                     "type": "string",
                 },
                 "repository": {
-                    "description": "Repository associtated with the dataset.",
+                    "description": "Repository associated with the dataset.",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -958,7 +958,7 @@ GRAMMAR_DICT = {
             },
             "fieldsets": ["basics", "categories"],
             "metrics": {"count": {"description": "Total count", "name": "count"}},
-            "search_fields": ["full_data", "title_only", "title_abstract_only"],
+            "search_fields": ["title_abstract_only", "title_only", "full_data"],
         },
         "funder_groups": {
             "fields": {
@@ -1001,6 +1001,15 @@ GRAMMAR_DICT = {
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": False,
+                    "is_multivalue": False,
+                    "long_description": None,
+                    "type": "string",
+                },
+                "active_status": {
+                    "description": None,
+                    "is_entity": False,
+                    "is_facet": True,
+                    "is_filter": True,
                     "is_multivalue": False,
                     "long_description": None,
                     "type": "string",
@@ -1428,6 +1437,15 @@ GRAMMAR_DICT = {
                     "long_description": None,
                     "type": "states",
                 },
+                "research_org_types": {
+                    "description": "Type of organisation to which investigators are affiliated. This field only contains information for organisations with GRID IDs.",
+                    "is_entity": False,
+                    "is_facet": True,
+                    "is_filter": True,
+                    "is_multivalue": False,
+                    "long_description": None,
+                    "type": "string",
+                },
                 "research_orgs": {
                     "description": "GRID organisations receiving the grant (note: identifiers are automatically extracted from the source text and can be missing in some cases).",
                     "is_entity": True,
@@ -1493,11 +1511,11 @@ GRAMMAR_DICT = {
             },
             "search_fields": [
                 "concepts",
-                "title_only",
-                "raw_affiliations",
                 "full_data",
+                "title_only",
                 "investigators",
                 "title_abstract_only",
+                "raw_affiliations",
             ],
         },
         "organizations": {
@@ -2207,7 +2225,7 @@ GRAMMAR_DICT = {
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": True,
-                    "is_multivalue": False,
+                    "is_multivalue": True,
                     "long_description": None,
                     "type": "json",
                 },
@@ -2344,8 +2362,8 @@ GRAMMAR_DICT = {
                 "inventors",
                 "title_only",
                 "assignees",
-                "full_data",
                 "title_abstract_only",
+                "full_data",
             ],
         },
         "policy_documents": {
@@ -2551,7 +2569,7 @@ GRAMMAR_DICT = {
             },
             "fieldsets": ["basics", "categories"],
             "metrics": {"count": {"description": "Total count", "name": "count"}},
-            "search_fields": ["full_data", "title_only"],
+            "search_fields": ["title_only", "full_data"],
         },
         "publications": {
             "fields": {
@@ -2812,6 +2830,15 @@ GRAMMAR_DICT = {
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": False,
+                    "is_multivalue": False,
+                    "long_description": None,
+                    "type": "string",
+                },
+                "document_type": {
+                    "description": "Document type prediction based on the content and metadata of a publication.",
+                    "is_entity": False,
+                    "is_facet": True,
+                    "is_filter": True,
                     "is_multivalue": False,
                     "long_description": None,
                     "type": "string",
@@ -3095,6 +3122,15 @@ GRAMMAR_DICT = {
                     "long_description": None,
                     "type": "string",
                 },
+                "research_org_types": {
+                    "description": "Types of organisation associated with the publication. This field only contains information for organisations with GRID IDs.",
+                    "is_entity": False,
+                    "is_facet": True,
+                    "is_filter": True,
+                    "is_multivalue": True,
+                    "long_description": None,
+                    "type": "string",
+                },
                 "research_orgs": {
                     "description": "GRID organisations associated to a publication. Identifiers are automatically extracted from author affiliations text, so they can be missing in some cases (note: this field supports :ref:`filter-functions`: ``count``).",
                     "is_entity": True,
@@ -3242,14 +3278,14 @@ GRAMMAR_DICT = {
             },
             "search_fields": [
                 "acknowledgements",
-                "authors",
                 "concepts",
                 "full_data_exact",
-                "full_data",
                 "terms",
                 "title_abstract_only",
                 "raw_affiliations",
+                "authors",
                 "title_only",
+                "full_data",
             ],
         },
         "reports": {
@@ -3617,7 +3653,7 @@ GRAMMAR_DICT = {
             },
             "fieldsets": ["basics", "categories"],
             "metrics": {"count": {"description": "Total count", "name": "count"}},
-            "search_fields": ["full_data", "concepts", "title_abstract_only"],
+            "search_fields": ["concepts", "title_abstract_only", "full_data"],
         },
         "research_org_groups": {
             "fields": {
