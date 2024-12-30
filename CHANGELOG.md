@@ -1,12 +1,17 @@
 # Changelog
 
+## v 1.4
+
+* Fix CLI [history bug](https://github.com/digital-science/dimcli/issues/80)
+* Added DSL grammar for DSL [V2.10](https://docs.dimensions.ai/dsl/releasenotes.html#version-2-10-0-2024-april-week-of-29th)
+
 ## v 1.3
 
 * Function `extract_affiliations` return an extra column for unstructured data, with the input string.
 
 ## v 1.2
 
-* Added DSL grammar for DSL V2.8
+* Added DSL grammar for DSL [V2.8](https://docs.dimensions.ai/dsl/releasenotes.html#version-2-8-0-2023-september-week-of-25th)
 * New utility function: [utils.explode_nested_repeated_field](https://digital-science.github.io/dimcli/modules.html#dimcli.utils.misc_utils.explode_nested_repeated_field)
 
 ## v 1.1
@@ -29,7 +34,7 @@
 ## v 0.9.9
 
 * New parameters for [DslDataset.as_dataframe()](https://digital-science.github.io/dimcli/modules.html#dimcli.core.api.DslDataset.as_dataframe)  
-* Improvements to the  `--nice` and `--links` rendering of dataframes with Dimesions data
+* Improvements to the  `--nice` and `--links` rendering of dataframes with Dimensions data
   - with hyperlinks, drop IDs if title is present
   - affiliations as a list with GRID links
   - generic 'default_transform' method for extra column not in transformations
