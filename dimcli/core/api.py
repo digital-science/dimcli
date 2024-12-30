@@ -88,7 +88,10 @@ class Dsl():
         if self._CONNECTION.token:
             # if already logged in, reuse connection          
             self._url = self._CONNECTION.url
-            self._headers = {'Authorization': "JWT " + self._CONNECTION.token}
+            if 'cris-api' in self._url:
+                self._headers = {'Authorization': "Bearer " + self._CONNECTION.token}
+            else:
+                self._headers = {'Authorization': "JWT " + self._CONNECTION.token}
             self.verify_ssl = self._CONNECTION.verify_ssl
         else:
             self._print_please_login()
@@ -105,7 +108,10 @@ class Dsl():
         if self._CONNECTION:
             self._CONNECTION.refresh_login()
             self._url = self._CONNECTION.url
-            self._headers = {'Authorization': "JWT " + self._CONNECTION.token}
+            if 'cris-api' in self._url:
+                self._headers = {'Authorization': "Bearer " + self._CONNECTION.token}
+            else:
+                self._headers = {'Authorization': "JWT " + self._CONNECTION.token}
             self.verify_ssl = self._CONNECTION.verify_ssl
         else:
             printDebug("Warning: please login first.")

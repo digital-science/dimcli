@@ -152,11 +152,17 @@ class APISession():
 
         login_data = {'username': username, 'password': password, 'key': key}
         
-        # POST AUTH REQUEST
-        response = requests.post(URL_AUTH, json=login_data, verify=verify_ssl)
-        response.raise_for_status()
+        if 'cris-api' in URL_QUERY:
+            login_data = {'api_key': key}
+            response = requests.get(URL_AUTH, params=login_data, verify=verify_ssl)
+            response.raise_for_status()
+            token = response.text
+        else:
+            # POST AUTH REQUEST
+            response = requests.post(URL_AUTH, json=login_data, verify=verify_ssl)
+            response.raise_for_status()
 
-        token = response.json()['token']
+            token = response.json()['token']
 
         self.instance = instance
         self.url = URL_QUERY
@@ -194,7 +200,11 @@ class APISession():
 
         """
         url_auth, url_query = None, None
-        if "/api/" in user_url:
+        if "cris-api" in user_url:
+            domain = user_url.split("/api/")[0]
+            url_auth = domain + "/token"
+            url_query = domain + "/api/query"
+        elif "/api/" in user_url:
             # savy user passing the full QUERY URL
             domain = user_url.split("/api/")[0]
             url_auth = domain + "/api/auth.json"
