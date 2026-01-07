@@ -420,6 +420,15 @@ GRAMMAR_DICT = {
                     "long_description": None,
                     "type": "string",
                 },
+                "overall_status": {
+                    "description": "Status of the trial as provided by the registry.",
+                    "is_entity": False,
+                    "is_facet": True,
+                    "is_filter": True,
+                    "is_multivalue": False,
+                    "long_description": None,
+                    "type": "string",
+                },
                 "phase": {
                     "description": "Phase of the clinical trial, as a string.",
                     "is_entity": False,
@@ -577,11 +586,11 @@ GRAMMAR_DICT = {
             "fieldsets": ["basics", "extras", "categories", "studies"],
             "metrics": {"count": {"description": "Total count", "name": "count"}},
             "search_fields": [
-                "full_data",
                 "title_only",
-                "investigators",
                 "title_abstract_only",
                 "raw_affiliations",
+                "investigators",
+                "full_data",
             ],
         },
         "datasets": {
@@ -958,7 +967,7 @@ GRAMMAR_DICT = {
             },
             "fieldsets": ["basics", "categories"],
             "metrics": {"count": {"description": "Total count", "name": "count"}},
-            "search_fields": ["title_abstract_only", "title_only", "full_data"],
+            "search_fields": ["title_only", "title_abstract_only", "full_data"],
         },
         "funder_groups": {
             "fields": {
@@ -1348,7 +1357,7 @@ GRAMMAR_DICT = {
                     "type": "json",
                 },
                 "keywords": {
-                    "description": "Keywords provided by the original data source.",
+                    "description": "Keywords provided by the original data cfg_models.Source.",
                     "is_entity": False,
                     "is_facet": True,
                     "is_filter": True,
@@ -1393,7 +1402,7 @@ GRAMMAR_DICT = {
                     "type": "string",
                 },
                 "project_numbers": {
-                    "description": "Grant identifiers, as provided by the source (e.g., funder, aggregator) the grant was derived from.",
+                    "description": "Grant identifiers, as provided by the cfg_models.Source (e.g., funder, aggregator) the grant was derived from.",
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": True,
@@ -1447,7 +1456,7 @@ GRAMMAR_DICT = {
                     "type": "string",
                 },
                 "research_orgs": {
-                    "description": "GRID organisations receiving the grant (note: identifiers are automatically extracted from the source text and can be missing in some cases).",
+                    "description": "GRID organisations receiving the grant (note: identifiers are automatically extracted from the cfg_models.Source text and can be missing in some cases).",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -1510,18 +1519,18 @@ GRAMMAR_DICT = {
                 },
             },
             "search_fields": [
-                "concepts",
-                "full_data",
                 "title_only",
-                "investigators",
                 "title_abstract_only",
+                "concepts",
                 "raw_affiliations",
+                "investigators",
+                "full_data",
             ],
         },
         "organizations": {
             "fields": {
                 "acronym": {
-                    "description": 'GRID acronym of the organization. E.g., "UT" for `grid.26999.3d <https://app.dimensions.ai/details/organization/grid.26999.3d>`_',
+                    "description": 'Acronym of the organization. E.g., "UT" for `grid.26999.3d <https://app.dimensions.ai/details/organization/grid.26999.3d>`_',
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": True,
@@ -1530,7 +1539,7 @@ GRAMMAR_DICT = {
                     "type": "string",
                 },
                 "city_name": {
-                    "description": 'GRID name of the organization country. E.g., "Bethesda" for `grid.419635.c <https://app.dimensions.ai/details/organization/grid.419635.c>`_',
+                    "description": 'Name of the organization city. E.g., "Bethesda" for `grid.419635.c <https://app.dimensions.ai/details/organization/grid.419635.c>`_',
                     "is_entity": False,
                     "is_facet": True,
                     "is_filter": True,
@@ -1557,7 +1566,7 @@ GRAMMAR_DICT = {
                     "type": "string",
                 },
                 "country_name": {
-                    "description": 'GRID name of the organization country. E.g., "Japan" for `grid.26999.3d <https://app.dimensions.ai/details/organization/grid.26999.3d>`_',
+                    "description": 'Name of the organization country. E.g., "Japan" for `grid.26999.3d <https://app.dimensions.ai/details/organization/grid.26999.3d>`_',
                     "is_entity": False,
                     "is_facet": True,
                     "is_filter": True,
@@ -1602,7 +1611,7 @@ GRAMMAR_DICT = {
                     "type": "string",
                 },
                 "id": {
-                    "description": 'GRID ID of the organization. E.g., "grid.26999.3d".',
+                    "description": 'ID of the organization. E.g., "grid.26999.3d".',
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": True,
@@ -1647,7 +1656,7 @@ GRAMMAR_DICT = {
                     "type": "float",
                 },
                 "name": {
-                    "description": 'GRID name of the organization. E.g., "University of Tokyo" for `grid.26999.3d <https://app.dimensions.ai/details/organization/grid.26999.3d>`_',
+                    "description": 'Name of the organization. E.g., "University of Tokyo" for `grid.26999.3d <https://app.dimensions.ai/details/organization/grid.26999.3d>`_',
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": True,
@@ -1746,7 +1755,7 @@ GRAMMAR_DICT = {
                     "type": "string",
                 },
                 "redirect": {
-                    "description": "GRID ID of an organization this one was redirected to",
+                    "description": "ID of an organization this one was redirected to",
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": True,
@@ -1773,7 +1782,7 @@ GRAMMAR_DICT = {
                     "type": "float",
                 },
                 "state_name": {
-                    "description": 'GRID name of the organization country. E.g., "Maryland" for `grid.419635.c <https://app.dimensions.ai/details/organization/grid.419635.c>`_',
+                    "description": 'Name of the organization state. E.g., "Maryland" for `grid.419635.c <https://app.dimensions.ai/details/organization/grid.419635.c>`_',
                     "is_entity": False,
                     "is_facet": True,
                     "is_filter": True,
@@ -1782,7 +1791,7 @@ GRAMMAR_DICT = {
                     "type": "string",
                 },
                 "status": {
-                    "description": "Status of an organization. May be be one of:\n        \n        * `a`: active organization\n        * `o`: obsolete organization\n        * `r`: redirected organization, see field `redirect` to obtain the GRID ID of an organization this one was redirected to",
+                    "description": "Status of an organization. May be be one of:\n        \n        * `a`: active organization\n        * `o`: obsolete organization\n        * `r`: redirected organization, see field `redirect` to obtain the ID of an organization this one was redirected to",
                     "is_entity": False,
                     "is_facet": True,
                     "is_filter": True,
@@ -2359,10 +2368,11 @@ GRAMMAR_DICT = {
             "fieldsets": ["basics", "extras", "categories"],
             "metrics": {"count": {"description": "Total count", "name": "count"}},
             "search_fields": [
-                "inventors",
                 "title_only",
-                "assignees",
                 "title_abstract_only",
+                "assignees",
+                "inventors",
+                "title_abstract_claims",
                 "full_data",
             ],
         },
@@ -2583,7 +2593,7 @@ GRAMMAR_DICT = {
                     "type": "string",
                 },
                 "acknowledgements": {
-                    "description": "The acknowledgements section text as found in the source document.",
+                    "description": "The acknowledgements section text as found in the cfg_models.Source document.",
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": False,
@@ -2889,7 +2899,7 @@ GRAMMAR_DICT = {
                     "type": "organizations",
                 },
                 "funding_section": {
-                    "description": "The funding section text as found in the source document",
+                    "description": "The funding section text as found in the cfg_models.Source document",
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": True,
@@ -2952,7 +2962,7 @@ GRAMMAR_DICT = {
                     "type": "string",
                 },
                 "journal_title_raw": {
-                    "description": "The journal title, as it appears in the original source (note: this field can be used to retrieve historical titles of journals whose official title was later updated).",
+                    "description": "The journal title, as it appears in the original cfg_models.Source (note: this field can be used to retrieve historical titles of journals whose official title was later updated).",
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": True,
@@ -3168,7 +3178,7 @@ GRAMMAR_DICT = {
                     "type": "float",
                 },
                 "source_title": {
-                    "description": "Source Title for the Publication.",
+                    "description": "cfg_models.Source Title for the Publication.",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -3277,14 +3287,15 @@ GRAMMAR_DICT = {
                 },
             },
             "search_fields": [
-                "acknowledgements",
-                "concepts",
                 "full_data_exact",
-                "terms",
-                "title_abstract_only",
-                "raw_affiliations",
-                "authors",
                 "title_only",
+                "terms",
+                "authors",
+                "funding",
+                "acknowledgements",
+                "title_abstract_only",
+                "concepts",
+                "raw_affiliations",
                 "full_data",
             ],
         },
@@ -3300,7 +3311,7 @@ GRAMMAR_DICT = {
                     "type": "string",
                 },
                 "authors": {
-                    "description": "Ordered list of authors names and their affiliations, as they appear in the source. The list can include researcher and organization identifiers, when available.",
+                    "description": "Ordered list of authors names and their affiliations, as they appear in the cfg_models.Source. The list can include researcher and organization identifiers, when available.",
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": True,
@@ -3462,7 +3473,7 @@ GRAMMAR_DICT = {
                     "type": "json",
                 },
                 "funder_details": {
-                    "description": "Sponsors/funders of the research/report, as they appear in the source.",
+                    "description": "Sponsors/funders of the research/report, as they appear in the cfg_models.Source.",
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": True,
@@ -3498,7 +3509,7 @@ GRAMMAR_DICT = {
                     "type": "string",
                 },
                 "keywords": {
-                    "description": "Keywords, as provided by the source.",
+                    "description": "Keywords, as provided by the cfg_models.Source.",
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": True,
@@ -3516,7 +3527,7 @@ GRAMMAR_DICT = {
                     "type": "string",
                 },
                 "publisher_details": {
-                    "description": "Organizations publishing the report, as they appear in the source.",
+                    "description": "Organizations publishing the report, as they appear in the cfg_models.Source.",
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": True,
@@ -3570,7 +3581,7 @@ GRAMMAR_DICT = {
                     "type": "states",
                 },
                 "research_orgs": {
-                    "description": "Combined list of GRID organisations associated with the report, because the source marks them as responsible for it, or because they appear as authors affiliations.",
+                    "description": "Combined list of GRID organisations associated with the report, because the cfg_models.Source marks them as responsible for it, or because they appear as authors affiliations.",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -3606,7 +3617,7 @@ GRAMMAR_DICT = {
                     "type": "countries",
                 },
                 "responsible_orgs_details": {
-                    "description": "Organizations responsible for the report, as they appear in the source. Note: this can be different from the author affiliations.",
+                    "description": "Organizations responsible for the report, as they appear in the cfg_models.Source. Note: this can be different from the author affiliations.",
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": True,
@@ -3653,7 +3664,7 @@ GRAMMAR_DICT = {
             },
             "fieldsets": ["basics", "categories"],
             "metrics": {"count": {"description": "Total count", "name": "count"}},
-            "search_fields": ["concepts", "title_abstract_only", "full_data"],
+            "search_fields": ["title_abstract_only", "concepts", "full_data"],
         },
         "research_org_groups": {
             "fields": {
@@ -3852,7 +3863,7 @@ GRAMMAR_DICT = {
         "source_titles": {
             "fields": {
                 "id": {
-                    "description": "The Dimensions ID of the source.",
+                    "description": "The Dimensions ID of the source title.",
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": True,
@@ -3861,7 +3872,7 @@ GRAMMAR_DICT = {
                     "type": "string",
                 },
                 "issn": {
-                    "description": "List of known ISSNs for the source, including both print and electronic.",
+                    "description": "List of known ISSNs for the source title, including both print and electronic.",
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": True,
@@ -3870,7 +3881,7 @@ GRAMMAR_DICT = {
                     "type": "string",
                 },
                 "issn_electronic": {
-                    "description": "Electronic ISSN for the source.",
+                    "description": "Electronic ISSN for the source title.",
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": True,
@@ -3879,7 +3890,7 @@ GRAMMAR_DICT = {
                     "type": "string",
                 },
                 "issn_print": {
-                    "description": "Print ISSN for the source.",
+                    "description": "Print ISSN for the source title.",
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": True,
@@ -3897,7 +3908,7 @@ GRAMMAR_DICT = {
                     "type": "string",
                 },
                 "linkout": {
-                    "description": "The source web URL, if known.",
+                    "description": "The source title web URL, if known.",
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": False,
@@ -3924,7 +3935,7 @@ GRAMMAR_DICT = {
                     "type": "float",
                 },
                 "snip": {
-                    "description": "SNIP indicator (source normalized impact per paper). This indicator measures the average citation impact of the publications of a journal.",
+                    "description": "SNIP indicator (source title normalized impact per paper). This indicator measures the average citation impact of the publications of a journal.",
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": True,
@@ -3933,7 +3944,7 @@ GRAMMAR_DICT = {
                     "type": "float",
                 },
                 "start_year": {
-                    "description": "Year when the source started publishing.",
+                    "description": "Year when the source title started publishing.",
                     "is_entity": False,
                     "is_facet": True,
                     "is_filter": True,
@@ -3942,7 +3953,7 @@ GRAMMAR_DICT = {
                     "type": "integer",
                 },
                 "title": {
-                    "description": "The title of the source.",
+                    "description": "The title of the source title.",
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": False,
@@ -3951,7 +3962,7 @@ GRAMMAR_DICT = {
                     "type": "string",
                 },
                 "type": {
-                    "description": "The source type: one of `book_series`, `proceeding`, `journal`, `preprint_platform` (4 in total).",
+                    "description": "The source title type: one of `book_series`, `proceeding`, `journal`, `preprint_platform` (4 in total).",
                     "is_entity": False,
                     "is_facet": True,
                     "is_filter": True,

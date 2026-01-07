@@ -1,5 +1,11 @@
 # Changelog
 
+
+## v 1.5
+
+* Added DSL grammar for DSL [V2.13](https://docs.dimensions.ai/dsl/releasenotes.html#version-2-13-2025-november-week-of-10th)
+* Updated CLI special commands. Now starting with `/` instead of `.`
+
 ## v 1.4
 
 * Fix CLI [history bug](https://github.com/digital-science/dimcli/issues/80)
