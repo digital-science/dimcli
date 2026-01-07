@@ -667,8 +667,7 @@ def preview_results(jsondata, maxitems=10):
                             click.style(str(row)))
             if len(jsondata[key]) > maxitems:
                 click.secho("---", dim=True)
-                click.secho(f"Note: {maxitems} of {len(jsondata[key])} results shown. Use '.show <number>' to view more.", dim=True)
-
+                click.secho(f"Note: {maxitems} of {len(jsondata[key])} results shown. Use '/show <number>' to view more.", dim=True)
 
 
 def print_json_compact(jsondata):

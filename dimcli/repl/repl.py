@@ -43,35 +43,35 @@ from ..utils.all import *
 
 HELP_MESSAGE =  """COMMANDS LIST
 ====================
-All special commands start with '.'
+All special commands start with '/'
 ----
->>> help: show this help message
+>>> /help: show this help message
 ----
->>> <tab>:  autocomplete. 
+>>> <tab>:  autocomplete.
 ----
->>> .docs: print out documentation for DSL data objects.  
->>> .export_as_json: save results from last query as JSON file.  
->>> .export_as_csv: save results from last query as CSV file.  
->>> .export_as_gist: save results from last query as Github GIST.  
->>> .export_as_html: save results from last query as HTML file. 
->>> .export_as_bar_chart: save results from last query as Plotly bar chart. 
->>> .export_as_jupyter: save results from last query as Jupyter notebook. 
->>> .export_as_gsheets: save results from last query as Google Sheets (requires gspread credentials). 
->>> .show [optional: N]: print N results from last query, trying to build URLs for objects. Default N=10.
->>> .json_compact: print results of last query as single-line JSON. 
->>> .json_full: print results of last query as formatted JSON.
->>> .url: resolve a Dimensions ID into a public URL.
+>>> /docs: print out documentation for DSL data objects.
+>>> /export_as_json: save results from last query as JSON file.
+>>> /export_as_csv: save results from last query as CSV file.
+>>> /export_as_gist: save results from last query as Github GIST.
+>>> /export_as_html: save results from last query as HTML file.
+>>> /export_as_bar_chart: save results from last query as Plotly bar chart.
+>>> /export_as_jupyter: save results from last query as Jupyter notebook.
+>>> /export_as_gsheets: save results from last query as Google Sheets (requires gspread credentials).
+>>> /show [optional: N]: print N results from last query, trying to build URLs for objects. Default N=10.
+>>> /json_compact: print results of last query as single-line JSON.
+>>> /json_full: print results of last query as formatted JSON.
+>>> /url: resolve a Dimensions ID into a public URL.
 ----
->>> <Ctrl-o>: search docs online. 
+>>> <Ctrl-o>: search docs online (type a search query first).
 >>> <Ctrl-c>: abort query.
 >>> <Ctrl-d>: exit console.
 ----
->>> quit: exit console
+>>> /quit: exit console
 ====================
 *ABOUT AUTOCOMPLETE*
 Including a space between query elements (= keywords and operators) leads to better autocomplete results."""
 
-WELCOME_MESSAGE = "Welcome! Type help for more info."
+WELCOME_MESSAGE = "Welcome! Type /help for more info."
 # WELCOME_MESSAGE = "Welcome! Type help for more info. Ready to query endpoint: %s"
 
 
@@ -105,16 +105,16 @@ class CommandsManager(object):
 
     def handle(self, text):
         "process text and delegate"
-        if text.replace("\n", "").strip().startswith(".show") or text.replace("\n", "").strip().startswith(".json"):
+        if text.replace("\n", "").strip().startswith("/show") or text.replace("\n", "").strip().startswith("/json"):
             self.show(text.replace("\n", "").strip())
 
-        elif text.replace("\n", "").strip().startswith(".export"):
+        elif text.replace("\n", "").strip().startswith("/export"):
             self.export(text.replace("\n", "").strip())
 
-        elif text.replace("\n", "").strip().startswith(".docs"):
+        elif text.replace("\n", "").strip().startswith("/docs"):
             self.docs_full(text.replace("\n", "").strip())
 
-        elif text.replace("\n", "").strip().startswith(".url"):
+        elif text.replace("\n", "").strip().startswith("/url"):
             self.url_resolver(text.replace("\n", "").strip())
 
         else:
@@ -125,7 +125,7 @@ class CommandsManager(object):
         """
         turn an ID into a Dimensions URL - print out results
         """
-        text = text.replace(".url", "").strip()
+        text = text.replace("/url", "").strip()
         if len(text) > 0:
             print_dimensions_url(text)
 
@@ -163,7 +163,7 @@ class CommandsManager(object):
         """
         print out docs infos from 'describe' API
         """
-        text = text.replace(".docs", "").split()
+        text = text.replace("/docs", "").split()
         if len(text) > 0:
             if text[0] in G.entities():
                 res = self.dsl.query(f"describe entity {text[0]}")
@@ -221,25 +221,25 @@ class CommandsManager(object):
         CONNECTION = get_global_connection()
         api_endpoint = CONNECTION.url
         # cases
-        if text == ".export_as_html":
+        if text == "/export_as_html":
             export_json_html(jsondata, query, api_endpoint, USER_EXPORTS_DIR)
 
-        elif text == ".export_as_gist":
+        elif text == "/export_as_gist":
             export_gist(jsondata, query, api_endpoint)
 
-        elif text == ".export_as_csv":
+        elif text == "/export_as_csv":
             export_json_csv(jsondata, query, USER_EXPORTS_DIR)
 
-        elif text == ".export_as_json":
+        elif text == "/export_as_json":
             export_json_json(jsondata, query, USER_EXPORTS_DIR)
 
-        elif text == ".export_as_bar_chart":
+        elif text == "/export_as_bar_chart":
             export_as_bar_chart(jsondata, query, USER_EXPORTS_DIR)
 
-        elif text == ".export_as_jupyter":
+        elif text == "/export_as_jupyter":
             export_as_jupyter(jsondata, query, USER_EXPORTS_DIR)
 
-        elif text == ".export_as_gsheets":
+        elif text == "/export_as_gsheets":
             export_as_gsheets_wrapper(jsondata, query)
 
 
@@ -259,14 +259,14 @@ class CommandsManager(object):
             print("Nothing to show - please run a search first.")
             return
         # cases
-        if text == ".json_compact":
+        if text == "/json_compact":
             print_json_compact(jsondata)
-        elif text == ".json_full":
+        elif text == "/json_full":
             print_json_full(jsondata)
         else:
-            # must be a simple ".show" + X command
+            # must be a simple "/show" + X command
             try:
-                no = text.replace(".show", "").strip()
+                no = text.replace("/show", "").strip()
                 slice_no = int(no)
             except ValueError:
                 slice_no = DEFAULT_NO_RECORDS
@@ -333,9 +333,9 @@ def run(instance="live"):
         else:
             if text.strip() == "":
                 continue
-            elif text == "quit":
+            elif text == "/quit":
                 break
-            elif text == "help":
+            elif text == "/help":
                 click.secho(HELP_MESSAGE, dim=True)
                 continue
             # cm = CommandsManager(CLIENT,databuffer)

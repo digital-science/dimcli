@@ -72,7 +72,7 @@ class CleverCompleter(Completer):
                 entity = G.entity_type_for_source_facet(source, test_return_obj)
                 candidates = G.fields_for_entity_from_source_facet(source, test_return_obj)
 
-        elif line_last_word(line_minus_current) in [".docs"]:
+        elif line_last_word(line_minus_current) in ["/docs"]:
             candidates = G.sources() + G.entities()
 
         elif line_last_word(line_minus_current) in ["describe"]:
