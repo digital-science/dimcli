@@ -34,7 +34,10 @@ def main(test_number=1):
 
         click.secho("\nTEST ......", bg="green")
         # ----
-        q = """search publications where researchers.orcid_id = "0000-0001-7334-8049" return publications[basics + book + altmetric + date + doi + funders + open_access + pmcid + pmid + times_cited + abstract + altmetric_id + issn + isbn + publisher + recent_citations + supporting_grant_ids + concepts] limit 25 skip 0"""
+        q = '''
+        search publications where doi in ["10.3847/1538-4357/ad9749","10.1103/physrevd.111.042005","10.3847/1538-4357/ad8de0","10.1364/fio.2024.jtu4a.2","10.3847/1538-4357/ad65ce","10.1364/cleo_si.2024.sm1d.3","10.1103/physrevd.110.042001","10.3847/1538-4357/ad3e83","10.3847/2041-8213/ad5beb"]
+        return publications [researchers]
+        limit 1000'''
         print(q)
         res = dsl.query(q)
         print(" ==> res.json.keys(): ", res.json.keys())
