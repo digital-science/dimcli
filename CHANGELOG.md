@@ -1,6 +1,15 @@
 # Changelog
 
 
+## v 1.8
+
+* Added DSL grammar for DSL [V2.15](https://docs.dimensions.ai/dsl/releasenotes.html#version-2-15-2026-may-week-of-4th)
+* Fixed `query_iterative()` raising a spurious "not a valid source" exception when a full-text search phrase contains the word "return" ([DIMENTRY-9906](https://digital-science.atlassian.net/browse/DIMENTRY-9906))
+* Fixed `query()` silently returning `None` on unexpected HTTP 2XX responses (e.g. empty-bodied 202s occasionally returned by the API), which could crash calling code with an unhelpful error; these now raise `requests.exceptions.HTTPError` ([PR #96](https://github.com/digital-science/dimcli/pull/96), thanks @edsu)
+* `query_iterative()` gained a `retry` argument to retry individual paginated requests on transient errors, propagated correctly across recursive pagination calls
+* Guarded against a `TypeError` in `query_iterative()` when the API response is missing `total_count`
+* Added explicit dependency: `jinja2>=3.1.2`, required by pandas' `.style` accessor for `as_dataframe(links=True)`; older jinja2 versions caused an `AttributeError: The '.style' accessor requires jinja2`
+
 ## v 1.7
 
 * Added DSL grammar for DSL [V2.14](https://docs.dimensions.ai/dsl/releasenotes.html#version-2-14-2026-february-week-of-2nd)

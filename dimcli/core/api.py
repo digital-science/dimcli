@@ -14,6 +14,7 @@ import json
 import IPython.display
 from itertools import islice
 import urllib.parse
+from requests.exceptions import HTTPError
 
 import pandas as pd
 
@@ -193,11 +194,18 @@ class Dsl():
                 if verbose: printDebug("ERROR LOG\n---\nQuery\n---\n" + str(q), "red")
                 if verbose: printDebug("Response.header\n---\n" + str(response.headers), "red")
                 if verbose: printDebug("Response.content\n---\n" +str(response.content), "red")
+
                 response.raise_for_status()
 
+                # raise_for_status() doesn't treat 2XX messages as an error but empty HTTP 202 
+                # messages have been observed.
+                #
+                # Any HTTP response that has made it here needs to trigger an exception or else we 
+                # will return None, which can cause problem for calling code.
 
+                raise HTTPError(f"Unexpected response HTTP {response.status_code}", response=response)
 
-    def query_iterative(self, q, show_results=None, limit=1000, skip=0, pause=1.5, force=False, maxlimit=0, verbose=None, _tot_count_prev_query=0, _warnings_tot=None):       
+    def query_iterative(self, q, show_results=None, limit=1000, skip=0, pause=1.5, force=False, maxlimit=0, verbose=None, retry=0, _tot_count_prev_query=0, _warnings_tot=None):       
         """Runs a DSL query and then keep querying until all matching records have been extracted. 
         
         The API returns a maximum of 1000 records per call. If a DSL query results in more than 1000 matches, it is possible to use pagination to get more results, up to 50k. 
@@ -224,7 +232,7 @@ class Dsl():
             The maximum number of records to extract in total. If 0, all available records are extracted, up to the API upper limit of 50k records per query.
         verbose : bool, default=False
             Verbose mode.
-
+        retry: number of retries per individual request, when an error is encountered
 
         Returns
         -------
@@ -291,7 +299,7 @@ class Dsl():
         q2 = q + " limit %d skip %d" % (limit, skip)
         
         start = time.time()
-        res = self.query(q2, show_results=False, retry=0, verbose=False)
+        res = self.query(q2, show_results=False, retry=retry, verbose=False)
         end = time.time()
         elapsed = end - start
 
@@ -314,7 +322,7 @@ class Dsl():
             tot =  _tot_count_prev_query # when force=True, we have no current query stats
 
         new_skip = skip+limit
-        if tot > 0 and new_skip > tot:
+        if tot is not None and tot > 0 and new_skip > tot:
             new_skip = tot
         if verbose and tot:  # if not first iteration
             t = "%.2f" % elapsed
@@ -328,15 +336,15 @@ class Dsl():
                 _warnings_tot = warnings
 
         if flag_force:
-            output = self.query_iterative(q, show_results, limit, new_skip, pause, force, maxlimit, verbose, _tot_count_prev_query, _warnings_tot)                    
+            output = self.query_iterative(q, show_results, limit, new_skip, pause, force, maxlimit, verbose, retry=retry, _tot_count_prev_query=_tot_count_prev_query, _warnings_tot=_warnings_tot)
 
         elif not IS_UNNEST and len(res[sourcetype]) == limit and not flag_last_round:
-            output = res[sourcetype] + self.query_iterative(q, show_results, limit, new_skip, pause, force,maxlimit, verbose, tot, _warnings_tot)
+            output = res[sourcetype] + self.query_iterative(q, show_results, limit, new_skip, pause, force, maxlimit, verbose, retry=retry, _tot_count_prev_query=tot, _warnings_tot=_warnings_tot)
 
         elif IS_UNNEST and len(res[sourcetype]) > 0 and not flag_last_round:
             # unnest returns a number of records that don't relate to actual data left
             # hence can't match the lenght of results to limit in this case
-            output = res[sourcetype] + self.query_iterative(q, show_results, limit, new_skip, pause, force, maxlimit, verbose, tot, _warnings_tot)
+            output = res[sourcetype] + self.query_iterative(q, show_results, limit, new_skip, pause, force, maxlimit, verbose, retry=retry, _tot_count_prev_query=tot, _warnings_tot=_warnings_tot)
 
         else:
             output = res[sourcetype]

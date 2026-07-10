@@ -29,6 +29,40 @@ def main(test_number=1):
     dsl = Dsl()
     test_number = int(test_number)
 
+
+    if test_number == 7:
+
+        click.secho("\nTEST ......", bg="green")
+        # ----
+        q = '''
+        search publications where doi in ["10.3847/1538-4357/ad9749","10.1103/physrevd.111.042005","10.3847/1538-4357/ad8de0","10.1364/fio.2024.jtu4a.2","10.3847/1538-4357/ad65ce","10.1364/cleo_si.2024.sm1d.3","10.1103/physrevd.110.042001","10.3847/1538-4357/ad3e83","10.3847/2041-8213/ad5beb"]
+        return publications [researchers]
+        limit 1000'''
+        print(q)
+        res = dsl.query(q)
+        print(" ==> res.json.keys(): ", res.json.keys())
+        # ----
+        click.secho("\n--------\nCOMPLETED", fg="green")
+        
+
+    if test_number == 6:
+
+        click.secho("\nTEST 006: query_iterative() with 'return' inside a search phrase (DIMENTRY-9906).", bg="green")
+        # ----
+        q = """search publications in title_abstract_only for "\\"congenital partial pulmonary venous return anomaly\\"" where year in [2016:2026] return publications[id]"""
+        print("Run using 'query'..")
+        print(q)
+        res = dsl.query(q)
+        print(" ==> res.json.keys(): ", res.json.keys())
+        # ----
+        q = """search publications in title_abstract_only for "\\"congenital partial pulmonary venous return anomaly\\"" where year in [2016:2026] return publications[id]"""
+        print("Run using 'query_iterative'..")
+        print(q)
+        res = dsl.query_iterative(q)
+        print(" ==> res.json.keys(): ", res.json.keys())
+        click.secho("\n--------\nCOMPLETED", fg="green")
+
+
     if test_number == 5:
 
         click.secho("\nTEST 005: GLOBAL login/logout using verify_ssl flag.", bg="green")
