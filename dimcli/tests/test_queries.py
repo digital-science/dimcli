@@ -117,6 +117,25 @@ class TestOne(unittest.TestCase):
         print(" ==> len(res): ", len(res))
         print(" ==> res['stats']: ", res['stats'])
         # ----
+        click.secho("\nTEST 001-G: Iterative querying with 'retry' arg + warnings preserved across multiple recursive pages (PR #96)", bg="green")
+        # ----
+        d = Dsl()
+        q = """search publications
+        where research_orgs.name = "America"
+        and year in [2010:2012]
+        return publications
+        """
+        # small limit forces several recursive calls, exercising the retry/_tot_count_prev_query/_warnings_tot
+        # keyword-argument propagation fixed after merging PR #96
+        res = d.query_iterative(q, limit=500, retry=2)
+        click.secho("Query results: ", fg="magenta")
+        print(" ==> len(res): ", len(res))
+        print(" ==> res['stats']: ", res['stats'])
+        print(" ==> len(res['publications']): ", len(res['publications']))
+        click.secho("Cumulative warnings across all recursive pages: ", fg="magenta")
+        print("WARNINGS [{}]".format(len(res["_warnings"])))
+        print("\n".join([s for s in res["_warnings"]]))
+        # ----
         click.secho("Completed test succesfully", fg="green")
 
 

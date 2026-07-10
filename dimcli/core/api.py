@@ -336,15 +336,15 @@ class Dsl():
                 _warnings_tot = warnings
 
         if flag_force:
-            output = self.query_iterative(q, show_results, limit, new_skip, pause, force, maxlimit, verbose, _tot_count_prev_query, _warnings_tot)                    
+            output = self.query_iterative(q, show_results, limit, new_skip, pause, force, maxlimit, verbose, retry=retry, _tot_count_prev_query=_tot_count_prev_query, _warnings_tot=_warnings_tot)
 
         elif not IS_UNNEST and len(res[sourcetype]) == limit and not flag_last_round:
-            output = res[sourcetype] + self.query_iterative(q, show_results, limit, new_skip, pause, force,maxlimit, verbose, tot, _warnings_tot)
+            output = res[sourcetype] + self.query_iterative(q, show_results, limit, new_skip, pause, force, maxlimit, verbose, retry=retry, _tot_count_prev_query=tot, _warnings_tot=_warnings_tot)
 
         elif IS_UNNEST and len(res[sourcetype]) > 0 and not flag_last_round:
             # unnest returns a number of records that don't relate to actual data left
             # hence can't match the lenght of results to limit in this case
-            output = res[sourcetype] + self.query_iterative(q, show_results, limit, new_skip, pause, force, maxlimit, verbose, tot, _warnings_tot)
+            output = res[sourcetype] + self.query_iterative(q, show_results, limit, new_skip, pause, force, maxlimit, verbose, retry=retry, _tot_count_prev_query=tot, _warnings_tot=_warnings_tot)
 
         else:
             output = res[sourcetype]
