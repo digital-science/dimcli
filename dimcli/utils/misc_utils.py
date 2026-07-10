@@ -259,7 +259,9 @@ def export_as_gsheets(input_data, query="", title=None, verbose=True):
         """Get the source/facet in the return statement
         Duplicates same method in dimcli.utils.repl_utils , to avoid circular imports
         """
-        l = line.split()
+        # strip quoted full-text search clauses first, so "return" inside a search phrase isn't mistaken for the DSL keyword
+        stripped_line = re.sub(r'\"(.+?)\"', "", line.replace(r'\"', ""))
+        l = stripped_line.split()
         n = l.count("return")
         if n == 1:
             i = l.index("return")

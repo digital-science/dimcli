@@ -108,6 +108,15 @@ class TestOne(unittest.TestCase):
         print("WARNINGS [{}]".format(len(res["_warnings"])))
         print("\n".join([s for s in res["_warnings"]]))
         # ----
+        click.secho("\nTEST 001-F: Iterative querying with 'return' inside a search phrase (DIMENTRY-9906)", bg="green")
+        # ----
+        d = Dsl()
+        q = """search publications in title_abstract_only for "\\"congenital partial pulmonary venous return anomaly\\"" where year in [2016:2026] return publications[id]"""
+        res = d.query_iterative(q)
+        click.secho("Query results: ", fg="magenta")
+        print(" ==> len(res): ", len(res))
+        print(" ==> res['stats']: ", res['stats'])
+        # ----
         click.secho("Completed test succesfully", fg="green")
 
 

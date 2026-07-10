@@ -235,7 +235,7 @@ def line_search_return(line):
     """
     get the source/facet in the return statement
     """
-    l = line.split()
+    l = remove_fulltext_search_clause(line).split()
     n = l.count("return")
     if n == 1:
         i = l.index("return")
