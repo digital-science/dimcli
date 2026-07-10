@@ -378,6 +378,6 @@ def dimensions_styler(df, source_type="", title_links=True):
 
     df = df.style.format(format_rules)
     if cols_to_drop:
-        df = df.hide_columns(cols_to_drop)
+        df = df.hide(cols_to_drop, axis="columns")
     return df
 

@@ -241,7 +241,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_for": {
-                    "description": "`ANZSRC Fields of Research classification <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_ (alias for most recent version).",
+                    "description": "`ANZSRC Fields of Research classification <https://help.dimensions.ai/en/articles/9781825>`_ (alias for most recent version).",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -250,7 +250,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_for_2020": {
-                    "description": "`ANZSRC Fields of Research classification <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`ANZSRC Fields of Research classification <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -259,7 +259,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_hra": {
-                    "description": "`Health Research Areas <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`Health Research Areas <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -268,7 +268,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_hrcs_hc": {
-                    "description": "`HRCS - Health Categories <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`HRCS - Health Categories <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -277,7 +277,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_hrcs_rac": {
-                    "description": "`HRCS – Research Activity Codes <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`HRCS – Research Activity Codes <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -286,7 +286,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_icrp_cso": {
-                    "description": "`ICRP Common Scientific Outline <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`ICRP Common Scientific Outline <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -295,7 +295,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_icrp_ct": {
-                    "description": "`ICRP Cancer Types <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`ICRP Cancer Types <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -304,7 +304,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_rcdc": {
-                    "description": "`Research, Condition, and Disease Categorization <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`Research, Condition, and Disease Categorization <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -588,9 +588,9 @@ GRAMMAR_DICT = {
             "search_fields": [
                 "title_only",
                 "full_data",
-                "raw_affiliations",
-                "title_abstract_only",
                 "investigators",
+                "title_abstract_only",
+                "raw_affiliations",
             ],
         },
         "datasets": {
@@ -632,7 +632,7 @@ GRAMMAR_DICT = {
                     "type": "json",
                 },
                 "category_bra": {
-                    "description": "`Broad Research Areas <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`Broad Research Areas <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -641,7 +641,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_for": {
-                    "description": "`ANZSRC Fields of Research classification <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_ (alias for most recent version).",
+                    "description": "`ANZSRC Fields of Research classification <https://help.dimensions.ai/en/articles/9781825>`_ (alias for most recent version).",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -650,7 +650,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_for_2020": {
-                    "description": "`ANZSRC Fields of Research classification <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`ANZSRC Fields of Research classification <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -659,7 +659,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_hra": {
-                    "description": "`Health Research Areas <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`Health Research Areas <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -668,7 +668,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_hrcs_hc": {
-                    "description": "`HRCS - Health Categories <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`HRCS - Health Categories <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -677,7 +677,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_hrcs_rac": {
-                    "description": "`HRCS – Research Activity Codes <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`HRCS – Research Activity Codes <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -686,7 +686,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_icrp_cso": {
-                    "description": "`ICRP Common Scientific Outline <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`ICRP Common Scientific Outline <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -695,7 +695,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_icrp_ct": {
-                    "description": "`ICRP Cancer Types <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`ICRP Cancer Types <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -704,7 +704,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_rcdc": {
-                    "description": "`Research, Condition, and Disease Categorization <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`Research, Condition, and Disease Categorization <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -847,17 +847,8 @@ GRAMMAR_DICT = {
                     "long_description": None,
                     "type": "string",
                 },
-                "language_desc": {
-                    "description": "Dataset title language, as ISO 639-1 language codes.",
-                    "is_entity": False,
-                    "is_facet": True,
-                    "is_filter": True,
-                    "is_multivalue": False,
-                    "long_description": None,
-                    "type": "string",
-                },
-                "language_title": {
-                    "description": "Dataset title language, as ISO 639-1 language codes.",
+                "language_detected": {
+                    "description": "Dataset language, as ISO 639-1 language codes.",
                     "is_entity": False,
                     "is_facet": True,
                     "is_filter": True,
@@ -967,7 +958,7 @@ GRAMMAR_DICT = {
             },
             "fieldsets": ["basics", "categories"],
             "metrics": {"count": {"description": "Total count", "name": "count"}},
-            "search_fields": ["title_only", "full_data", "title_abstract_only"],
+            "search_fields": ["title_only", "title_abstract_only", "full_data"],
         },
         "funder_groups": {
             "fields": {
@@ -1033,7 +1024,7 @@ GRAMMAR_DICT = {
                     "type": "integer",
                 },
                 "category_bra": {
-                    "description": "`Broad Research Areas <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`Broad Research Areas <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -1051,7 +1042,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_for_2020": {
-                    "description": "`ANZSRC Fields of Research classification <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`ANZSRC Fields of Research classification <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -1060,7 +1051,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_hra": {
-                    "description": "`Health Research Areas <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`Health Research Areas <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -1069,7 +1060,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_hrcs_hc": {
-                    "description": "`HRCS - Health Categories <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_ .",
+                    "description": "`HRCS - Health Categories <https://help.dimensions.ai/en/articles/9781825>`_ .",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -1078,7 +1069,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_hrcs_rac": {
-                    "description": "`HRCS – Research Activity Codes <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_ .",
+                    "description": "`HRCS – Research Activity Codes <https://help.dimensions.ai/en/articles/9781825>`_ .",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -1087,7 +1078,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_icrp_cso": {
-                    "description": "`ICRP Common Scientific Outline <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`ICRP Common Scientific Outline <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -1096,7 +1087,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_icrp_ct": {
-                    "description": "`ICRP Cancer Types <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`ICRP Cancer Types <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -1105,7 +1096,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_rcdc": {
-                    "description": "`Research, Condition, and Disease Categorization <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_ .",
+                    "description": "`Research, Condition, and Disease Categorization <https://help.dimensions.ai/en/articles/9781825>`_ .",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -1123,7 +1114,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_uoa": {
-                    "description": "`Units of Assessment <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`Units of Assessment <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -1180,15 +1171,6 @@ GRAMMAR_DICT = {
                     "description": "The funding opportunity announcement (FOA) number, where available e.g. for grants from the US National Institute of Health (NIH) or from the National Science Foundation (NSF).",
                     "is_entity": False,
                     "is_facet": False,
-                    "is_filter": True,
-                    "is_multivalue": False,
-                    "long_description": None,
-                    "type": "string",
-                },
-                "funder_org_acronym": {
-                    "description": None,
-                    "is_entity": False,
-                    "is_facet": True,
                     "is_filter": True,
                     "is_multivalue": False,
                     "long_description": None,
@@ -1519,18 +1501,18 @@ GRAMMAR_DICT = {
                 },
             },
             "search_fields": [
+                "concepts",
                 "title_only",
-                "raw_affiliations",
-                "title_abstract_only",
                 "full_data",
                 "investigators",
-                "concepts",
+                "title_abstract_only",
+                "raw_affiliations",
             ],
         },
         "organizations": {
             "fields": {
-                "acronym": {
-                    "description": 'Acronym of the organization. E.g., "UT" for `grid.26999.3d <https://app.dimensions.ai/details/organization/grid.26999.3d>`_',
+                "acronyms": {
+                    "description": 'Acronyms of the organization. E.g., "UT" for `grid.26999.3d <https://app.dimensions.ai/details/organization/grid.26999.3d>`_',
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": True,
@@ -1951,7 +1933,7 @@ GRAMMAR_DICT = {
                     "type": "string",
                 },
                 "category_bra": {
-                    "description": "`Broad Research Areas <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`Broad Research Areas <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -1960,7 +1942,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_for": {
-                    "description": "`ANZSRC Fields of Research classification <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_ (alias for most recent version).",
+                    "description": "`ANZSRC Fields of Research classification <https://help.dimensions.ai/en/articles/9781825>`_ (alias for most recent version).",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -1969,7 +1951,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_for_2020": {
-                    "description": "`ANZSRC Fields of Research classification <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`ANZSRC Fields of Research classification <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -1978,7 +1960,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_hra": {
-                    "description": "`Health Research Areas <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`Health Research Areas <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -1987,7 +1969,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_hrcs_hc": {
-                    "description": "`HRCS - Health Categories <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`HRCS - Health Categories <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -1996,7 +1978,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_hrcs_rac": {
-                    "description": "`HRCS – Research Activity Codes <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`HRCS – Research Activity Codes <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -2005,7 +1987,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_icrp_cso": {
-                    "description": "`ICRP Common Scientific Outline <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`ICRP Common Scientific Outline <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -2014,7 +1996,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_icrp_ct": {
-                    "description": "`ICRP Cancer Types <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`ICRP Cancer Types <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -2023,7 +2005,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_rcdc": {
-                    "description": "`Research, Condition, and Disease Categorization <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`Research, Condition, and Disease Categorization <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -2387,17 +2369,17 @@ GRAMMAR_DICT = {
             "metrics": {"count": {"description": "Total count", "name": "count"}},
             "search_fields": [
                 "title_only",
-                "title_abstract_only",
                 "full_data",
-                "title_abstract_claims",
                 "assignees",
+                "title_abstract_only",
+                "title_abstract_claims",
                 "inventors",
             ],
         },
         "policy_documents": {
             "fields": {
                 "category_bra": {
-                    "description": "`Broad Research Areas <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`Broad Research Areas <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -2406,7 +2388,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_for": {
-                    "description": "`ANZSRC Fields of Research classification <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_ (alias for most recent version).",
+                    "description": "`ANZSRC Fields of Research classification <https://help.dimensions.ai/en/articles/9781825>`_ (alias for most recent version).",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -2415,7 +2397,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_for_2020": {
-                    "description": "`ANZSRC Fields of Research classification <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`ANZSRC Fields of Research classification <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -2424,7 +2406,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_hra": {
-                    "description": "`Health Research Areas <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`Health Research Areas <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -2433,7 +2415,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_hrcs_hc": {
-                    "description": "`HRCS - Health Categories <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`HRCS - Health Categories <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -2442,7 +2424,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_hrcs_rac": {
-                    "description": "`HRCS – Research Activity Codes <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`HRCS – Research Activity Codes <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -2451,7 +2433,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_icrp_cso": {
-                    "description": "`ICRP Common Scientific Outline <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`ICRP Common Scientific Outline <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -2460,7 +2442,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_icrp_ct": {
-                    "description": "`ICRP Cancer Types <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`ICRP Cancer Types <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -2469,7 +2451,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_rcdc": {
-                    "description": "`Research, Condition, and Disease Categorization <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`Research, Condition, and Disease Categorization <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -2651,7 +2633,7 @@ GRAMMAR_DICT = {
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": True,
-                    "is_multivalue": True,
+                    "is_multivalue": False,
                     "long_description": 'Returned objects contain: ``first_name``, ``last_name``, ``corresponding``, ``orcid``, ``current_organization_id``, ``researcher_id``, ``affiliations`` and ``raw_affiliation``.\n\n        For example:\n        \n        .. code-block:: json\n        \n                {\n                    "raw_affiliation": [\n                        "Centre for Operational Research, International Union Against Tuberculosis and Lung Disease (The Union), Paris, France.",\n                        "Centre for Operational Research, The Union South-East Asia Office, New Delhi, India."\n                    ],\n                    "first_name": "Pruthu",\n                    "last_name": "Thekkur",\n                    "corresponding": "",\n                    "orcid": "[\'s\']",\n                    "researcher_id": "ur.0670077515.38",\n                    "affiliations": [\n                        {\n                            "raw_affiliation": "Centre for Operational Research, International Union Against Tuberculosis and Lung Disease (The Union), Paris, France.",\n                            "id": "grid.435357.3",\n                            "name": "International Union Against Tuberculosis and Lung Disease",\n                            "city": "Paris",\n                            "city_id": 2988507,\n                            "country": "France",\n                            "country_code": "FR",\n                            "state": null,\n                            "state_code": null\n                        },\n                        {\n                            "raw_affiliation": "Centre for Operational Research, The Union South-East Asia Office, New Delhi, India.",\n                            "id": "grid.8195.5",\n                            "name": "University of Delhi",\n                            "city": "New Delhi",\n                            "city_id": 1261481,\n                            "country": "India",\n                            "country_code": "IN",\n                            "state": null,\n                            "state_code": null\n                        }\n                    ]\n                }',
                     "type": "json",
                 },
@@ -2692,7 +2674,7 @@ GRAMMAR_DICT = {
                     "type": "string",
                 },
                 "category_bra": {
-                    "description": "`Broad Research Areas <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`Broad Research Areas <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -2701,7 +2683,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_for": {
-                    "description": "`ANZSRC Fields of Research classification <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_ (alias for most recent version).",
+                    "description": "`ANZSRC Fields of Research classification <https://help.dimensions.ai/en/articles/9781825>`_ (alias for most recent version).",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -2710,7 +2692,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_for_2020": {
-                    "description": "`ANZSRC Fields of Research classification <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`ANZSRC Fields of Research classification <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -2719,7 +2701,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_hra": {
-                    "description": "`Health Research Areas <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`Health Research Areas <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -2728,7 +2710,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_hrcs_hc": {
-                    "description": "`HRCS - Health Categories <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`HRCS - Health Categories <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -2737,7 +2719,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_hrcs_rac": {
-                    "description": "`HRCS – Research Activity Codes <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`HRCS – Research Activity Codes <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -2746,7 +2728,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_icrp_cso": {
-                    "description": "`ICRP Common Scientific Outline <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`ICRP Common Scientific Outline <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -2755,7 +2737,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_icrp_ct": {
-                    "description": "`ICRP Cancer Types <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`ICRP Cancer Types <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -2764,7 +2746,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_rcdc": {
-                    "description": "`Research, Condition, and Disease Categorization <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`Research, Condition, and Disease Categorization <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -2782,7 +2764,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_uoa": {
-                    "description": "`Units of Assessment <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`Units of Assessment <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -2807,6 +2789,15 @@ GRAMMAR_DICT = {
                     "is_multivalue": False,
                     "long_description": None,
                     "type": "json",
+                },
+                "concepts_relevant": {
+                    "description": "Concepts describing the main topics of a publication (note: automatically derived from the publication text using machine learning). The field includes all concepts with a concept relevance score of 0.6 or higher.",
+                    "is_entity": False,
+                    "is_facet": True,
+                    "is_filter": True,
+                    "is_multivalue": True,
+                    "long_description": None,
+                    "type": "string",
                 },
                 "concepts_scores": {
                     "description": "Relevancy scores for `concepts`.",
@@ -2863,7 +2854,7 @@ GRAMMAR_DICT = {
                     "type": "string",
                 },
                 "document_type": {
-                    "description": "Document type prediction based on the content and metadata of a publication.",
+                    "description": "Document type (all capitalized) prediction based on the content and metadata of a publication (one of: Research Article, Conference Paper, Other Journal Content, Reference Work, Conference Abstract, Review Article, Research Chapter, Book Review, Letter To Editor, Editorial, Other Book Content, Correction Erratum, Other Conference Content)",
                     "is_entity": False,
                     "is_facet": True,
                     "is_filter": True,
@@ -2890,7 +2881,7 @@ GRAMMAR_DICT = {
                     "type": "string",
                 },
                 "field_citation_ratio": {
-                    "description": "Relative citation performance of article when compared to similarly aged articles in its area of research (note: does not support emptiness filters).",
+                    "description": "Relative citation performance of article when compared to similarly aged articles in its area of research.",
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": True,
@@ -2998,7 +2989,7 @@ GRAMMAR_DICT = {
                     "type": "string",
                 },
                 "mesh_terms": {
-                    "description": "PubMed MeSH terms",
+                    "description": "Medical Subject Heading terms as used in PubMed.",
                     "is_entity": False,
                     "is_facet": True,
                     "is_filter": True,
@@ -3007,7 +2998,7 @@ GRAMMAR_DICT = {
                     "type": "string",
                 },
                 "open_access": {
-                    "description": "Open Access categories for publications (`more info <https://dimensions.freshdesk.com/support/solutions/articles/23000018863-where-does-the-definition-of-open-access-come-from-in-dimensions-what-does-it-include->`_)",
+                    "description": "Open Access categories for publications (`more info <https://help.dimensions.ai/en/articles/9783681>`_)",
                     "is_entity": False,
                     "is_facet": True,
                     "is_filter": True,
@@ -3061,7 +3052,7 @@ GRAMMAR_DICT = {
                     "type": "string",
                 },
                 "recent_citations": {
-                    "description": "Number of citations received in the last two years. Does not support emptiness filters",
+                    "description": "Number of citations received in the last two years.",
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": True,
@@ -3088,7 +3079,7 @@ GRAMMAR_DICT = {
                     "type": "publication_links",
                 },
                 "relative_citation_ratio": {
-                    "description": "Relative citation performance of an article when compared to others in its area of research (note: does not support emptiness filters).",
+                    "description": "Relative citation performance of an article when compared to others in its area of research.",
                     "is_entity": False,
                     "is_facet": False,
                     "is_filter": True,
@@ -3114,15 +3105,6 @@ GRAMMAR_DICT = {
                     "long_description": None,
                     "type": "countries",
                 },
-                "research_org_country_names": {
-                    "description": "Country name of the organisations authors are affiliated to, as a string.",
-                    "is_entity": False,
-                    "is_facet": False,
-                    "is_filter": True,
-                    "is_multivalue": True,
-                    "long_description": None,
-                    "type": "string",
-                },
                 "research_org_names": {
                     "description": "Names of organizations authors are affiliated to. If the organization has a GRID ID, the canonical organization name is used. Otherwise the original affiliation string is used.",
                     "is_entity": False,
@@ -3140,15 +3122,6 @@ GRAMMAR_DICT = {
                     "is_multivalue": True,
                     "long_description": None,
                     "type": "states",
-                },
-                "research_org_state_names": {
-                    "description": "State name of the organisations authors are affiliated to, as a string.",
-                    "is_entity": False,
-                    "is_facet": False,
-                    "is_filter": False,
-                    "is_multivalue": True,
-                    "long_description": None,
-                    "type": "string",
                 },
                 "research_org_types": {
                     "description": "Types of organisation associated with the publication. This field only contains information for organisations with GRID IDs.",
@@ -3223,7 +3196,7 @@ GRAMMAR_DICT = {
                     "type": "string",
                 },
                 "times_cited": {
-                    "description": "Number of citations (note: does not support emptiness filters).",
+                    "description": "Number of citations.",
                     "is_entity": False,
                     "is_facet": True,
                     "is_filter": True,
@@ -3305,16 +3278,16 @@ GRAMMAR_DICT = {
                 },
             },
             "search_fields": [
+                "concepts",
+                "acknowledgements",
+                "full_data",
+                "full_data_exact",
                 "title_abstract_only",
+                "funding",
                 "raw_affiliations",
                 "terms",
-                "acknowledgements",
-                "funding",
                 "title_only",
-                "full_data",
                 "authors",
-                "full_data_exact",
-                "concepts",
             ],
         },
         "reports": {
@@ -3338,7 +3311,7 @@ GRAMMAR_DICT = {
                     "type": "json",
                 },
                 "category_bra": {
-                    "description": "`Broad Research Areas <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`Broad Research Areas <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -3347,7 +3320,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_for": {
-                    "description": "`ANZSRC Fields of Research classification <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_ (alias for most recent version).",
+                    "description": "`ANZSRC Fields of Research classification <https://help.dimensions.ai/en/articles/9781825>`_ (alias for most recent version).",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -3356,7 +3329,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_for_2020": {
-                    "description": "`ANZSRC Fields of Research classification <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`ANZSRC Fields of Research classification <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -3365,7 +3338,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_hra": {
-                    "description": "`Health Research Areas <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`Health Research Areas <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -3374,7 +3347,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_hrcs_hc": {
-                    "description": "`HRCS - Health Categories <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`HRCS - Health Categories <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -3383,7 +3356,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_hrcs_rac": {
-                    "description": "`HRCS – Research Activity Codes <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`HRCS – Research Activity Codes <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -3392,7 +3365,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_icrp_cso": {
-                    "description": "`ICRP Common Scientific Outline <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`ICRP Common Scientific Outline <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -3401,7 +3374,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_icrp_ct": {
-                    "description": "`ICRP Cancer Types <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`ICRP Cancer Types <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -3410,7 +3383,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_rcdc": {
-                    "description": "`Research, Condition, and Disease Categorization <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`Research, Condition, and Disease Categorization <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -3428,7 +3401,7 @@ GRAMMAR_DICT = {
                     "type": "categories",
                 },
                 "category_uoa": {
-                    "description": "`Units of Assessment <https://dimensions.freshdesk.com/support/solutions/articles/23000018820-what-are-fields-of-research-and-other-classification-systems-and-how-are-they-created->`_",
+                    "description": "`Units of Assessment <https://help.dimensions.ai/en/articles/9781825>`_",
                     "is_entity": True,
                     "is_facet": True,
                     "is_filter": True,
@@ -3682,7 +3655,7 @@ GRAMMAR_DICT = {
             },
             "fieldsets": ["basics", "categories"],
             "metrics": {"count": {"description": "Total count", "name": "count"}},
-            "search_fields": ["full_data", "title_abstract_only", "concepts"],
+            "search_fields": ["concepts", "title_abstract_only", "full_data"],
         },
         "research_org_groups": {
             "fields": {
